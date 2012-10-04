@@ -18,10 +18,6 @@ module Controllers
     set :views, relative('../../app/views')
     helpers Sinatra::ContentFor
 
-    before do
-      redirect "/" unless session['auth']
-    end
-
     post '/create' do
         user = session['user']
         begin
