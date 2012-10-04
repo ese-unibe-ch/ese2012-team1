@@ -7,7 +7,7 @@ require 'sinatra/base'
 require 'haml'
 require 'ftools'
 require 'sinatra/content_for'
-require_relative('../models/module/user')
+require_relative('../models/user')
 require_relative('../helpers/render')
 
 include Models
