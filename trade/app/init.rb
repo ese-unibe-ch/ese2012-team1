@@ -3,8 +3,8 @@ def relative path
 end
 require 'rubygems'
 require 'require_relative'
-require_relative('../../trade/app/models/module/item')
-require_relative('../../trade/app/models/module/user')
+require_relative('../../trade/app/models/item')
+require_relative('../../trade/app/models/user')
 
 include Models
 
