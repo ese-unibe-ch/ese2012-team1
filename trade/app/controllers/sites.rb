@@ -23,10 +23,6 @@ module Controllers
     end
 
     get '/home' do
-      puts session[:auth]
-      puts session[:user]
-        puts "HOME!"
-
         haml :home
     end
 
