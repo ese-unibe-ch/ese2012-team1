@@ -16,8 +16,11 @@ module Controllers
     set :views, relative('../../app/views')
     helpers Sinatra::ContentFor
 
+    before do
+      redirect "/" unless session['auth']
+    end
+
     post '/create' do
-      if session['auth']
         user = session['user']
         begin
           User.get_user(user).create_item(params[:name], Integer(params[:price]))
@@ -25,33 +28,21 @@ module Controllers
           redirect "/error/Not_A_Number"
         end
         redirect "/home/inactive"
-      else
-        redirect "/"
-      end
     end
 
     get '/changestate/:id/setactive' do
-      if session['auth']
         id = params[:id]
         Item.get_item(id).to_active
         redirect "/home/inactive"
-      else
-        redirect "/"
-      end
     end
 
     get '/changestate/:id/setinactive' do
-      if session['auth']
         id = params[:id]
         Item.get_item(id).to_inactive
         redirect "/home/active"
-      else
-        redirect "/"
-      end
     end
 
     get '/buy/:id' do
-      if session['auth']
         id = params[:id]
         item = Item.get_item(id)
         old_user = item.get_owner
@@ -63,9 +54,6 @@ module Controllers
           redirect "/error/Not_Enough_Credits"
         end
         redirect "/home/active"
-      else
-        redirect "/"
-      end
     end
 
   end

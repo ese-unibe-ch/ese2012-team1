@@ -16,21 +16,7 @@ module Controllers
     set :views, relative('../../app/views')
     helpers Sinatra::ContentFor
 
-    get '/' do
-      if session['auth']
-        redirect "/home"
-      else
-        haml :index
-      end
-    end
 
-    get '/login' do
-      if session['auth']
-        redirect "/home"
-      else
-        haml :login
-      end
-    end
 
     get '/logout' do
       if session['auth']

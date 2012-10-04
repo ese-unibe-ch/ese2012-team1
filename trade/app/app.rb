@@ -19,8 +19,8 @@ class App
   set :public_folder, 'public'
   set :static, true
   use Controllers::Authentication
-  use Controllers::Sites
   use Controllers::Creator
+  use Controllers::Sites
 
   get '/hi' do
     "Hello World"

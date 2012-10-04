@@ -12,8 +12,27 @@ include Models
 
 module Controllers
   class Authentication < Sinatra::Base
+
     set :views, relative('../../app/views')
     helpers Sinatra::ContentFor
+
+    get '/' do
+      session['auth']
+
+      if session['auth']
+        redirect "/home"
+      else
+        haml :index
+      end
+    end
+
+    get '/login' do
+      if session['auth']
+        redirect "/home"
+      else
+        haml :login
+      end
+    end
 
     post "/authenticate" do
       halt 401, "No such login" unless User.login params[:username], params[:password]
