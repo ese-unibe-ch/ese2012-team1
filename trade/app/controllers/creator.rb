@@ -8,8 +8,10 @@ require 'haml'
 require 'sinatra/content_for'
 require_relative('../models/module/user')
 require_relative('../models/module/item')
+require_relative('../helpers/render')
 
 include Models
+include Helpers
 
 module Controllers
   class Creator < Sinatra::Base

@@ -17,6 +17,7 @@ class App
   enable :sessions
   set :views, relative('app/views')
   set :public_folder, 'public'
+  set :public, 'public'
   set :static, true
   use Controllers::Authentication
   use Controllers::Creator
