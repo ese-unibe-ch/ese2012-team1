@@ -8,6 +8,7 @@ require 'haml'
 require_relative('controllers/authentication')
 require_relative('controllers/sites')
 require_relative('controllers/creator')
+require_relative('controllers/uploader')
 
 require_relative('init.rb') unless ENV['RACK_ENV'] == 'test'
 
@@ -20,6 +21,7 @@ class App < Sinatra::Base
   use Controllers::Authentication
   use Controllers::Creator
   use Controllers::Sites
+  use Controllers::Uploader
 
 end
 
