@@ -1,3 +1,4 @@
+
 %h1 Registration
 %br
 %form(action="/register" method="POST")
@@ -8,7 +9,9 @@
   %br
   %label Password:
   %br
-  %input(type="password" name="password" value="")
+  %input(type="password" name="password" id="password")
+  %br
+  %label(id="message")
   %br
   %br
   %label Email:
