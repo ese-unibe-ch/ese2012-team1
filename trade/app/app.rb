@@ -8,6 +8,7 @@ require 'haml'
 require_relative('controllers/authentication')
 require_relative('controllers/sites')
 require_relative('controllers/creator')
+require_relative('controllers/uploader')
 
 require_relative('init.rb')
 
@@ -21,6 +22,7 @@ class App
   use Controllers::Authentication
   use Controllers::Creator
   use Controllers::Sites
+  use Controllers::Uploader
 
   get '/hi' do
     "Hello World"

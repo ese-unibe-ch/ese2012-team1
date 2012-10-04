@@ -19,8 +19,6 @@ module Controllers
     helpers Sinatra::ContentFor
 
     get '/' do
-      session['auth']
-
       if session['auth']
         redirect "/home"
       else
