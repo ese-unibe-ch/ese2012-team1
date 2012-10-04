@@ -10,12 +10,11 @@ require_relative('controllers/sites')
 require_relative('controllers/creator')
 require_relative('controllers/uploader')
 
-require_relative('init.rb')
+require_relative('init.rb') unless ENV['RACK_ENV'] == 'test'
 
-module App
-class App
+class App < Sinatra::Base
 
-  enable :sessions
+  enable :sessions unless ENV['RACK_ENV'] == 'test'
   set :views, relative('app/views')
   set :public_folder, 'public'
   set :static, true
@@ -24,12 +23,7 @@ class App
   use Controllers::Sites
   use Controllers::Uploader
 
-  get '/hi' do
-    "Hello World"
-  end
-
-
 end
 
-end
+App.run! unless ENV['RACK_ENV'] == 'test'
 
