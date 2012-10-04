@@ -1,6 +1,3 @@
-def relative(path)
-  File.join(File.expand_path(File.dirname(__FILE__)), path)
-end
 require 'rubygems'
 require 'require_relative'
 require 'sinatra/base'
@@ -15,7 +12,7 @@ include Helpers
 
 module Controllers
   class Creator < Sinatra::Application
-    set :views, relative('../../app/views')
+    set :views , "#{absolute_path('../views', __FILE__)}"
 
     before do
       redirect "/" unless session[:auth]

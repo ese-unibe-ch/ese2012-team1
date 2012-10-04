@@ -1,6 +1,3 @@
-def relative(path)
-  File.join(File.expand_path(File.dirname(__FILE__)), path)
-end
 require 'rubygems'
 require 'require_relative'
 require 'sinatra/base'
@@ -15,8 +12,7 @@ include Helpers
 
 module Controllers
   class Sites < Sinatra::Application
-    set :views, relative('../../app/views')
-    helpers Sinatra::ContentFor
+    set :views , "#{absolute_path('../views', __FILE__)}"
 
     get '/logout' do
         haml :logout

@@ -1,21 +1,23 @@
-def relative(path)
-  File.join(File.expand_path(File.dirname(__FILE__)), path)
-end
 require 'rubygems'
 require 'require_relative'
 require 'sinatra'
 require 'haml'
+
 require_relative('controllers/authentication')
 require_relative('controllers/sites')
 require_relative('controllers/creator')
 require_relative('controllers/uploader')
-
 require_relative('init.rb') unless ENV['RACK_ENV'] == 'test'
+require_relative('helpers/render')
+
+include Helpers
 
 class App < Sinatra::Base
 
   enable :sessions unless ENV['RACK_ENV'] == 'test'
-  set :views, relative('app/views')
+  set :root, File.dirname(__FILE__)
+  set :views , "#{absolute_path('/views', __FILE__)}"
+
   set :public_folder, 'public'
   set :static, true
   use Controllers::Authentication
