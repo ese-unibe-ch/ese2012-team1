@@ -36,7 +36,9 @@
                 %em= item.name
                 %em= " owned by #{item.owner.name} costs #{item.price} credits"
                 \:
-                %a(href="/buy/#{item.id}.#{item.name}" ) Buy Item
+                %form(action="/buy" method="POST")
+                  %input(type = 'hidden' name = 'id'){ :value => "#{item.id}.#{item.name}" }
+                  %input(type = 'submit' value = 'Buy Item')
       %tr
         %td(colspan="2")
           %p Built during ESE 2012 by the guys who brought you "the moving turtle" in P2

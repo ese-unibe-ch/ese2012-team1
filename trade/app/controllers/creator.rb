@@ -42,7 +42,7 @@ module Controllers
         redirect "/home/active"
     end
 
-    get '/buy/:id' do
+    post '/buy' do
         id = params[:id]
         item = Item.get_item(id)
         old_user = item.get_owner
