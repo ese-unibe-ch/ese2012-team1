@@ -45,5 +45,15 @@ module Controllers
       redirect "/"
     end
 
+    get '/register' do
+      haml :register
+    end
+
+    post '/register' do
+      "You are to be registered..."
+      User.created(params[:name], params[:password])
+      "You are to be registered..."
+
+    end
   end
 end

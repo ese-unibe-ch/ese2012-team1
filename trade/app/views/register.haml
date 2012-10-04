@@ -1,0 +1,26 @@
+%h1 Registration
+%br
+%form(action="/register" method="POST")
+  %label Name:
+  %br
+  %input(type="text" name="username" value="")
+  %br
+  %br
+  %label Password:
+  %br
+  %input(type="password" name="password" value="")
+  %br
+  %br
+  %label Email:
+  %br
+  %input(type="text" name="email" value="")
+  %br
+  %br
+  %label Description:
+  %br
+  %textarea(name="interests" cols=30 rows=10)
+  %br
+  %br
+  %label Avatar:
+  %input(type="file" name="avatar_path" size=50 maxlength="=100000" accept="text/*")
+  %input(type="submit" value="Register")
