@@ -42,7 +42,6 @@ module Controllers
       end
 
       user = User.created(params[:name], params[:password])
-      user.save
 
       redirect '/login'
     end

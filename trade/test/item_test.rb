@@ -19,6 +19,7 @@ class ItemTest < Test::Unit::TestCase
     assert( owner.list_items_inactive.size == 0, "Item list inactive length should be 0" )
     assert( owner.list_items[0].is_active? , "New created item should now be active" )
     assert( owner.list_items[0].to_s, "testobject, 10" )
+    owner.clear
   end
 
   #test if item is initialized correctly
@@ -28,6 +29,7 @@ class ItemTest < Test::Unit::TestCase
     assert(item.get_name == "testobject", "Name should be returned")
     assert(item.get_price == 50, "Should return price")
     assert(!item.is_active?, "Should not be active")
+    owner.clear
   end
 
   #test for item activation
@@ -41,6 +43,7 @@ class ItemTest < Test::Unit::TestCase
     assert(item.get_name == "testobject", "Name should be returned")
     assert(item.get_price == 50, "Should return price")
     assert(item.is_active?, "Should be active now")
+    owner.clear
   end
 
   # test for items owner
@@ -49,6 +52,7 @@ class ItemTest < Test::Unit::TestCase
     item = owner.create_item("testobject", 50)
     assert(item.get_owner == owner, "Owner not set correctly")
     assert(item.get_owner.get_name == "testuser", "Owner not set correctly")
+    owner.clear
   end
 
   # test for items owner after selling
@@ -64,6 +68,9 @@ class ItemTest < Test::Unit::TestCase
     end
     assert(item.get_owner == new_owner, "Owner not set correctly")
     assert(item.get_owner.get_name == "New", "Owner not set correctly")
+
+    old_owner.clear
+    new_owner.clear
   end
 
 end

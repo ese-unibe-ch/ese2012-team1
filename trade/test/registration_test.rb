@@ -26,9 +26,6 @@ class RegistrationTest < Test::Unit::TestCase
         homer = Models::User.created('Homer', 'homer')
         homer.create_item('Beer', 200)
         homer.list_items_inactive.detect {|item| item.name == 'Beer' }.to_active
-
-        bart.save
-        homer.save
       end
     end
 
@@ -91,9 +88,9 @@ class RegistrationTest < Test::Unit::TestCase
     end
 
     it 'post /unregister should remove Homer from list of users' do
-      assert User.get_user('Homer') != nil, "Homer should exist"
-      post '/unregister', {}, 'rack.session' => session =  { :user => 'Homer', :auth => true  }
-      assert User.get_user('Homer') == nil, "Homer should not exist anymore"
+      assert User.get_user('Bart') != nil, "Homer should exist"
+      post '/unregister', {}, 'rack.session' => session =  { :user => 'Bart', :auth => true  }
+      assert User.get_user('Bart') == nil, "Homer should not exist anymore"
     end
 
     it 'post /unregister should redirect to /unauthenticate' do

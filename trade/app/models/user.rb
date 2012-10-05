@@ -112,6 +112,7 @@ module Models
     end
 
     def self.get_user(username)
+      puts @@users
       return @@users[username]
     end
 

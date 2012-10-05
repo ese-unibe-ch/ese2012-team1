@@ -26,9 +26,6 @@ class MainTest < Test::Unit::TestCase
         homer = Models::User.created('Homer', 'homer')
         homer.create_item('Beer', 200)
         homer.list_items_inactive.detect {|item| item.name == 'Beer' }.to_active
-
-        bart.save
-        homer.save
       end
     end
 
