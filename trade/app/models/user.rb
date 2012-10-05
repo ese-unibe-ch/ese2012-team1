@@ -31,6 +31,7 @@ module Models
       pw_hash = BCrypt::Engine.hash_secret(password, pw_salt)
       user.password_salt = pw_salt
       user.password_hash = pw_hash
+      user.save
       user
     end
 
