@@ -2,7 +2,7 @@ require 'rubygems'
 require 'require_relative'
 require 'sinatra/base'
 require 'haml'
-require 'sinatra/content_for'
+require 'ftools'
 require_relative '../models/user'
 require_relative '../helpers/render'
 
@@ -42,6 +42,13 @@ module Controllers
       end
 
       user = User.created(params[:name], params[:password])
+
+      if params[:avatar] != nil
+        dir = absolute_path('../public/images/users/', __FILE__)
+        tempfile = params[:avatar][:tempfile]
+        filename = params[:avatar][:filename]
+        File.copy(tempfile.path, "#{dir}#{params[:name]}.#{filename.sub!(/.*\./, "")  }")
+      end
 
       redirect '/login'
     end

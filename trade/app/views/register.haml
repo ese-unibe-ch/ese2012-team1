@@ -1,7 +1,7 @@
 
 %h1 Registration
 %br
-%form(action="/register" method="POST")
+%form(action="/register" enctype="multipart/form-data" method="POST")
   %label Name:
   %br
   %input(type="text" name="name" value="")
@@ -25,5 +25,5 @@
   %br
   %br
   %label Avatar:
-  %input(type="file" name="avatar_path" size=50 maxlength="=100000" accept="text/*")
+  %input(type="file" name="avatar" size=50 maxlength="=100000" accept="text/*")
   %input(type="submit" value="Register")
