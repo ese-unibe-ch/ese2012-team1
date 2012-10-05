@@ -39,5 +39,11 @@ module Controllers
       session[:auth] = false
       redirect "/"
     end
+
+    get "/unauthenticate" do
+      session[:user] = nil
+      session[:auth] = false
+      redirect "/"
+    end
   end
 end
