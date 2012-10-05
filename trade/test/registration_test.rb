@@ -6,18 +6,18 @@ require 'rack/test'
 
 ENV['RACK_ENV'] = 'test'
 
-require_relative '../app/controllers/authentication'
+require_relative '../app/controllers/registration'
 require_relative '../app/models/user'
 
-class AuthenticationTest < Test::Unit::TestCase
+class RegistrationTest < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def app
-    Controllers::Authentication
+    Controllers::Registration
   end
 
   describe 'Simple Tests' do
-    class TestApp < Controllers::Authentication
+    class TestApp < Controllers::Registration
       configure do
         bart = Models::User.created('Bart' , 'bart')
         bart.create_item('Skateboard', 100)
@@ -30,35 +30,6 @@ class AuthenticationTest < Test::Unit::TestCase
         bart.save
         homer.save
       end
-    end
-
-    it 'get /login should show login.html' do
-      get '/login', {}, 'rack.session' => { :user => nil, :auth => false  }
-      assert last_response.ok?
-      assert last_response.body.include?('Name:'), "Should ask for name but was\n#{last_response.body}"
-      assert last_response.body.include?('Password:'), "Should ask for password but was\n#{last_response.body}"
-    end
-
-    it 'get / should show index.html' do
-      get '/', {}, 'rack.session' => { :user => nil, :auth => false  }
-      assert last_response.ok?
-      assert last_response.body.include?('Welcome to the Trading System!'), "Should give a warm welcome but was\n#{last_response.body}"
-      assert last_response.body.include?('href=\'/login\''), "Should have link to login"
-    end
-
-    it 'post /authenticate should redirect to /home' do
-      post "/authenticate", :username => "Homer", :password => 'homer', 'rack.session' => { :user => nil, :auth => false  }
-      assert last_response.redirect?, "Should redirect but was #{last_response.body}"
-      assert last_response.location.include?('/home')
-    end
-
-    it 'post /unauthenticate should reset session[:name] and session[:auth] and redirect to /' do
-      session =  { :user => 'Homer', :auth => true  }
-      post "/unauthenticate", {}, 'rack.session' => session
-      assert session[:user] == nil, "Should reset \':user\' to nil but was #{session[:user]}"
-      assert !session[:auth], "Should set \'auth\' to false but was #{session[:auth]}"
-      assert last_response.redirect?, "Should redirect but was #{last_response.body}"
-      assert last_response.location.include?('/')
     end
 
     it 'post /register should redirect to /register if password is too short' do
@@ -99,10 +70,6 @@ class AuthenticationTest < Test::Unit::TestCase
       post "/register", {:password => 'aB12De', :name => 'Matz'}, 'rack.session' => session =  { :user => nil, :auth => false  }
       user = Models::User.get_user('Matz')
       assert(user != nil, "User should exist within system")
-
-      post "/register", {:password => 'aB12De', :name => 'Larry'}, 'rack.session' => session =  { :user => nil, :auth => false  }
-      user = Models::User.get_user('Larry')
-      assert(user != nil, "User should exist within system")
     end
 
     it 'get /register should add script and load initialize' do
@@ -121,6 +88,18 @@ class AuthenticationTest < Test::Unit::TestCase
       assert last_response.body.include?('Avatar:'), "Should ask for avatar but was\n#{last_response.body}"
       assert last_response.body.include?('Email:'), "Should ask for email but was\n#{last_response.body}"
       assert last_response.body.include?('Password:'), "Should ask for password but was\n#{last_response.body}"
+    end
+
+    it 'post /unregister should remove Homer from list of users' do
+      assert User.get_user('Homer') != nil, "Homer should exist"
+      post '/unregister', {}, 'rack.session' => session =  { :user => 'Homer', :auth => true  }
+      assert User.get_user('Homer') == nil, "Homer should not exist anymore"
+    end
+
+    it 'post /unregister should redirect to /unauthenticate' do
+      post '/unregister', {}, 'rack.session' => session =  { :user => 'Homer', :auth => true  }
+      assert last_response.redirect?
+      assert last_response.location.include?('/unauthenticate'), "Should redirect to /unauthenticate"
     end
   end
 end

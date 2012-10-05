@@ -1,6 +1,3 @@
-def relative(path)
-  File.join(File.expand_path(File.dirname(__FILE__)), path)
-end
 require 'test/unit'
 require 'rubygems'
 require 'require_relative'
@@ -9,7 +6,6 @@ require_relative('../app/models/item')
 
 class ItemTest < Test::Unit::TestCase
 
-  # Fake test
   def test_item_create_by_user
     owner = Models::User.created( "testuser", "password" )
     assert( owner.list_items.size == 0, "Item list length should be 0" )

@@ -9,7 +9,80 @@ require_relative('../app/models/item')
 
 class UserTest < Test::Unit::TestCase
 
-  # Fake test
+  ##
+  #
+  # Save and clear
+  #
+  ##
+
+  def test_should_remove_from_list_of_users
+    owner = Models::User.created("testuser", "password")
+    owner.save
+    detected_user = Models::User.get_all(nil).detect{|user| user == owner}
+    assert(detected_user != nil, "Should be in list")
+    owner.clear
+    detected_user = Models::User.get_all(nil).detect{|user| user == owner}
+    assert(detected_user == nil, "Should be removed from list")
+  end
+
+  ##
+  #
+  # User creation
+  #
+  ##
+
+  def test_should_create_user
+    owner = Models::User.created("testuser", "password")
+    assert(owner != nil, "Should create a test user")
+  end
+
+  def test_should_have_name
+    owner = Models::User.created("testuser", "password")
+    assert(owner.name == "testuser", "Should have name")
+  end
+
+  def test_should_have_password
+    owner = Models::User.created("testuser", "password")
+    assert(owner.password_hash != nil, "Should set password hash")
+    assert(owner.password_salt != nil, "Should set password salt")
+  end
+
+  def test_should_have_description
+    fail("Not yet implemented")
+  end
+
+  def test_should_have_path_to_avatar
+    fail("Not yet implemented")
+  end
+
+  def test_should_have_unique_email_adresse
+    fail("Not yet implemented")
+  end
+
+  def test_should_accept_password
+    owner = Models::User.created("testuser", "password")
+    owner.save
+    assert(Models::User.login("testuser", "password"), "Should login")
+    owner.clear
+  end
+
+  def test_should_not_accept_password
+    owner = Models::User.created("testuser", "password")
+    owner.save
+    begin
+      Models::User.login("testuser", "passwor")
+    rescue => e
+      assert(e.is_a(RuntimeError))
+    end
+    owner.clear
+  end
+
+  ##
+  #
+  # Item creation
+  #
+  ##
+
   def test_user_item_create
     owner = Models::User.created( "testuser", "password" )
     assert( owner.list_items.size == 0, "Item list length should be 0" )
@@ -110,11 +183,4 @@ class UserTest < Test::Unit::TestCase
     assert(owner.list_items_inactive[0].to_s == "testobject, 10")
     assert(owner.list_items_inactive[1].to_s == "testobject2, 50")
   end
-
-  def test_auth
-    owner = Models::User.created( "testuser", "password" )
-    owner.save
-    assert (Models::User.login "testuser", "password")
-  end
-
 end

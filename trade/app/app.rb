@@ -4,6 +4,7 @@ require 'sinatra'
 require 'haml'
 
 require_relative('controllers/authentication')
+require_relative('controllers/registration')
 require_relative('controllers/sites')
 require_relative('controllers/creator')
 require_relative('controllers/uploader')
@@ -21,6 +22,7 @@ class App < Sinatra::Base
   set :public_folder, 'public'
   set :static, true
   use Controllers::Authentication
+  use Controllers::Registration
   use Controllers::Creator
   use Controllers::Sites
   use Controllers::Uploader

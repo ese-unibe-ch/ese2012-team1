@@ -35,7 +35,7 @@ module Models
     end
 
     def save
-      raise "Duplicated user" if @@users.has_key? self.name and @@users[self.name] != self
+      fail "Duplicated user" if @@users.has_key? self.name and @@users[self.name] != self
       @@users[self.name] = self
     end
 
@@ -104,8 +104,9 @@ module Models
     end
 
     def self.login name, password
+      return false unless @@users.has_key? name
+
       user = @@users[name]
-      return false if user.nil?
       user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
     end
 
@@ -122,6 +123,10 @@ module Models
       return ret_array.select {|s| s.name !=  viewer}
     end
 
+    #Removes himself from the list of users and of the system
+    def clear
+       @@users.delete(self.name)
+    end
   end
 
 end

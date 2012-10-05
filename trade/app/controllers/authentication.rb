@@ -26,7 +26,7 @@ module Controllers
     end
 
     post "/authenticate" do
-      halt 401, "No such login" unless User.login params[:username], params[:password]
+      halt 401, "No such login" unless User.login(params[:username], params[:password])
 
       session[:user] = params[:username]
       session[:auth] = true
@@ -38,16 +38,6 @@ module Controllers
       session[:user] = nil
       session[:auth] = false
       redirect "/"
-    end
-
-    get '/register' do
-      haml :register, :locals => { :script => 'passwordchecker.js', :onload => 'initialize()' }
-    end
-
-    post '/register' do
-      "You are to be registered..."
-      User.created(params[:name], params[:password])
-      "You are to be registered..."
     end
   end
 end
