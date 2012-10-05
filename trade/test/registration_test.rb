@@ -4,6 +4,8 @@ require 'test/unit'
 require 'helper'
 require 'rack/test'
 
+require 'test_helper'
+
 ENV['RACK_ENV'] = 'test'
 
 require_relative '../app/controllers/registration'
@@ -19,13 +21,7 @@ class RegistrationTest < Test::Unit::TestCase
   describe 'Simple Tests' do
     class TestApp < Controllers::Registration
       configure do
-        bart = Models::User.created('Bart' , 'bart')
-        bart.create_item('Skateboard', 100)
-        bart.list_items_inactive.detect {|item| item.name == 'Skateboard' }.to_active
-
-        homer = Models::User.created('Homer', 'homer')
-        homer.create_item('Beer', 200)
-        homer.list_items_inactive.detect {|item| item.name == 'Beer' }.to_active
+        TestHelper.load
       end
     end
 
@@ -41,9 +37,9 @@ class RegistrationTest < Test::Unit::TestCase
       assert last_response.location.include?('/register')
     end
 
-    #Not yet implemented...
-
     it 'post /register should redirect to /register if password is too weak' do
+      fail("Not yet implemented")
+
       post "/register", {:password => 'aaaagsfa'}, 'rack.session' => session =  { :user => nil, :auth => false  }
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
       assert last_response.location.include?('/register')

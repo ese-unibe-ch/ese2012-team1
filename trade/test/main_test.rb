@@ -4,6 +4,8 @@ require 'test/unit'
 require 'helper'
 require 'rack/test'
 
+require 'test_helper'
+
 ENV['RACK_ENV'] = 'test'
 
 require_relative '../app/app'
@@ -19,13 +21,7 @@ class MainTest < Test::Unit::TestCase
   describe 'Simple Tests' do
     class TestApp < App
       configure do
-        bart = Models::User.created('Bart' , 'bart')
-        bart.create_item('Skateboard', 100)
-        bart.list_items_inactive.detect {|item| item.name == 'Skateboard' }.to_active
-
-        homer = Models::User.created('Homer', 'homer')
-        homer.create_item('Beer', 200)
-        homer.list_items_inactive.detect {|item| item.name == 'Beer' }.to_active
+        TestHelper.load
       end
     end
 
