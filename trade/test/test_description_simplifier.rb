@@ -42,7 +42,7 @@ class Test::Unit::TestCase
   # test\__and_so_on_
 
   def self.test_name(name)
-    "test_#{replace_whitespaces(remove_capital_letters(name))}".to_sym
+    "test_#{replace_spaces_with_underscore(replace_capital_letters(name))}".to_sym
   end
 
   # Replaces all spaces with underscores

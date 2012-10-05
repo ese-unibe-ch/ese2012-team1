@@ -41,7 +41,7 @@ module Controllers
     end
 
     get '/register' do
-      haml :register
+      haml :register, :locals => { :script => 'passwordchecker.js', :onload => 'initialize()' }
     end
 
     post '/register' do

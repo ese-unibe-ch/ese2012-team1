@@ -61,8 +61,16 @@ class AuthenticationTest < Test::Unit::TestCase
       assert last_response.location.include?('/')
     end
 
+    it 'get /register should add script and load intialize' do
+      get '/register'
+      assert last_response.ok?
+      assert last_response.body.include?('passwordchecker.js'), "Should include script for password checking but was\n#{last_response.body}"
+      assert last_response.body.include?('onload=\'initialize()\''), "Should load initialize() in body but was\n#{last_response.body}"
+    end
+
     it 'get /register should show registration.html' do
       get '/register'
+      assert last_response.ok?
       assert last_response.body.include?('Name:'), "Should ask for name but was\n#{last_response.body}"
       assert last_response.body.include?('Password:'), "Should ask for password but was\n#{last_response.body}"
       assert last_response.body.include?('Description:'), "Should ask for description but was\n#{last_response.body}"
