@@ -1,5 +1,10 @@
 %h2= "Users (#{params[:id]}) Active Items"
+#usr_img
+  %img(height=200 width=200){ :alt => User.get_user(params[:id]).name, :src => User.get_user(params[:id]).avatar }
 %br
+%div= User.get_user(params[:id]).description
+%br
+%h3 Check out my Items:
 %ul
   - for item in active_items
     %li
