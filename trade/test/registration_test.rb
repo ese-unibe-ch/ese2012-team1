@@ -54,13 +54,17 @@ class RegistrationTest < Test::Unit::TestCase
     end
 
     it 'post /register should redirect to /login if password is okey' do
-      post "/register", {:password => 'B4rney', :name => 'Barney'}, 'rack.session' => session =  { :user => nil, :auth => false  }
+      post "/register", {:password => 'aB12De', :name => 'Larry', :description => "Perl is a Pearl!",
+                         :email => 'larry@mail.ch'},
+           'rack.session' => session =  { :user => nil, :auth => false  }
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
-      assert last_response.location.include?('/login')
+      assert last_response.location.include?('/login'), "Should redirect to /login but was #{last_response.location}"
     end
 
     it 'post /register should add user to system' do
-      post "/register", {:password => 'aB12De', :name => 'Matz'}, 'rack.session' => session =  { :user => nil, :auth => false  }
+      post "/register", {:password => 'aB12De', :name => 'Matz', :description => "Ruby rocks!",
+                         :email => 'math@mail.ch'},
+           'rack.session' => session =  { :user => nil, :auth => false  }
       user = Models::User.get_user('Matz')
       assert(user != nil, "User should exist within system")
     end

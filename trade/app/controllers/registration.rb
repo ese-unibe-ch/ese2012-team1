@@ -37,18 +37,28 @@ module Controllers
     ##
 
     post '/register' do
-      if params[:password].length < 6 || params[:password] =~ /[^a-zA-Z1-9]/ #Still missing conditions...
+      if params[:password].length < 6 || params[:password] =~ /[^a-zA-Z1-9]/ ||
+         params[:email].nil? || params[:name].nil? #Still missing conditions...
         redirect '/register'
       end
 
-      user = User.created(params[:name], params[:password])
+      password = params[:password]
+      email = params[:email]
+      description = params[:description].nil? ? "" : params[:description]
+      name = params[:name]
+
+
+      dir = absolute_path('../public/images/users/', __FILE__)
+      file_path = 'dir/default_avatar.png'
 
       if params[:avatar] != nil
-        dir = absolute_path('../public/images/users/', __FILE__)
         tempfile = params[:avatar][:tempfile]
         filename = params[:avatar][:filename]
-        File.copy(tempfile.path, "#{dir}#{params[:name]}.#{filename.sub!(/.*\./, "")  }")
+        file_path ="#{dir}#{params[:name]}.#{filename.sub!(/.*\./, "")  }"
+        File.copy(tempfile.path, file_path)
       end
+
+      User.created(name, password, email, description, file_path)
 
       redirect '/login'
     end

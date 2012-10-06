@@ -17,14 +17,40 @@ module Models
     #  fails if the buyer has not enough credits.
 
     # generate getter and setter for name and price
-    attr_accessor :name, :credits, :item_list, :pw, :password_hash, :password_salt
+    attr_accessor :description, :avatar, :email, :name, :credits, :item_list, :pw, :password_hash, :password_salt
+
+    ##
+    #
+    # E-Mailadress should be unique
+    #
+    ##
+
+    def invariant
+      fail "E-mail should be unique" if @@users.one? {|user| @@users.all? {|innerUser| user[1].email != innerUser[1].email if innerUser != user}}
+    end
 
     @@users = {}
 
+    def self.email_unique?(email_to_compare)
+      @@users.all? {|user| user[1].email != email_to_compare }
+    end
+
     # factory method (constructor) on the class
-    def self.created( name, password)
+    def self.created(name,  password, email, description, avatar)
+      # Preconditions
+      fail "Missing name" if (name == nil)
+      fail "Missing password" if (password == nil)
+      fail "Missing email" if (email == nil)
+      fail "Missing description" if (description == nil)
+      fail "Missing path to avatar" if (avatar == nil)
+      fail "Not a correct email address" unless email =~ /[A-Za-z123456789._-]+@[A-Za-z123456789-]+\.[a-z]+$/
+      fail "E-mail not unique" unless self.email_unique?(email)
+
       user = self.new
       user.name = name
+      user.email = email
+      user.description = description
+      user.avatar = avatar
       user.credits = 100
       user.item_list = Array.new
       pw_salt = BCrypt::Engine.generate_salt
@@ -32,6 +58,8 @@ module Models
       user.password_salt = pw_salt
       user.password_hash = pw_hash
       user.save
+
+      user.invariant
       user
     end
 

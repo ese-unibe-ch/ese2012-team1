@@ -12,7 +12,7 @@ class UserTest < Test::Unit::TestCase
   @owner
 
   def setup
-    @owner = Models::User.created("testuser", "password")
+    @owner = Models::User.created("testuser", "password", "user@mail.ch", "Hey there", "C:/bild.gif")
   end
 
   def teardown
@@ -53,15 +53,21 @@ class UserTest < Test::Unit::TestCase
   end
 
   def test_should_have_description
-    fail("Not yet implemented")
+    assert(@owner.description = "Hey there")
   end
 
   def test_should_have_path_to_avatar
-    fail("Not yet implemented")
+    assert(@owner.avatar = "C:/bild.gif")
+  end
+
+  def test_should_have_email
+    assert(@owner.email == "user@mail.ch", "Should have email")
   end
 
   def test_should_have_unique_email_adresse
-    fail("Not yet implemented")
+    assert_raise(RuntimeError, "Didn't throw a RuntimeError") {
+      Models::User.created("testuser2", "password2", "user@mail.ch", "Hey there2", "C:/bild2.gif")
+    }
   end
 
   def test_should_accept_password
@@ -69,11 +75,7 @@ class UserTest < Test::Unit::TestCase
   end
 
   def test_should_not_accept_password
-    begin
-      Models::User.login("testuser", "passwor")
-    rescue => e
-      assert(e.is_a(RuntimeError))
-    end
+    assert(! Models::User.login("testuser", "passwor"), "Should not login")
   end
 
   ##
@@ -103,8 +105,8 @@ class UserTest < Test::Unit::TestCase
   end
 
   def test_sales
-    old_owner = Models::User.created("Old", "password")
-    new_owner = Models::User.created("New", "password")
+    old_owner = Models::User.created("Old", "password", "old@mail.ch", "i'm old", "old.gif" )
+    new_owner = Models::User.created("New", "password", "new@mail.ch", "i'm new", "new.gif")
 
     sock = old_owner.create_item("sock",10)
     assert( !sock.is_active?, "item should not be active, is")
@@ -134,8 +136,8 @@ class UserTest < Test::Unit::TestCase
   end
 
   def test_sales_not_possible_because_of_price
-    old_owner = Models::User.created("Old", "password")
-    new_owner = Models::User.created("New", "password")
+    old_owner = Models::User.created("Old", "password", "old@mail.ch", "i'm old", "old.gif" )
+    new_owner = Models::User.created("New", "password", "new@mail.ch", "i'm new", "new.gif")
 
     sock = old_owner.create_item("sock",210)
     assert( !sock.is_active?, "item should not be active, is")

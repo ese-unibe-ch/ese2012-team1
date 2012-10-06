@@ -15,11 +15,11 @@ class TestHelper
   def self.load
     self.clear_all
 
-    bart = Models::User.created('Bart' , 'bart')
+    bart = Models::User.created('Bart' , 'bart', 'bart@mail.ch', 'I\' should not...', 'bart.gif')
     bart.create_item('Skateboard', 100)
     bart.list_items_inactive.detect {|item| item.name == 'Skateboard' }.to_active
 
-    homer = Models::User.created('Homer', 'homer')
+    homer = Models::User.created('Homer', 'homer', 'homer@mail.ch', 'Do!', 'homer.jpg')
     homer.create_item('Beer', 200)
     homer.list_items_inactive.detect {|item| item.name == 'Beer' }.to_active
   end
