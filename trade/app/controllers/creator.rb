@@ -21,7 +21,8 @@ module Controllers
     post '/create' do
         user = session[:user]
         begin
-          User.get_user(user).create_item(params[:name], Integer(params[:price]))
+          new_item = User.get_user(user).create_item(params[:name], Integer(params[:price]))
+          new_item.add_description(params[:description])
         rescue
           redirect "/error/Not_A_Number"
         end
