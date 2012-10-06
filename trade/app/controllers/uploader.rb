@@ -19,7 +19,7 @@ module Controllers
     end
 
     post '/upload/users' do
-      dir = absolute_path('public/images/users/', __FILE__)
+      dir = absolute_path('../public/images/users/', __FILE__)
       tempfile = params['myfile'][:tempfile]
       filename = params['myfile'][:filename]
       File.copy(tempfile.path, "#{dir}#{filename}")
@@ -27,7 +27,7 @@ module Controllers
     end
 
     post '/upload/items' do
-      dir = absolute_path('public/images/items/', __FILE__)
+      dir = absolute_path('../public/images/items/', __FILE__)
       tempfile = params['myfile'][:tempfile]
       filename = params['myfile'][:filename]
       File.copy(tempfile.path, "#{dir}#{filename}")

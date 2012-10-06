@@ -4,6 +4,8 @@ require 'test/unit'
 require 'helper'
 require 'rack/test'
 
+require 'test_helper'
+
 ENV['RACK_ENV'] = 'test'
 
 require_relative '../app/controllers/authentication'
@@ -19,16 +21,7 @@ class AuthenticationTest < Test::Unit::TestCase
   describe 'Simple Tests' do
     class TestApp < Controllers::Authentication
       configure do
-        bart = Models::User.created('Bart' , 'bart')
-        bart.create_item('Skateboard', 100)
-        bart.list_items_inactive.detect {|item| item.name == 'Skateboard' }.to_active
-
-        homer = Models::User.created('Homer', 'homer')
-        homer.create_item('Beer', 200)
-        homer.list_items_inactive.detect {|item| item.name == 'Beer' }.to_active
-
-        bart.save
-        homer.save
+        TestHelper.load
       end
     end
 
@@ -59,24 +52,6 @@ class AuthenticationTest < Test::Unit::TestCase
       assert !session[:auth], "Should set \'auth\' to false but was #{session[:auth]}"
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
       assert last_response.location.include?('/')
-    end
-
-    it 'get /register should add script and load intialize' do
-      get '/register'
-      assert last_response.ok?
-      assert last_response.body.include?('passwordchecker.js'), "Should include script for password checking but was\n#{last_response.body}"
-      assert last_response.body.include?('onload=\'initialize()\''), "Should load initialize() in body but was\n#{last_response.body}"
-    end
-
-    it 'get /register should show registration.html' do
-      get '/register'
-      assert last_response.ok?
-      assert last_response.body.include?('Name:'), "Should ask for name but was\n#{last_response.body}"
-      assert last_response.body.include?('Password:'), "Should ask for password but was\n#{last_response.body}"
-      assert last_response.body.include?('Description:'), "Should ask for description but was\n#{last_response.body}"
-      assert last_response.body.include?('Avatar:'), "Should ask for avatar but was\n#{last_response.body}"
-      assert last_response.body.include?('Email:'), "Should ask for email but was\n#{last_response.body}"
-      assert last_response.body.include?('Password:'), "Should ask for password but was\n#{last_response.body}"
     end
   end
 end
