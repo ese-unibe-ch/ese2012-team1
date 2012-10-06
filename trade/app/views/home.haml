@@ -1,5 +1,8 @@
 %h2 Content
 %br
+%img(height=200 width=200){ :alt => User.get_user(session[:user]).name, :src => User.get_user(session[:user]).avatar }
+
+%br
           = "Currently logged in User: #{User.get_user(session[:user]).name}"
 %br
           = "Your Credits: #{User.get_user(session[:user]).credits}"

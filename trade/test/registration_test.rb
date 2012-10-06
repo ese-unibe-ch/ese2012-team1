@@ -18,7 +18,7 @@ class RegistrationTest < Test::Unit::TestCase
     Controllers::Registration
   end
 
-  describe 'Simple Tests' do
+  describe 'Registration' do
     class TestApp < Controllers::Registration
       configure do
         TestHelper.load
