@@ -88,9 +88,9 @@ class RegistrationTest < Test::Unit::TestCase
     end
 
     it 'post /unregister should remove Homer from list of users' do
-      assert User.get_user('Bart') != nil, "Homer should exist"
+      assert User.get_user('Bart') != nil, "Bart should exist"
       post '/unregister', {}, 'rack.session' => session =  { :user => 'Bart', :auth => true  }
-      assert User.get_user('Bart') == nil, "Homer should not exist anymore"
+      assert User.get_user('Bart') == nil, "Bart should not exist anymore"
     end
 
     it 'post /unregister should redirect to /unauthenticate' do
