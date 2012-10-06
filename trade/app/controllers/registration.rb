@@ -38,7 +38,9 @@ module Controllers
 
     post '/register' do
       if params[:password].length < 6 || params[:password] =~ /[^a-zA-Z1-9]/ ||
+         params[:password] != params[:re_password] ||
          params[:email].nil? || params[:name].nil? #Still missing conditions...
+
         redirect '/register'
       end
 
