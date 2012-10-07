@@ -82,3 +82,12 @@ div#usr_img img {
 div.bigmargin {
     margin-top: 20px;
 }
+
+div.itembuttons {
+    margin-left: 20px;
+    display: block;
+}
+
+input.itembuttons {
+    display: inline;
+}

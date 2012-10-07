@@ -5,5 +5,7 @@
     %li
       %em= item.name
       %em= item.price
-      \:
-      %a(href="/changestate/#{item.id}.#{item.name}/setinactive" ) Set Inactive
+      %div(class="itembuttons")
+        %form(name="state" action="/changestate/setinactive" method="POST")
+          %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
+          %input(type="submit" value="Set Inactive")

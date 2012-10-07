@@ -6,4 +6,13 @@
       %em= item.name
       %em= item.price
       \:
-      %a(href="/changestate/#{item.id}.#{item.name}/setactive" ) Set Active
+    %div(class="itembuttons")
+      %form(name="state" action="/changestate/setactive" method="POST")
+        %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
+        %input(class="itembuttons" type="submit" value="Set Active")
+      %form(name="edit" action="/home/edit" method="POST")
+        %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
+        %input(class="itembuttons" type="submit" value="Edit Item")
+      %form(name="delete" action="/home/delete" method="POST")
+        %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
+        %input(class="itembuttons" type="submit" value="Delete Item")

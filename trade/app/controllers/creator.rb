@@ -29,16 +29,16 @@ module Controllers
         redirect "/home/inactive"
     end
 
-    get '/changestate/:id/setactive' do
+    post '/changestate/setactive' do
         id = params[:id]
         Item.get_item(id).to_active
         redirect "/home/inactive"
     end
 
-    get '/changestate/:id/setinactive' do
-        id = params[:id]
-        Item.get_item(id).to_inactive
-        redirect "/home/active"
+    post '/changestate/setinactive' do
+      id = params[:id]
+      Item.get_item(id).to_inactive
+      redirect "/home/active"
     end
 
     post '/buy' do
