@@ -4,19 +4,19 @@
     %a(href="/home") Home
   %br
   %li
-    %a(href="/home/active") My Active Items
+    %a(href="/home/active" name="active_items") My Active Items
   %li
-    %a(href="/home/inactive") My Inactive Items
+    %a(href="/home/inactive" name="inactive_items") My Inactive Items
   %li
-    %a(href="/home/new") Create Item
+    %a(href="/home/new" name="create_item") Create Item
   %br
   %li
-    %a(href="/users") All Users
+    %a(href="/users" name="users") All Users
   %li
-    %a(href="/items") All Items
+    %a(href="/items" name="items") All Items
   %br
   %li
-    %a(href="/logout") Logout
+    %a(href="/logout" name="logout") Logout
   %li
     %form(action='\unregister' name='data' method='POST')
     %a(href="javascript:data.submit()") Delete Account
