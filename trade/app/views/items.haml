@@ -5,7 +5,9 @@
     %li
       %em= item.name
       %em= " owned by #{item.owner.name} costs #{item.price} credits"
+      %img(height=50 width=50){ :alt => item.name, :src => item.picture }
       \:
       %form(action="/buy" method="POST")
         %input(type = 'hidden' name = 'id'){ :value => "#{item.id}.#{item.name}" }
         %input(type = 'submit' value = 'Buy Item')
+
