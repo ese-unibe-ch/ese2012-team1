@@ -142,8 +142,12 @@ module Models
     end
 
     #Removes himself from the list of users and of the system
+    #Removes users items before
     def clear
-       @@users.delete(self.name)
+      for e in self.item_list
+        e.clear
+      end
+      @@users.delete(self.name)
     end
   end
 

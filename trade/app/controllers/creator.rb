@@ -41,6 +41,29 @@ module Controllers
       redirect "/home/active"
     end
 
+    post '/home/delete' do
+      id = params[:id]
+      Item.get_item(id).clear
+      redirect "/home/inactive"
+    end
+
+    post '/home/edit' do
+      id = params[:id]
+      name = Item.get_item(id).name
+      description = Item.get_item(id).description
+      price = Item.get_item(id).price
+      haml :home_edit , :locals => {:id => id, :name => name, :description => description, :price => price}
+    end
+
+    post '/home/edit/save' do
+      id = params[:id]
+      new_description = params[:new_description]
+      new_price = params[:new_price]
+      Item.get_item(id).add_description(new_description)
+      Item.get_item(id).price = new_price
+      redirect "/home/inactive"
+    end
+
     post '/buy' do
         id = params[:id]
         item = Item.get_item(id)

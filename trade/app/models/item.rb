@@ -115,6 +115,12 @@ module Models
       self.is_active?
     end
 
+    #Removes itself from the list of items and of the system
+    def clear
+      @@item_list["#{self.id}.#{self.name}"].owner.remove_item(self)
+      @@item_list.delete("#{self.id}.#{self.name}")
+    end
+
   end
 
 end

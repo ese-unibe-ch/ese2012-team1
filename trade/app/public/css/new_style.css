@@ -85,9 +85,8 @@ div.bigmargin {
 
 div.itembuttons {
     margin-left: 20px;
-    display: block;
 }
 
 input.itembuttons {
-    display: inline;
+    float: left;
 }
