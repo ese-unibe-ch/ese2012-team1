@@ -1,0 +1,93 @@
+body {
+    font-family:Verdana;
+    overflow-x:hidden;
+    overflow:-moz-scrollbars-vertical;
+}
+
+div#header h1 {
+    font-family: fantasy;
+    padding-top: 20px
+}
+
+div#menu {
+    padding-top: 1em;
+    position: fixed;
+    top: 20%;
+    bottom: 10%;
+    left: 0;
+    right: 80%;
+    background: #A0C544;
+    padding-left: 1em
+}
+
+div#main {
+    position: fixed;
+    top: 20%;
+    bottom: 10%;
+    left: 20%;
+    right: 0;
+    padding: 2em;
+    overflow: scroll;
+}
+
+div#header {
+    position: fixed;
+    top: 0;
+    bottom: 80%;
+    left: 0;
+    right: 0;
+    background: #347C2C;
+    padding-left: 5em
+}
+
+div#footer {
+    position: fixed;
+    top: 90%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #347C2C;
+    padding-left: 5em
+}
+
+div#menu div {
+    float: left;
+    width: 100%;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em
+}
+
+div#menu div:hover {
+    background: #347C2C;
+}
+
+div#menu a {
+    padding-left: 0.25em;
+    text-decoration: none;
+    color: black
+}
+
+div#footer div {
+    position:absolute;
+    bottom:0.25em;
+    left:0.25em;
+}
+
+div#usr_img img {
+    position:absolute;
+    top:3em;
+    right:3em;
+}
+
+div.bigmargin {
+    margin-top: 20px;
+}
+
+div.itembuttons {
+    margin-left: 20px;
+    display: block;
+}
+
+input.itembuttons {
+    display: inline;
+}

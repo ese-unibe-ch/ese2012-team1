@@ -5,25 +5,14 @@
     - if defined? css
       %link(rel="stylesheet" href="/css/#{css}" type="text/css")
     - else
-      %link(rel="stylesheet" href="/css/style.css" type="text/css")
+      %link(rel="stylesheet" href="/css/new_style.css" type="text/css")
     - if defined? script
       %script(type="text/javascript" src="/java-script/#{script}")
 
   %body{ defined?(onload) ? {:onload => "#{onload}"} : "" }
-    %table
-      %tr
-        %td(colspan="2")
-          #header
-            = render_file('_the_header.haml')
-      %tr
-        %td
-          #nav
-            = render_file('_the_menu.haml') if session['auth']
-            = render_file('_the_menu_b.haml') if !session['auth']
-        %td
-          #content
-            = yield
-      %tr
-        %td(colspan="2")
-          #footer
-            = render_file('_the_footer.haml')
+    = render_file('_the_header.haml')
+    = render_file('_the_menu.haml') if session['auth']
+    = render_file('_the_menu_b.haml') if !session['auth']
+    %div(id="main")
+      = yield
+    = render_file('_the_footer.haml')

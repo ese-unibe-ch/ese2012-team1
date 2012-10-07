@@ -1,22 +1,18 @@
-%h2 Menu
-%ul
-  %li
+%div(id='menu')
+  %div
     %a(href="/home") Home
-  %br
-  %li
+  %div
     %a(href="/home/active" name="active_items") My Active Items
-  %li
+  %div
     %a(href="/home/inactive" name="inactive_items") My Inactive Items
-  %li
+  %div
     %a(href="/home/new" name="create_item") Create Item
-  %br
-  %li
+  %div(class="bigmargin")
     %a(href="/users" name="users") All Users
-  %li
+  %div
     %a(href="/items" name="items") All Items
-  %br
-  %li
+  %div(class="bigmargin")
     %a(href="/logout" name="logout") Logout
-  %li
-    %form(action='\unregister' name='data' method='POST')
+  %div
+    %form(action='/unregister' name='data' method='POST')
     %a(href="javascript:data.submit()") Delete Account

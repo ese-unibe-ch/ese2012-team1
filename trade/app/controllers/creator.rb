@@ -21,23 +21,24 @@ module Controllers
     post '/create' do
         user = session[:user]
         begin
-          User.get_user(user).create_item(params[:name], Integer(params[:price]))
+          new_item = User.get_user(user).create_item(params[:name], Integer(params[:price]))
+          new_item.add_description(params[:description])
         rescue
           redirect "/error/Not_A_Number"
         end
         redirect "/home/inactive"
     end
 
-    get '/changestate/:id/setactive' do
+    post '/changestate/setactive' do
         id = params[:id]
         Item.get_item(id).to_active
         redirect "/home/inactive"
     end
 
-    get '/changestate/:id/setinactive' do
-        id = params[:id]
-        Item.get_item(id).to_inactive
-        redirect "/home/active"
+    post '/changestate/setinactive' do
+      id = params[:id]
+      Item.get_item(id).to_inactive
+      redirect "/home/active"
     end
 
     post '/buy' do

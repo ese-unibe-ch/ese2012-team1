@@ -93,24 +93,12 @@ module Models
 
     #return users item list active
     def list_items
-      return_list = Array.new
-      for s in self.item_list
-        if s.is_active?
-          return_list.push(s)
-        end
-      end
-      return return_list
+      item_list.select {|s| s.is_active?}
     end
 
     #return users item list inactive
     def list_items_inactive
-      return_list = Array.new
-      for s in self.item_list
-        if !s.is_active?
-          return_list.push(s)
-        end
-      end
-      return return_list
+      item_list.select {|s| !s.is_active?}
     end
 
     # buy an item

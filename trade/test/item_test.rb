@@ -64,4 +64,36 @@ class ItemTest < Test::Unit::TestCase
     new_owner.clear
   end
 
+  #test if adding of description generally works
+  def test_description_adding
+    owner = Models::User.created("Test owner", "password", "owner@mail.ch", "i own something", "old.gif")
+    item = Models::Item.created("Test object", 20, owner)
+    assert_equal(item.get_owner, owner)
+    item.add_description ("I'm an object for testing.")
+    assert_equal(item.description, "I'm an object for testing.")
+
+    owner.clear
+  end
+
+  #test if adding of picture generally works
+  def test_picture_adding
+    owner = Models::User.created("Test owner", "password", "owner@mail.ch", "i own something", "old.gif")
+    item = Models::Item.created("Test object", 20, owner)
+    item.add_picture("new.gif")
+    assert_equal(item.picture, "new.gif")
+
+    owner.clear
+  end
+
+  #test if the checking of editability works correctly
+  def test_editability
+    owner = Models::User.created("Test owner", "password", "owner@mail.ch", "i own something", "new.gif")
+    item = owner.create_item("book", 50)
+    assert_equal(item.is_active?, false)
+    item.to_active
+    assert(item.editable?, true)
+
+    owner.clear
+  end
+
 end

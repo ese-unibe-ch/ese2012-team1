@@ -90,7 +90,7 @@ EOF
     #Sending message via smtp server of gmail
     Net::SMTP.start('smtp.gmail.com', 587, 'gmail.com', @from, @password, :login) do |smtp|
       smtp.send_message(content_file, @from, to)
-    end
+    end     instead of
   end
 end
 
