@@ -69,6 +69,7 @@ module Controllers
 
     post '/home/edit/save' do
       id = params[:id]
+      redirect "/home/inactive" if Item.get_item(id).editable?
       new_description = params[:new_description]
       new_price = params[:new_price]
       Item.get_item(id).add_description(new_description)
