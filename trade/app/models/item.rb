@@ -26,6 +26,7 @@ module Models
       item.price = price
       item.active = false
       item.owner = owner
+      item.picture = "../images/items/default_item.png"
       item
     end
 
@@ -117,8 +118,13 @@ module Models
 
     #Removes itself from the list of items and of the system
     def clear
-      @@item_list["#{self.id}.#{self.name}"].owner.remove_item(self)
+      @@item_list["#{self.id}.#{self.name}"].owner.delete_item(self)
       @@item_list.delete("#{self.id}.#{self.name}")
+    end
+
+    #Returns the uniq id if the item
+    def get_id
+      return "#{self.id}.#{self.name}"
     end
 
   end

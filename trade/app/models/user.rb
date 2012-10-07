@@ -120,6 +120,11 @@ module Models
       self.item_list.delete(item_to_remove)
     end
 
+    # removing item from users item_list
+    def delete_item(item_to_remove)
+      self.item_list.delete(item_to_remove)
+    end
+
     def self.login name, password
       return false unless @@users.has_key? name
 
