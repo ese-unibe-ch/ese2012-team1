@@ -1,3 +1,7 @@
+require 'rubygems'
+require 'require_relative'
+require_relative '../helpers/render'
+
 module Models
 
   class Item
@@ -101,10 +105,12 @@ module Models
       self.description = description
     end
 
-    # Adds a picture to the item.
-    # @param  picture    the picture file for the item
+    # Adds a path to a picture to the item.
+    # @param  picture : path to picture file for the item
     def add_picture (picture)
       fail "Missing picture." if (picture == nil)
+      fail "There exists no file on path #{picture}" unless (File.exists?(Helpers::absolute_path(picture.sub("images", "public/images"), __FILE__)))
+
       self.picture = picture
     end
 

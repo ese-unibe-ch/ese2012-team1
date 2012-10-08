@@ -49,7 +49,6 @@ module Controllers
       description = params[:description].nil? ? "" : params[:description]
       name = params[:name]
 
-
       dir = absolute_path('../public/images/users/', __FILE__)
       file_path = "../images/users/default_avatar.png"
 

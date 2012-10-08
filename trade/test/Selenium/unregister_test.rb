@@ -1,3 +1,5 @@
+ENV['RACK_ENV'] = "test"
+
 require "test/unit"
 require "rubygems"
 require "selenium/webdriver"
@@ -50,7 +52,10 @@ class UnregisterTest < Test::Unit::TestCase
       logout_via("create_item")
 
       login("userD", "passwordD")
-      logout_via("")
+      logout_via("users")
+
+      login("userE", "passwordE")
+      logout_via("items")
     ensure
       @driver.quit
     end

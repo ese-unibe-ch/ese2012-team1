@@ -1,3 +1,5 @@
+ENV['RACK_ENV'] = "test"
+
 require "test/unit"
 require "rubygems"
 require "selenium/webdriver"

@@ -2,11 +2,13 @@ require 'rubygems'
 require 'bcrypt'
 require 'require_relative'
 require_relative('item')
+require_relative('../helpers/render')
+
+include Helpers
 
 module Models
-
   class User
-    #Users have a name.
+    #Users have a name, a unique e-mail, a description and a avatar.
     #Users have an amount of credits.
     #A new user has originally 100 credit.
     #A user can add a new item to the system with a name and a price; the item is originally inactive.
@@ -36,6 +38,8 @@ module Models
     end
 
     # factory method (constructor) on the class
+    # You have to save the picture at public/images/users/ before
+    # you call this method. If not it will fail.
     def self.created(name,  password, email, description, avatar)
       # Preconditions
       fail "Missing name" if (name == nil)
@@ -43,6 +47,7 @@ module Models
       fail "Missing email" if (email == nil)
       fail "Missing description" if (description == nil)
       fail "Missing path to avatar" if (avatar == nil)
+      fail "There's no avatar at #{avatar}" unless (File.exists?(Helpers::absolute_path(avatar.sub("images", "public/images"), __FILE__)))
       fail "Not a correct email address" unless email =~ /[A-Za-z123456789._-]+@[A-Za-z123456789-]+\.[a-z]+$/
       fail "E-mail not unique" unless self.email_unique?(email)
 
@@ -146,5 +151,4 @@ module Models
        @@users.delete(self.name)
     end
   end
-
 end
