@@ -21,7 +21,7 @@ module Controllers
     post '/create' do
         user = session[:user]
         begin
-          new_item = User.get_user(user).create_item(params[:name], Integer(params[:price]))
+          new_item = User.get_user(user).create_item(params[:name], Integer((params[:price]).to_i))
           new_item.add_description(params[:description])
 
           dir = absolute_path('../public/images/items/', __FILE__)
@@ -64,7 +64,8 @@ module Controllers
       name = Item.get_item(id).name
       description = Item.get_item(id).description
       price = Item.get_item(id).price
-      haml :home_edit , :locals => {:id => id, :name => name, :description => description, :price => price}
+      picture = Item.get_item(id).picture
+      haml :home_edit , :locals => {:id => id, :name => name, :description => description, :price => price, :picture => picture}
     end
 
     post '/home/edit/save' do

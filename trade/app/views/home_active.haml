@@ -5,6 +5,7 @@
     %li
       %em= item.name
       %em= item.price
+      %img(height=50 width=50){ :alt => item.name, :src => item.picture }
       \:
       %div(class="itembuttons")
         %form(name="state" action="/changestate/setinactive" method="POST")

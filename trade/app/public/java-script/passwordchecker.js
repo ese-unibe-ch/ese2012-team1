@@ -34,7 +34,7 @@ function inputCheck(){
         setTextAndColor(messageField, "Weak password. Only digits", "red");
     } else if (eingabe.match(/^([a-zA-Z])+$/) || eingabe.match(/^([a-z]|\d)+$/)
         || eingabe.match(/^([A-Z]|\d)+$/) )  {
-        setTextAndColor(messageField, "Normal Password", "orange");
+        setTextAndColor(messageField, "Password must have lowercase, uppercase and digits", "red");
     } else {
         setTextAndColor(messageField, "Gracious password! You are now allowed to enter", "green");
     }

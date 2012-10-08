@@ -78,6 +78,11 @@ div#usr_img img {
     top:3em;
     right:3em;
 }
+div#item_img img{
+    position:absolute;
+    top:3em;
+    right:3em;
+}
 
 div.bigmargin {
     margin-top: 20px;
