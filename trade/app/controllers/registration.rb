@@ -62,8 +62,9 @@ module Controllers
       end
 
       User.created(name, password, email, description, file_path)
-
-      redirect '/login'
+      session[:user] = name
+      session[:auth] = true
+      redirect '/'
     end
 
     ##

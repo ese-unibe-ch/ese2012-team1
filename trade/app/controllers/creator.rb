@@ -101,7 +101,7 @@ module Controllers
         else
           redirect "/error/Not_Enough_Credits"
         end
-        redirect "/home/active"
+        redirect "/home/inactive"
     end
 
   end
