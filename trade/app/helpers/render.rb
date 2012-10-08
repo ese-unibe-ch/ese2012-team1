@@ -1,10 +1,6 @@
 module Helpers
   def render_file(filename)
-    if ENV['RACK_ENV'] == 'test'
-        contents = File.read(absolute_path("../views/#{filename}", __FILE__))
-    else
-        contents = File.read("views/#{filename}")
-    end
+    contents = File.read(absolute_path("../views/#{filename}", __FILE__))
     Haml::Engine.new(contents).render
   end
 
