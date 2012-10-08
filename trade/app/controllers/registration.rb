@@ -5,6 +5,7 @@ require 'haml'
 require 'ftools'
 require_relative '../models/user'
 require_relative '../helpers/render'
+require_relative '../helpers/string_checkers'
 
 include Models
 include Helpers
@@ -39,7 +40,7 @@ module Controllers
     post '/register' do
       if params[:password].length < 6 || params[:password] =~ /[^a-zA-Z1-9]/ ||
          params[:password] != params[:re_password] ||
-         params[:email].nil? || params[:name].nil? #Still missing conditions...
+         params[:email].nil? || params[:name].nil? || !params[:password].is_strong_password?
 
         redirect '/register'
       end

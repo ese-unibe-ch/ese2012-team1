@@ -44,8 +44,6 @@ class RegistrationTest < Test::Unit::TestCase
     end
 
     it 'post /register should redirect to /register if password is too weak' do
-      fail("Not yet implemented")
-
       post "/register", {:password => 'aaaagsfa', :re_password => 'aaaagsfa'}, 'rack.session' => session =  { :user => nil, :auth => false  }
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
       assert last_response.location.include?('/register')

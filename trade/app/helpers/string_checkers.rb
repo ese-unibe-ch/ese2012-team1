@@ -25,4 +25,30 @@ class String
     eval_domain_part && eval_local_part
   end
 
+##
+#
+# Checks if is a strong password meaning
+# 1) At least six characters long
+# 2) Contains at least one number, one small letter and one capital letter
+#
+##
+
+  def is_strong_password?
+    if self.match(/[^a-zA-Z1-9]/)
+        false
+    elsif self.length < 6
+        false
+    elsif self.match(/^[A-Z]+$/)
+        false
+    elsif self.match(/^[a-z]+$/)
+        false
+    elsif self.match(/^\d+$/)
+        false
+    elsif self.match(/^([a-zA-Z])+$/) || self.match(/^([a-z]|\d)+$/) || self.match(/^([A-Z]|\d)+$/)
+        false
+    else
+        true
+    end
+  end
+
 end

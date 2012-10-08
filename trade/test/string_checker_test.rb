@@ -5,7 +5,7 @@ require 'test_description_simplifier'
 
 require_relative('../app/helpers/string_checkers')
 
-class TestStringChecker < Test::Unit::TestCase
+class StringCheckerTest < Test::Unit::TestCase
   should "accept mail@mail.ch as e-mail" do
     string = "mail@mail.ch"
     assert(string.is_email?)
@@ -39,5 +39,30 @@ class TestStringChecker < Test::Unit::TestCase
   shouldnt "accept mailmail.ch as e-mail" do
     string = "mailmail.ch"
     assert(!string.is_email?)
+  end
+
+  should "accept password with digits, capital letters and small letters" do
+    string = "123ABCabc"
+    assert(string.is_strong_password?)
+  end
+
+  shouldnt "accept short password" do
+    string = "1aA"
+    assert(!string.is_strong_password?)
+  end
+
+  shouldnt "accept password with only capital and small letters" do
+    string = "abcdABCD"
+    assert(!string.is_strong_password?)
+  end
+
+  shouldnt "accept password with only small letters and digits" do
+    string = "abcd1234"
+    assert(!string.is_strong_password?)
+  end
+
+  shouldnt "accept password with only captial letters and digits" do
+    string = "ABCD1234"
+    assert(!string.is_strong_password?)
   end
 end
