@@ -1,0 +1,20 @@
+%h2 Edit Item
+%br
+%form(action="/home/edit/save" enctype="multipart/form-data" method="POST")
+  %label= ("Name of Item: #{name}")
+  %br
+  %label Description of Item:
+  %br
+  %textarea(name="new_description" cols=30 rows=10)
+    = "#{description}"
+  %br
+  %label Price:
+  %br
+  %input(type="text" name="new_price" value="#{price}")
+  %br
+  %label Item Picture:
+  %br
+  %input(type="file" name="item_picture" size=50 maxlength="=100000" accept="text/*")
+  %input(type="hidden" name="id" value="#{id}")
+  %br
+  %input(type="submit" value="Save")

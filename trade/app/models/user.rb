@@ -125,6 +125,11 @@ module Models
       self.item_list.delete(item_to_remove)
     end
 
+    # removing item from users item_list
+    def delete_item(item_to_remove)
+      self.item_list.delete(item_to_remove)
+    end
+
     def self.login name, password
       return false unless @@users.has_key? name
 
@@ -147,8 +152,12 @@ module Models
     end
 
     #Removes himself from the list of users and of the system
+    #Removes users items before
     def clear
-       @@users.delete(self.name)
+      for e in self.item_list
+        e.clear
+      end
+      @@users.delete(self.name)
     end
   end
 end

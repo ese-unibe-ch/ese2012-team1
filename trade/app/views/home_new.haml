@@ -1,6 +1,6 @@
 %h2 Create Item
 %br
-%form(action="/create" method="POST")
+%form(action="/create" enctype="multipart/form-data" method="POST")
   %label Name of Item:
   %br
   %input(type="text" name="name" value="")
@@ -12,5 +12,9 @@
   %label Price:
   %br
   %input(type="text" name="price" value="")
+  %br
+  %label Item Picture:
+  %br
+  %input(type="file" name="item_picture" size=50 maxlength="=100000" accept="text/*")
   %br
   %input(type="submit" value="Create")

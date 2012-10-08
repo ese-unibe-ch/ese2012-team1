@@ -23,6 +23,18 @@ module Controllers
         begin
           new_item = User.get_user(user).create_item(params[:name], Integer(params[:price]))
           new_item.add_description(params[:description])
+
+          dir = absolute_path('../public/images/items/', __FILE__)
+
+          if params[:item_picture] != nil
+            tempfile = params[:item_picture][:tempfile]
+            filename = params[:item_picture][:filename]
+            file_path ="#{dir}#{new_item.get_id}.#{filename.sub(/.*\./, "")  }"
+            File.copy(tempfile.path, file_path)
+            file_path = "../images/users/#{new_item.get_id}.#{filename.sub(/.*\./, "")}"
+            new_item.add_picture(file_path)
+          end
+
         rescue
           redirect "/error/Not_A_Number"
         end
@@ -39,6 +51,42 @@ module Controllers
       id = params[:id]
       Item.get_item(id).to_inactive
       redirect "/home/active"
+    end
+
+    post '/home/delete' do
+      id = params[:id]
+      Item.get_item(id).clear
+      redirect "/home/inactive"
+    end
+
+    post '/home/edit' do
+      id = params[:id]
+      name = Item.get_item(id).name
+      description = Item.get_item(id).description
+      price = Item.get_item(id).price
+      haml :home_edit , :locals => {:id => id, :name => name, :description => description, :price => price}
+    end
+
+    post '/home/edit/save' do
+      id = params[:id]
+      redirect "/home/inactive" if Item.get_item(id).editable?
+      new_description = params[:new_description]
+      new_price = params[:new_price]
+      Item.get_item(id).add_description(new_description)
+      Item.get_item(id).price = new_price
+
+      dir = absolute_path('../public/images/items/', __FILE__)
+
+      if params[:item_picture] != nil
+        tempfile = params[:item_picture][:tempfile]
+        filename = params[:item_picture][:filename]
+        file_path ="#{dir}#{id}.#{filename.sub(/.*\./, "")  }"
+        File.copy(tempfile.path, file_path)
+        file_path = "../images/users/#{id}.#{filename.sub(/.*\./, "")}"
+        Item.get_item(id).add_picture(file_path)
+      end
+
+      redirect "/home/inactive"
     end
 
     post '/buy' do
