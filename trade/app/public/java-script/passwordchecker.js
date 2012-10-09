@@ -78,7 +78,7 @@ function setTextAndColor(messageField, text, color) {
  */
 
 function setButtonState() {
-    var button = document.getElementById('register').disabled;
+    var button = document.getElementById('register');
     if (strong == true && same_password == true) {
         button.disabled = false;
     }
