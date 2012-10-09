@@ -95,3 +95,8 @@ div.itembuttons {
 input.itembuttons {
     float: left;
 }
+
+div#w3c img {
+    position:relative;
+    bottom:1em;
+}
