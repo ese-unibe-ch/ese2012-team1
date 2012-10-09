@@ -10,13 +10,11 @@ module Models
     def initialize
       self.users ={}
       self.items ={}
-      self.item_id_count = 0;
+      self.item_id_count = 0
     end
 
     def add_user(user)
-      email = user.email
-      users = {email => user}
-      #TODO does not work as I intend...
+      self.users.store(user.email, user)
     end
 
     def add_item(item)

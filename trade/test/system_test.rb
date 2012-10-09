@@ -10,8 +10,8 @@ class SystemTest < Test::Unit::TestCase
   @beppo
 
   def setup
-    @momo = Models::User.created("Momo",    "zeit",     "momo@mail.ch",   "Denn Zeit ist Leben",  "C:/bild.gif")
-    @beppo = Models::User.created("Beppo",  "strasse",  "beppo@gmail.ch", "Schritt für Schritt", "C:/bild.gif")
+    @momo = Models::User.created("Momo",    "zeit",     "momo@mail.ch",   "Denn Zeit ist Leben",  "../images/users/default_avatar.png")
+    @beppo = Models::User.created("Beppo",  "strasse",  "beppo@gmail.ch", "Schritt für Schritt", "../images/users/default_avatar.png")
   end
 
   def teardown
@@ -30,7 +30,6 @@ class SystemTest < Test::Unit::TestCase
     system.add_user(@momo)
     system.add_user(@beppo)
     assert(system.users.size == 2, "there should be 2 users, but there were #{system.users.size} user(s).")
-
   end
 
 end
