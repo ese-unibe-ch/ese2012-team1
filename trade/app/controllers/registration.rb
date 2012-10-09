@@ -42,7 +42,7 @@ module Controllers
          params[:password] != params[:re_password] ||
          params[:email].nil? || params[:name].nil? || !params[:password].is_strong_password?
 
-        redirect '/register'
+         redirect '/register'
       end
 
       password = params[:password]

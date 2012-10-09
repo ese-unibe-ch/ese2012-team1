@@ -18,9 +18,23 @@ module Controllers
       redirect "/" unless session[:auth]
     end
 
+    ##
+    #
+    # Creates an item
+    #
+    # Expects a name for the item, a price and a description as parameters
+    # Can also contain a picture.
+    #
+    ##
+
     post '/create' do
+        fail "Should have name." if params[:name] == nil
+        fail "Should have price" if params[:price] == nil
+        fail "Should have description" if params[:description] == nil
+        fail "Should be number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:price])
+
         user = session[:user]
-        begin
+
           new_item = User.get_user(user).create_item(params[:name], Integer((params[:price]).to_i))
           new_item.add_description(params[:description])
 
@@ -29,15 +43,12 @@ module Controllers
           if params[:item_picture] != nil
             tempfile = params[:item_picture][:tempfile]
             filename = params[:item_picture][:filename]
-            file_path ="#{dir}#{new_item.get_id}.#{filename.sub(/.*\./, "")  }"
+            file_path ="#{dir}#{new_item.get_id}#{File.extname(filename)}"
             File.copy(tempfile.path, file_path)
-            file_path = "../images/users/#{new_item.get_id}.#{filename.sub(/.*\./, "")}"
+            file_path = "../images/items/#{new_item.get_id}#{File.extname(filename)}"
             new_item.add_picture(file_path)
           end
 
-        rescue
-          redirect "/error/Not_A_Number"
-        end
         redirect "/home/inactive"
     end
 

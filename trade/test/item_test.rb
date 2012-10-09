@@ -68,7 +68,7 @@ class ItemTest < Test::Unit::TestCase
   def test_description_adding
     item = Models::Item.created("Test object", 20, @owner)
     assert_equal(item.get_owner, @owner)
-    item.add_description ("I'm an object for testing.")
+    item.add_description("I'm an object for testing.")
     assert_equal(item.description, "I'm an object for testing.")
   end
 

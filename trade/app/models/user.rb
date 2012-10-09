@@ -106,6 +106,29 @@ module Models
       item_list.select {|s| !s.is_active?}
     end
 
+    ##
+    #
+    # Returns true if a user owns a specific item
+    #
+    ##
+
+    def has_item?(item_name)
+      item_list.one? { |item| item.name == item_name }
+    end
+
+    ##
+    #
+    # Returns item with the given name. Throws error if
+    # User doesn't own item.
+    #
+    ##
+
+    def get_item(item_name)
+      fail "User doesn't own object \'#{item_name}\'" unless (self.has_item?(item_name))
+
+      item_list.select { |item| item.name == item_name }[0]
+    end
+
     # buy an item
     # @return true if user can buy item, false if his credit amount is to small
     def buy_new_item?(item_to_buy)

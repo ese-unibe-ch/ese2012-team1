@@ -186,4 +186,17 @@ class UserTest < Test::Unit::TestCase
     assert(@owner.list_items_inactive[0].to_s == "testobject, 10")
     assert(@owner.list_items_inactive[1].to_s == "testobject2, 50")
   end
+
+  def test_user_should_have_item
+    assert(!@owner.has_item?('testobject2'))
+    @owner.create_item("testobject2", 50)
+    assert(@owner.has_item?('testobject2'))
+  end
+
+  def test_user_should_return_item
+    assert_raise(RuntimeError) { @owner.get_item('testobject2') }
+    item_created = @owner.create_item("testobject2", 50)
+    item_get = @owner.get_item('testobject2')
+    assert(item_created == item_get, "Both items should be same but where #{item_get} and #{item_created}")
+  end
 end
