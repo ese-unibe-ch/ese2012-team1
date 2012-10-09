@@ -34,21 +34,36 @@ module Controllers
     # Should get parameter
     # :name - User name
     # :password - User password
+    # :email - User e-mail
+    # optional :description - A description of the user
+    # optional :avatar - A file for the avatar
     #
     ##
 
-    post '/register' do
-      if params[:password].length < 6 || params[:password] =~ /[^a-zA-Z1-9]/ ||
-         params[:password] != params[:re_password] ||
-         params[:email].nil? || params[:name].nil? || !params[:password].is_strong_password?
+    def are_nil?(*args)
+      result = false
+      args.each do |arg|
+        result = result || arg == nil
+      end
+      result
+    end
 
-         redirect '/register'
+    post '/register' do
+      if are_nil?(params[:password], params[:re_password], params[:email], params[:name]) ||
+         ! params[:password].is_strong_password? || params[:password] != params[:re_password] ||
+          params[:email] == "" || !params[:email].is_email? || params[:name] == ""
+        session[:form_email] = params[:email]
+        session[:form_name] = params[:name]
+        session[:form_description] = params[:description]
+        redirect '/register'
       end
 
       password = params[:password]
       email = params[:email]
       description = params[:description].nil? ? "" : params[:description]
       name = params[:name]
+
+      puts "#{name}"
 
       dir = absolute_path('../public/images/users/', __FILE__)
       file_path = "../images/users/default_avatar.png"

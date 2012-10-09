@@ -32,13 +32,13 @@ class RegistrationTest < Test::Unit::TestCase
     end
 
     it 'post /register should redirect to /register if password holds special characters' do
-      post "/register", {:password => '$onn3nBad', :re_password => '$onn3nBad', :user => 'Larry'}, 'rack.session' => session =  { :user => nil, :auth => false  }
+      post "/register", {:password => '$onn3nBad', :re_password => '$onn3nBad', :name => 'Larry'}, 'rack.session' => session =  { :user => nil, :auth => false  }
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
       assert last_response.location.include?('/register')
     end
 
     it 'post /register should redirect to /register if password retype is wrong' do
-      post "/register", {:password => 'Aonn3nBad', :re_password => 'fonn3nBad', :user => 'Larry'}, 'rack.session' => session =  { :user => nil, :auth => false  }
+      post "/register", {:password => 'Aonn3nBad', :re_password => 'fonn3nBad', :name => 'Larry'}, 'rack.session' => session =  { :user => nil, :auth => false  }
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
       assert last_response.location.include?('/register')
     end
@@ -62,7 +62,7 @@ class RegistrationTest < Test::Unit::TestCase
                          :email => 'larry@mail.ch'},
            'rack.session' => session =  { :user => nil, :auth => false  }
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
-      assert last_response.location.include?('/'), "Should redirect to /login but was #{last_response.location}"
+      assert last_response.location =~ /\/$/, "Should redirect to /login but was #{last_response.location}"
     end
 
     it 'post /register should add user to system' do
@@ -71,6 +71,9 @@ class RegistrationTest < Test::Unit::TestCase
            'rack.session' => session =  { :user => nil, :auth => false  }
       user = Models::User.get_user('Matz')
       assert(user != nil, "User should exist within system")
+      assert(user.name == 'Matz', "User should be called Matz but was #{user.name}");
+      assert(user.email == 'math@mail.ch', "User should have email math@mail.ch but was #{user.email}")
+      assert(user.description == 'Ruby rocks!', "Description should be 'Ruby rocks!' but was '#{user.description}'")
     end
 
     it 'get /register should add script and load initialize' do

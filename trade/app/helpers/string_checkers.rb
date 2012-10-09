@@ -14,13 +14,15 @@ class String
 
   def is_email?
     return false unless (self.include?('@'))
+
     parts = (self.split('@', 2))
     local_part = parts[0]
     domain_part = parts[1]
+
     return false if (domain_part.include?('@'))
 
-    eval_local_part = local_part =~ /[A-Za-z123456789._-]+/
-    eval_domain_part = domain_part =~ /[A-Z.a-z123456789-]+\.[a-z]+$/
+    eval_local_part = local_part =~ /^[A-Za-z0123456789._-]+$/
+    eval_domain_part =  domain_part =~ /^[A-Z.a-z0123456789-]+\.[a-z]+$/
 
     eval_domain_part && eval_local_part
   end
@@ -30,6 +32,7 @@ class String
 # Checks if is a strong password meaning
 # 1) At least six characters long
 # 2) Contains at least one number, one small letter and one capital letter
+# 3) Contains only numbers, capital and small letters
 #
 ##
 

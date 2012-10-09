@@ -1,7 +1,7 @@
 %form(action="/register" enctype="multipart/form-data" method="post")
   %label Name:
   %br
-  %input(type="text" name="name" value="")
+  %input(type="text" name="name"){:value => session[:form_name]}
   %br
   %br
   %label Password:
@@ -19,12 +19,13 @@
   %br
   %label Email:
   %br
-  %input(type="text" name="email" value="")
+  %input(type="text" name="email"){:value => session[:form_email]}
   %br
   %br
   %label Description:
   %br
   %textarea(name="interests" cols=30 rows=10)
+    = session[:form_description].to_s
   %br
   %br
   %label Avatar:

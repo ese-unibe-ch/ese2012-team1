@@ -41,6 +41,12 @@ class StringCheckerTest < Test::Unit::TestCase
     assert(!string.is_email?)
   end
 
+  shouldnt "accept ma?il@mail.ch as e-mail" do
+    string = "ma?il@mail.ch"
+    assert(!string.is_email?)
+  end
+
+
   should "accept password with digits, capital letters and small letters" do
     string = "123ABCabc"
     assert(string.is_strong_password?)
