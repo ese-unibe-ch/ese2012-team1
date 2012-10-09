@@ -1,7 +1,6 @@
 body {
     font-family:Verdana;
     overflow-x:hidden;
-    overflow:-moz-scrollbars-vertical;
 }
 
 div#header h1 {
