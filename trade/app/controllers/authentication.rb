@@ -22,7 +22,7 @@ module Controllers
     get '/login' do
       redirect "/home" if session[:auth]
 
-      haml :login
+      haml :login, :locals => { :onload => 'document.loginform.username.focus()' }
     end
 
     post "/authenticate" do
