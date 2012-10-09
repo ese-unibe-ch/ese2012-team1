@@ -66,7 +66,7 @@ class RegistrationTest < Test::Unit::TestCase
     end
 
     it 'post /register should add user to system' do
-      post "/register", {:password => 'aB12De', :re_password => 'aB12De', :name => 'Matz', :description => "Ruby rocks!",
+      post "/register", {:password => 'aB12De', :re_password => 'aB12De', :name => 'Matz', :interests => "Ruby rocks!",
                          :email => 'math@mail.ch'},
            'rack.session' => session =  { :user => nil, :auth => false  }
       user = Models::User.get_user('Matz')

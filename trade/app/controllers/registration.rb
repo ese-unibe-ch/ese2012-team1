@@ -54,13 +54,13 @@ module Controllers
           params[:email] == "" || !params[:email].is_email? || params[:name] == ""
         session[:form_email] = params[:email]
         session[:form_name] = params[:name]
-        session[:form_description] = params[:description]
+        session[:form_description] = params[:interests]
         redirect '/register'
       end
 
       password = params[:password]
       email = params[:email]
-      description = params[:description].nil? ? "" : params[:description]
+      description = params[:interests].nil? ? "" : params[:interests]
       name = params[:name]
 
       puts "#{name}"
