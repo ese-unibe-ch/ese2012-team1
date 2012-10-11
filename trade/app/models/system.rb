@@ -16,6 +16,7 @@ module Models
       self.item_id_count = 0
     end
 
+    # ---------user------------------------------------------------------------
 
     # Adds an user to the system.
     def add_user(user)
@@ -41,12 +42,17 @@ module Models
     end
 
 
+    # --------item-------------------------------------------------------------
 
     # Adds an item to the system and increments the id counter for items.
     def add_item(item)
       fail"An item must have an owner when added to the system." if (item.owner == nil)
       items = {:item_id_count => item}
       item.id = item_id_count + 1
+    end
+
+    def fetch_item(item_id)
+
     end
 
 

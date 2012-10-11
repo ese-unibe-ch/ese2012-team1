@@ -4,6 +4,7 @@ require 'require_relative'
 require_relative('../app/models/system')
 require_relative('../app/models/user')
 require_relative('../app/models/item')
+
 class SystemTest < Test::Unit::TestCase
 
   @momo
