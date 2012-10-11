@@ -4,6 +4,9 @@
   %label Name:
   %br
   %input(type="text" name="username" value="")
+  -if defined?(error_message)
+    %label
+      = "#{error_message}"
   %br
   %br
   %label Password:
