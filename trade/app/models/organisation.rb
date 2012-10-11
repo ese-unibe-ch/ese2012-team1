@@ -1,5 +1,5 @@
 module Model
-  class Organisation < Models :Account
+  class Organisation < Models::Account
     #An Organisation is an account witch is accessed by multiple users.
     #every user in the users list can act as the organisation and buy or sell items for it
     #Accounts have a name, an amount of credits, a description, an avatar and a list of users.
