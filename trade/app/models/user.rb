@@ -3,6 +3,7 @@ require 'bcrypt'
 require 'require_relative'
 require_relative('item')
 require_relative('../helpers/render')
+require_relative('../helpers/string_checkers')
 
 include Helpers
 
