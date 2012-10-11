@@ -2,12 +2,13 @@ require 'rubygems'
 require 'bcrypt'
 require 'require_relative'
 require_relative('item')
+require_relative('account')
 require_relative('../helpers/render')
 require_relative('../helpers/string_checkers')
 
 
 module Models
-  class User < Models:Account
+  class User < Models::Account
     #Users have a name, a unique e-mail, a description and a avatar.
     #Users have an amount of credits.
     #A new user has originally 100 credit.
