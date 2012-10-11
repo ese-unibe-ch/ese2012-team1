@@ -79,8 +79,20 @@ module Controllers
       haml :home_edit , :locals => {:id => id, :name => name, :description => description, :price => price, :picture => picture}
     end
 
+    ###
+    #
+    #  Does edit an item.
+    #  Needs params:
+    #  :id : id of item to change
+    #  :new_description : description to change
+    #  :new_price : price to change
+    #  :item_picture : picture to change
+    #
+    ###
+
     post '/home/edit/save' do
       id = params[:id]
+      puts(id)
       redirect "/home/inactive" if Item.get_item(id).editable?
       new_description = params[:new_description]
       new_price = params[:new_price]
@@ -94,7 +106,7 @@ module Controllers
         filename = params[:item_picture][:filename]
         file_path ="#{dir}#{id}.#{filename.sub(/.*\./, "")  }"
         File.copy(tempfile.path, file_path)
-        file_path = "../images/users/#{id}.#{filename.sub(/.*\./, "")}"
+        file_path = "../images/items/#{id}.#{filename.sub(/.*\./, "")}"
         Item.get_item(id).add_picture(file_path)
       end
 
