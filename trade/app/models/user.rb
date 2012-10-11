@@ -73,27 +73,10 @@ module Models
       @@users[self.name] = self
     end
 
-    # get string representation of users name
-    def get_name
-      self.name
-    end
-
-    #get amount of users credits
-    def get_credits
-      self.credits
-    end
 
     #get string representation
     def to_s
       "#{self.name} has currently #{self.credits} credits, #{list_items.size} active and #{list_items_inactive.size} inactive items"
-    end
-
-    #let the user create a new item
-    def create_item(name, price)
-      new_item = Models::Item.created( name, price, self )
-      self.item_list.push(new_item)
-      new_item.save
-      return new_item
     end
 
     #return users item list active
@@ -129,18 +112,7 @@ module Models
       item_list.select { |item| item.name == item_name }[0]
     end
 
-    # buy an item
-    # @return true if user can buy item, false if his credit amount is to small
-    def buy_new_item?(item_to_buy)
-      if item_to_buy.get_price > self.credits
-        return false
-      end
-      self.credits = self.credits - item_to_buy.get_price
-      item_to_buy.to_inactive
-      item_to_buy.set_owner(self)
-      self.item_list.push(item_to_buy)
-      return true
-    end
+
 
     # removing item from users item_list
     def remove_item(item_to_remove)
@@ -174,13 +146,6 @@ module Models
       return ret_array.select {|s| s.name !=  viewer}
     end
 
-    #Removes himself from the list of users and of the system
-    #Removes users items before
-    def clear
-      for e in self.item_list
-        e.clear
-      end
-      @@users.delete(self.name)
-    end
+
   end
 end
