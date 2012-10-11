@@ -1,3 +1,11 @@
+require 'rubygems'
+require 'bcrypt'
+require 'require_relative'
+require_relative('item')
+require_relative('../helpers/render')
+
+include Helpers
+
 module Models
 class Account
   #Account is a abstract class. It's designed to simplify the behave of the shop.
@@ -11,13 +19,9 @@ class Account
   #  the trade, the item is inactive. The transaction
   #  fails if the buyer has not enough credits.
 
-  # generate getter and setter for name and price
+  # generate getter and setter
   attr_accessor :description, :avatar, :name, :credits
 
-  # invariant
-  def invariant
-    fail "Name must be set" if name == nil
-  end
 
   #get string representation
   def to_s
@@ -28,12 +32,11 @@ class Account
   def create_item(name, price)
     new_item = Models::Item.created( name, price, self )
     System.item_list.push(new_item)
-    new_item
   end
 
   # buy an item
   # @return true if user can buy item, false if his credit amount is to small
-  def buy_new_item(item_to_buy)
+  def buy_item(item_to_buy)
     fail "not enough credits" if item_to_buy.get_price > self.credits
     fail "not adapted to System-Model"
     self.credits = self.credits - item_to_buy.get_price

@@ -1,13 +1,7 @@
-require 'rubygems'
-require 'bcrypt'
-require 'require_relative'
-require_relative('item')
-require_relative('../helpers/render')
 
-include Helpers
 
 module Models
-  class User
+  class User < Models:Account
     #Users have a name, a unique e-mail, a description and a avatar.
     #Users have an amount of credits.
     #A new user has originally 100 credit.
@@ -19,7 +13,7 @@ module Models
     #  fails if the buyer has not enough credits.
 
     # generate getter and setter for name and price
-    attr_accessor :description, :avatar, :email, :name, :credits, :item_list, :pw, :password_hash, :password_salt
+    attr_accessor :email, :pw, :password_hash, :password_salt
 
     ##
     #
@@ -28,12 +22,13 @@ module Models
     ##
 
     def invariant
+      fail "not implemented"
       fail "E-mail should be unique" if @@users.one? {|user| @@users.all? {|innerUser| user[1].email != innerUser[1].email if innerUser != user}}
     end
 
-    @@users = {}
 
     def self.email_unique?(email_to_compare)
+      fail "not implemented"
       @@users.all? {|user| user[1].email != email_to_compare }
     end
 
@@ -69,6 +64,7 @@ module Models
     end
 
     def save
+      fail "not implemented"
       fail "Duplicated user" if @@users.has_key? self.name and @@users[self.name] != self
       @@users[self.name] = self
     end
@@ -81,11 +77,13 @@ module Models
 
     #return users item list active
     def list_items
+      fail "not implemented"
       item_list.select {|s| s.is_active?}
     end
 
     #return users item list inactive
     def list_items_inactive
+      fail "not implemented"
       item_list.select {|s| !s.is_active?}
     end
 
@@ -96,6 +94,7 @@ module Models
     ##
 
     def has_item?(item_name)
+      fail "not implemented"
       item_list.one? { |item| item.name == item_name }
     end
 
@@ -107,6 +106,7 @@ module Models
     ##
 
     def get_item(item_name)
+      fail "not implemented"
       fail "User doesn't own object \'#{item_name}\'" unless (self.has_item?(item_name))
 
       item_list.select { |item| item.name == item_name }[0]
@@ -116,16 +116,19 @@ module Models
 
     # removing item from users item_list
     def remove_item(item_to_remove)
+      fail "not implemented"
       self.credits = self.credits + item_to_remove.get_price
       self.item_list.delete(item_to_remove)
     end
 
     # removing item from users item_list
     def delete_item(item_to_remove)
+      fail "not implemented"
       self.item_list.delete(item_to_remove)
     end
 
     def self.login name, password
+      fail "not implemented"
       return false unless @@users.has_key? name
 
       user = @@users[name]
@@ -133,11 +136,13 @@ module Models
     end
 
     def self.get_user(username)
+      fail "not implemented"
       puts @@users
       return @@users[username]
     end
 
     def self.get_all(viewer)
+      fail "not implemented"
       new_array = @@users.to_a
       ret_array = Array.new
       for e in new_array
