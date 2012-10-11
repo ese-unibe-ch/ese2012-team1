@@ -26,19 +26,19 @@ module Models
 
     # Returns the user with associated email.
     def fetch_user(user_email)
-      fail "No user with email #{user_email}" if self.users.member?(user_email)
+      fail "No user with email #{user_email}" unless self.users.member?(user_email)
       self.users.fetch(user_email)
     end
 
     # Returns all users but the one specified in a array
     def fetch_all_users_but(user_email)
-      fail "No user with email #{user_email}" if self.users.member?(user_email)
+      fail "No user with email #{user_email}" unless self.users.member?(user_email)
       self.users.values - [user_email]  # Array difference
     end
 
     # Removes an user from the system.
     def remove_user(user_email)
-      fail "No user with email #{user_email}" if self.users.member?(user_email)
+      fail "No user with email #{user_email}" unless self.users.member?(user_email)
       self.users.delete(user_email)
     end
 
@@ -51,10 +51,32 @@ module Models
       item.id = item_id_count + 1
     end
 
+    # Returns the item with associated id.
     def fetch_item(item_id)
-
+      fail "No such item id" if self.items.contains(item_id)
+      self.items.fetch(item_id)
     end
 
+    # Returns a hash with all items of this user.
+    def fetch_items_of(user_email)
+      fail "No such user email" if self.users.contains(user_email)
+      user = self.fetch_user(user_email)
+      self.items.each {|id, item| item.get_owner == user}
+    end
+
+    # Returns all items but the ones of the specified user.
+    def fetch_all_items_but_of(user_email)
+      fail "No such user email" if self.users.contains(user_email)
+      user = self.fetch_user(user_email)
+      self.items.each {|id, item| item.get_owner != user}
+    end
+
+    # Removes an item from the system
+    # @see fetch_item
+    def remove_item(item)
+      fail "No such item id" if self.items.contains(item_id)
+      items.delete(item)
+    end
 
   end
 end
