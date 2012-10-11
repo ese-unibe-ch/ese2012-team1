@@ -45,13 +45,20 @@ class AuthenticationTest < Test::Unit::TestCase
       assert last_response.location.include?('/home')
     end
 
+    it 'post /authenticate with wrong password should show login.hmtl and error message' do
+      post "/authenticate", :username => "Homer", :password => 'omer', 'rack.session' => { :user => nil, :auth => false  }
+      assert last_response.ok?
+      assert last_response.body.include?('Login')
+      assert last_response.body.include?('No such user')
+    end
+
     it 'post /unauthenticate should reset session[:name] and session[:auth] and redirect to /' do
       session =  { :user => 'Homer', :auth => true  }
       post "/unauthenticate", {}, 'rack.session' => session
       assert session[:user] == nil, "Should reset \':user\' to nil but was #{session[:user]}"
       assert !session[:auth], "Should set \'auth\' to false but was #{session[:auth]}"
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
-      assert last_response.location.include?('/')
+      assert last_response.location.match?(/\/$/)
     end
   end
 end
