@@ -48,7 +48,7 @@ module Models
       fail "Missing description" if (description == nil)
       fail "Missing path to avatar" if (avatar == nil)
       fail "There's no avatar at #{avatar}" unless (File.exists?(Helpers::absolute_path(avatar.sub("images", "public/images"), __FILE__)))
-      fail "Not a correct email address" unless email =~ /[A-Za-z123456789._-]+@[A-Za-z123456789-]+\.[a-z]+$/
+      fail "Not a correct email address" unless email.is_email?
       fail "E-mail not unique" unless self.email_unique?(email)
 
       user = self.new
