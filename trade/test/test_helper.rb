@@ -17,6 +17,7 @@ class TestHelper
 
     bart = Models::User.created('Bart' , 'bart', 'bart@mail.ch', 'I\' should not...', '../images/users/default_avatar.png')
     bart.create_item('Skateboard', 100)
+    bart.create_item('Elephant', 50)
     bart.list_items_inactive.detect {|item| item.name == 'Skateboard' }.to_active
 
     homer = Models::User.created('Homer', 'homer', 'homer@mail.ch', 'Do!', '../images/users/default_avatar.png')

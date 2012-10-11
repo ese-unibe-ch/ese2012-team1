@@ -53,14 +53,18 @@ module Controllers
     end
 
     post '/changestate/setactive' do
-        id = params[:id]
-        Item.get_item(id).to_active
+        item = Item.get_item(params[:id])
+        if item.owner.name == session[:user]
+          item.to_active
+        end
         redirect "/home/inactive"
     end
 
     post '/changestate/setinactive' do
-      id = params[:id]
-      Item.get_item(id).to_inactive
+      item = Item.get_item(params[:id])
+      if item.owner.name == session[:user]
+        item.to_inactive
+      end
       redirect "/home/active"
     end
 
@@ -92,7 +96,6 @@ module Controllers
 
     post '/home/edit/save' do
       id = params[:id]
-      puts(id)
       redirect "/home/inactive" if Item.get_item(id).editable?
       new_description = params[:new_description]
       new_price = params[:new_price]
