@@ -93,6 +93,7 @@ module Controllers
         tempfile = params[:item_picture][:tempfile]
         filename = params[:item_picture][:filename]
         file_path ="#{dir}#{id}.#{filename.sub(/.*\./, "")  }"
+        File.delete(file_path)
         File.copy(tempfile.path, file_path)
         file_path = "../images/users/#{id}.#{filename.sub(/.*\./, "")}"
         Item.get_item(id).add_picture(file_path)
