@@ -26,6 +26,37 @@ class CreatorTest < Test::Unit::TestCase
       end
     end
 
+    it 'post /changestate/setinactive should set an item inactive' do
+      user = User.get_user('Bart')
+      item = user.get_item('Skateboard')
+
+      assert(item.is_active?, "Item should be active")
+
+      post '/changestate/setinactive', {:id => item.get_id }, 'rack.session' => {:user => 'Bart', :auth => true}
+
+      assert(!item.is_active?, "Item should be inactive")
+    end
+
+    it 'post /changestate/setactive should set an item active' do
+      item = User.get_user('Bart').create_item('sling', 20)
+
+      assert(!item.is_active?, "Item should be inactive")
+
+      post '/changestate/setactive', {:id => item.get_id}, 'rack.session' => {:user => 'Bart', :auth => true}
+
+      assert(item.is_active?, "Item should be active")
+    end
+
+    it 'post /changestate/setactive should not set items of somebody else active' do
+       item = User.get_user('Bart').create_item('sling', 20)
+
+       assert(!item.is_active?, "Item should be inactive")
+
+       post '/changestate/setactive', {:id => item.get_id}, 'rack.session' => {:user => 'Homer', :auth => true}
+
+       assert(!item.is_active?, "Item should be inactive")
+    end
+
     it 'post /create should create a new item' do
       user = Models::User.get_user('Homer')
       assert(! user.has_item?('Gold'), "Should not own gold before post /create")
@@ -50,6 +81,7 @@ class CreatorTest < Test::Unit::TestCase
       assert(user.has_item?('Skateboard'), "Should own skateboard")
       assert(item.price.to_i == 200, "Should cost 200 but was #{item.price}")
       assert(item.description == 'Kind of used...', "Should be \'Kind of used...\' but was #{item.description}")
+      assert(item.picture == "../images/items/#{item.get_id}.png", "Path to file should be ../images/items/#{item.get_id}.png but was #{item.picture}")
 
       # Removing File after test
       File.delete("#{user.get_item('Skateboard').picture.sub("images", "app/public/images")}")

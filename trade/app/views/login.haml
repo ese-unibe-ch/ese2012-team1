@@ -5,7 +5,8 @@
   %br
   %input(type="text" name="username" value="")
   -if defined?(error_message)
-    %label
+    %br
+    %label(class="warning")
       = "#{error_message}"
   %br
   %br

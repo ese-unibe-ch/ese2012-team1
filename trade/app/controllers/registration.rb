@@ -40,6 +40,13 @@ module Controllers
     #
     ##
 
+    ##
+    #
+    # Checks if one of the given arguments is a member
+    # of the Nil class.
+    #
+    ##
+
     def are_nil?(*args)
       result = false
       args.each do |arg|
@@ -51,7 +58,7 @@ module Controllers
     post '/register' do
       if are_nil?(params[:password], params[:re_password], params[:email], params[:name]) ||
          ! params[:password].is_strong_password? || params[:password] != params[:re_password] ||
-          params[:email] == "" || !params[:email].is_email? || params[:name] == ""
+          params[:email] == "" || ! params[:email].is_email? || params[:name] == ""
         session[:form_email] = params[:email]
         session[:form_name] = params[:name]
         session[:form_description] = params[:interests]

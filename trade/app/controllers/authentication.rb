@@ -26,12 +26,12 @@ module Controllers
     end
 
     post "/authenticate" do
-      if ! User.login(params[:username], params[:password])
-        haml :login, :locals => { :error_message => 'No such user!'}
-      else
+      if User.login(params[:username], params[:password])
         session[:user] = params[:username]
         session[:auth] = true
         redirect "/home"
+      else
+        haml :login, :locals => { :error_message => 'No such user or password!'}
       end
     end
 
