@@ -30,17 +30,17 @@ module Models
       self.users.fetch(user_email)
     end
 
-    # Removes an user from the system.
-    def remove_user(user_email)
-      fail "No user with email #{user_email}" if self.users.member?(user_email)
-      self.users.delete(user_email)
-    end
-
+    # Returns all users but the one specified in a array
     def fetch_all_users_but(user_email)
       fail "No user with email #{user_email}" if self.users.member?(user_email)
       self.users.values - [user_email]  # Array difference
     end
 
+    # Removes an user from the system.
+    def remove_user(user_email)
+      fail "No user with email #{user_email}" if self.users.member?(user_email)
+      self.users.delete(user_email)
+    end
 
     # --------item-------------------------------------------------------------
 
