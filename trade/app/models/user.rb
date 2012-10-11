@@ -1,3 +1,9 @@
+require 'rubygems'
+require 'bcrypt'
+require 'require_relative'
+require_relative('item')
+require_relative('../helpers/render')
+require_relative('../helpers/string_checkers')
 
 
 module Models
@@ -64,26 +70,40 @@ module Models
     end
 
     def save
-      fail "not implemented"
       fail "Duplicated user" if @@users.has_key? self.name and @@users[self.name] != self
       @@users[self.name] = self
     end
 
+    # get string representation of users name
+    def get_name
+      self.name
+    end
+
+    #get amount of users credits
+    def get_credits
+      self.credits
+    end
 
     #get string representation
     def to_s
       "#{self.name} has currently #{self.credits} credits, #{list_items.size} active and #{list_items_inactive.size} inactive items"
     end
 
+    #let the user create a new item
+    def create_item(name, price)
+      new_item = Models::Item.created( name, price, self )
+      self.item_list.push(new_item)
+      new_item.save
+      return new_item
+    end
+
     #return users item list active
     def list_items
-      fail "not implemented"
       item_list.select {|s| s.is_active?}
     end
 
     #return users item list inactive
     def list_items_inactive
-      fail "not implemented"
       item_list.select {|s| !s.is_active?}
     end
 
@@ -94,7 +114,6 @@ module Models
     ##
 
     def has_item?(item_name)
-      fail "not implemented"
       item_list.one? { |item| item.name == item_name }
     end
 
@@ -106,29 +125,36 @@ module Models
     ##
 
     def get_item(item_name)
-      fail "not implemented"
       fail "User doesn't own object \'#{item_name}\'" unless (self.has_item?(item_name))
 
       item_list.select { |item| item.name == item_name }[0]
     end
 
-
+    # buy an item
+    # @return true if user can buy item, false if his credit amount is to small
+    def buy_new_item?(item_to_buy)
+      if item_to_buy.get_price > self.credits
+        return false
+      end
+      self.credits = self.credits - item_to_buy.get_price
+      item_to_buy.to_inactive
+      item_to_buy.set_owner(self)
+      self.item_list.push(item_to_buy)
+      return true
+    end
 
     # removing item from users item_list
     def remove_item(item_to_remove)
-      fail "not implemented"
       self.credits = self.credits + item_to_remove.get_price
       self.item_list.delete(item_to_remove)
     end
 
     # removing item from users item_list
     def delete_item(item_to_remove)
-      fail "not implemented"
       self.item_list.delete(item_to_remove)
     end
 
     def self.login name, password
-      fail "not implemented"
       return false unless @@users.has_key? name
 
       user = @@users[name]
@@ -136,13 +162,11 @@ module Models
     end
 
     def self.get_user(username)
-      fail "not implemented"
       puts @@users
       return @@users[username]
     end
 
     def self.get_all(viewer)
-      fail "not implemented"
       new_array = @@users.to_a
       ret_array = Array.new
       for e in new_array
@@ -151,6 +175,13 @@ module Models
       return ret_array.select {|s| s.name !=  viewer}
     end
 
-
+    #Removes himself from the list of users and of the system
+    #Removes users items before
+    def clear
+      for e in self.item_list
+        e.clear
+      end
+      @@users.delete(self.name)
+    end
   end
 end
