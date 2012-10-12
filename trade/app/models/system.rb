@@ -74,6 +74,7 @@ module Models
     # Removes an item from the system
     # @see fetch_item
     def remove_item(item)
+      fail "There are no items" if self.items.size == 0
       fail "No such item id" if self.items.contains(item_id)
       items.delete(item)
     end
@@ -95,13 +96,15 @@ module Models
     # Returns a list of all the users organisations
     def fetch_organisations_of(user_email)
       fail "No such user email" if self.users.contains(user_email)
-      self.organisation.each{|org_name, org| org.is_member?(user_email)}
+      user = self.fetch_user(user_email)
+      self.organisation.each{|org_name, org| org.is_member?(user)}
     end
 
     # Removes an organisation from the system.
     def remove_organisation(org_name)
-      fail "No such organisation name found" if self.items.contains(item_id)
+      fail "No such organisation name found" if self.organisation.contains(org_name)
       organisations.delete(org_name)
     end
+
   end
 end
