@@ -10,10 +10,14 @@ class SystemTest < Test::Unit::TestCase
 
   @momo
   @beppo
+  @cassiopeia
+
   @sand
   @time
   @curly_hair
   @broom
+
+  @meister_hora_club
 
   def setup
     #set up some users
@@ -25,11 +29,21 @@ class SystemTest < Test::Unit::TestCase
     @time = Models::Item.created("Time", @cassiopeia, 200)
     @curly_hair = Models::Item.created("curly_hair", @momo, 25)
     @broom = Models::Item.created("Broom", @beppo, 15)
+    #set up organisation
+    @meister_hora_club = Models::Organisation.named("Meister Hora Club", "Die Zeit steht still", "../images/users/default_avatar.png" , @cassiopeia)
   end
 
   def teardown
     @momo.clear
     @beppo.clear
+    @cassiopeia.clear
+
+    @sand.clear
+    @time.clear
+    @curly_hair.clear
+    @broom.clear
+
+    @meister_hora_club.clear
   end
 
 
@@ -107,7 +121,7 @@ class SystemTest < Test::Unit::TestCase
     system.add_item(@sand)
     system.add_item(@curly_hair)
     assert(system.items.size == 3, "there should be three items in the system, but there were #{system.items.size} items")
-    assert(@time.id == 0 and @sand.id == 1 and @curly_hair.id ==2)
+    assert((@time.id == 0) && (@sand.id == 1) && (@curly_hair.id ==2))
   end
 
   def test_should_fetch_item
@@ -171,29 +185,30 @@ class SystemTest < Test::Unit::TestCase
 
   # ---- organisation ---------------------
 
-  # Adds an item to the system and increments the id counter for items.
-  def add_organisation(org)
-    fail "No organisation" if (user == nil)
-    organisation.store(org.get_name, org)
+  def test_should_add_organisation
+    system = Models::System.instance
+    system.add_organisation(@meister_hora_club)
+    assert(system.organisations.size == 1, "There should be exactly one organisation, but there are #{system.organisations.size}")
   end
 
-  # Returns the organisation with associated name.
-  def fetch_organisation(org_name)
-    fail "No such organisation name" if self.organisation.contains(org_name)
-    self.organisation.fetch(org_name)
+  def test_should_fetch_org
+    system = Models::System.instance
+    system.add_organisation(@meister_hora_club)
+    assert(system.fetch_organisation("Meister Hora Club") == @meister_hora_club)
   end
 
-  # Returns a list of all the users organisations
-  def fetch_organisations_of(user_email)
-    fail "No such user email" if self.users.contains(user_email)
-    user = self.fetch_user(user_email)
-    self.organisation.each{|org_name, org| org.is_member?(user)}
+  # Testing only the case, that organisation has one user
+  def test_should_fetch_user_of_org
+    system = Models::System.instance
+    system.add_organisation(@meister_hora_club)
+    assert(system.fetch_organisations_of("cassiopeia@hotmail.ch") == @cassiopeia)
   end
 
-  # Removes an organisation from the system.
-  def remove_organisation(org_name)
-    fail "No such organisation name found" if self.organisation.contains(org_name)
-    organisations.delete(org_name)
+  def test_should_remove_organisation
+    system = Models::System.instance
+    system.add_organisation(@meister_hora_club)
+    system.remove_organisation("Meister Hora Club")
+    assert(system.organisations.size == 0, "There should be no organisation left, but is still #{system.organisations.size}")
   end
 
 end
