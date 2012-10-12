@@ -7,6 +7,7 @@ module Models
   class System
     include Singleton
     attr_accessor :organisation, :users, :items, :item_id_count
+    @us = {}
 
     def initialize
       self.organisation = {}
@@ -44,15 +45,16 @@ module Models
     # Checks if mail if an user exists with this mail.
     # @param [mail] user_email
     def self.mail_unique?(user_email)
-       list = self.users.collect { |user| user.email == user_email }
-       if   (list.length > 0)
+      list = self.users.collect { |user| user.email == user_email }
+      if   (list.length > 0)
         false
       else
         true
       end
     end
+
     def get_users
-      @users
+      @us
     end
 
     # --------item-------------------------------------------------------------

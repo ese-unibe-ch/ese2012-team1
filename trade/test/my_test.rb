@@ -14,9 +14,7 @@ class MyTest < Test::Unit::TestCase
   end
   def test_method
     a = Models::System.instance
-    b = a.get_users
-    puts(b)
-    b["test"]="test"
-    assert(b["test"].equal?("test"),"" )
+    a.get_users.store("test","test")
+    assert(a.get_users.has_key?("test") )
   end
 end
