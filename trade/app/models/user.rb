@@ -116,9 +116,9 @@ module Models
     ##
 
     def get_item(item_Id)
-      fail "User doesn't own object \'#{item_name}\'" unless (self.has_item?(item_Id))
+      fail "User doesn't own object \'#{item_Id}\'" unless (self.has_item?(item_Id))
 
-      Models::System.instance.fetch_all_items_but_of(self.mail).select { |item| item.name == item_name }[0]
+      Models::System.instance.fetch_all_items_but_of(self.mail).select { |item| item.id == item_Id }[0]
     end
 
     # buy an item

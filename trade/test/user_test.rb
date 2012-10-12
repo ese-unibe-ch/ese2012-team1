@@ -174,8 +174,8 @@ class UserTest < Test::Unit::TestCase
     a = user.create_item("testobject", 10)
     b = user.create_item("testobject2", 50)
     user.list_items_inactive { |e| e.to_active }
-    assert(Models::System.instance.fetch_user("user@mail.ch").list_items[1] == a)
-    assert(Models::System.instance.fetch_user("user@mail.ch").list_items[0] == b)
+    assert(Models::System.instance.fetch_user("user@mail.ch").list_items[0] == b, "Should be item \'testobject2\' but was #{Models::System.instance.fetch_user("user@mail.ch").list_items[0]}")
+    assert(Models::System.instance.fetch_user("user@mail.ch").list_items[1] == a, "Should be item \'testobject\' but was #{Models::System.instance.fetch_user("user@mail.ch").list_items[1]}")
   end
 
   def test_method_list_inactive
