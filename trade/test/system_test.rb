@@ -30,10 +30,12 @@ class SystemTest < Test::Unit::TestCase
     @curly_hair = Models::Item.created("curly_hair", @momo, 25)
     @broom = Models::Item.created("Broom", @beppo, 15)
     #set up organisation
-    @meister_hora_club = Models::Organisation.named("Meister Hora Club", "Die Zeit steht still", "../images/users/default_avatar.png" , @cassiopeia)
+#    @meister_hora_club = Models::Organisation.named("Meister Hora Club", "Die Zeit steht still", "../images/users/default_avatar.png" , @cassiopeia)
+
   end
 
   def teardown
+=begin
     @momo.clear
     @beppo.clear
     @cassiopeia.clear
@@ -44,6 +46,7 @@ class SystemTest < Test::Unit::TestCase
     @broom.clear
 
     @meister_hora_club.clear
+=end
   end
 
 
@@ -114,11 +117,14 @@ class SystemTest < Test::Unit::TestCase
     system = Models::System.instance
     assert(system.items.size == 0, "there should be no items in the system, but there were #{system.items.size} items")
 
+    assert(@time.id == nil, "Unless an item is added to the system, its id should be nill, but was #{@time.id}")
     system.add_item(@time)
     assert(system.items.size == 1, "there should be one item in the system, but there were #{system.items.size} items")
-    assert(@time.id == 0)
+    assert(@time.id == 0, "The id of the first item should be 0 but it was #{@time.id}")
 
     system.add_item(@sand)
+    assert(system.items.size == 2, "there should be three items in the system, but there were #{system.items.size} items")
+    assert(@sand.id == 1, "The id of the second item should be 1 but was #{@sand.id}")
     system.add_item(@curly_hair)
     assert(system.items.size == 3, "there should be three items in the system, but there were #{system.items.size} items")
     assert((@time.id == 0) && (@sand.id == 1) && (@curly_hair.id ==2))

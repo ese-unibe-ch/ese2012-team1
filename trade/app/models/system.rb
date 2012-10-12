@@ -1,4 +1,9 @@
+#require 'rubygems'
 require 'singleton'
+#require 'require_relative'
+#require_relative('user')
+#require_relative('item')
+
 
 module Models
   # This class serves as some kind of database. It holds all organisations (identified by name),
@@ -46,10 +51,14 @@ module Models
 
     # Adds an item to the system and increments the id counter for items.
     def add_item(item)
+      #preconditions
+      fail"An items id should initially be nil, but was #{item.id}" unless (item.id == nil)
       fail"An item must have an owner when added to the system." if (item.owner == nil)
+
       item.id = item_id_count
-      items.store(:item_id_count, item)
-      item.id = item_id_count + 1
+      self.items.store(item_id_count, item)
+      self.item_id_count += 1
+
     end
 
     # Returns the item with associated id.
@@ -76,7 +85,7 @@ module Models
     # @see fetch_item
     def remove_item(item)
       fail "There are no items" if self.items.size == 0
-      fail "No such item id" if self.items.fetch(item_id)
+#      fail "No such item id" unless self.items.fetch(item.id)
       items.delete(item)
     end
 

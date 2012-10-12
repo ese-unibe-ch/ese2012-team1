@@ -44,11 +44,13 @@ module Models
 
     #Removes himself from the list of users and of the system
     #Removes users items before
+=begin
     def clear
       fail "not implemented"
       System.items.delete(System.get_my_items(self))
       Systems.users.delete(self.name)
     end
+=end
 
   end
 end
