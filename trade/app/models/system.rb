@@ -1,26 +1,33 @@
-require 'singleton'
 
 module Models
-  # This class serves as some kind of database. It holds all organisations (identified by name),
-  # all users (identified by email) and all items (identified by id).
-  # It is implemented as a Singleton.
+
   class System
-    include Singleton
-    attr_accessor :organisation, :users, :items, :item_id_count
-    @us = {}
+
+    attr_accessor :users, :items, :item_id_count
+    @@instance  = self.new
+    @@instantiated =false
+
+
 
     def initialize
       self.organisation = {}
       self.users = {}
       self.items = {}
       self.item_id_count = 0
+      self
     end
 
-    # ---------user------------------------------------------------------------
 
-    # Adds an user to the system.
-    def self.add_user(user)
-      fail "No user" if (user == nil)
+    def self.instance
+      if (@instantiated == nil)
+        @instance=Models::System.new
+        @instantiated = true
+      else
+        @instance
+      end
+    end
+
+    def add_user(user)
       self.users.store(user.email, user)
     end
 
