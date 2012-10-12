@@ -62,15 +62,13 @@ module Models
       pw_hash = BCrypt::Engine.hash_secret(password, pw_salt)
       user.password_salt = pw_salt
       user.password_hash = pw_hash
-      user.save
-
       user.invariant
+      user.save
       user
     end
 
     def save
-      fail "Duplicated user" if Models::System.users.has_key? self.name and Models::System.users[self.name] != self
-      Models::System.users[self.name] = self
+      Models::System.add_user(self)
     end
 
     # get string representation of users name

@@ -3,28 +3,25 @@ module Models
 
   class System
 
-    attr_accessor :users, :items, :item_id_count
-    @@instance  = self.new
-    @@instantiated =false
+    attr_accessor  :item_id_count
+    @@instance = nil
+    @users = nil
+    @items = nil
+    @organisation
+
 
 
 
     def initialize
-      self.organisation = {}
-      self.users = {}
-      self.items = {}
-      self.item_id_count = 0
-      self
+      @organisation = Hash.new()
+      @users = Hash.new()
+      @items = Hash.new()
+      @item_id_count = 0
     end
 
 
     def self.instance
-      if (@instantiated == nil)
-        @instance=Models::System.new
-        @instantiated = true
-      else
-        @instance
-      end
+      (@@instance == nil) ? @@instance=Models::System.new : @@instance
     end
 
     def add_user(user)
@@ -32,26 +29,26 @@ module Models
     end
 
     # Returns the user with associated email.
-    def self.fetch_user(user_email)
+    def fetch_user(user_email)
       fail "No user with email #{user_email}" unless self.users.member?(user_email)
-      self.users.fetch(user_email)
+      users.fetch(user_email)
     end
 
     # Returns all users but the one specified in a array
-    def self.fetch_all_users_but(user_email)
+    def fetch_all_users_but(user_email)
       fail "No user with email #{user_email}" unless self.users.member?(user_email)
-      self.users.values - [user_email] # Array difference
+      users.values - [user_email] # Array difference
     end
 
     # Removes an user from the system.
-    def self.remove_user(user_email)
+    def remove_user(user_email)
       fail "No user with email #{user_email}" unless self.users.member?(user_email)
-      self.users.delete(user_email)
+      users.delete(user_email)
     end
 
     # Checks if mail if an user exists with this mail.
     # @param [mail] user_email
-    def self.mail_unique?(user_email)
+    def mail_unique?(user_email)
       list = self.users.collect { |user| user.email == user_email }
       if   (list.length > 0)
         false
@@ -60,8 +57,14 @@ module Models
       end
     end
 
-    def get_users
-      @us
+    def users
+      @users
+    end
+    def items
+      @items
+    end
+    def organisation
+      @organisation
     end
 
     # --------item-------------------------------------------------------------
