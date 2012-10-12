@@ -89,8 +89,8 @@ module Models
 
     #return users item list active
     # @param user_mail
-    def list_items(user_mail)
-      Models::System.instance.fetch_items_of(user_mail).select { |s| s.is_active? }
+    def list_items
+      Models::System.instance.fetch_items_of(self.email).select { |s| s.is_active? }
     end
 
     #return users item list inactive
@@ -104,8 +104,8 @@ module Models
     #
     ##
 
-    def has_item?(item_Id)
-      Models::System.instance.fetch_items_of(self.email).one? { |item| item.id == item_Id }
+    def has_item?(itemId)
+      Models::System.instance.fetch_items_of(self.email).one? { |i| i.id == itemId }
     end
 
     ##
@@ -144,20 +144,17 @@ module Models
       Models::System.instance.remove_item(item_to_remove)
     end
 
-    def self.login name, password
+    def self.login email, password
       return false unless Models::System.instance.users.has_key?(email)
-
-      user = Models::System.instance.users[email]
+      user = Models::System.instance.fetch_user(email)
       user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
     end
 
     #Removes himself from the list of users and of the Models::System
     #Removes users items before
     def clear
-      for e in Models::System.instance.fetch_items_of(self.email)
-        Models::System.instance.remove_item(e)
-      end
-      Models::System.users.instance.remove_user(self.email)
+      Models::System.instance.fetch_items_of(self.email).each { |e| Models::System.instance.remove_item(e) }
+      Models::System.instance.remove_user(self.email)
     end
   end
 end

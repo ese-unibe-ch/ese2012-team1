@@ -48,8 +48,8 @@ module Models
     def add_item(item)
       fail"An item must have an owner when added to the system." if (item.owner == nil)
       item.id = item_id_count
-      items.store(:item_id_count, item)
-      item.id = item_id_count + 1
+      items.store(self.item_id_count, item)
+      self.item_id_count += 1
     end
 
     # Returns the item with associated id.
@@ -62,22 +62,22 @@ module Models
     def fetch_items_of(user_email)
       fail "No such user email" if self.users.fetch(user_email) == nil
       user = self.fetch_user(user_email)
-      self.items.each {|id, item| item.get_owner == user}
+      self.items.values.select {| item| item.get_owner == user}
     end
 
     # Returns all items but the ones of the specified user.
     def fetch_all_items_but_of(user_email)
       fail "No such user email" if self.users.fetch(user_email)
       user = self.fetch_user(user_email)
-      self.items.each {|id, item| item.get_owner != user}
+      self.items.values.select {| item| item.get_owner != user}
     end
 
     # Removes an item from the system
     # @see fetch_item
     def remove_item(item)
       fail "There are no items" if self.items.size == 0
-      fail "No such item id" if self.items.fetch(item_id)
-      items.delete(item)
+      fail "No such item id" if self.items.fetch(item.id) == nil
+      items.delete(item.id)
     end
 
     # ---- organisation ---------------------
@@ -90,7 +90,7 @@ module Models
 
     # Returns the organisation with associated name.
     def fetch_organisation(org_name)
-      fail "No such organisation name" if self.organisation.fetch(org_name)
+      fail "No such organisation name" if self.organisation.fetch(org_name) == nil
       self.organisation.fetch(org_name)
     end
 
