@@ -22,7 +22,7 @@ module Model
     org.avatar = pic
     org.users = List.new
     org.users.add(user)
-    Model:System.organisation.add(self)
+    Model::System.organisation.add(self)
   end
 
   def get_name
