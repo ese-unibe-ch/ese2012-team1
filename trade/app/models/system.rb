@@ -1,9 +1,4 @@
-#require 'rubygems'
 require 'singleton'
-#require 'require_relative'
-#require_relative('user')
-#require_relative('item')
-
 
 module Models
   # This class serves as some kind of database. It holds all organisations (identified by name),
@@ -54,11 +49,9 @@ module Models
       #preconditions
       fail"An items id should initially be nil, but was #{item.id}" unless (item.id == nil)
       fail"An item must have an owner when added to the system." if (item.owner == nil)
-
       item.id = item_id_count
-      self.items.store(item_id_count, item)
+      items.store(self.item_id_count, item)
       self.item_id_count += 1
-
     end
 
     # Returns the item with associated id.
@@ -71,7 +64,7 @@ module Models
     def fetch_items_of(user_email)
       fail "No such user email" if self.users.fetch(user_email) == nil
       user = self.fetch_user(user_email)
-      self.items.each {|id, item| item.get_owner == user}
+      self.items.values.select {| item| item.get_owner == user}
     end
 
     # Returns all items but the ones of the specified user.
@@ -85,8 +78,8 @@ module Models
     # @see fetch_item
     def remove_item(item)
       fail "There are no items" if self.items.size == 0
-#      fail "No such item id" unless self.items.fetch(item.id)
-      items.delete(item)
+      fail "No such item id" if self.items.fetch(item.id) == nil
+      items.delete(item.id)
     end
 
     # ---- organisation ---------------------
@@ -99,7 +92,7 @@ module Models
 
     # Returns the organisation with associated name.
     def fetch_organisation(org_name)
-      fail "No such organisation name" if self.organisation.fetch(org_name)
+      fail "No such organisation name" if self.organisation.fetch(org_name) == nil
       self.organisation.fetch(org_name)
     end
 
