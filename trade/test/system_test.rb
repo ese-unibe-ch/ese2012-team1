@@ -25,7 +25,7 @@ class SystemTest < Test::Unit::TestCase
     #set up some users
     @momo = Models::User.created("Momo",    "zeit",     "momo@mail.ch",   "Denn Zeit ist Leben",  "../images/users/default_avatar.png")
     @beppo = Models::User.created("Beppo",  "strasse",  "beppo@gmail.ch", "Schritt für Schritt", "../images/users/default_avatar.png")
-    @cassiopeia = Models::User.created("Cassiopeia", "panzer", "kassiopeia@hotmail.ch", "*schweig*", "../images/users/default_avatar.png" )
+    @cassiopeia = Models::User.created("Cassiopeia", "panzer", "cassiopeia@hotmail.ch", "*schweig*", "../images/users/default_avatar.png" )
     #set up some items
     @sand = Models::Item.created("Sand", @momo, 12)
     @time = Models::Item.created("Time", @cassiopeia, 200)
@@ -99,16 +99,16 @@ class SystemTest < Test::Unit::TestCase
     system.add_user(@beppo)
 
     others = system.fetch_all_users_but("momo@mail.ch")
-    assert(system.fetch_all_users_but("momo@mail.ch").size == 1, "Only one should remain, but there were #{system.fetch_all_users_but("momo@")}")
+    assert(system.fetch_all_users_but("momo@mail.ch").size == 1, "Only one should remain, but there were #{system.fetch_all_users_but("momo@mail.ch")}")
     assert( others == [@beppo], "Beppo should be left, but instead: #{others}")
 
     others = system.fetch_all_users_but("beppo@gmail.ch")
-    assert(system.fetch_all_users_but("beppo@gmail.ch").size == 1, "Only one should remain, but there were #{system.fetch_all_users_but("momo@")}")
+    assert(system.fetch_all_users_but("beppo@gmail.ch").size == 1, "Only one should remain, but there were #{system.fetch_all_users_but("momo@mail.ch")}")
     assert( others == [@beppo], "Momo should be left, but instead: #{others}")
 
     system.add_user(@kassiopeia)
     others = system.fetch_all_users_but("momo@mail.ch")
-    assert(system.fetch_all_users_but("momo@mail.ch").size == 2, "Two should remain, but there were #{system.fetch_all_users_but("momo@")}")
+    assert(system.fetch_all_users_but("momo@mail.ch").size == 2, "Two should remain, but there were #{system.fetch_all_users_but("momo@mail.ch")}")
     assert( others == [@beppo], "Beppo and Momo should be left, but instead: #{others}")
   end
 
@@ -137,7 +137,7 @@ class SystemTest < Test::Unit::TestCase
     system.add_item(@sand)
     system.add_item(@curly_hair)
 
-    assert(system.fetch_item("Time")==@time, "Fetched item should be Time, but was #{system.fetch_item("Time")}")
+    assert(system.fetch_item(@time.id)==@time, "Fetched item should be Time, but was #{system.fetch_item(@time.id)}")
   end
 
   def test_should_fetch_item_of_user
@@ -148,9 +148,9 @@ class SystemTest < Test::Unit::TestCase
 
     items_cassiopeia = system.fetch_items_of("cassiopeia@hotmail.ch")
     items_momo = system.fetch_items_of("momo@mail.ch")
-    assert(items_cassiopeia.value?(@time), "Cassiopeia should have Time, but has #{items_kassiopeia}")
-    assert(items_momo.value?(@sand), "Momo should have Sand, but has #{items_momo}")
-    assert(items_momo.value?(@curly_hair), "Momo should have Curly Hair, but has #{items_momo}")
+    assert(items_cassiopeia.include?(@time), "Cassiopeia should have Time, but has #{items_cassiopeia}")
+    assert(items_momo.include?(@sand), "Momo should have Sand, but has #{items_momo}")
+    assert(items_momo.include?(@curly_hair), "Momo should have Curly Hair, but has #{items_momo}")
 
 
   end
@@ -165,9 +165,9 @@ class SystemTest < Test::Unit::TestCase
     system.add_item(@curly_hair)
     system.add_item(@broom)
 
-    remaining =  system.fetch_all_items_but_of("Momo")
-    assert(remaining.value.include?(@time))
-    assert(remaining.value.include?(@broom))
+    remaining =  system.fetch_all_items_but_of("momo@mail.ch")
+    assert(remaining.values.include?(@time))
+    assert(remaining.values.include?(@broom))
     assert(remaining.size == 2, "There should be 2 items left, but there are #{remaining.to_s}.")
 
 
@@ -208,14 +208,15 @@ class SystemTest < Test::Unit::TestCase
   def test_should_fetch_user_of_org
     system = Models::System.instance
     system.add_organisation(@meister_hora_club)
-    assert(system.fetch_organisations_of("cassiopeia@hotmail.ch") == @cassiopeia)
+    assert(system.fetch_organisations_of("cassiopeia@hotmail.ch").include?(@meister_hora_club))
   end
 
   def test_should_remove_organisation
     system = Models::System.instance
     system.add_organisation(@meister_hora_club)
+    assert(system.organisation.include?(@meister_hora_club))
     system.remove_organisation("Meister Hora Club")
-    assert(system.organisations.size == 0, "There should be no organisation left, but is still #{system.organisations.size}")
+    assert(system.organisation.size == 0, "There should be no organisation left, but is still #{system.organisations.size}")
   end
 
 end

@@ -59,20 +59,20 @@ module Models
 
     # Returns the item with associated id.
     def fetch_item(item_id)
-      fail "No such item id" if self.items.fetch(item_id)
+      fail "No such item id" unless self.items.fetch(item_id)
       self.items.fetch(item_id)
     end
 
     # Returns a hash with all items of this user.
     def fetch_items_of(user_email)
-      fail "No such user email" if self.users.fetch(user_email) == nil
+      fail "No such user email" unless self.fetch_user(user_email)
       user = self.fetch_user(user_email)
       self.items.values.select {| item| item.get_owner == user}
     end
 
     # Returns all items but the ones of the specified user.
     def fetch_all_items_but_of(user_email)
-      fail "No such user email" if self.users.fetch(user_email)
+      fail "No such user email" unless self.users.fetch(user_email)
       user = self.fetch_user(user_email)
       self.items.each {|id, item| item.get_owner != user}
     end
@@ -81,7 +81,7 @@ module Models
     # @see fetch_item
     def remove_item(item)
       fail "There are no items" if self.items.size == 0
-      fail "No such item id" if self.items.fetch(item.id) == nil
+      fail "No such item id" unless self.items.fetch(item.id)
       items.delete(item.id)
     end
 
@@ -95,20 +95,20 @@ module Models
 
     # Returns the organisation with associated name.
     def fetch_organisation(org_name)
-      fail "No such organisation name" if self.organisation.fetch(org_name) == nil
+      fail "No such organisation name" unless self.organisation.fetch(org_name)
       self.organisation.fetch(org_name)
     end
 
     # Returns a list of all the users organisations
     def fetch_organisations_of(user_email)
-      fail "No such user email" if self.users.fetch(user_email)
+      fail "No such user email" unless self.users.fetch(user_email)
       user = self.fetch_user(user_email)
       self.organisation.each{|org_name, org| org.is_member?(user)}
     end
 
     # Removes an organisation from the system.
     def remove_organisation(org_name)
-      fail "No such organisation name found" if self.organisation.fetch(org_name)
+      fail "No such organisation name found" unless self.organisation.fetch(org_name)
       organisations.delete(org_name)
     end
 
