@@ -11,7 +11,7 @@ module Model
     attr_accessor :users
   end
 
-  def is_Member?(user)
+  def is_member?(user)
     users.one? { |member| member.email == user.email }
   end
 
@@ -23,6 +23,10 @@ module Model
     org.users = List.new
     org.users.add(user)
     Model:System.organisation.add(self)
+  end
+
+  def get_name
+    self.name
   end
 
 end
