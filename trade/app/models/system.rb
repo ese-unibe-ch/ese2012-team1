@@ -47,7 +47,7 @@ module Models
     # Adds an item to the system and increments the id counter for items.
     def add_item(item)
       fail"An item must have an owner when added to the system." if (item.owner == nil)
-      items = {:item_id_count => item}
+      items.stores(:item_id_count, item)
       item.id = item_id_count + 1
     end
 
@@ -78,5 +78,30 @@ module Models
       items.delete(item)
     end
 
+    # ---- organisation ---------------------
+
+    # Adds an item to the system and increments the id counter for items.
+    def add_organisation(org)
+      fail "No organisation" if (user == nil)
+      organisation.store(org.get_name, org)
+    end
+
+    # Returns the organisation with associated name.
+    def fetch_organisation(org_name)
+      fail "No such organisation name" if self.organisation.contains(org_name)
+      self.organisation.fetch(org_name)
+    end
+
+    # Returns a list of all the users organisations
+    def fetch_organisations_of(user_email)
+      fail "No such user email" if self.users.contains(user_email)
+      self.organisation.each{|org_name, org| org.is_member?(user_email)}
+    end
+
+    # Removes an organisation from the system.
+    def remove_organisation(org_name)
+      fail "No such organisation name found" if self.items.contains(item_id)
+      organisations.delete(org_name)
+    end
   end
 end
