@@ -1,4 +1,12 @@
-module Model
+require 'rubygems'
+require 'bcrypt'
+require 'require_relative'
+require_relative('item')
+require_relative('account')
+require_relative('system')
+
+module Models
+
   class Organisation < Models::Account
     #An Organisation is an account witch is accessed by multiple users.
     #every user in the users list can act as the organisation and buy or sell items for it
@@ -9,24 +17,27 @@ module Model
 
     # generate getter and setter
     attr_accessor :users
-  end
 
-  def is_member?(user)
-    users.one? { |member| member.email == user.email }
-  end
+    def is_member?(user)
+      users.one? { |member| member.email == user.email }
+    end
 
-  def self.named(name, desc, pic, user)
-    org = self.new
-    org.name = name
-    org.description = desc
-    org.avatar = pic
-    org.users = List.new
-    org.users.add(user)
-    Model:System.organisation.add(self)
-  end
+    def self.named(name, desc, pic, user)
+      org = self.new
+      org.name = name
+      org.description = desc
+      org.avatar = pic
+      org.users = Array.new
+      org.users.push(user)
+      org.save
+    end
 
-  def get_name
-    self.name
-  end
+    def save
+      Models::System.instance.add_organisation(self)
+    end
 
+    def get_name
+      self.name
+    end
+  end
 end

@@ -1,4 +1,7 @@
 require 'singleton'
+require 'rubygems'
+require 'require_relative'
+require_relative('organisation')
 
 module Models
   # This class serves as some kind of database. It holds all organisations (identified by name),
@@ -84,9 +87,9 @@ module Models
 
     # ---- organisation ---------------------
 
-    # Adds an item to the system and increments the id counter for items.
+    # Adds an organisation to the system.
     def add_organisation(org)
-      fail "No organisation" if (user == nil)
+      fail "No organisation" if (org == nil)
       organisation.store(org.get_name, org)
     end
 

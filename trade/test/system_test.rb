@@ -4,6 +4,8 @@ require 'require_relative'
 require_relative('../app/models/system')
 require_relative('../app/models/user')
 require_relative('../app/models/item')
+require_relative('../app/models/organisation')
+
 
 class SystemTest < Test::Unit::TestCase
 
@@ -30,8 +32,7 @@ class SystemTest < Test::Unit::TestCase
     @curly_hair = Models::Item.created("curly_hair", @momo, 25)
     @broom = Models::Item.created("Broom", @beppo, 15)
     #set up organisation
-#    @meister_hora_club = Models::Organisation.named("Meister Hora Club", "Die Zeit steht still", "../images/users/default_avatar.png" , @cassiopeia)
-
+    @meister_hora_club = Models::Organisation.named("Meister Hora Club", "Die Zeit steht still", "../images/users/default_avatar.png" , @cassiopeia)
   end
 
   def teardown
@@ -194,7 +195,7 @@ class SystemTest < Test::Unit::TestCase
   def test_should_add_organisation
     system = Models::System.instance
     system.add_organisation(@meister_hora_club)
-    assert(system.organisations.size == 1, "There should be exactly one organisation, but there are #{system.organisations.size}")
+    assert(system.organisation.size == 1, "There should be exactly one organisation, but there are #{system.organisation.size}")
   end
 
   def test_should_fetch_org
