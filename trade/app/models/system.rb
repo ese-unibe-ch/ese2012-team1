@@ -10,9 +10,9 @@ module Models
     attr_accessor :organisation, :users, :items, :item_id_count
 
     def initialize
-      self.organisation = {}
-      self.users = {}
-      self.items = {}
+      self.organisation = Hash.new
+      self.users = Hash.new
+      self.items = Hash.new
       self.item_id_count = 0
     end
 
@@ -47,26 +47,27 @@ module Models
     # Adds an item to the system and increments the id counter for items.
     def add_item(item)
       fail"An item must have an owner when added to the system." if (item.owner == nil)
-      items.stores(:item_id_count, item)
+      item.id = item_id_count
+      items.store(:item_id_count, item)
       item.id = item_id_count + 1
     end
 
     # Returns the item with associated id.
     def fetch_item(item_id)
-      fail "No such item id" if self.items.contains(item_id)
+      fail "No such item id" if self.items.fetch(item_id)
       self.items.fetch(item_id)
     end
 
     # Returns a hash with all items of this user.
     def fetch_items_of(user_email)
-      fail "No such user email" if self.users.contains(user_email)
+      fail "No such user email" if self.users.fetch(user_email) == nil
       user = self.fetch_user(user_email)
       self.items.each {|id, item| item.get_owner == user}
     end
 
     # Returns all items but the ones of the specified user.
     def fetch_all_items_but_of(user_email)
-      fail "No such user email" if self.users.contains(user_email)
+      fail "No such user email" if self.users.fetch(user_email)
       user = self.fetch_user(user_email)
       self.items.each {|id, item| item.get_owner != user}
     end
@@ -75,7 +76,7 @@ module Models
     # @see fetch_item
     def remove_item(item)
       fail "There are no items" if self.items.size == 0
-      fail "No such item id" if self.items.contains(item_id)
+      fail "No such item id" if self.items.fetch(item_id)
       items.delete(item)
     end
 
@@ -89,20 +90,20 @@ module Models
 
     # Returns the organisation with associated name.
     def fetch_organisation(org_name)
-      fail "No such organisation name" if self.organisation.contains(org_name)
+      fail "No such organisation name" if self.organisation.fetch(org_name)
       self.organisation.fetch(org_name)
     end
 
     # Returns a list of all the users organisations
     def fetch_organisations_of(user_email)
-      fail "No such user email" if self.users.contains(user_email)
+      fail "No such user email" if self.users.fetch(user_email)
       user = self.fetch_user(user_email)
       self.organisation.each{|org_name, org| org.is_member?(user)}
     end
 
     # Removes an organisation from the system.
     def remove_organisation(org_name)
-      fail "No such organisation name found" if self.organisation.contains(org_name)
+      fail "No such organisation name found" if self.organisation.fetch(org_name)
       organisations.delete(org_name)
     end
 

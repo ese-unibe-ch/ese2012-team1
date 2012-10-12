@@ -29,13 +29,8 @@ module Models
     #
     ##
 
-    def invariant
-      fail "E-mail should be unique" if Models::System.users.one? {|user| Models::System.users.all? {|innerUser| user[1].email != innerUser[1].email if innerUser != user}}
-    end
-
-
     def self.email_unique?(email_to_compare)
-      Models::System.mail_unique?( email_to_compare)
+      (Models::System.instance.users.member?(email_to_compare)) ? false : true
     end
 
     # factory method (constructor) on the class
@@ -48,7 +43,7 @@ module Models
       fail "Missing email" if (email == nil)
       fail "Missing description" if (description == nil)
       fail "Missing path to avatar" if (avatar == nil)
-      fail "There's no avatar at #{avatar}" unless (File.exists?(Helpers::absolute_path(avatar.sub("images", "public/images"), __FILE__)))
+#      fail "There's no avatar at #{avatar}" unless (File.exists?(Helpers::absolute_path(avatar.sub("images", "public/images"), __FILE__)))
       fail "Not a correct email address" unless email =~ /[A-Za-z123456789._-]+@[A-Za-z123456789-]+\.[a-z]+$/
       fail "E-mail not unique" unless self.email_unique?(email)
 
@@ -62,13 +57,12 @@ module Models
       pw_hash = BCrypt::Engine.hash_secret(password, pw_salt)
       user.password_salt = pw_salt
       user.password_hash = pw_hash
-      user.invariant
       user.save
       user
     end
 
     def save
-      Models::System.add_user(self)
+      Models::System.instance.add_user(self)
     end
 
     # get string representation of users name
@@ -83,7 +77,7 @@ module Models
 
     #get string representation
     def to_s
-      "#{self.name} has currently #{self.credits} credits, #{list_items.size} active and #{list_items_inactive.size} inactive items"
+      "#{self.name} has currently #{self.credits} credits"
     end
 
     #let the user create a new item
@@ -94,13 +88,14 @@ module Models
     end
 
     #return users item list active
-    def list_items
-      item_list.select {|s| s.is_active?}
+    # @param user_mail
+    def list_items(user_mail)
+      Models::System.instance.fetch_items_of(user_mail).select { |s| s.is_active? }
     end
 
     #return users item list inactive
     def list_items_inactive
-      Models::System.users.fetch_all_items_but_of(self.mail).select {|s| !s.is_active?}
+      Models::System.instance.fetch_items_of(self.email).select {|s| !s.is_active?}
     end
 
     ##
@@ -109,8 +104,8 @@ module Models
     #
     ##
 
-    def has_item?(item_name)
-      Models::System.users.fetch_all_items_but_of(self.mail).one? { |item| item.name == item_name }
+    def has_item?(item_Id)
+      Models::System.instance.fetch_items_of(self.email).one? { |item| item.id == item_Id }
     end
 
     ##
@@ -120,10 +115,10 @@ module Models
     #
     ##
 
-    def get_item(item_name)
-      fail "User doesn't own object \'#{item_name}\'" unless (self.has_item?(item_name))
+    def get_item(item_Id)
+      fail "User doesn't own object \'#{item_name}\'" unless (self.has_item?(item_Id))
 
-      Models::System.users.fetch_all_items_but_of(self.mail).select { |item| item.name == item_name }[0]
+      Models::System.instance.fetch_all_items_but_of(self.mail).select { |item| item.name == item_name }[0]
     end
 
     # buy an item
@@ -146,37 +141,23 @@ module Models
     # removing item from users item_list
     # @param [item] item_to_remove
     def delete_item(item_to_remove)
-      Models::System.items.delete(item_to_remove)
+      Models::System.instance.remove_item(item_to_remove)
     end
 
     def self.login name, password
-      return false unless Models::System.users.has_key? name
+      return false unless Models::System.instance.users.has_key?(email)
 
-      user = Models::System.users[name]
+      user = Models::System.instance.users[email]
       user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
-    end
-
-    def self.get_user(username)
-      puts @@users
-      return @@users[username]
-    end
-
-    def self.get_all(viewer)
-      new_array = Models::System.users.to_a
-      ret_array = Array.new
-      for e in new_array
-        ret_array.push(e[1])
-      end
-      return ret_array.select {|s| s.name !=  viewer}
     end
 
     #Removes himself from the list of users and of the Models::System
     #Removes users items before
     def clear
-      for e in Models::System.items
-        e.clear
+      for e in Models::System.instance.fetch_items_of(self.email)
+        Models::System.instance.remove_item(e)
       end
-      Models::System.users.delete(self.name)
+      Models::System.users.instance.remove_user(self.email)
     end
   end
 end

@@ -15,9 +15,6 @@ module Models
     # generate getter and setter for name and price
     attr_accessor :name, :price, :active, :owner, :id, :description, :picture
 
-    @@item_list = {}
-    @@count = 0
-
     # factory method (constructor) on the class
     def self.created( name, price, owner )
       #Preconditions
@@ -25,7 +22,7 @@ module Models
       fail "Item needs a price." if (price == nil)
       fail "Item needs an owner." if (owner == nil)
       item = self.new
-      item.id = @@count + 1
+      item.id = nil
       item.name = name
       item.price = price
       item.active = false
@@ -35,9 +32,7 @@ module Models
     end
 
     def save
-      raise "Duplicated item" if @@item_list.has_key? self.id and @@item_list[self.id] != self
-      @@item_list["#{self.id}.#{self.name}"] = self
-      @@count += 1
+      Models::System.instance.add_item(self)
     end
 
     # get state
