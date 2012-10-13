@@ -34,7 +34,7 @@ module Models
       self.users.fetch(user_email)
     end
 
-    # Returns all users but the one specified in a array
+    # Returns all users but the one specified in an array
     def fetch_all_users_but(user_email)
       fail "No user with email #{user_email}" unless self.users.member?(user_email)
       self.users.values - [fetch_user(user_email)]  # Array difference

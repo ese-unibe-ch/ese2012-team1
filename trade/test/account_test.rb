@@ -33,7 +33,7 @@ class AccountTest < Test::Unit::TestCase
     assert(Models::System.instance.items.size == 1) #Not a really good test...
   end
 
-  # test for items owner after selling
+  # test for item's owner after selling
   def test_should_buy_item
     account1 = create_account
     item = account1.create_item("Chaos", 100)

@@ -171,7 +171,7 @@ class SystemTest < Test::Unit::TestCase
     system = Models::System.instance
     assert(system.items.size == 0, "there should be no items in the system, but there were #{system.items.size} items")
 
-    #This is more a test for item! assert(@time.id == nil, "Unless an item is added to the system, its id should be nill, but was #{@time.id}")
+    #This is more a test for item! assert(@time.id == nil, "Unless an item is added to the system, its id should be nil, but was #{@time.id}")
     mock_item0 = MockItem.new
     system.add_item(mock_item0)
     assert(system.items.size == 1, "there should be one item in the system, but there were #{system.items.size} items")

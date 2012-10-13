@@ -91,7 +91,7 @@ module Controllers
 
     ##
     #
-    # Removes a user from the system and redirects
+    # Removes an user from the system and redirects
     # to '/unauthenticate'
     #
     ##
