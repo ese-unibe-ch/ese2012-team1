@@ -69,6 +69,22 @@ class SystemTest < Test::Unit::TestCase
     users
   end
 
+  def add_items(users)
+    system = Models::System.instance
+
+    items = { :curly_hair => MockItem.create(users[:momo]),
+              :sand => MockItem.create(users[:momo]),
+              :broom => MockItem.create(users[:beppo]),
+              :time => MockItem.create(users[:kassiopeia]) }
+
+    system.add_item(items[:curly_hair])
+    system.add_item(items[:sand])
+    system.add_item(items[:broom])
+    system.add_item(items[:time])
+
+    items
+  end
+
   def teardown
     Models::System.instance.users = Hash.new
     Models::System.instance.items = Hash.new
@@ -190,22 +206,6 @@ class SystemTest < Test::Unit::TestCase
     assert(items_momo.size == 2, "Items size should be 2 but was #{items_momo.size}")
     assert(items_momo.include?(items[:sand]), "Momo should have Sand, but has #{items_momo}")
     assert(items_momo.include?(items[:curly_hair]), "Momo should have Curly Hair, but has #{items_momo}")
-  end
-
-  def add_items(users)
-    system = Models::System.instance
-
-    items = { :curly_hair => MockItem.create(users[:momo]),
-              :sand => MockItem.create(users[:momo]),
-              :broom => MockItem.create(users[:beppo]),
-              :time => MockItem.create(users[:kassiopeia]) }
-
-    system.add_item(items[:curly_hair])
-    system.add_item(items[:sand])
-    system.add_item(items[:broom])
-    system.add_item(items[:time])
-
-    items
   end
 
   def test_should_fetch_all_items_but_of_user

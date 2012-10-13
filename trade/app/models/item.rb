@@ -1,9 +1,10 @@
 require 'rubygems'
 require 'require_relative'
+
 require_relative '../helpers/render'
+require_relative 'system'
 
 module Models
-
   class Item
     #Items have a name.
     #Items have a price.
@@ -16,7 +17,7 @@ module Models
     attr_accessor :name, :price, :active, :owner, :id, :description, :picture
 
     # factory method (constructor) on the class
-    def self.created( name, price, owner )
+    def self.created( name, price, owner)
       #Preconditions
       fail "Item needs a name." if (name == nil)
       fail "Item needs a price." if (price == nil)
@@ -28,12 +29,12 @@ module Models
       item.active = false
       item.owner = owner
       item.picture = "../images/items/default_item.png"
-      item.save
       item
     end
 
-    def save
-      Models::System.instance.add_item(self)
+    def bought_by(new_owner)
+      self.owner = new_owner
+      self.to_inactive
     end
 
     # get state

@@ -1,6 +1,10 @@
 require 'rubygems'
 require 'require_relative'
+
+require_relative 'item'
 require_relative '../helpers/render'
+
+include Helpers
 
 module Models
 
@@ -20,26 +24,57 @@ module Models
     attr_accessor :description, :avatar, :name, :credits
 
 
+    ###
+    #
+    # At start an account owns 100 credits
+    #
+    ##
+
+    def initialize
+      self.credits = 100
+    end
+
+    def self.created(name, description, avatar)
+      fail "Missing name" if (name == nil)
+      fail "Missing description" if (description == nil)
+      fail "Missing path to avatar" if (avatar == nil)
+      fail "There's no avatar at #{avatar}" unless (File.exists?(absolute_path(avatar.sub("images", "public/images"), __FILE__)))
+
+      account = self.new
+      account.name = name
+      account.description = description
+      account.avatar = avatar
+
+      account
+    end
+
     #get string representation
     def to_s
       "#{self.name} has currently #{self.credits} credits"
     end
 
-    #let the account create a new item
+    #let the account create a new item and returns it
     def create_item(name, price)
+      fail "No name set" if (name == nil)
+      fail "No price set" if (price == nil)
+      fail "Price has to be positive" if (price < 0)
+
       new_item = Models::Item.created(name, price, self)
-      System.item_list.push(new_item)
+      Models::System.instance.add_item(new_item)
+
+      new_item
     end
 
     # buy an item
     # @return true if user can buy item, false if his credit amount is to small
     def buy_item(item_to_buy)
       fail "not enough credits" if item_to_buy.get_price > self.credits
-      fail "not adapted to System-Model"
+      fail "Item not in System" unless (System.instance.items.include?(item_to_buy.id))
+      # PZ: Don't like that I can't do that:
+      # fail "Item already belongs to you" if (System.instance.fetch_items_of(self.id))
+
       self.credits = self.credits - item_to_buy.get_price
-      item_to_buy.to_inactive
-      item_to_buy.set_owner(self)
-      self.item_list.push(item_to_buy)
+      item_to_buy.bought_by(self)
     end
 
     #Removes himself from the list of users and of the system
