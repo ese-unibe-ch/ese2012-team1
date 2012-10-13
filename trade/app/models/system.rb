@@ -100,7 +100,7 @@ module Models
       self.organisation.fetch(org_name)
     end
 
-    # Returns a list of all the users organisations
+    # Returns a list of all the user's organisations
     def fetch_organisations_of(user_email)
       fail "No such user email #{user_email}" unless self.users.member?(user_email)
       user = self.fetch_user(user_email)

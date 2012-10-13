@@ -121,5 +121,15 @@ module Models
       Models::System.instance.fetch_items_of(self.email).each { |e| Models::System.instance.remove_item(e) }
       Models::System.instance.remove_user(self.email)
     end
+
+    # Allows the user to create an organisation of which he automatically becomes the admin.
+    # @param name   the name of the organisation
+    # @param description    the description of the organisation
+    # @return new_organization    the organisation which was created
+    def create_organisation(name, description)
+      new_organisation = Models::Organisation.named(name, description, self)
+      new_organisation.add_admin(self)
+      new_organisation
+    end
   end
 end

@@ -100,6 +100,19 @@ class UserTest < Test::Unit::TestCase
     assert(Models::System.instance.fetch_user("user@mail.ch").list_items[0].to_s, "testobject, 10")
   end
 
+  #test for creation of an organisation by a user
+  def test_user_organisation_create
+    Models::System.instance.fetch_user("user@mail.com").create_organisation("org", "I'm an organisation.")
+    assert(Models::System.instance.fetch_organisations_of("user@mail.ch").size == 1, "Amount of organisations should be 1.")
+    assert_equal(Models::System.instance.fetch_organisation("org").name, "org")
+    assert_equal(Models::System.instance.fetch_organisation("org").description, "I'm an organisation.")
+    assert_equal(Models::System.instance.fetch_organisation("org").credits, 100)
+    assert(Models::System.instance.fetch_organistaion("org").admin_list.size == 1, "Should have one admin.")
+    assert(Models::System.instance.fetch_organisation("org").list_admins[0].name, "testuser")
+    assert(Models::System.instance.fetch_organisation("org").users.size == 1, "Should have one user.")
+    assert(Models::System.instance.fetch_organisation("org").list_users[0].name, "testuser")
+  end
+
   def test_create_user
     assert(Models::System.instance.fetch_user("user@mail.ch").name == "testuser", "Name should be correct")
     assert(Models::System.instance.fetch_user("user@mail.ch").get_credits == 100, "Credits should be 100 first")
