@@ -9,18 +9,18 @@ require 'test_helper'
 
 ENV['RACK_ENV'] = 'test'
 
-require_relative '../app/controllers/creator'
+require_relative '../app/controllers/item_actions'
 require_relative '../app/models/item'
 
-class CreatorTest < Test::Unit::TestCase
+class ItemActionsTest < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def app
-    Controllers::Creator
+    Controllers::ItemActions
   end
 
   describe 'Simple Tests' do
-    class TestApp < Controllers::Creator
+    class TestApp < Controllers::ItemActions
       configure do
         TestHelper.load
       end

@@ -11,7 +11,7 @@ include Models
 include Helpers
 
 module Controllers
-  class Creator < Sinatra::Application
+  class ItemActions < Sinatra::Application
     set :views , "#{absolute_path('../views', __FILE__)}"
 
     before do

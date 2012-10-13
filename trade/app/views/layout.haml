@@ -11,9 +11,9 @@
       %script(type="text/javascript" src="/java-script/#{script}")
 
   %body{ defined?(onload) ? {:onload => "#{onload}"} : "" }
-    = render_file('_the_header.haml')
-    = render_file('_the_menu.haml') if session['auth']
-    = render_file('_the_menu_b.haml') if !session['auth']
+    = render_file('frame_header.haml')
+    = render_file('frame_menu_logged.haml') if session['auth']
+    = render_file('frame_menu_unlogged.haml') if !session['auth']
     %div(id="main")
       = yield
-    = render_file('_the_footer.haml')
+    = render_file('frame_footer.haml')
