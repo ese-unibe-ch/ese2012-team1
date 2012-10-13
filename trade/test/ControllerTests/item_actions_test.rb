@@ -20,6 +20,11 @@ class ItemActionsTest < Test::Unit::TestCase
     Controllers::ItemActions
   end
 
+  def teardown
+    Models::System.instance.users = Hash.new
+    Models::System.instance.items = Hash.new
+  end
+
   describe 'Simple Tests' do
 
     class TestApp < Controllers::ItemActions

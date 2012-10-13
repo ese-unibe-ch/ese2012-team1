@@ -26,7 +26,7 @@ class MainTest < Test::Unit::TestCase
     end
 
     it 'get /home as Homer should show home site' do
-      get '/home', {}, 'rack.session' => { :user => 'Homer', :auth => true  }
+      get '/home', {}, 'rack.session' => { :user => 'homer@mail.ch', :auth => true  }
       assert last_response.ok?
       assert last_response.body.include?('Trading System'), "Should show title but was\n#{last_response.body}"
     end

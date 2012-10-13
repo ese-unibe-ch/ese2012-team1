@@ -1,7 +1,6 @@
 require 'singleton'
 require 'rubygems'
 require 'require_relative'
-require_relative('organisation')
 
 module Models
   # This class serves as some kind of database. It holds all organisations (identified by name),
@@ -113,5 +112,12 @@ module Models
       organisation.delete(org_name)
     end
 
+    #Removes all users, all items and resets the counter
+    def reset
+      self.users = Hash.new
+      self.items = Hash.new
+      self.organisation = Hash.new
+      self.item_id_count = 0
+    end
   end
 end

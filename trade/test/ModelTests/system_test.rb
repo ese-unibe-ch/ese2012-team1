@@ -1,10 +1,10 @@
 require 'test/unit'
 require 'rubygems'
 require 'require_relative'
-require_relative('../app/models/system')
-require_relative('../app/models/user')
-require_relative('../app/models/item')
-require_relative('../app/models/organisation')
+require_relative('../../app/models/system')
+require_relative('../../app/models/user')
+require_relative('../../app/models/item')
+require_relative('../../app/models/organisation')
 
 class MockItem
    attr_accessor :owner, :id
@@ -55,6 +55,14 @@ class MockUser
 end
 
 class SystemTest < Test::Unit::TestCase
+  def setup
+    Models::System.instance.reset
+  end
+
+  def teardown
+    Models::System.instance.reset
+  end
+
   def add_users
     system = Models::System.instance
 
@@ -83,11 +91,6 @@ class SystemTest < Test::Unit::TestCase
     system.add_item(items[:time])
 
     items
-  end
-
-  def teardown
-    Models::System.instance.users = Hash.new
-    Models::System.instance.items = Hash.new
   end
 
   #---- Singleton -----------------
@@ -175,7 +178,7 @@ class SystemTest < Test::Unit::TestCase
     mock_item0 = MockItem.new
     system.add_item(mock_item0)
     assert(system.items.size == 1, "there should be one item in the system, but there were #{system.items.size} items")
-    assert(mock_item0.id == 0, "The id of the first item should be 0 but it was #{@time.id}")
+    assert(mock_item0.id == 0, "The id of the first item should be 0 but it was #{mock_item0.id}")
 
     mock_item1 = MockItem.new
     system.add_item(mock_item1)

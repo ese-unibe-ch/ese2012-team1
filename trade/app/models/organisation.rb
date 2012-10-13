@@ -1,7 +1,6 @@
 require 'rubygems'
-require 'bcrypt'
 require 'require_relative'
-require_relative('item')
+
 require_relative('account')
 require_relative('system')
 
@@ -13,22 +12,20 @@ module Models
     #organisations may own certain items
     #organisations (represented by the users in the list) may buy and sell  items of another user or organisation
 
-
     # generate getter and setter
     attr_accessor :users
 
-    def is_member?(user)
-      users.one? { |member| member.email == user.email }
+    def initialize
+      super
+      self.users = Hash.new
     end
 
-    def self.named(name, desc, pic, user)
-      org = self.new
-      org.name = name
-      org.description = desc
-      org.avatar = pic
-      org.users = Array.new
-      org.users.push(user)
-      org.save
+    def set_admin(user)
+      self.users.store(user.email, user)
+    end
+
+    def is_member?(user)
+      users.one? { |email, member| email == user.email }
     end
 
     def save

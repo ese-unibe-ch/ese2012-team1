@@ -4,6 +4,7 @@ require 'require_relative'
 require_relative('item')
 require_relative('account')
 require_relative('system')
+require_relative('organisation')
 require_relative('../helpers/render')
 require_relative('../helpers/string_checkers')
 
@@ -106,12 +107,13 @@ module Models
     def get_item(item_Id)
       fail "#{self.email} doesn't own object: \'#{item_Id}\'" unless (self.has_item?(item_Id.to_i))
 
-      Models::System.instance.fetch_all_items_but_of(self.email).select { |item| item.id == item_Id.to_i }[0]
+      Models::System.instance.fetch_item(item_Id)
     end
 
     def self.login email, password
-      return false unless Models::System.instance.users.has_key?(email)
+      return false unless Models::System.instance.users.member?(email)
       user = Models::System.instance.fetch_user(email)
+      puts "#{user}"
       user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
     end
 
@@ -128,7 +130,12 @@ module Models
     # @return new_organization    the organisation which was created
     # @param picture : picture of the organisation
     def create_organisation(name, description, picture)
-      Models::Organisation.named(name, description, picture,  self)
+      organisation = Models::Organisation.created(name, description, picture)
+      Models::System.instance.add_organisation(organisation)
+
+      organisation
     end
+
+
   end
 end

@@ -5,10 +5,10 @@ end
 require 'test/unit'
 require 'rubygems'
 require 'require_relative'
-require_relative('../app/models/user')
-require_relative('../app/models/item')
-require_relative('../app/models/account')
-require_relative('../app/models/system')
+require_relative('../../app/models/user')
+require_relative('../../app/models/item')
+require_relative('../../app/models/account')
+require_relative('../../app/models/system')
 
 class UserTest < Test::Unit::TestCase
 
@@ -17,7 +17,7 @@ class UserTest < Test::Unit::TestCase
     Models::System.instance.users = Hash.new
     Models::System.instance.items = Hash.new
 
-    Models::User.created("testuser", "password", "user@mail.ch", "Hey there", "../images/users/default_avatar.png")
+    @user = Models::User.created("testuser", "password", "user@mail.ch", "Hey there", "../images/users/default_avatar.png")
   end
 
   def teardown
@@ -104,8 +104,11 @@ class UserTest < Test::Unit::TestCase
   #test for creation of an organisation by a user
   def test_user_organisation_create
     user = Models::System.instance.fetch_user("user@mail.ch")
-    user.create_organisation("org", "I'm an organisation.", "../images/users/default_avatar.png")
-    assert(Models::System.instance.fetch_organisations_of("user@mail.ch").size == 1, "Amount of organisations should be 1.")
+    org = user.create_organisation("org", "I'm an organisation.", "../images/users/default_avatar.png")
+    org.set_admin(user)
+
+    assert(Models::System.instance.fetch_organisations_of("user@mail.ch").size == 1,
+           "Amount of organisations should be 1 but was #{Models::System.instance.fetch_organisations_of("user@mail.ch").size}.")
     assert_equal(Models::System.instance.fetch_organisation("org").name, "org")
     assert_equal(Models::System.instance.fetch_organisation("org").description, "I'm an organisation.")
     assert_equal(Models::System.instance.fetch_organisation("org").credits, 100)
@@ -192,35 +195,24 @@ class UserTest < Test::Unit::TestCase
   end
 
   def test_method_list_inactive
-    a = Models::System.instance
-    a.users.clear
-    a.items.clear
-    Models::User.created("testuser", "password", "user@mail.ch", "Hey there", "../images/users/default_avatar.png")
-    user = Models::System.instance.fetch_user("user@mail.ch")
-    user.create_item("testobject", 10)
-    user.create_item("testobject2", 50)
-    assert(Models::System.instance.fetch_user("user@mail.ch").list_items_inactive[0].to_s.=="testobject, 10")
-    assert(Models::System.instance.fetch_user("user@mail.ch").list_items_inactive[1].to_s =="testobject2, 50")
+    @user = Models::System.instance.fetch_user("user@mail.ch")
+    test1 = @user.create_item("testobject", 10)
+    test2 = @user.create_item("testobject2", 50)
+    assert(Models::System.instance.items.member?(test1.id))
+    assert(Models::System.instance.items.member?(test2.id))
   end
 
   def test_user_should_have_item
-    a = Models::System.instance
-    a.users.clear
-    a.items.clear
-    Models::User.created("testuser", "password", "user@mail.ch", "Hey there", "../images/users/default_avatar.png")
     assert(! Models::System.instance.fetch_user("user@mail.ch").has_item?('testobject2'))
-    Models::System.instance.fetch_user("user@mail.ch").create_item("testobject2", 50)
-    assert(Models::System.instance.fetch_user("user@mail.ch").has_item?(Models::System.instance.items.index('testobject2')))
+    item = Models::System.instance.fetch_user("user@mail.ch").create_item("testobject2", 50)
+    assert(Models::System.instance.fetch_user("user@mail.ch").has_item?(item.id))
   end
 
   def test_user_should_return_item
-    a = Models::System.instance
-    a.users.clear
-    a.items.clear
-    Models::User.created("testuser", "password", "user@mail.ch", "Hey there", "../images/users/default_avatar.png")
-    assert_raise(RuntimeError) { Models::System.instance.fetch_user("user@mail.ch").get_item(Models::System.instance.items.index('testobject2')) }
-    item_created = Models::System.instance.fetch_user("user@mail.ch").create_item("testobject2", 50)
-    item_get = Models::System.instance.fetch_user("user@mail.ch").get_item(Models::System.instance.items.index('testobject2'))
+    assert_raise(RuntimeError) { Models::System.instance.fetch_user("user@mail.ch").get_item(2) }
+
+    item_created = @user.create_item("testobject2", 50)
+    item_get = @user.get_item(item_created.id)
     assert(item_created == item_get, "Both items should be same but where #{item_get} and #{item_created}")
   end
 end

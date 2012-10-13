@@ -1,21 +1,21 @@
 require 'test/unit'
 require 'rubygems'
 require 'require_relative'
-require_relative('../app/models/user')
-require_relative('../app/models/item')
-require_relative('../app/models/system')
+require_relative('../../app/models/user')
+require_relative('../../app/models/item')
+require_relative('../../app/models/system')
 
 class ItemTest < Test::Unit::TestCase
 
   @owner
 
   def setup
+    Models::System.instance.reset
     @owner = Models::User.created("testuser", "password", "user@mail.ch", "Hey there", "../images/users/default_avatar.png")
   end
 
   def teardown
-    Models::System.instance.users = Hash.new
-    Models::System.instance.items = Hash.new
+    Models::System.instance.reset
   end
 
   #test if item is initialized correctly

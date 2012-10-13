@@ -2,13 +2,16 @@ require 'test/unit'
 require 'rubygems'
 require 'require_relative'
 
-require_relative('../app/models/account')
+require_relative('../../app/models/account')
 
 class AccountTest < Test::Unit::TestCase
 
+  def setup
+    Models::System.instance.reset
+  end
+
   def teardown
-    Models::System.instance.items = Hash.new
-    Models::System.instance.users = Hash.new
+    Models::System.instance.reset
   end
 
   def test_initialization

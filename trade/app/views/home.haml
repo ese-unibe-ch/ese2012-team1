@@ -1,14 +1,14 @@
 %h2 Content
 %br
 #usr_img
-  %img(height=200 width=200){ :alt => User.get_user(session[:user]).name, :src => User.get_user(session[:user]).avatar }
+  %img(height=200 width=200){ :alt => Models::System.instance.fetch_user(session[:user]).name, :src => Models::System.instance.fetch_user(session[:user]).avatar }
 
 %br
-= "Currently logged in User: #{User.get_user(session[:user]).name}"
+= "Currently logged in User: #{Models::System.instance.fetch_user(session[:user]).name}"
 %br
-= "Your Credits: #{User.get_user(session[:user]).credits}"
+= "Your Credits: #{Models::System.instance.fetch_user(session[:user]).credits}"
 %br
-= "You have #{User.get_user(session[:user]).list_items.size} active Items"
+= "You have #{Models::System.instance.fetch_user(session[:user]).list_items.size} active Items"
 %br
-= "You have #{User.get_user(session[:user]).list_items_inactive.size} inactive Items"
+= "You have #{Models::System.instance.fetch_user(session[:user]).list_items_inactive.size} inactive Items"
 
