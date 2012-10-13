@@ -125,7 +125,7 @@ module Models
       System.instance.remove_item(self.id)
     end
 
-    #Returns the uniq id if the item
+    #Returns the unique id if the item
     def get_id
       return "#{self.id}.#{self.name}"
     end

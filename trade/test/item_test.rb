@@ -38,7 +38,7 @@ class ItemTest < Test::Unit::TestCase
     @owner.clear
   end
 
-  # test for items owner
+  # test for item's owner
   def test_item_owner
     item = @owner.create_item("testobject", 50)
     assert(item.get_owner == @owner, "Owner not set correctly")
@@ -46,7 +46,7 @@ class ItemTest < Test::Unit::TestCase
     @owner.clear
   end
 
-  # test for items owner after selling
+  # test for item's owner after selling
   def test_item_owner_after_selling
     old_owner = Models::User.created("Old", "password", "old@mail.ch", "i'm old", "../images/users/default_avatar.png" )
     new_owner = Models::User.created("New", "password", "new@mail.ch", "i'm new", "../images/users/default_avatar.png")

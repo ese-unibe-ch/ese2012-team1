@@ -9,14 +9,14 @@ include Helpers
 module Models
 
   class Account
-    #Account is a abstract class. It's designed to simplify the behave of the shop.
-    #Accounts have a name, an amount of credits, a description and a avatar.
+    #Account is an abstract class. It's designed to simplify the behaviour of the shop.
+    #Accounts have a name, an amount of credits, a description and an avatar.
     #Implementations of accounts may add a new item to the system with a name and a price;
     #  the item is originally inactive.
     #Implementations of accounts may own certain items
     #Implementations of accounts may buy active items of another user
-    #  (inactive items can't be bought). When a implementation of account buys an item,
-    #  it becomes the owner; credit are transferred accordingly; immediately after
+    #  (inactive items can't be bought). If an implementation of account buys an item,
+    #  it becomes the owner; credits are transferred accordingly; immediately after
     #  the trade, the item is inactive. The transaction
     #  fails if the buyer has not enough credits.
 
@@ -26,7 +26,7 @@ module Models
 
     ###
     #
-    # At start an account owns 100 credits
+    # At the start an account owns 100 credits
     #
     ##
 

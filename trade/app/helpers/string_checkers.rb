@@ -29,7 +29,7 @@ class String
 
 ##
 #
-# Checks if is a strong password meaning
+# Checks if it is a strong password meaning
 # 1) At least six characters long
 # 2) Contains at least one number, one small letter and one capital letter
 # 3) Contains only numbers, capital and small letters

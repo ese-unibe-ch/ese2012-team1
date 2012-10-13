@@ -10,14 +10,14 @@ require_relative('../helpers/string_checkers')
 
 module Models
   class User < Models::Account
-    #Users have a name, a unique e-mail, a description and a avatar.
+    #Users have a name, an unique e-mail, a description and an avatar.
     #Users have an amount of credits.
-    #A new user has originally 100 credit.
-    #A user can add a new item to the system with a name and a price; the item is originally inactive.
-    #A user provides a method that lists his/her active items to sell.
+    #A new user has originally 100 credits.
+    #An user can add a new item to the system with a name and a price; the item is originally inactive.
+    #An user provides a method that lists his/her active items to sell.
     #User possesses certain items
-    #A user can buy active items of another user (inactive items can't be bought). When a user buys an item, it becomes
-    #  the owner; credit are transferred accordingly; immediately after the trade, the item is inactive. The transaction
+    #An user can buy active items of another user (inactive items can't be bought). If an user buys an item, it becomes
+    #  the owner; credits are transferred accordingly; immediately after the trade, the item is inactive. The transaction
     #  fails if the buyer has not enough credits.
 
     # generate getter and setter for name and price
@@ -25,7 +25,7 @@ module Models
 
     ##
     #
-    # E-Mailadress should be unique
+    # E-Mailaddress should be unique
     #
     ##
 
@@ -35,7 +35,7 @@ module Models
 
     # factory method (constructor) on the class
     # You have to save the picture at public/images/users/ before
-    # you call this method. If not it will fail.
+    # you call this method. If not, it will fail.
     def self.created(name,  password, email, description, avatar)
       # Preconditions
       fail "Missing name" if (name == nil)
@@ -65,12 +65,12 @@ module Models
       Models::System.instance.add_user(self)
     end
 
-    # get string representation of users name
+    # get string representation of user's name
     def get_name
       self.name
     end
 
-    #get amount of users credits
+    #get amount of user's credits
     def get_credits
       self.credits
     end
@@ -87,20 +87,20 @@ module Models
       return new_item
     end
 
-    #return users item list active
+    #return user's item list active
     # @param user_mail
     def list_items
       Models::System.instance.fetch_items_of(self.email).select { |s| s.is_active? }
     end
 
-    #return users item list inactive
+    #return user's item list inactive
     def list_items_inactive
       Models::System.instance.fetch_items_of(self.email).select {|s| !s.is_active?}
     end
 
     ##
     #
-    # Returns true if a user owns a specific item
+    # Returns true if an user owns a specific item
     #
     ##
 
@@ -111,7 +111,7 @@ module Models
     ##
     #
     # Returns item with the given name. Throws error if
-    # User doesn't own item.
+    # user doesn't own the item.
     #
     ##
 
@@ -133,12 +133,12 @@ module Models
       return true
     end
 
-    # removing item from users item_list
+    # removing item from user's item_list
     def remove_item(item_to_remove)
       self.credits = self.credits + item_to_remove.get_price
     end
 
-    # removing item from users item_list
+    # removing item from user's item_list
     # @param [item] item_to_remove
     def delete_item(item_to_remove)
       Models::System.instance.remove_item(item_to_remove)
@@ -151,7 +151,7 @@ module Models
     end
 
     #Removes himself from the list of users and of the Models::System
-    #Removes users items before
+    #Removes user's items beforehand
     def clear
       Models::System.instance.fetch_items_of(self.email).each { |e| Models::System.instance.remove_item(e) }
       Models::System.instance.remove_user(self.email)
