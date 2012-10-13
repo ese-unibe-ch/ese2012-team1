@@ -6,6 +6,7 @@ require 'sinatra/content_for'
 require_relative('../models/user')
 require_relative('../models/item')
 require_relative('../helpers/render')
+require_relative('../helpers/string_checkers')
 
 include Models
 include Helpers
@@ -35,7 +36,7 @@ module Controllers
 
         user = session[:user]
 
-          new_item = User.get_user(user).create_item(params[:name], Integer((params[:price]).to_i))
+          new_item = Models::System.instance.fetch_user(user).create_item(params[:name], Integer((params[:price]).to_i))
           new_item.add_description(params[:description])
 
           dir = absolute_path('../public/images/items/', __FILE__)
@@ -43,9 +44,9 @@ module Controllers
           if params[:item_picture] != nil
             tempfile = params[:item_picture][:tempfile]
             filename = params[:item_picture][:filename]
-            file_path ="#{dir}#{new_item.get_id}#{File.extname(filename)}"
+            file_path ="#{dir}#{new_item.id}#{File.extname(filename)}"
             File.copy(tempfile.path, file_path)
-            file_path = "../images/items/#{new_item.get_id}#{File.extname(filename)}"
+            file_path = "../images/items/#{new_item.id}#{File.extname(filename)}"
             new_item.add_picture(file_path)
           end
 
@@ -53,16 +54,20 @@ module Controllers
     end
 
     post '/changestate/setactive' do
-        item = Item.get_item(params[:id])
-        if item.owner.name == session[:user]
+        item = Models::System.instance.fetch_item(params[:id])
+
+        if item.owner.email == session[:user]
           item.to_active
         end
+
         redirect "/home/inactive"
     end
 
     post '/changestate/setinactive' do
-      item = Item.get_item(params[:id])
-      if item.owner.name == session[:user]
+      item = Models::System.instance.fetch_item(params[:id])
+
+      puts ("item: #{item}")
+      if item.owner.email == session[:user]
         item.to_inactive
       end
       redirect "/home/active"
@@ -70,16 +75,16 @@ module Controllers
 
     post '/home/delete' do
       id = params[:id]
-      Item.get_item(id).clear
+      Models::System.instance.fetch_item(id).clear
       redirect "/home/inactive"
     end
 
     post '/home/edit' do
       id = params[:id]
-      name = Item.get_item(id).name
-      description = Item.get_item(id).description
-      price = Item.get_item(id).price
-      picture = Item.get_item(id).picture
+      name = Models::System.instance.fetch_item(id).name
+      description = Models::System.instance.fetch_item(id).description
+      price = Models::System.instance.fetch_item(id).price
+      picture = Models::System.instance.fetch_item(id).picture
       haml :home_edit , :locals => {:id => id, :name => name, :description => description, :price => price, :picture => picture}
     end
 
@@ -96,11 +101,11 @@ module Controllers
 
     post '/home/edit/save' do
       id = params[:id]
-      redirect "/home/inactive" if Item.get_item(id).editable?
+      redirect "/home/inactive" if Models::System.instance.fetch_item(id).editable?
       new_description = params[:new_description]
       new_price = params[:new_price]
-      Item.get_item(id).add_description(new_description)
-      Item.get_item(id).price = new_price
+      Models::System.instance.fetch_item(id).add_description(new_description)
+      Models::System.instance.fetch_item(id).price = new_price
 
       dir = absolute_path('../public/images/items/', __FILE__)
 
@@ -110,7 +115,7 @@ module Controllers
         file_path ="#{dir}#{id}#{File.extname(filename)}"
         File.copy(tempfile.path, file_path)
         file_path = "../images/items/#{id}#{File.extname(filename)}"
-        Item.get_item(id).add_picture(file_path)
+        Models::System.instance.fetch_item(id).add_picture(file_path)
       end
 
       redirect "/home/inactive"
@@ -118,7 +123,7 @@ module Controllers
 
     post '/buy' do
         id = params[:id]
-        item = Item.get_item(id)
+        item = Models::System.instance.fetch_item(id)
         old_user = item.get_owner
         user = session[:user]
         new_user = User.get_user(user)

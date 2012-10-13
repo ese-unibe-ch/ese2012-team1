@@ -6,6 +6,9 @@
 
 class TestHelper
 
+  @@users = Hash.new
+  @@items = Hash.new
+
   ##
   #
   # Clears all users and loads test data afterwards.
@@ -14,15 +17,41 @@ class TestHelper
 
   def self.load
     self.clear_all
+    @@items = Hash.new
+    @@users = Hash.new
 
     bart = Models::User.created('Bart' , 'bart', 'bart@mail.ch', 'I\' should not...', '../images/users/default_avatar.png')
-    bart.create_item('Skateboard', 100)
-    bart.create_item('Elephant', 50)
-    bart.list_items_inactive.detect {|item| item.name == 'Skateboard' }.to_active
+    @@users.store(:bart, bart)
+    @@items.store(:skateboard, bart.create_item('Skateboard', 100))
+    @@items.store(:elephant, bart.create_item('Elephant', 50))
+    @@items[:skateboard].to_active
 
     homer = Models::User.created('Homer', 'homer', 'homer@mail.ch', 'Do!', '../images/users/default_avatar.png')
-    homer.create_item('Beer', 200)
-    homer.list_items_inactive.detect {|item| item.name == 'Beer' }.to_active
+    @@users.store(homer.name, homer)
+    @@items.store(:beer, homer.create_item('Beer', 200))
+    @@items[:beer].to_active
+  end
+
+  ##
+  #
+  # Returns all users created in this test helper as hash:
+  # username => user
+  #
+  ##
+
+  def self.get_users
+    @@users
+  end
+
+  ##
+  #
+  # Returns all items created in this test helper as hash
+  # itemname => item
+  #
+  ##
+
+  def self.get_items
+    @@items
   end
 
   ##
@@ -32,8 +61,7 @@ class TestHelper
   ##
 
   def self.clear_all
-    Models::User.get_all(nil).each do |user|
-      user.clear
-    end
+    Models::System.instance.users = Hash.new
+    Models::System.instance.items = Hash.new
   end
 end

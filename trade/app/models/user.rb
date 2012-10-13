@@ -93,7 +93,7 @@ module Models
     ##
 
     def has_item?(itemId)
-      Models::System.instance.fetch_items_of(self.email).one? { |i| i.id == itemId }
+      Models::System.instance.fetch_items_of(self.email).one? { |item| item.id == itemId.to_i }
     end
 
     ##
@@ -104,9 +104,9 @@ module Models
     ##
 
     def get_item(item_Id)
-      fail "User doesn't own object \'#{item_Id}\'" unless (self.has_item?(item_Id))
+      fail "#{self.email} doesn't own object: \'#{item_Id}\'" unless (self.has_item?(item_Id.to_i))
 
-      Models::System.instance.fetch_all_items_but_of(self.mail).select { |item| item.id == item_Id }[0]
+      Models::System.instance.fetch_all_items_but_of(self.email).select { |item| item.id == item_Id.to_i }[0]
     end
 
     def self.login email, password

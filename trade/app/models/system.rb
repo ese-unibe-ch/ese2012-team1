@@ -60,8 +60,8 @@ module Models
 
     # Returns the item with associated id.
     def fetch_item(item_id)
-      fail "No such item id" unless self.items.fetch(item_id)
-      self.items.fetch(item_id)
+      fail "No such item id: #{item_id}" unless self.items.member?(item_id.to_i)
+      self.items.fetch(item_id.to_i)
     end
 
     # Returns a hash with all items of this user.

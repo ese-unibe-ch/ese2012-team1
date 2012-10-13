@@ -41,7 +41,7 @@ module Models
 
     # to String-method
     def to_s
-      "#{self.get_name}, #{self.get_price}"
+      "#{self.name}, #{self.price}"
     end
 
     # to set active
@@ -81,11 +81,6 @@ module Models
     #Removes itself from the list of items and of the system
     def clear
       System.instance.remove_item(self.id)
-    end
-
-    #Returns the unique id if the item
-    def get_id
-      return "#{self.id}.#{self.name}"
     end
 
     def can_be_bought_by?(user)
