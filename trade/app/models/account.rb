@@ -67,15 +67,22 @@ module Models
 
     # buy an item
     # @return true if user can buy item, false if his credit amount is to small
+    # Removes the price of the item from itself and give it to the owner
     def buy_item(item_to_buy)
-      fail "not enough credits" if item_to_buy.get_price > self.credits
+      fail "not enough credits" if item_to_buy.price > self.credits
       fail "Item not in System" unless (System.instance.items.include?(item_to_buy.id))
       # PZ: Don't like that I can't do that:
       # fail "Item already belongs to you" if (System.instance.fetch_items_of(self.id))
 
-      self.credits = self.credits - item_to_buy.get_price
+      old_owner = item_to_buy.owner
+      #Subtracts price from buyer
+      self.credits = self.credits - item_to_buy.price
+      #Adds price to owner
+      old_owner.credits += item_to_buy.price
+
       item_to_buy.bought_by(self)
     end
+
 
     #Removes himself from the list of users and of the system
     #Removes users items before

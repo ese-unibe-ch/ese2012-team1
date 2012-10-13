@@ -75,18 +75,6 @@ module Models
       self.credits
     end
 
-    #get string representation
-    def to_s
-      "#{self.name} has currently #{self.credits} credits"
-    end
-
-    #let the user create a new item
-    def create_item(name, price)
-      new_item = Models::Item.created( name, price, self )
-      new_item.save
-      return new_item
-    end
-
     #return users item list active
     # @param user_mail
     def list_items
@@ -119,29 +107,6 @@ module Models
       fail "User doesn't own object \'#{item_Id}\'" unless (self.has_item?(item_Id))
 
       Models::System.instance.fetch_all_items_but_of(self.mail).select { |item| item.id == item_Id }[0]
-    end
-
-    # buy an item
-    # @return true if user can buy item, false if his credit amount is to small
-    def buy_new_item?(item_to_buy)
-      if item_to_buy.get_price > self.credits
-        return false
-      end
-      self.credits = self.credits - item_to_buy.get_price
-      item_to_buy.to_inactive
-      item_to_buy.set_owner(self)
-      return true
-    end
-
-    # removing item from users item_list
-    def remove_item(item_to_remove)
-      self.credits = self.credits + item_to_remove.get_price
-    end
-
-    # removing item from users item_list
-    # @param [item] item_to_remove
-    def delete_item(item_to_remove)
-      Models::System.instance.remove_item(item_to_remove)
     end
 
     def self.login email, password

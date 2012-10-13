@@ -42,5 +42,7 @@ class AccountTest < Test::Unit::TestCase
     account2 = Models::Account.created("Judith", "Judiths account", "../images/users/default_avatar.png")
     account2.buy_item(item)
     assert(item.owner == account2, "Judith should be owner of \'Chaos\'")
+    assert(account1.credits == 200, "Pascal should earn 100 credits")
+    assert(account2.credits == 0, "Judith should pay 100 credits")
   end
 end

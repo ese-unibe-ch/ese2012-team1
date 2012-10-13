@@ -22,6 +22,8 @@ module Models
       fail "Item needs a name." if (name == nil)
       fail "Item needs a price." if (price == nil)
       fail "Item needs an owner." if (owner == nil)
+      fail "Price can't be negative" if (price < 0)
+
       item = self.new
       item.id = nil
       item.name = name
@@ -32,19 +34,9 @@ module Models
       item
     end
 
-    def bought_by(new_owner)
-      self.owner = new_owner
-      self.to_inactive
-    end
-
     # get state
     def is_active?
       self.active
-    end
-
-    # set owner
-    def set_owner(new_owner)
-      self.owner = new_owner
     end
 
     # to String-method
@@ -62,41 +54,7 @@ module Models
       self.active = false
     end
 
-    # get name
-    def get_name
-      # string interpolation
-      "#{name}"
-    end
-
-    # get price
-    def get_price
-      # int interpolation
-      self.price
-    end
-
-    # return the owner
-    def get_owner
-      self.owner
-    end
-
-    def self.get_item(itemid)
-      return @@item_list[itemid]
-    end
-
-    #def self.get_all(viewer)
-    #  return @@item_list.select {|s| s.owner.name !=  viewer}
-    #end
-    def self.get_all(viewer)
-      new_array = @@item_list.to_a
-      ret_array = Array.new
-      for e in new_array
-        ret_array.push(e[1])
-      end
-      ret = ret_array.select {|s| s.owner.name !=  viewer}
-      return ret.select {|s| s.is_active?}
-    end
-
-    # Adds a decription to the item.
+    # Adds a description to the item.
     # @param  description   the string containing the description for the item
     def add_description (description)
       fail "Missing description." if (description == nil)
@@ -130,6 +88,14 @@ module Models
       return "#{self.id}.#{self.name}"
     end
 
+    def can_be_bought_by?(user)
+      user.credits >= self.price && self.active
+    end
+
+    def bought_by(new_owner)
+      self.owner = new_owner
+      self.to_inactive
+    end
   end
 
 end

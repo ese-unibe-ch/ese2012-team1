@@ -3,6 +3,7 @@ require 'rubygems'
 require 'require_relative'
 require_relative('../app/models/user')
 require_relative('../app/models/item')
+require_relative('../app/models/system')
 
 class ItemTest < Test::Unit::TestCase
 
@@ -13,61 +14,48 @@ class ItemTest < Test::Unit::TestCase
   end
 
   def teardown
-    @owner.clear
+    Models::System.instance.users = Hash.new
+    Models::System.instance.items = Hash.new
   end
 
   #test if item is initialized correctly
   def test_item_initialisation
-    item = @owner.create_item("testobject", 50)
-    assert(item.get_name == "testobject", "Name should be returned")
-    assert(item.get_price == 50, "Should return price")
+    item = Models::Item.created("testobject", 50, @owner)
+    assert(item.name == "testobject", "Name should be returned")
+    assert(item.price == 50, "Should return price")
     assert(!item.is_active?, "Should not be active")
-     @owner.clear
+    assert(item.id == nil, "Id should be nil after initialization (is to be set by system) but was #{item.id}")
   end
 
   #test for item activation
   def test_item_activation
-    item = @owner.create_item("testobject", 50)
-    assert(item.get_name == "testobject", "Name should be returned")
-    assert(item.get_price == 50, "Should return price")
+    item = Models::Item.created("testobject", 50, @owner)
+    assert(item.name == "testobject", "Name should be returned")
+    assert(item.price == 50, "Should return price")
     assert(!item.is_active?, "Should not be active")
     item.to_active
-    assert(item.get_name == "testobject", "Name should be returned")
-    assert(item.get_price == 50, "Should return price")
+    assert(item.name == "testobject", "Name should be returned")
+    assert(item.price == 50, "Should return price")
     assert(item.is_active?, "Should be active now")
-    @owner.clear
   end
 
-  # test for items owner
-  def test_item_owner
-    item = @owner.create_item("testobject", 50)
-    assert(item.get_owner == @owner, "Owner not set correctly")
-    assert(item.get_owner.get_name == "testuser", "Owner not set correctly")
-    @owner.clear
-  end
-
-  # test for items owner after selling
-  def test_item_owner_after_selling
-    old_owner = Models::User.created("Old", "password", "old@mail.ch", "i'm old", "../images/users/default_avatar.png" )
-    new_owner = Models::User.created("New", "password", "new@mail.ch", "i'm new", "../images/users/default_avatar.png")
-    item = old_owner.create_item("sock",10)
-    assert(item.get_owner == old_owner, "Owner not set correctly")
-    assert(item.get_owner.get_name == "Old", "Owner not set correctly")
-    old_owner.list_items_inactive[0].to_active
-    if new_owner.buy_new_item?(item)
-      old_owner.remove_item(item)
-    end
-    assert(item.get_owner == new_owner, "Owner not set correctly")
-    assert(item.get_owner.get_name == "New", "Owner not set correctly")
-
-    old_owner.clear
-    new_owner.clear
+  #test for item deactivation
+  def test_item_deactivation
+    item = Models::Item.created("testobject", 50, @owner)
+    assert(item.price == 50, "Should return price")
+    assert(!item.is_active?, "Should not be active")
+    item.to_active
+    assert(item.price == 50, "Should return price")
+    assert(item.is_active?, "Should be active now")
+    item.to_inactive
+    assert(item.price == 50, "Should return price")
+    assert(! item.is_active?, "Should be inactive now")
   end
 
   #test if adding of description generally works
   def test_description_adding
     item = Models::Item.created("Test object", 20, @owner)
-    assert_equal(item.get_owner, @owner)
+    assert_equal(item.owner, @owner)
     item.add_description("I'm an object for testing.")
     assert_equal(item.description, "I'm an object for testing.")
   end
@@ -81,10 +69,40 @@ class ItemTest < Test::Unit::TestCase
 
   #test if the checking of editability works correctly
   def test_editability
-    item = @owner.create_item("book", 50)
+    item = Models::Item.created("book", 50, @owner)
     assert_equal(item.is_active?, false)
     item.to_active
     assert(item.editable?, true)
   end
 
+  def test_should_be_buyable
+    item = Models::Item.created("book", 50, @owner)
+    item.to_active
+
+    buyer = Models::User.created("testuser2", "password", "user2@mail.ch", "Hey there", "../images/users/default_avatar.png")
+
+    assert(item.can_be_bought_by?(buyer))
+  end
+
+  def test_should_not_be_buyable_if_deactive
+    item = Models::Item.created("book", 50, @owner)
+
+    buyer = Models::User.created("testuser2", "password", "user2@mail.ch", "Hey there", "../images/users/default_avatar.png")
+
+    assert(! item.can_be_bought_by?(buyer))
+  end
+
+  def test_should_not_be_buyable_if_price_to_high
+    item = Models::Item.created("book", 150, @owner)
+    item.to_active
+
+    buyer = Models::User.created("testuser2", "password", "user2@mail.ch", "Hey there", "../images/users/default_avatar.png")
+
+    assert(! item.can_be_bought_by?(buyer))
+  end
+
+  def test_should_remove_item_from_system
+    # Not happy that the item removes himself from the list. This should make the user because he is
+    # responsible to add it.
+  end
 end
