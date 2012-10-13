@@ -126,10 +126,9 @@ module Models
     # @param name   the name of the organisation
     # @param description    the description of the organisation
     # @return new_organization    the organisation which was created
-    def create_organisation(name, description)
-      new_organisation = Models::Organisation.named(name, description, self)
-      new_organisation.add_admin(self)
-      new_organisation
+    # @param picture : picture of the organisation
+    def create_organisation(name, description, picture)
+      Models::Organisation.named(name, description, picture,  self)
     end
   end
 end

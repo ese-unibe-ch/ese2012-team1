@@ -97,7 +97,7 @@ module Controllers
     ##
 
     post '/unregister' do
-      user = User.get_user(session[:user])
+      user = Models::System.instance.users.fetch(session[:user])
       user.clear
 
       redirect '/unauthenticate'

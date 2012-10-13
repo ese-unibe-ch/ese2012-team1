@@ -67,12 +67,12 @@ class RegistrationTest < Test::Unit::TestCase
 
     it 'post /register should add user to system' do
       post "/register", {:password => 'aB12De', :re_password => 'aB12De', :name => 'Matz', :interests => "Ruby rocks!",
-                         :email => 'math@mail.ch'},
+                         :email => 'matz@mail.ch'},
            'rack.session' => session =  { :user => nil, :auth => false  }
-      user = Models::User.get_user('Matz')
+      user = Models::System.instance.users.fetch('matz@mail.ch')
       assert(user != nil, "User should exist within system")
       assert(user.name == 'Matz', "User should be called Matz but was #{user.name}");
-      assert(user.email == 'math@mail.ch', "User should have email math@mail.ch but was #{user.email}")
+      assert(user.email == 'matz@mail.ch', "User should have email matz@mail.ch but was #{user.email}")
       assert(user.description == 'Ruby rocks!', "Description should be 'Ruby rocks!' but was '#{user.description}'")
     end
 
@@ -95,13 +95,13 @@ class RegistrationTest < Test::Unit::TestCase
     end
 
     it 'post /unregister should remove Homer from list of users' do
-      assert User.get_user('Bart') != nil, "Bart should exist"
-      post '/unregister', {}, 'rack.session' => session =  { :user => 'Bart', :auth => true  }
-      assert User.get_user('Bart') == nil, "Bart should not exist anymore"
+      assert Models::System.instance.users.member?('bart@mail.ch'), "Bart should exist"
+      post '/unregister', {}, 'rack.session' => session =  { :user => 'bart@mail.ch', :auth => true  }
+      assert !Models::System.instance.users.member?('bart@mail.ch'), "Bart should not exist anymore"
     end
 
     it 'post /unregister should redirect to /unauthenticate' do
-      post '/unregister', {}, 'rack.session' => session =  { :user => 'Homer', :auth => true  }
+      post '/unregister', {}, 'rack.session' => session =  { :user => 'homer@mail.ch', :auth => true  }
       assert last_response.redirect?
       assert last_response.location.include?('/unauthenticate'), "Should redirect to /unauthenticate"
     end

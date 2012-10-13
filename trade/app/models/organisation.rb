@@ -5,7 +5,6 @@ require_relative('item')
 require_relative('account')
 require_relative('system')
 
-=begin
 module Models
  class Organisation < Models::Account
     #An Organisation is an account which is accessed by multiple users.
@@ -41,4 +40,3 @@ module Models
     end
   end
 end
-=end

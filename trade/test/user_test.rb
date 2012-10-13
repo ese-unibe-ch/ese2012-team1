@@ -14,15 +14,16 @@ class UserTest < Test::Unit::TestCase
 
 
   def setup
-    a = Models::System.instance
-    a.users.clear
-    a.items.clear
+    Models::System.instance.users = Hash.new
+    Models::System.instance.items = Hash.new
+
     Models::User.created("testuser", "password", "user@mail.ch", "Hey there", "../images/users/default_avatar.png")
   end
 
-  #def teardown
-  Models::System.instance.users.clear
-  # end
+  def teardown
+    Models::System.instance.users = Hash.new
+    Models::System.instance.items = Hash.new
+  end
 
   ##
   #
@@ -102,15 +103,14 @@ class UserTest < Test::Unit::TestCase
 
   #test for creation of an organisation by a user
   def test_user_organisation_create
-    Models::System.instance.fetch_user("user@mail.com").create_organisation("org", "I'm an organisation.")
+    user = Models::System.instance.fetch_user("user@mail.ch")
+    user.create_organisation("org", "I'm an organisation.", "../images/users/default_avatar.png")
     assert(Models::System.instance.fetch_organisations_of("user@mail.ch").size == 1, "Amount of organisations should be 1.")
     assert_equal(Models::System.instance.fetch_organisation("org").name, "org")
     assert_equal(Models::System.instance.fetch_organisation("org").description, "I'm an organisation.")
     assert_equal(Models::System.instance.fetch_organisation("org").credits, 100)
-    assert(Models::System.instance.fetch_organistaion("org").admin_list.size == 1, "Should have one admin.")
-    assert(Models::System.instance.fetch_organisation("org").list_admins[0].name, "testuser")
     assert(Models::System.instance.fetch_organisation("org").users.size == 1, "Should have one user.")
-    assert(Models::System.instance.fetch_organisation("org").list_users[0].name, "testuser")
+    assert(Models::System.instance.fetch_organisation("org").is_member?(user))
   end
 
   def test_create_user
@@ -131,8 +131,8 @@ class UserTest < Test::Unit::TestCase
     assert(sock.is_active?, "item should be active, is not")
     assert(old_owner.list_items[0].is_active?, "item should be active, is not")
 
-    if new_owner.buy_new_item?(sock)
-      old_owner.remove_item(sock)
+    if sock.can_be_bought_by?(new_owner)
+      new_owner.buy_item(sock)
     end
 
     assert(old_owner.list_items.size==0)
@@ -160,7 +160,7 @@ class UserTest < Test::Unit::TestCase
     sock.to_active
     assert(sock.is_active?, "item should be active, is not")
 
-    if new_owner.buy_new_item?(sock)
+    if sock.can_be_bought_by?(new_owner)
       old_owner.remove_item(sock)
     end
 
@@ -187,8 +187,8 @@ class UserTest < Test::Unit::TestCase
     a = user.create_item("testobject", 10)
     b = user.create_item("testobject2", 50)
     user.list_items_inactive { |e| e.to_active }
-    assert(Models::System.instance.fetch_user("user@mail.ch").list_items[0] == b, "Should be item \'testobject2\' but was #{Models::System.instance.fetch_user("user@mail.ch").list_items[0]}")
-    assert(Models::System.instance.fetch_user("user@mail.ch").list_items[1] == a, "Should be item \'testobject\' but was #{Models::System.instance.fetch_user("user@mail.ch").list_items[1]}")
+    assert(Models::System.instance.fetch_items_of("user@mail.ch")[0] == a, "Should be item \'testobject2\' but was #{Models::System.instance.fetch_items_of("user@mail.ch")[0]}")
+    assert(Models::System.instance.fetch_items_of("user@mail.ch")[1] == b, "Should be item \'testobject\' but was #{Models::System.instance.fetch_items_of("user@mail.ch")[1]}")
   end
 
   def test_method_list_inactive
@@ -208,7 +208,7 @@ class UserTest < Test::Unit::TestCase
     a.users.clear
     a.items.clear
     Models::User.created("testuser", "password", "user@mail.ch", "Hey there", "../images/users/default_avatar.png")
-    assert(Models::System.instance.fetch_user("user@mail.ch").has_item?('testobject2')==false)
+    assert(! Models::System.instance.fetch_user("user@mail.ch").has_item?('testobject2'))
     Models::System.instance.fetch_user("user@mail.ch").create_item("testobject2", 50)
     assert(Models::System.instance.fetch_user("user@mail.ch").has_item?(Models::System.instance.items.index('testobject2')))
   end
