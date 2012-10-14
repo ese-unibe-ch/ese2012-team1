@@ -4,6 +4,12 @@ module Helpers
     Haml::Engine.new(contents).render
   end
 
+
+  def render_file_with_argument(filename, arguments)
+    contents = File.read(absolute_path("../views/#{filename}", __FILE__))
+    Haml::Engine.new(contents).render(Object.new, :my_arguments => arguments)
+  end
+
   #Returns absolute path to the given relative path and __FILE__
   #
   #@param relative_path: absolute_path path seen from file of the calling class
