@@ -86,7 +86,7 @@ module Models
 
     # Returns all items but the ones of the specified user.
     def fetch_all_active_items_but_of(user_email)
-      fail "No such user email" unless self.users.member?(user_email)
+      fail "No such user email" unless self.users.one?{ |id, user| user.email == user_email }
       user = self.fetch_user(user_email)
       self.items.values.delete_if {| item| item.owner == user}.select {|i| i.active == true}
     end
