@@ -26,6 +26,7 @@ module Controllers
     end
 
     post "/authenticate" do
+      #Nicht sauber!
       user = Models::System.instance.fetch_user_by_email(params[:username])
       if User.login(user, params[:password])
         session[:user] = user.id
