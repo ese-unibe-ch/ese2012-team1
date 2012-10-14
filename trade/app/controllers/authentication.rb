@@ -26,9 +26,9 @@ module Controllers
     end
 
     post "/authenticate" do
-      user = Models::System.instance.get_user_by_email(params[:username])
-      if User.login(params[:username], params[:password])
-        session[:user] = params[:username]
+      user = Models::System.instance.fetch_user_by_email(params[:username])
+      if User.login(user, params[:password])
+        session[:user] = user.id
         session[:auth] = true
         redirect "/home"
       else

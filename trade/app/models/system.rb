@@ -41,7 +41,7 @@ module Models
     end
 
     def fetch_user_by_email(email)
-      self.accounts.values.detect
+      self.accounts.values.detect{|account| account.respond_to?(:email) && account.email == email}
     end
 
     # Returns all users but the one specified in an array
