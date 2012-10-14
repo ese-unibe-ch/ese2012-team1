@@ -43,7 +43,7 @@ module Controllers
 
     get '/users/:id' do
         user = params[:id]
-        haml :users_id, :locals => {:active_items => Models::System.instance.fetch_items_of(user)}
+        haml :users_id, :locals => {:active_items => Models::System.instance.fetch_active_items_of(user)}
     end
 
     get '/items' do
