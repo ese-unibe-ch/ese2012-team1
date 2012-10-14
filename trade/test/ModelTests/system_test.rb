@@ -220,8 +220,8 @@ class SystemTest < Test::Unit::TestCase
     items = add_items(users)
 
     remaining =  system.fetch_all_items_but_of(users[:momo].email)
-    assert(remaining.values.include?(items[:broom]))
-    assert(remaining.values.include?(items[:time]))
+    assert(remaining.include?(items[:broom]))
+    assert(remaining.include?(items[:time]))
     assert(remaining.size == 2, "There should be 2 items left, but there are #{remaining.to_s}.")
 
   end
