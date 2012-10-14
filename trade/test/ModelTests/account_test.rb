@@ -4,6 +4,18 @@ require 'require_relative'
 
 require_relative('../../app/models/account')
 
+class Models::Account
+  @saved = false
+
+  def save
+    @saved = true
+  end
+
+  def saved?
+    @saved
+  end
+end
+
 class AccountTest < Test::Unit::TestCase
 
   def setup
@@ -25,15 +37,17 @@ class AccountTest < Test::Unit::TestCase
     assert(account.description == "Pascals account", "Should have description")
     assert(account.avatar == "../images/users/default_avatar.png", "Should have avatar")
     assert(account.credits == 100, "Should have 100 credits")
+    assert(account.saved?, "Should be saved to system")
 
     account
   end
 
   def test_should_create_item_and_add_it_to_system
     account = create_account
-    account.create_item("Chaos", 100)
+    item = account.create_item("Chaos", 100)
 
-    assert(Models::System.instance.items.size == 1) #Not a really good test...
+    assert(Models::System.instance.items.size == 1)
+    assert(Models::System.instance.items.member?(item.id))
   end
 
   # test for item's owner after selling

@@ -21,7 +21,7 @@ module Models
     #  fails if the buyer has not enough credits.
 
     # generate getter and setter
-    attr_accessor :description, :avatar, :name, :credits
+    attr_accessor :description, :avatar, :name, :credits, :id
 
 
     ###
@@ -45,7 +45,13 @@ module Models
       account.description = description
       account.avatar = avatar
 
+      account.save
+
       account
+    end
+
+    def save
+      fail("Template method to be implemented by subclass")
     end
 
     #get string representation

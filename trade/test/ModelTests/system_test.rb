@@ -37,7 +37,7 @@ end
 
 
 class MockUser
-  attr_accessor :email
+  attr_accessor :email, :id
 
   def initialize
     self.email = "mail@mail.ch"
@@ -115,7 +115,7 @@ class SystemTest < Test::Unit::TestCase
     system = Models::System.instance
     user0 = MockUser.new
     system.add_user(user0)
-    assert(system.users.member?(user0.email), "User0 should already be added to the system")
+    assert(system.users.member?(user0.id), "User0 should already be added to the system")
     assert_raise(RuntimeError) { Models::System.instance.add_user(user0)}
   end
 

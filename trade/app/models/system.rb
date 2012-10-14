@@ -9,13 +9,14 @@ module Models
   class System
     include Singleton
 
-    attr_accessor :organisation, :users, :items, :item_id_count
+    attr_accessor :organisation, :users, :items, :item_id_count, :account_id_count
 
     def initialize
       self.organisation = Hash.new
       self.users = Hash.new
       self.items = Hash.new
       self.item_id_count = 0
+      self.account_id_count = 0
     end
 
     # ---------user------------------------------------------------------------
@@ -23,26 +24,32 @@ module Models
     # Adds an user to the system.
     def add_user(user)
       fail "No user" if (user == nil)
-      fail "User already exists" if (users.member?(user.email))
-      self.users.store(user.email, user)
+      fail "User already exists" if (users.one? {|id, users| users.email== user.email })
+
+      user.id = self.account_id_count
+      self.users.store(user.id, user)
+      self.account_id_count += 1
+
+      fail "User should have correct id" unless (user.id == account_id_count-1)
+      fail "User should be stored in users-hash" unless (self.users.member?(account_id_count-1))
     end
 
     # Returns the user with associated email.
     def fetch_user(user_email)
-      fail "No user with email #{user_email}" unless self.users.member?(user_email)
-      self.users.fetch(user_email)
+      fail "No user with email #{user_email}" unless self.users.one? { |id, user| user.email == user_email }
+      self.users.detect{|id, user| user.email == user_email }[1]
     end
 
     # Returns all users but the one specified in an array
     def fetch_all_users_but(user_email)
-      fail "No user with email #{user_email}" unless self.users.member?(user_email)
-      self.users.values - [fetch_user(user_email)]  # Array difference
+      fail "No user with email #{user_email}" unless self.users.one? { |id, user| user.email == user_email }
+      self.users.values - [self.fetch_user(user_email)]  # Array difference
     end
 
     # Removes an user from the system.
     def remove_user(user_email)
-      fail "No user with email #{user_email}" unless self.users.member?(user_email)
-      self.users.delete(user_email)
+      fail "No user with email #{user_email}" unless self.users.one? { |id, user| user.email == user_email }
+      self.users.delete_if { |id, user| user.email == user_email }
     end
 
     # --------item-------------------------------------------------------------
@@ -72,7 +79,7 @@ module Models
 
     # Returns all items but the ones of the specified user.
     def fetch_all_items_but_of(user_email)
-      fail "No such user email" unless self.users.member?(user_email)
+      fail "No such user email" unless self.users.one?{ |id, user| user.email == user_email }
       user = self.fetch_user(user_email)
       self.items.delete_if {|name, item| item.owner == user}
     end
@@ -101,7 +108,7 @@ module Models
 
     # Returns a list of all the user's organisations
     def fetch_organisations_of(user_email)
-      fail "No such user email #{user_email}" unless self.users.member?(user_email)
+      fail "No such user email #{user_email}" unless self.users.one? { |id, user| user.email == user_email }
       user = self.fetch_user(user_email)
       self.organisation.each{|org_name, org| org.is_member?(user)}
     end

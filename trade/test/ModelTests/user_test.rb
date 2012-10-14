@@ -45,7 +45,7 @@ class UserTest < Test::Unit::TestCase
   ##
 
   def test_should_create_user
-    assert(Models::System.instance.fetch_user("user@mail.ch") != nil, "Should create a test user")
+    assert(Models::System.instance.fetch_user("user@mail.ch") != nil, "Should create a test user in system")
   end
 
   def test_should_have_name

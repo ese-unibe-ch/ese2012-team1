@@ -48,21 +48,23 @@ module Models
       fail "Not a correct email address" unless email.is_email?
 #      fail "E-mail not unique" unless self.email_unique?(email)
 
-      user = self.new
-      user.name = name
+      user = super(name, description, avatar)
+
       user.email = email
-      user.description = description
-      user.avatar = avatar
-      user.credits = 100
       pw_salt = BCrypt::Engine.generate_salt
       pw_hash = BCrypt::Engine.hash_secret(password, pw_salt)
       user.password_salt = pw_salt
       user.password_hash = pw_hash
-      user.save
+
+      puts(user)
+      puts(user.class)
+
       user
     end
 
     def save
+      puts("saved!")
+      puts(self)
       Models::System.instance.add_user(self)
     end
 
@@ -111,8 +113,7 @@ module Models
     end
 
     def self.login email, password
-      puts "#{email}, #{password}"
-      return false unless Models::System.instance.users.member?(email)
+      return false unless Models::System.instance.users.one? { |id, user| user.email == email }
       user = Models::System.instance.fetch_user(email)
       puts "#{user}"
       user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
