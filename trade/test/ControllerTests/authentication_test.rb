@@ -8,19 +8,14 @@ require 'test_helper'
 
 ENV['RACK_ENV'] = 'test'
 
-require_relative '../app/controllers/authentication'
-require_relative '../app/models/user'
+require_relative '../../app/controllers/authentication'
+require_relative '../../app/models/user'
 
 class AuthenticationTest < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def app
     Controllers::Authentication
-  end
-
-  def teardown
-    Models::System.instance.users = Hash.new
-    Models::System.instance.items = Hash.new
   end
 
   describe 'Simple Tests' do
@@ -45,6 +40,8 @@ class AuthenticationTest < Test::Unit::TestCase
     end
 
     it 'post /authenticate should redirect to /home' do
+      assert(Models::System.instance.users.member?('homer@mail.ch'), "Homer should be part of the system only #{Models::System.instance.users}")
+
       post "/authenticate", :username => "homer@mail.ch", :password => 'homer', 'rack.session' => { :user => nil, :auth => false  }
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
       assert last_response.location.include?('/home')

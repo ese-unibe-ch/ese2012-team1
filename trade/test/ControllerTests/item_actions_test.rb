@@ -9,20 +9,15 @@ require 'test_helper'
 
 ENV['RACK_ENV'] = 'test'
 
-require_relative '../app/controllers/item_actions'
-require_relative '../app/models/item'
-require_relative '../app/models/system'
+require_relative '../../app/controllers/item_actions'
+require_relative '../../app/models/item'
+require_relative '../../app/models/system'
 
 class ItemActionsTest < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def app
     Controllers::ItemActions
-  end
-
-  def teardown
-    Models::System.instance.users = Hash.new
-    Models::System.instance.items = Hash.new
   end
 
   describe 'Simple Tests' do
@@ -72,7 +67,7 @@ class ItemActionsTest < Test::Unit::TestCase
       homers_items = Models::System.instance.fetch_items_of(user.email)
       assert(!homers_items.include?('Gold'), "Should not own gold before post /create")
 
-      file = Rack::Test::UploadedFile.new("../app/public/images/items/default_item.png", "image/png")
+      file = Rack::Test::UploadedFile.new("../../app/public/images/items/default_item.png", "image/png")
 
       post '/create', { :item_picture => file, :name => 'Gold', :price => 100, :description => 'Very very valuable'}, 'rack.session' => { :user => user.email, :auth => true  }
 
@@ -81,7 +76,7 @@ class ItemActionsTest < Test::Unit::TestCase
       assert(item.name == 'Gold', "Should own gold but instead did own: #{homers_items}")
 
       # Removing File after test
-      File.delete("#{item.picture.sub("images", "app/public/images")}")
+      File.delete("#{item.picture.sub("images", "../app/public/images")}")
     end
 
     it 'post /home/edit/save should save changes' do
@@ -91,7 +86,7 @@ class ItemActionsTest < Test::Unit::TestCase
       item = items[:skateboard]
       item.to_inactive
 
-      file = Rack::Test::UploadedFile.new("../app/public/images/items/default_item.png", "image/png")
+      file = Rack::Test::UploadedFile.new("../../app/public/images/items/default_item.png", "image/png")
 
       post '/home/edit/save', { :id => item.id, :item_picture => file, :new_description => 'Kind of used...', :new_price => 200 }, 'rack.session' => { :user => 'bart@mail.ch', :auth => true  }
       assert(users[:bart].has_item?(item.id), "Should own skateboard")
@@ -100,7 +95,7 @@ class ItemActionsTest < Test::Unit::TestCase
       assert(item.picture == "../images/items/#{item.id}.png", "Path to file should be ../images/items/#{item.id}.png but was #{item.picture}")
 
       # Removing File after test
-      File.delete("#{item.picture.sub("images", "app/public/images")}")
+      File.delete("#{item.picture.sub("images", "../app/public/images")}")
     end
   end
 end

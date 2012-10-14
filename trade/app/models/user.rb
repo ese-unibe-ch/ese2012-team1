@@ -111,6 +111,7 @@ module Models
     end
 
     def self.login email, password
+      puts "#{email}, #{password}"
       return false unless Models::System.instance.users.member?(email)
       user = Models::System.instance.fetch_user(email)
       puts "#{user}"
@@ -132,7 +133,6 @@ module Models
     def create_organisation(name, description, picture)
       organisation = Models::Organisation.created(name, description, picture)
       Models::System.instance.add_organisation(organisation)
-
       organisation
     end
 

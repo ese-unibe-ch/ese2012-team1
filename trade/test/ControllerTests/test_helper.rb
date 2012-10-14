@@ -17,8 +17,7 @@ class TestHelper
 
   def self.load
     self.clear_all
-    @@items = Hash.new
-    @@users = Hash.new
+    self.reset
 
     bart = Models::User.created('Bart' , 'bart', 'bart@mail.ch', 'I\' should not...', '../images/users/default_avatar.png')
     @@users.store(:bart, bart)
@@ -61,7 +60,17 @@ class TestHelper
   ##
 
   def self.clear_all
-    Models::System.instance.users = Hash.new
-    Models::System.instance.items = Hash.new
+    Models::System.instance.reset
+  end
+
+  ##
+  #
+  # Resets all class variables
+  #
+  ##
+
+  def self.reset
+    @@items = Hash.new
+    @@users = Hash.new
   end
 end

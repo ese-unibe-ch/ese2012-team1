@@ -8,8 +8,8 @@ require 'test_helper'
 
 ENV['RACK_ENV'] = 'test'
 
-require_relative '../app/controllers/registration'
-require_relative '../app/models/user'
+require_relative '../../app/controllers/registration'
+require_relative '../../app/models/user'
 
 class RegistrationTest < Test::Unit::TestCase
   include Rack::Test::Methods
