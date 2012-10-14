@@ -30,27 +30,29 @@ class ItemActionsTest < Test::Unit::TestCase
 
     it 'post /changestate/setinactive should set an item inactive' do
       items = TestHelper.get_items
+      users = TestHelper.get_users
       item = items[:skateboard]
 
       assert(item.is_active?, "Item should be active")
 
-      post '/changestate/setinactive', {:id => item.id }, 'rack.session' => {:user => 'bart@mail.ch', :auth => true}
+      post '/changestate/setinactive', {:id => item.id }, 'rack.session' => {:user => users[:bart].id, :auth => true}
 
       assert(!item.is_active?, "Item should be inactive")
     end
 
     it 'post /changestate/setactive should set an item active' do
-      item = Models::System.instance.fetch_user('bart@mail.ch').create_item('sling', 20)
+      user = Models::System.instance.fetch_user_by_email('bart@mail.ch')
+      item = user.create_item('sling', 20)
 
       assert(!item.is_active?, "Item should be inactive")
 
-      post '/changestate/setactive', {:id => item.id}, 'rack.session' => {:user => 'bart@mail.ch', :auth => true}
+      post '/changestate/setactive', {:id => item.id}, 'rack.session' => {:user => user.id, :auth => true}
 
       assert(item.is_active?, "Item should be active")
     end
 
     it 'post /changestate/setactive should not set items of somebody else active' do
-       item = Models::System.instance.fetch_user('bart@mail.ch').create_item('sling', 20)
+       item = Models::System.instance.fetch_user_by_email('bart@mail.ch').create_item('sling', 20)
 
        assert(!item.is_active?, "Item should be inactive")
 
@@ -62,16 +64,16 @@ class ItemActionsTest < Test::Unit::TestCase
     end
 
     it 'post /create should create a new item' do
-      user = Models::System.instance.fetch_user('homer@mail.ch')
+      user = Models::System.instance.fetch_user_by_email('homer@mail.ch')
 
-      homers_items = Models::System.instance.fetch_items_of(user.email)
+      homers_items = Models::System.instance.fetch_items_of(user.id)
       assert(!homers_items.include?('Gold'), "Should not own gold before post /create")
 
       file = Rack::Test::UploadedFile.new("../../app/public/images/items/default_item.png", "image/png")
 
-      post '/create', { :item_picture => file, :name => 'Gold', :price => 100, :description => 'Very very valuable'}, 'rack.session' => { :user => user.email, :auth => true  }
+      post '/create', { :item_picture => file, :name => 'Gold', :price => 100, :description => 'Very very valuable'}, 'rack.session' => { :user => user.id, :auth => true  }
 
-      homers_items = Models::System.instance.fetch_items_of(user.email)
+      homers_items = Models::System.instance.fetch_items_of(user.id)
       item = homers_items.detect{|item| item.name == 'Gold'}
       assert(item.name == 'Gold', "Should own gold but instead did own: #{homers_items}")
 

@@ -56,15 +56,10 @@ module Models
       user.password_salt = pw_salt
       user.password_hash = pw_hash
 
-      puts(user)
-      puts(user.class)
-
       user
     end
 
     def save
-      puts("saved!")
-      puts(self)
       Models::System.instance.add_account(self)
     end
 

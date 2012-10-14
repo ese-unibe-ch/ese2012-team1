@@ -90,7 +90,7 @@ module Models
     # Returns all items but the ones of the specified user.
     def fetch_all_items_but_of(account_id)
       fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
-      self.items.values.delete_if {|item| item.owner.id != account_id}
+      self.items.values.delete_if {|item| item.owner.id == account_id}
     end
 
     # Returns all active items but the ones of the specified user.

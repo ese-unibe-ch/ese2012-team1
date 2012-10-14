@@ -56,7 +56,7 @@ module Models
 
     #get string representation
     def to_s
-      "#{self.name} has currently #{self.credits} credits"
+      "#{self.name}:#{self.id}"
     end
 
     #let the account create a new item and returns it

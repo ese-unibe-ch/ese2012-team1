@@ -25,8 +25,11 @@ class MainTest < Test::Unit::TestCase
       end
     end
 
-    it 'get /home as Homer should show home site' do
-      get '/home', {}, 'rack.session' => { :user => 'homer@mail.ch', :auth => true  }
+    it 'get /home as Homer should his show home site' do
+      users = TestHelper.get_users
+      puts(users)
+      puts((users[:homer]).id)
+      get '/home', {}, 'rack.session' => { :user => users[:homer].id, :auth => true  }
       assert last_response.ok?
       assert last_response.body.include?('Trading System'), "Should show title but was\n#{last_response.body}"
     end

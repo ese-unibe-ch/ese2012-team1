@@ -69,7 +69,7 @@ class RegistrationTest < Test::Unit::TestCase
       post "/register", {:password => 'aB12De', :re_password => 'aB12De', :name => 'Matz', :interests => "Ruby rocks!",
                          :email => 'matz@mail.ch'},
            'rack.session' => session =  { :user => nil, :auth => false  }
-      user = Models::System.instance.users.fetch('matz@mail.ch')
+      user = Models::System.instance.fetch_user_by_email('matz@mail.ch')
       assert(user != nil, "User should exist within system")
       assert(user.name == 'Matz', "User should be called Matz but was #{user.name}");
       assert(user.email == 'matz@mail.ch', "User should have email matz@mail.ch but was #{user.email}")
@@ -94,14 +94,16 @@ class RegistrationTest < Test::Unit::TestCase
       assert last_response.body.include?('Password:'), "Should ask for password but was\n#{last_response.body}"
     end
 
-    it 'post /unregister should remove Homer from list of users' do
-      assert Models::System.instance.users.member?('bart@mail.ch'), "Bart should exist"
-      post '/unregister', {}, 'rack.session' => session =  { :user => 'bart@mail.ch', :auth => true  }
-      assert !Models::System.instance.users.member?('bart@mail.ch'), "Bart should not exist anymore"
+    it 'post /unregister should remove bart from list of users' do
+      users = TestHelper.get_users
+      post '/unregister', {}, 'rack.session' => { :user => users[:bart].id, :auth => true  }
+      assert !Models::System.instance.accounts.member?(users[:bart].id), "Bart should not exist anymore"
     end
 
     it 'post /unregister should redirect to /unauthenticate' do
-      post '/unregister', {}, 'rack.session' => session =  { :user => 'homer@mail.ch', :auth => true  }
+      users = TestHelper.get_users
+
+      post '/unregister', {}, 'rack.session' => { :user => users[:homer].id, :auth => true  }
       assert last_response.redirect?
       assert last_response.location.include?('/unauthenticate'), "Should redirect to /unauthenticate"
     end

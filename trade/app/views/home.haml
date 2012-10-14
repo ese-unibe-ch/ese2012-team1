@@ -1,7 +1,7 @@
 %h2 Your Profile
 %br
 #usr_img
-  %img(height=200 width=200){ :alt => Models::System.instance.fetch_account(session[:user]).name, :src => Models::System.instance.fetch_account(session[:user]).avatar }
+  %img(height=200 width=200){ :alt => Models::System.instance.fetch_account(session[:user].to_i).name, :src => Models::System.instance.fetch_account(session[:user].to_i).avatar }
 
 %br
 = "Currently logged in as User: #{Models::System.instance.fetch_account(session[:user]).name}"

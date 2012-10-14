@@ -115,7 +115,7 @@ class UserTest < Test::Unit::TestCase
   def test_create_user
     assert(Models::System.instance.fetch_account(0).name == "testuser", "Name should be correct")
     assert(Models::System.instance.fetch_account(0).credits == 100, "Credits should be 100 first")
-    assert(Models::System.instance.fetch_account(0).to_s == "testuser has currently 100 credits", "String representation is wrong generated")
+    assert(Models::System.instance.fetch_account(0).to_s == "testuser:0", "String representation is wrong generated")
   end
 
   def test_sales

@@ -11,7 +11,7 @@ class LoginTest < Test::Unit::TestCase
     driver.get("localhost:4567/login")
 
     element = driver.find_element :name => "username"
-    element.send_keys "ese"
+    element.send_keys "ese@mail.ch"
     element = driver.find_element :name => "password"
     element.send_keys "ese"
 

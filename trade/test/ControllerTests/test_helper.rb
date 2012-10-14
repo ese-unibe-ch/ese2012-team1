@@ -26,7 +26,7 @@ class TestHelper
     @@items[:skateboard].to_active
 
     homer = Models::User.created('Homer', 'homer', 'homer@mail.ch', 'Do!', '../images/users/default_avatar.png')
-    @@users.store(homer.name, homer)
+    @@users.store(:homer, homer)
     @@items.store(:beer, homer.create_item('Beer', 200))
     @@items[:beer].to_active
   end

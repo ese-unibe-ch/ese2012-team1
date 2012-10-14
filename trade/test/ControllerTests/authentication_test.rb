@@ -28,7 +28,7 @@ class AuthenticationTest < Test::Unit::TestCase
     it 'get /login should show login.html' do
       get '/login', {}, 'rack.session' => { :user => nil, :auth => false  }
       assert last_response.ok?
-      assert last_response.body.include?('Name:'), "Should ask for name but was\n#{last_response.body}"
+      assert last_response.body.include?('E-Mail:'), "Should ask for name but was\n#{last_response.body}"
       assert last_response.body.include?('Password:'), "Should ask for password but was\n#{last_response.body}"
     end
 
@@ -40,8 +40,6 @@ class AuthenticationTest < Test::Unit::TestCase
     end
 
     it 'post /authenticate should redirect to /home' do
-      assert(Models::System.instance.users.member?('homer@mail.ch'), "Homer should be part of the system only #{Models::System.instance.users}")
-
       post "/authenticate", :username => "homer@mail.ch", :password => 'homer', 'rack.session' => { :user => nil, :auth => false  }
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
       assert last_response.location.include?('/home')
