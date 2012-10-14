@@ -105,7 +105,7 @@ class UserTest < Test::Unit::TestCase
   def test_user_organisation_create
     user = Models::System.instance.fetch_user("user@mail.ch")
     org = user.create_organisation("org", "I'm an organisation.", "../images/users/default_avatar.png")
-    org.set_admin(user)
+    org.add_member(user)
 
     assert(Models::System.instance.fetch_organisations_of("user@mail.ch").size == 1,
            "Amount of organisations should be 1 but was #{Models::System.instance.fetch_organisations_of("user@mail.ch").size}.")

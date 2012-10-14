@@ -20,7 +20,7 @@ module Models
       self.users = Hash.new
     end
 
-    def set_admin(user)
+    def add_member(user)
       self.users.store(user.email, user)
     end
 
@@ -30,10 +30,6 @@ module Models
 
     def save
       Models::System.instance.add_organisation(self)
-    end
-
-    def get_name
-      self.name
     end
   end
 end
