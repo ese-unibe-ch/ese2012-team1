@@ -1,10 +1,10 @@
-%h2= "#{Models::System.instance.fetch_user(params[:id]).name}'s Items"
+%h2= "#{Models::System.instance.fetch_account(params[:id].to_i).name}'s Items"
 #usr_img
-  %img(height=200 width=200){ :alt => Models::System.instance.fetch_account(params[:id]).name, :src => Models::System.instance.fetch_account(params[:id]).avatar }
+  %img(height=200 width=200){ :alt => Models::System.instance.fetch_account(params[:id].to_i).name, :src => Models::System.instance.fetch_account(params[:id].to_i).avatar }
 %br
   = "Description:"
   %br
-  = "#{Models::System.instance.fetch_account(params[:id]).description}"
+  = "#{Models::System.instance.fetch_account(params[:id].to_i).description}"
 %br
 %h3 Check out my Items:
 %ul
