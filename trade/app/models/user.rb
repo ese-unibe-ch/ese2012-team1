@@ -117,8 +117,8 @@ module Models
     #Removes himself from the list of users and of the Models::System
     #Removes user's items beforehand
     def clear
-      Models::System.instance.fetch_items_of(self.email).each { |e| Models::System.instance.remove_item(e) }
-      Models::System.instance.remove_user(self.email)
+      Models::System.instance.fetch_items_of(self.id).each { |e| Models::System.instance.remove_item(e) }
+      Models::System.instance.remove_account(self.id)
     end
 
     # Allows the user to create an organisation of which he automatically becomes the admin.
