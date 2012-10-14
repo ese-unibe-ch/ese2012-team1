@@ -13,7 +13,7 @@ include Helpers
 
 module Controllers
   class ItemActions < Sinatra::Application
-    set :views , "#{absolute_path('../views', __FILE__)}"
+    set :views, "#{absolute_path('../views', __FILE__)}"
 
     before do
       redirect "/" unless session[:auth]
@@ -29,38 +29,38 @@ module Controllers
     ##
 
     post '/create' do
-        fail "Should have name." if params[:name] == nil
-        fail "Should have price" if params[:price] == nil
-        fail "Should have description" if params[:description] == nil
-        fail "Should be number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:price])
+      fail "Should have name." if params[:name] == nil
+      fail "Should have price" if params[:price] == nil
+      fail "Should have description" if params[:description] == nil
+      fail "Should be number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:price])
 
-        user = session[:user]
+      user = session[:user]
 
-          new_item = Models::System.instance.fetch_user(user).create_item(params[:name], Integer((params[:price]).to_i))
-          new_item.add_description(params[:description])
+      new_item = Models::System.instance.fetch_user(user).create_item(params[:name], Integer((params[:price]).to_i))
+      new_item.add_description(params[:description])
 
-          dir = absolute_path('../public/images/items/', __FILE__)
+      dir = absolute_path('../public/images/items/', __FILE__)
 
-          if params[:item_picture] != nil
-            tempfile = params[:item_picture][:tempfile]
-            filename = params[:item_picture][:filename]
-            file_path ="#{dir}#{new_item.id}#{File.extname(filename)}"
-            File.copy(tempfile.path, file_path)
-            file_path = "../images/items/#{new_item.id}#{File.extname(filename)}"
-            new_item.add_picture(file_path)
-          end
+      if params[:item_picture] != nil
+        tempfile = params[:item_picture][:tempfile]
+        filename = params[:item_picture][:filename]
+        file_path ="#{dir}#{new_item.id}#{File.extname(filename)}"
+        File.copy(tempfile.path, file_path)
+        file_path = "../images/items/#{new_item.id}#{File.extname(filename)}"
+        new_item.add_picture(file_path)
+      end
 
-        redirect "/home/inactive"
+      redirect "/home/inactive"
     end
 
     post '/changestate/setactive' do
-        item = Models::System.instance.fetch_item(params[:id])
+      item = Models::System.instance.fetch_item(params[:id])
 
-        if item.owner.email == session[:user]
-          item.to_active
-        end
+      if item.owner.email == session[:user]
+        item.to_active
+      end
 
-        redirect "/home/inactive"
+      redirect "/home/inactive"
     end
 
     post '/changestate/setinactive' do
@@ -85,7 +85,7 @@ module Controllers
       description = Models::System.instance.fetch_item(id).description
       price = Models::System.instance.fetch_item(id).price
       picture = Models::System.instance.fetch_item(id).picture
-      haml :home_edit , :locals => {:id => id, :name => name, :description => description, :price => price, :picture => picture}
+      haml :home_edit, :locals => {:id => id, :name => name, :description => description, :price => price, :picture => picture}
     end
 
     ###
@@ -122,17 +122,17 @@ module Controllers
     end
 
     post '/buy' do
-        id = params[:id]
-        item = Models::System.instance.fetch_item(id)
-        old_user = item.get_owner
-        user = session[:user]
-        new_user = User.get_user(user)
-        if new_user.buy_new_item?(item)
-          old_user.remove_item(item)
-        else
-          redirect "/error/Not_Enough_Credits"
-        end
+      id = params[:id]
+      item = Models::System.instance.fetch_item(id)
+      user = session[:user]
+      new_user = Models::System.instance.fetch_user(user)
+      if (item.can_be_bought_by?(new_user))
+        new_user.buy_item(item)
         redirect "/home/inactive"
+      else
+        redirect "/error/Not_Enough_Credits"
+      end
+
     end
 
   end
