@@ -34,9 +34,9 @@ module Controllers
       fail "Should have description" if params[:description] == nil
       fail "Should be number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:price])
 
-      user = session[:user]
+      id = session[:user]
 
-      new_item = Models::System.instance.fetch_user(user).create_item(params[:name], Integer((params[:price]).to_i))
+      new_item = Models::System.instance.fetch_account(id).create_item(params[:name], Integer((params[:price]).to_i))
       new_item.add_description(params[:description])
 
       dir = absolute_path('../public/images/items/', __FILE__)
@@ -56,7 +56,7 @@ module Controllers
     post '/changestate/setactive' do
       item = Models::System.instance.fetch_item(params[:id])
 
-      if item.owner.email == session[:user]
+      if item.owner.id == session[:user]
         item.to_active
       end
 
@@ -67,7 +67,7 @@ module Controllers
       item = Models::System.instance.fetch_item(params[:id])
 
       puts ("item: #{item}")
-      if item.owner.email == session[:user]
+      if item.owner.id == session[:user]
         item.to_inactive
       end
       redirect "/home/active"
@@ -124,9 +124,9 @@ module Controllers
     post '/buy' do
       id = params[:id]
       item = Models::System.instance.fetch_item(id)
-      user = session[:user]
-      new_user = Models::System.instance.fetch_user(user)
-      if (item.can_be_bought_by?(new_user))
+      user_id = session[:user]
+      new_user = Models::System.instance.fetch_account(user_id)
+      if item.can_be_bought_by?(new_user)
         new_user.buy_item(item)
         redirect "/home/inactive"
       else
