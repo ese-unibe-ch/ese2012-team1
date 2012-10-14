@@ -26,8 +26,10 @@ class MockItem
 end
 
 class MockOrganisation
-  def get_name
-    "Meister Hora Club"
+  attr_accessor :name
+
+  def initialize
+    self.name = "Meister Hora Club"
   end
 
   def is_member?(user_email)
@@ -266,7 +268,7 @@ class SystemTest < Test::Unit::TestCase
     organisation = MockOrganisation.new
 
     system.add_organisation(organisation)
-    assert(system.fetch_organisations_of("kassiopeia@mail.ch").include?(organisation.get_name))
+    assert(system.fetch_organisations_of("kassiopeia@mail.ch").include?(organisation.name))
   end
 
   def test_should_remove_organisation
@@ -274,9 +276,9 @@ class SystemTest < Test::Unit::TestCase
 
     organisation = MockOrganisation.new
     system.add_organisation(organisation)
-    assert(system.organisation.include?(organisation.get_name))
+    assert(system.organisation.include?(organisation.name))
 
-    system.remove_organisation(organisation.get_name)
+    system.remove_organisation(organisation.name)
     assert(system.organisation.size == 0, "There should be no organisation left, but is still #{system.organisation.size}")
   end
 

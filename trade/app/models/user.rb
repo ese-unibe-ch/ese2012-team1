@@ -68,16 +68,6 @@ module Models
       Models::System.instance.add_user(self)
     end
 
-    # get string representation of user's name
-    def get_name
-      self.name
-    end
-
-    #get amount of user's credits
-    def get_credits
-      self.credits
-    end
-
     #return user's item list active
     # @param user_mail
     def list_items

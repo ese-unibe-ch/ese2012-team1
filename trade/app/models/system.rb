@@ -97,7 +97,7 @@ module Models
     # Adds an organisation to the system.
     def add_organisation(org)
       fail "No organisation" if (org == nil)
-      organisation.store(org.get_name, org)
+      organisation.store(org.name, org)
     end
 
     # Returns the organisation with associated name.

@@ -118,7 +118,7 @@ class UserTest < Test::Unit::TestCase
 
   def test_create_user
     assert(Models::System.instance.fetch_user("user@mail.ch").name == "testuser", "Name should be correct")
-    assert(Models::System.instance.fetch_user("user@mail.ch").get_credits == 100, "Credits should be 100 first")
+    assert(Models::System.instance.fetch_user("user@mail.ch").credits == 100, "Credits should be 100 first")
     assert(Models::System.instance.fetch_user("user@mail.ch").to_s == "testuser has currently 100 credits", "String representation is wrong generated")
   end
 
@@ -146,8 +146,8 @@ class UserTest < Test::Unit::TestCase
     assert(!sock.is_active?, "item should not be active, is")
     assert(!new_owner.list_items_inactive[0].is_active?, "item should not be active, is")
 
-    assert(old_owner.get_credits == 110, "Seller should now have more money")
-    assert(new_owner.get_credits == 90, "Buyer should now have less money")
+    assert(old_owner.credits == 110, "Seller should now have more money")
+    assert(new_owner.credits == 90, "Buyer should now have less money")
 
     old_owner.clear
     new_owner.clear
@@ -174,8 +174,8 @@ class UserTest < Test::Unit::TestCase
 
     assert(sock.is_active?, "item should be active, is not")
 
-    assert(old_owner.get_credits == 100, "Money should be like before")
-    assert(new_owner.get_credits == 100, "Money should be like before")
+    assert(old_owner.credits == 100, "Money should be like before")
+    assert(new_owner.credits == 100, "Money should be like before")
 
     old_owner.clear
     new_owner.clear
