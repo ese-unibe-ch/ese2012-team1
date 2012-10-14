@@ -77,6 +77,13 @@ module Models
       self.items.values.select {| item| item.owner == user}
     end
 
+    # Returns a hash with all active items of this user.
+    def fetch_active_items_of(user_email)
+      fail "No such user email" unless self.fetch_user(user_email)
+      user = self.fetch_user(user_email)
+      self.items.values.select {| item| item.owner == user}.select {|i| i.active == true}
+    end
+
     # Returns all items but the ones of the specified user.
     def fetch_all_items_but_of(user_email)
       fail "No such user email" unless self.users.one?{ |id, user| user.email == user_email }
@@ -84,7 +91,7 @@ module Models
       self.items.values.delete_if {| item| item.owner == user}
     end
 
-    # Returns all items but the ones of the specified user.
+    # Returns all active items but the ones of the specified user.
     def fetch_all_active_items_but_of(user_email)
       fail "No such user email" unless self.users.one?{ |id, user| user.email == user_email }
       user = self.fetch_user(user_email)
