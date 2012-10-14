@@ -96,11 +96,15 @@ module Controllers
     #
     ##
     get '/unregister' do
+      puts "get session: #{session[:auth]}"
+      puts "get user: #{session[:user]}"
       haml :unregister
     end
 
 
     post '/unregister' do
+      puts "post session: #{session[:auth]}"
+      puts "post user: #{session[:user]}"
       user = Models::System.instance.users.fetch(session[:user])
       user.clear
 
