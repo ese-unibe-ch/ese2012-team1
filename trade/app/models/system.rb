@@ -84,19 +84,19 @@ module Models
     def fetch_active_items_of(user_email)
       fail "No such user email" unless self.fetch_user(user_email)
       user = self.fetch_user(user_email)
-      self.items.values.select {| item| item.owner == user}.select {|i| i.active == true}
+      self.items.values.select {| item| item.owner == user}.select {|i| i.active}
     end
 
     # Returns all items but the ones of the specified user.
     def fetch_all_items_but_of(account_id)
       fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
-      self.items.values.delete_if {|item| item.owner.id == account_id}
+      self.items.values.delete_if {|item| item.owner.id != account_id}
     end
 
     # Returns all active items but the ones of the specified user.
     def fetch_all_active_items_but_of(account_id)
       fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
-      self.items.values.select{|item| item.owner.id == account_id && item.active}
+      self.items.values.select{|item| item.owner.id != account_id && item.active}
     end
 
     # Removes an item from the system
