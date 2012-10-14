@@ -24,12 +24,12 @@ module Controllers
 
     get '/home/active' do
         user = session[:user]
-        haml :home_active, :locals => {:active_items => User.get_user(user).list_items}
+        haml :home_active, :locals => {:active_items => Models::System.instance.fetch_user(user).list_items}
     end
 
     get '/home/inactive' do
         user = session[:user]
-        haml :home_inactive, :locals => {:inactive_items => User.get_user(user).list_items_inactive}
+        haml :home_inactive, :locals => {:inactive_items => Models::System.instance.fetch_user(user).list_items_inactive}
     end
 
     get '/home/new' do
@@ -38,17 +38,17 @@ module Controllers
 
     get '/users' do
         viewer = session[:user]
-        haml :users, :locals => {:all_users => User.get_all(viewer)}
+        haml :users, :locals => {:all_users => Models::System.instance.fetch_all_users_but(viewer)}
     end
 
     get '/users/:id' do
         user = params[:id]
-        haml :users_id, :locals => {:active_items => User.get_user(user).list_items}
+        haml :users_id, :locals => {:active_items => Models::System.instance.fetch_items_of(user)}
     end
 
     get '/items' do
         viewer = session[:user]
-        haml :items, :locals => {:all_items => Item.get_all(viewer)}
+        haml :items, :locals => {:all_items => Models::System.instance.fetch_all_items_but_of(viewer)}
     end
 
     get '/error/:title' do

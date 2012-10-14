@@ -74,7 +74,7 @@ module Models
     def fetch_all_items_but_of(user_email)
       fail "No such user email" unless self.users.member?(user_email)
       user = self.fetch_user(user_email)
-      self.items.delete_if {|name, item| item.owner == user}
+      self.items.values.delete_if {| item| item.owner == user}
     end
 
     # Removes an item from the system
