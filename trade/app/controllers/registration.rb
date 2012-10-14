@@ -83,8 +83,8 @@ module Controllers
         file_path = "../images/users/#{params[:name]}.#{filename.sub(/.*\./, "")}"
       end
 
-      User.created(name, password, email, description, file_path)
-      session[:user] = email
+      user = User.created(name, password, email, description, file_path)
+      session[:user] = user.id
       session[:auth] = true
       redirect '/'
     end
@@ -101,7 +101,7 @@ module Controllers
 
 
     post '/unregister' do
-      user = Models::System.instance.fetch_user(session[:user])
+      user = Models::System.instance.fetch_account(session[:user])
       user.clear
 
       redirect '/unauthenticate'
