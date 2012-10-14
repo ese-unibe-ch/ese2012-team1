@@ -26,6 +26,7 @@ module Controllers
     end
 
     post "/authenticate" do
+      user = Models::System.instance.get_user_by_email(params[:username])
       if User.login(params[:username], params[:password])
         session[:user] = params[:username]
         session[:auth] = true

@@ -95,9 +95,13 @@ module Controllers
     # to '/unauthenticate'
     #
     ##
+    get '/unregister' do
+      haml :unregister
+    end
+
 
     post '/unregister' do
-      user = Models::System.instance.users.fetch(session[:user])
+      user = Models::System.instance.fetch_user(session[:user])
       user.clear
 
       redirect '/unauthenticate'

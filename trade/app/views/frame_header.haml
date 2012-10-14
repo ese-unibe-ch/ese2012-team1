@@ -1,3 +1,5 @@
 %div(id='header')
   %h1
     Trading System
+  %div(id='switch')
+    = render_file_with_argument('switch_and_account.haml', [my_arguments[1]]) if my_arguments[0] == "yes"

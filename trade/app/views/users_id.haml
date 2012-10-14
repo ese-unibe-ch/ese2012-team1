@@ -1,8 +1,10 @@
-%h2= "Users (#{params[:id]}) Active Items"
+%h2= "#{Models::System.instance.fetch_user(params[:id]).name}'s Items"
 #usr_img
-  %img(height=200 width=200){ :alt => User.get_user(params[:id]).name, :src => User.get_user(params[:id]).avatar }
+  %img(height=200 width=200){ :alt => Models::System.instance.fetch_user(params[:id]).name, :src => Models::System.instance.fetch_user(params[:id]).avatar }
 %br
-%div= User.get_user(params[:id]).description
+  = "Description:"
+  %br
+  = "#{Models::System.instance.fetch_user(params[:id]).description}"
 %br
 %h3 Check out my Items:
 %ul

@@ -40,6 +40,10 @@ module Models
       self.accounts.fetch(account_id)
     end
 
+    def fetch_user_by_email(email)
+      self.accounts.values.detect
+    end
+
     # Returns all users but the one specified in an array
     def fetch_all_accounts_but(account_id)
       fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
@@ -76,13 +80,20 @@ module Models
       self.items.values.select {|item| item.owner.id == account_id}
     end
 
+    # Returns a hash with all active items of this user.
+    def fetch_active_items_of(user_email)
+      fail "No such user email" unless self.fetch_user(user_email)
+      user = self.fetch_user(user_email)
+      self.items.values.select {| item| item.owner == user}.select {|i| i.active == true}
+    end
+
     # Returns all items but the ones of the specified user.
     def fetch_all_items_but_of(account_id)
       fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
       self.items.values.delete_if {|item| item.owner.id == account_id}
     end
 
-    # Returns all items but the ones of the specified user.
+    # Returns all active items but the ones of the specified user.
     def fetch_all_active_items_but_of(account_id)
       fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
       self.items.values.select{|item| item.owner.id == account_id && item.active}

@@ -38,6 +38,13 @@ div#header {
     background: #347C2C;
     padding-left: 5em
 }
+div#switch {
+    background: #A0C544;
+    position:absolute;
+    top:2em;
+    right:3em;
+    padding: 20px;
+ }
 
 div#footer {
     position: fixed;
