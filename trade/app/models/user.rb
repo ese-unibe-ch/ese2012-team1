@@ -122,9 +122,9 @@ module Models
     # @return new_organization    the organisation which was created
     # @param picture : picture of the organisation
     def create_organisation(name, description, picture)
-      Models::Organisation.created(name, description, picture)
+      org = Models::Organisation.created(name, description, picture)
+      org.add_member(self)
+      org
     end
-
-
   end
 end

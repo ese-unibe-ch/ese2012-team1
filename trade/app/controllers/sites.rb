@@ -62,5 +62,21 @@ module Controllers
         haml :error, :locals => {:error_title => params[:title], :error_message => msg}
     end
 
+    get '/create/organisation' do
+        haml :create_organisation
+    end
+
+    post '/create/organisation' do
+      fail "Should have name" if params[:name].nil?
+      fail "Should have description" if params[:description].nil?
+
+      user = Models::System.instance.fetch_account(session[:user])
+      user.create_organisation(params[:name], params[:description], "../images/users/default_avatar.png")
+    end
+
+    get '/organisations' do
+      user = Models::System.instance.fetch_account(session[:user])
+      haml :organisations, :locals => { :all_organisations => Models::System.instance.fetch_organisations_of(user.id) }
+    end
   end
 end
