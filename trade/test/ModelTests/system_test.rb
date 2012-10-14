@@ -26,10 +26,10 @@ class MockItem
 end
 
 class MockOrganisation
-  attr_accessor :name
+  attr_accessor :id
 
   def initialize
-    self.name = "Meister Hora Club"
+    self.id = nil
   end
 
   def is_member?(user_email)
@@ -43,12 +43,17 @@ class MockUser
 
   def initialize
     self.email = "mail@mail.ch"
+    self.id = nil
   end
 
   def self.create(*args)
     user = self.new
     user.email = args.size == 1 ? args[0] : "mail@mail.ch"
     user
+  end
+
+  def is_member?(account)
+    false
   end
 
   def to_s
@@ -72,9 +77,9 @@ class SystemTest < Test::Unit::TestCase
             :beppo => MockUser.create("beppo@mail.ch"),
             :kassiopeia => MockUser.create("kassiopeia@mail.ch") }
 
-    system.add_user(users[:momo])
-    system.add_user(users[:beppo])
-    system.add_user(users[:kassiopeia])
+    system.add_account(users[:momo])
+    system.add_account(users[:beppo])
+    system.add_account(users[:kassiopeia])
 
     users
   end
@@ -107,18 +112,18 @@ class SystemTest < Test::Unit::TestCase
 
   def test_should_add_user
     system = Models::System.instance
-    assert(system.users.size == 0, "there should be 3 users, but there were #{system.users.size} user(s): #{system.users}")
+    assert(system.accounts.size == 0, "there should be 3 users, but there were #{system.accounts.size} user(s): #{system.accounts}")
     mock_user = MockUser.new
-    system.add_user(mock_user)
-    assert(system.users.size == 1, "there should be 1 user, but there were #{system.users.size} user(s): #{system.users}")
+    system.add_account(mock_user)
+    assert(system.accounts.size == 1, "there should be 1 user, but there were #{system.accounts.size} user(s): #{system.accounts}")
   end
 
   def test_should_fail_if_adding_user_twice
     system = Models::System.instance
     user0 = MockUser.new
-    system.add_user(user0)
-    assert(system.users.member?(user0.id), "User0 should already be added to the system")
-    assert_raise(RuntimeError) { Models::System.instance.add_user(user0)}
+    system.add_account(user0)
+    assert(system.accounts.member?(user0.id), "User0 should already be added to the system")
+    assert_raise(RuntimeError) { Models::System.instance.add_account(user0)}
   end
 
   def test_should_fetch_user
@@ -126,8 +131,11 @@ class SystemTest < Test::Unit::TestCase
 
     users = add_users
 
-    assert(system.fetch_user("beppo@mail.ch")== users[:beppo], "User should be Beppo, but was #{system.fetch_user("beppo@mail.ch")}")
-    assert(system.fetch_user("momo@mail.ch")== users[:momo], "User should be Momo, but was #{system.fetch_user("momo@mail.ch")}")
+    fetched1 = system.fetch_account(users[:beppo].id)
+    fetched2 = system.fetch_account(users[:momo].id)
+
+    assert(fetched1 == users[:beppo], "User should be Beppo, but was #{fetched1}")
+    assert(fetched2== users[:momo], "User should be Momo, but was #{fetched2}")
   end
 
   def test_should_remove_user
@@ -135,15 +143,15 @@ class SystemTest < Test::Unit::TestCase
 
     users = add_users
 
-    system.remove_user(users[:kassiopeia].email)
-    assert(system.users.size == 2, "There should be 2 users left, but there were #{system.users.size}")
-    assert(   system.users.values == [users[:momo], users[:beppo]] ||
-              system.users.values == [users[:beppo], users[:momo]])
+    system.remove_account(users[:kassiopeia].id)
+    assert(system.accounts.size == 2, "There should be 2 users left, but there were #{system.accounts.size}")
+    assert(   system.accounts.values == [users[:momo], users[:beppo]] ||
+              system.accounts.values == [users[:beppo], users[:momo]])
 
-    system.remove_user("beppo@mail.ch")
-    system.remove_user("momo@mail.ch")
+    system.remove_account(users[:beppo].id)
+    system.remove_account(users[:momo].id)
 
-    assert(system.users.size == 0, "There should be no users left, but there were still #{system.users.size} users")
+    assert(system.accounts.size == 0, "There should be no users left, but there were still #{system.accounts.size} users")
   end
 
   def test_should_fetch_all_but_one_user
@@ -152,20 +160,21 @@ class SystemTest < Test::Unit::TestCase
     beppo = MockUser.create("beppo@mail.ch")
     momo = MockUser.create("momo@mail.ch")
 
-    system.add_user(momo)
-    system.add_user(beppo)
+    system.add_account(momo)
+    system.add_account(beppo)
 
-    others = system.fetch_all_users_but("momo@mail.ch")
+    others = system.fetch_all_accounts_but(momo.id)
     assert(others.size == 1, "Only one should remain, but there were #{others.size}")
     assert( others == [beppo], "Beppo should be left, but instead: #{others}")
 
-    others = system.fetch_all_users_but("beppo@mail.ch")
+    others = system.fetch_all_accounts_but(beppo.id)
     assert(others.size == 1, "Only one should remain, but there were #{others}")
     assert( others == [momo], "Momo should be left, but instead: #{others}")
 
-    system.add_user(MockUser.create("kassiopeia@mail.ch"))
+    kassiopeia = MockUser.create("kassiopeia@mail.ch")
+    system.add_account(kassiopeia)
 
-    others = system.fetch_all_users_but("kassiopeia@mail.ch")
+    others = system.fetch_all_accounts_but(kassiopeia.id)
     assert(others.size == 2, "Two should remain, but there were #{others}")
     assert( others == [momo, beppo] || others == [beppo, momo], "Beppo and Momo should be left, but instead: #{others}")
   end
@@ -203,10 +212,11 @@ class SystemTest < Test::Unit::TestCase
 
   def test_should_fetch_item_of_user
     system = Models::System.instance
-    items = add_items(add_users)
+    users = add_users
+    items = add_items(users)
 
-    items_cassiopeia = system.fetch_items_of("kassiopeia@mail.ch")
-    items_momo = system.fetch_items_of("momo@mail.ch")
+    items_cassiopeia = system.fetch_items_of(users[:kassiopeia].id)
+    items_momo = system.fetch_items_of(users[:momo].id)
     assert(items_cassiopeia.include?(items[:time]), "Kassiopeia should have Time, but has #{items_cassiopeia}")
     assert(items_momo.size == 2, "Items size should be 2 but was #{items_momo.size}")
     assert(items_momo.include?(items[:sand]), "Momo should have Sand, but has #{items_momo}")
@@ -219,7 +229,7 @@ class SystemTest < Test::Unit::TestCase
     users = add_users
     items = add_items(users)
 
-    remaining =  system.fetch_all_items_but_of(users[:momo].email)
+    remaining =  system.fetch_all_items_but_of(users[:momo].id)
     assert(remaining.include?(items[:broom]))
     assert(remaining.include?(items[:time]))
     assert(remaining.size == 2, "There should be 2 items left, but there are #{remaining.to_s}.")
@@ -249,37 +259,40 @@ class SystemTest < Test::Unit::TestCase
   def test_should_add_organisation
     system = Models::System.instance
     organisation = MockOrganisation.new
-    system.add_organisation(organisation)
-    assert(system.organisation.size == 1, "There should be exactly one organisation, but there are #{system.organisation.size}")
+    system.add_account(organisation)
+    assert(system.accounts.size == 1, "There should be exactly one organisation, but there are #{system.accounts.size}")
   end
 
   def test_should_fetch_org
     system = Models::System.instance
     organisation = MockOrganisation.new
-    system.add_organisation(organisation)
-    assert(system.fetch_organisation("Meister Hora Club") == organisation)
+
+    system.add_account(organisation)
+
+    puts(organisation.id)
+    assert(system.fetch_account(organisation.id) == organisation, "Should fetch account out of #{system.accounts}")
   end
 
   # Testing only the case, that organisation has one user
   def test_should_fetch_user_of_org
     system = Models::System.instance
 
-    add_users
+    users = add_users
     organisation = MockOrganisation.new
 
-    system.add_organisation(organisation)
-    assert(system.fetch_organisations_of("kassiopeia@mail.ch").include?(organisation.name))
+    system.add_account(organisation)
+    assert(system.fetch_organisations_of(users[:kassiopeia].id).include?(organisation))
   end
 
   def test_should_remove_organisation
     system = Models::System.instance
 
     organisation = MockOrganisation.new
-    system.add_organisation(organisation)
-    assert(system.organisation.include?(organisation.name))
+    system.add_account(organisation)
+    assert(system.accounts.member?(organisation.id))
 
-    system.remove_organisation(organisation.name)
-    assert(system.organisation.size == 0, "There should be no organisation left, but is still #{system.organisation.size}")
+    system.remove_account(organisation.id)
+    assert(system.accounts.size == 0, "There should be no organisation left, but is still #{system.accounts.size}")
   end
 
 end

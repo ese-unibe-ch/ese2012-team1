@@ -29,7 +29,7 @@ module Models
     end
 
     def save
-      Models::System.instance.add_organisation(self)
+      Models::System.instance.add_account(self)
     end
   end
 end

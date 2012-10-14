@@ -89,6 +89,10 @@ module Models
       item_to_buy.bought_by(self)
     end
 
+    def is_member?(user)
+      false
+    end
+
 
     #Removes himself from the list of users and of the system
     #Removes users items before

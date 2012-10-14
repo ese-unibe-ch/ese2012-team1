@@ -35,8 +35,8 @@ class OrganisationTest < Test::Unit::TestCase
     assert(organisation.description == "Pascals account", "Should have description")
     assert(organisation.avatar == "../images/users/default_avatar.png", "Should have avatar")
 
-    assert(Models::System.instance.organisation.size == 1, "There should be one organisation")
-    assert(Models::System.instance.organisation.one? {|id, org| org == organisation})
+    assert(Models::System.instance.accounts.size == 1, "There should be one organisation")
+    assert(Models::System.instance.accounts.one? {|id, org| org == organisation})
 
     organisation
   end

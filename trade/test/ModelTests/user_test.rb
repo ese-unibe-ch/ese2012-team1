@@ -14,15 +14,13 @@ class UserTest < Test::Unit::TestCase
 
 
   def setup
-    Models::System.instance.users = Hash.new
-    Models::System.instance.items = Hash.new
+    Models::System.instance.reset
 
     @user = Models::User.created("testuser", "password", "user@mail.ch", "Hey there", "../images/users/default_avatar.png")
   end
 
   def teardown
-    Models::System.instance.users = Hash.new
-    Models::System.instance.items = Hash.new
+    Models::System.instance.reset
   end
 
   ##
@@ -32,10 +30,10 @@ class UserTest < Test::Unit::TestCase
   ##
 
   def test_should_remove_from_list_of_users
-    detected_user = Models::System.instance.fetch_user("user@mail.ch")
+    detected_user = Models::System.instance.fetch_account(@user.id)
     assert(detected_user != nil, "Should be in list")
-    Models::System.instance.users.clear
-    assert_raise(RuntimeError){  Models::System.instance.fetch_user("user@mail.ch")}
+    Models::System.instance.reset
+    assert_raise(RuntimeError){  Models::System.instance.fetch_account(@user.id) }
   end
 
   ##
@@ -45,28 +43,28 @@ class UserTest < Test::Unit::TestCase
   ##
 
   def test_should_create_user
-    assert(Models::System.instance.fetch_user("user@mail.ch") != nil, "Should create a test user in system")
+    assert(Models::System.instance.fetch_account(@user.id) != nil, "Should create a test user in system")
   end
 
   def test_should_have_name
-    assert(Models::System.instance.fetch_user("user@mail.ch").name == "testuser", "Should have name")
+    assert(Models::System.instance.fetch_account(@user.id).name == "testuser", "Should have name")
   end
 
   def test_should_have_password
-    assert(Models::System.instance.fetch_user("user@mail.ch").password_hash != nil, "Should set password hash")
-    assert(Models::System.instance.fetch_user("user@mail.ch").password_salt != nil, "Should set password salt")
+    assert(Models::System.instance.fetch_account(@user.id).password_hash != nil, "Should set password hash")
+    assert(Models::System.instance.fetch_account(@user.id).password_salt != nil, "Should set password salt")
   end
 
   def test_should_have_description
-    assert(Models::System.instance.fetch_user("user@mail.ch").description = "Hey there")
+    assert(Models::System.instance.fetch_account(@user.id).description = "Hey there")
   end
 
   def test_should_have_path_to_avatar
-    assert(Models::System.instance.fetch_user("user@mail.ch").avatar = "C:/bild.gif")
+    assert(Models::System.instance.fetch_account(@user.id).avatar = "C:/bild.gif")
   end
 
   def test_should_have_email
-    assert(Models::System.instance.fetch_user("user@mail.ch").email == "user@mail.ch", "Should have email")
+    assert(Models::System.instance.fetch_account(@user.id).email == "user@mail.ch", "Should have email")
   end
 
   def test_should_have_unique_email_adresse
@@ -74,11 +72,11 @@ class UserTest < Test::Unit::TestCase
   end
 
   def test_should_accept_password
-    assert(Models::User.login("user@mail.ch", "password"), "Should login")
+    assert(Models::User.login(@user, "password"), "Should login")
   end
 
   def test_should_not_accept_password
-    assert(!Models::User.login("user@mail.ch", "passwor"), "Should not login")
+    assert(!Models::User.login(@user, "passwor"), "Should not login")
   end
 
   ##
@@ -88,38 +86,36 @@ class UserTest < Test::Unit::TestCase
   ##
 
   def test_user_item_create
-    assert(Models::System.instance.fetch_items_of("user@mail.ch").size == 0, "Item list length should be 0")
-    assert(Models::System.instance.fetch_user("user@mail.ch").list_items_inactive.size == 0, "Item list inactive length should be 0")
-    Models::System.instance.fetch_user("user@mail.ch").create_item("testobject", 10)
-    assert(Models::System.instance.fetch_user("user@mail.ch").list_items.size == 0, "Item list length should be 0")
-    assert(Models::System.instance.fetch_user("user@mail.ch").list_items_inactive.size == 1, "Item list inactive length should be 1")
-    assert(!Models::System.instance.fetch_user("user@mail.ch").list_items_inactive[0].is_active?, "New created item should be inactive")
-    Models::System.instance.fetch_user("user@mail.ch").list_items_inactive[0].to_active
-    assert(Models::System.instance.fetch_user("user@mail.ch").list_items.size == 1, "Item list length should be 1")
-    assert(Models::System.instance.fetch_user("user@mail.ch").list_items_inactive.size == 0, "Item list inactive length should be 0")
-    assert(Models::System.instance.fetch_user("user@mail.ch").list_items[0].is_active?, "New created item should now be active")
-    assert(Models::System.instance.fetch_user("user@mail.ch").list_items[0].to_s, "testobject, 10")
+    assert(Models::System.instance.fetch_items_of(@user.id).size == 0, "Item list length should be 0")
+    assert(Models::System.instance.fetch_account(@user.id).list_items_inactive.size == 0, "Item list inactive length should be 0")
+    Models::System.instance.fetch_account(@user.id).create_item("testobject", 10)
+    assert(Models::System.instance.fetch_account(@user.id).list_items.size == 0, "Item list length should be 0")
+    assert(Models::System.instance.fetch_account(@user.id).list_items_inactive.size == 1, "Item list inactive length should be 1")
+    assert(!Models::System.instance.fetch_account(@user.id).list_items_inactive[0].is_active?, "New created item should be inactive")
+    Models::System.instance.fetch_account(@user.id).list_items_inactive[0].to_active
+    assert(Models::System.instance.fetch_account(@user.id).list_items.size == 1, "Item list length should be 1")
+    assert(Models::System.instance.fetch_account(@user.id).list_items_inactive.size == 0, "Item list inactive length should be 0")
+    assert(Models::System.instance.fetch_account(@user.id).list_items[0].is_active?, "New created item should now be active")
+    assert(Models::System.instance.fetch_account(@user.id).list_items[0].to_s, "testobject, 10")
   end
 
   #test for creation of an organisation by a user
   def test_user_organisation_create
-    user = Models::System.instance.fetch_user("user@mail.ch")
+    user = Models::System.instance.fetch_account(@user.id)
     org = user.create_organisation("org", "I'm an organisation.", "../images/users/default_avatar.png")
     org.add_member(user)
 
-    assert(Models::System.instance.fetch_organisations_of("user@mail.ch").size == 1,
-           "Amount of organisations should be 1 but was #{Models::System.instance.fetch_organisations_of("user@mail.ch").size}.")
-    assert_equal(Models::System.instance.fetch_organisation("org").name, "org")
-    assert_equal(Models::System.instance.fetch_organisation("org").description, "I'm an organisation.")
-    assert_equal(Models::System.instance.fetch_organisation("org").credits, 100)
-    assert(Models::System.instance.fetch_organisation("org").users.size == 1, "Should have one user.")
-    assert(Models::System.instance.fetch_organisation("org").is_member?(user))
+    assert_equal(org.name, "org")
+    assert_equal(org.description, "I'm an organisation.")
+    assert_equal(org.credits, 100)
+    assert(Models::System.instance.accounts.size == 2, "Should have one account (user and organisation.")
+    assert(org.is_member?(user))
   end
 
   def test_create_user
-    assert(Models::System.instance.fetch_user("user@mail.ch").name == "testuser", "Name should be correct")
-    assert(Models::System.instance.fetch_user("user@mail.ch").credits == 100, "Credits should be 100 first")
-    assert(Models::System.instance.fetch_user("user@mail.ch").to_s == "testuser has currently 100 credits", "String representation is wrong generated")
+    assert(Models::System.instance.fetch_account(0).name == "testuser", "Name should be correct")
+    assert(Models::System.instance.fetch_account(0).credits == 100, "Credits should be 100 first")
+    assert(Models::System.instance.fetch_account(0).to_s == "testuser has currently 100 credits", "String representation is wrong generated")
   end
 
   def test_sales
@@ -148,9 +144,6 @@ class UserTest < Test::Unit::TestCase
 
     assert(old_owner.credits == 110, "Seller should now have more money")
     assert(new_owner.credits == 90, "Buyer should now have less money")
-
-    old_owner.clear
-    new_owner.clear
   end
 
   def test_sales_not_possible_because_of_price
@@ -176,40 +169,33 @@ class UserTest < Test::Unit::TestCase
 
     assert(old_owner.credits == 100, "Money should be like before")
     assert(new_owner.credits == 100, "Money should be like before")
-
-    old_owner.clear
-    new_owner.clear
   end
 
-  def test_method_list_active
-    a = Models::System.instance
-    a.users.clear
-    a.items.clear
-    Models::User.created("testuser", "password", "user@mail.ch", "Hey there", "../images/users/default_avatar.png")
-    user = Models::System.instance.fetch_user("user@mail.ch")
+  def test_fetch_items_of_a_user
+    user = Models::User.created("testuser", "password", "user@mail.ch", "Hey there", "../images/users/default_avatar.png")
     a = user.create_item("testobject", 10)
     b = user.create_item("testobject2", 50)
+
     user.list_items_inactive { |e| e.to_active }
-    assert(Models::System.instance.fetch_items_of("user@mail.ch")[0] == a, "Should be item \'testobject2\' but was #{Models::System.instance.fetch_items_of("user@mail.ch")[0]}")
-    assert(Models::System.instance.fetch_items_of("user@mail.ch")[1] == b, "Should be item \'testobject\' but was #{Models::System.instance.fetch_items_of("user@mail.ch")[1]}")
+
+    item0 = Models::System.instance.fetch_items_of(user.id)[0]
+    item1 = Models::System.instance.fetch_items_of(user.id)[1]
+    assert(item0 == a, "Should be item \'testobject2\' but was #{item0}")
+    assert(item1 == b, "Should be item \'testobject\' but was #{item1}")
   end
 
   def test_method_list_inactive
-    @user = Models::System.instance.fetch_user("user@mail.ch")
-    test1 = @user.create_item("testobject", 10)
-    test2 = @user.create_item("testobject2", 50)
-    assert(Models::System.instance.items.member?(test1.id))
-    assert(Models::System.instance.items.member?(test2.id))
+    #have to be implemented
   end
 
   def test_user_should_have_item
-    assert(! Models::System.instance.fetch_user("user@mail.ch").has_item?('testobject2'))
-    item = Models::System.instance.fetch_user("user@mail.ch").create_item("testobject2", 50)
-    assert(Models::System.instance.fetch_user("user@mail.ch").has_item?(item.id))
+    assert(! Models::System.instance.fetch_account(@user.id).has_item?('testobject2'))
+    item = Models::System.instance.fetch_account(@user.id).create_item("testobject2", 50)
+    assert(Models::System.instance.fetch_account(@user.id).has_item?(item.id))
   end
 
   def test_user_should_return_item
-    assert_raise(RuntimeError) { Models::System.instance.fetch_user("user@mail.ch").get_item(2) }
+    assert_raise(RuntimeError) { Models::System.instance.fetch_account(@user.id).get_item(2) }
 
     item_created = @user.create_item("testobject2", 50)
     item_get = @user.get_item(item_created.id)

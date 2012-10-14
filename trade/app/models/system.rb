@@ -9,11 +9,10 @@ module Models
   class System
     include Singleton
 
-    attr_accessor :organisation, :users, :items, :item_id_count, :account_id_count
+    attr_accessor :accounts, :items, :item_id_count, :account_id_count
 
     def initialize
-      self.organisation = Hash.new
-      self.users = Hash.new
+      self.accounts = Hash.new
       self.items = Hash.new
       self.item_id_count = 0
       self.account_id_count = 0
@@ -22,34 +21,35 @@ module Models
     # ---------user------------------------------------------------------------
 
     # Adds an user to the system.
-    def add_user(user)
-      fail "No user" if (user == nil)
-      fail "User already exists" if (users.one? {|id, users| users.email== user.email })
+    def add_account(account)
+      fail "No account" if (account == nil)
+      fail "Account \'#{account}\' already exists" if (accounts.one? {|id, acc| acc == account })
+      fail "Account should be set by this method" unless account.id == nil
 
-      user.id = self.account_id_count
-      self.users.store(user.id, user)
+      account.id = self.account_id_count
+      self.accounts.store(account.id, account)
       self.account_id_count += 1
 
-      fail "User should have correct id" unless (user.id == account_id_count-1)
-      fail "User should be stored in users-hash" unless (self.users.member?(account_id_count-1))
+      fail "User should have correct id" unless (account.id == account_id_count-1)
+      fail "User should be stored in users-hash" unless (self.accounts.member?(account_id_count-1))
     end
 
     # Returns the user with associated email.
-    def fetch_user(user_email)
-      fail "No user with email #{user_email}" unless self.users.one? { |id, user| user.email == user_email }
-      self.users.detect{|id, user| user.email == user_email }[1]
+    def fetch_account(account_id)
+      fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
+      self.accounts.fetch(account_id)
     end
 
     # Returns all users but the one specified in an array
-    def fetch_all_users_but(user_email)
-      fail "No user with email #{user_email}" unless self.users.one? { |id, user| user.email == user_email }
-      self.users.values - [self.fetch_user(user_email)]  # Array difference
+    def fetch_all_accounts_but(account_id)
+      fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
+      self.accounts.values - [self.fetch_account(account_id)]  # Array difference
     end
 
     # Removes an user from the system.
-    def remove_user(user_email)
-      fail "No user with email #{user_email}" unless self.users.one? { |id, user| user.email == user_email }
-      self.users.delete_if { |id, user| user.email == user_email }
+    def remove_account(account_id)
+      fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
+      self.accounts.delete(account_id)
     end
 
     # --------item-------------------------------------------------------------
@@ -71,24 +71,21 @@ module Models
     end
 
     # Returns a hash with all items of this user.
-    def fetch_items_of(user_email)
-      fail "No such user email" unless self.fetch_user(user_email)
-      user = self.fetch_user(user_email)
-      self.items.values.select {| item| item.owner == user}
+    def fetch_items_of(account_id)
+      fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
+      self.items.values.select {|item| item.owner.id == account_id}
     end
 
     # Returns all items but the ones of the specified user.
-    def fetch_all_items_but_of(user_email)
-      fail "No such user email" unless self.users.one?{ |id, user| user.email == user_email }
-      user = self.fetch_user(user_email)
-      self.items.values.delete_if {| item| item.owner == user}
+    def fetch_all_items_but_of(account_id)
+      fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
+      self.items.values.delete_if {|item| item.owner.id == account_id}
     end
 
     # Returns all items but the ones of the specified user.
-    def fetch_all_active_items_but_of(user_email)
-      fail "No such user email" unless self.users.one?{ |id, user| user.email == user_email }
-      user = self.fetch_user(user_email)
-      self.items.values.delete_if {| item| item.owner == user}.select {|i| i.active == true}
+    def fetch_all_active_items_but_of(account_id)
+      fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
+      self.items.values.select{|item| item.owner.id == account_id && item.active}
     end
 
     # Removes an item from the system
@@ -96,42 +93,20 @@ module Models
     def remove_item(item)
       fail "There are no items" if self.items.size == 0
       fail "No such item" unless self.items.member?(item.id)
-      item = self.items.delete(item.id)
+      self.items.delete(item.id)
     end
 
-    # ---- organisation ---------------------
-
-    # Adds an organisation to the system.
-    def add_organisation(org)
-      fail "No organisation" if (org == nil)
-      organisation.store(org.name, org)
-    end
-
-    # Returns the organisation with associated name.
-    def fetch_organisation(org_name)
-      fail "No such organisation name" unless self.organisation.member?(org_name)
-      self.organisation.fetch(org_name)
-    end
-
-    # Returns a list of all the user's organisations
-    def fetch_organisations_of(user_email)
-      fail "No such user email #{user_email}" unless self.users.one? { |id, user| user.email == user_email }
-      user = self.fetch_user(user_email)
-      self.organisation.each{|org_name, org| org.is_member?(user)}
-    end
-
-    # Removes an organisation from the system.
-    def remove_organisation(org_name)
-      fail "No such organisation name found" unless self.organisation.member?(org_name)
-      organisation.delete(org_name)
+    def fetch_organisations_of(account_nr)
+      account = fetch_account(account_nr)
+      accounts.values.select {|acc| acc.is_member?(account)}
     end
 
     #Removes all users, all items and resets the counter
     def reset
-      self.users = Hash.new
+      self.accounts = Hash.new
       self.items = Hash.new
-      self.organisation = Hash.new
       self.item_id_count = 0
+      self.account_id_count = 0
     end
   end
 end

@@ -65,18 +65,18 @@ module Models
     def save
       puts("saved!")
       puts(self)
-      Models::System.instance.add_user(self)
+      Models::System.instance.add_account(self)
     end
 
     #return user's item list active
     # @param user_mail
     def list_items
-      Models::System.instance.fetch_items_of(self.email).select { |s| s.is_active? }
+      Models::System.instance.fetch_items_of(self.id).select { |s| s.is_active? }
     end
 
     #return user's item list inactive
     def list_items_inactive
-      Models::System.instance.fetch_items_of(self.email).select {|s| !s.is_active?}
+      Models::System.instance.fetch_items_of(self.id).select {|s| !s.is_active?}
     end
 
     ##
@@ -86,7 +86,7 @@ module Models
     ##
 
     def has_item?(itemId)
-      Models::System.instance.fetch_items_of(self.email).one? { |item| item.id == itemId.to_i }
+      Models::System.instance.fetch_items_of(self.id).one? { |item| item.id == itemId.to_i }
     end
 
     ##
@@ -102,10 +102,9 @@ module Models
       Models::System.instance.fetch_item(item_Id)
     end
 
-    def self.login email, password
-      return false unless Models::System.instance.users.one? { |id, user| user.email == email }
-      user = Models::System.instance.fetch_user(email)
-      puts "#{user}"
+    def self.login account, password
+      return false unless Models::System.instance.accounts.one? { |id, user| user.respond_to?(:email) && user == account }
+      user = Models::System.instance.fetch_account(account.id)
       user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
     end
 
@@ -122,9 +121,7 @@ module Models
     # @return new_organization    the organisation which was created
     # @param picture : picture of the organisation
     def create_organisation(name, description, picture)
-      organisation = Models::Organisation.created(name, description, picture)
-      Models::System.instance.add_organisation(organisation)
-      organisation
+      Models::Organisation.created(name, description, picture)
     end
 
 
