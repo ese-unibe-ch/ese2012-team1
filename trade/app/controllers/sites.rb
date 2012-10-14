@@ -23,13 +23,13 @@ module Controllers
     end
 
     get '/home/active' do
-        user = session[:user]
-        haml :home_active, :locals => {:active_items => Models::System.instance.fetch_user(user).list_items}
+        user_id = session[:user]
+        haml :home_active, :locals => {:active_items => Models::System.instance.fetch_account(user_id).list_items}
     end
 
     get '/home/inactive' do
-        user = session[:user]
-        haml :home_inactive, :locals => {:inactive_items => Models::System.instance.fetch_user(user).list_items_inactive}
+        user_id = session[:user]
+        haml :home_inactive, :locals => {:inactive_items => Models::System.instance.fetch_account(user_id).list_items_inactive}
     end
 
     get '/home/new' do
@@ -37,18 +37,18 @@ module Controllers
     end
 
     get '/users' do
-        viewer = session[:user]
-        haml :users, :locals => {:all_users => Models::System.instance.fetch_all_users_but(viewer)}
+        viewer_id = session[:user]
+        haml :users, :locals => {:all_users => Models::System.instance.fetch_all_accounts_but(viewer_id)}
     end
 
     get '/users/:id' do
-        user = params[:id]
-        haml :users_id, :locals => {:active_items => Models::System.instance.fetch_active_items_of(user)}
+        user_id = params[:id]
+        haml :users_id, :locals => {:active_items => Models::System.instance.fetch_account(user_id).list_items_active}
     end
 
     get '/items' do
-        viewer = session[:user]
-        haml :items, :locals => {:all_items => Models::System.instance.fetch_all_active_items_but_of(viewer)}
+        viewer_id = session[:user]
+        haml :items, :locals => {:all_items => Models::System.instance.fetch_all_active_items_but_of(viewer_id)}
     end
 
     get '/error/:title' do

@@ -79,6 +79,12 @@ module Models
       Models::System.instance.fetch_items_of(self.id).select {|s| !s.is_active?}
     end
 
+
+    #return user's item list active
+    def list_items_active
+      Models::System.instance.fetch_items_of(self.id).select {|s| s.is_active?}
+    end
+
     ##
     #
     # Returns true if an user owns a specific item
