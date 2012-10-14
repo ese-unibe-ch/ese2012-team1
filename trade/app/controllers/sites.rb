@@ -48,7 +48,7 @@ module Controllers
 
     get '/items' do
         viewer = session[:user]
-        haml :items, :locals => {:all_items => Models::System.instance.fetch_all_items_but_of(viewer)}
+        haml :items, :locals => {:all_items => Models::System.instance.fetch_all_active_items_but_of(viewer)}
     end
 
     get '/error/:title' do

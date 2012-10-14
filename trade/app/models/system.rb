@@ -84,6 +84,13 @@ module Models
       self.items.values.delete_if {| item| item.owner == user}
     end
 
+    # Returns all items but the ones of the specified user.
+    def fetch_all_active_items_but_of(user_email)
+      fail "No such user email" unless self.users.one?{ |id, user| user.email == user_email }
+      user = self.fetch_user(user_email)
+      self.items.values.delete_if {| item| item.owner == user}.select {|i| i.active == true}
+    end
+
     # Removes an item from the system
     # @see fetch_item
     def remove_item(item)
