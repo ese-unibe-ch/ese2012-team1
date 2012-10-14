@@ -34,7 +34,7 @@ module Controllers
       fail "Should have description" if params[:description] == nil
       fail "Should be number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:price])
 
-      id = session[:user]
+      id = session[:account]
 
       new_item = Models::System.instance.fetch_account(id).create_item(params[:name], Integer((params[:price]).to_i))
       new_item.add_description(params[:description])
@@ -56,7 +56,7 @@ module Controllers
     post '/changestate/setactive' do
       item = Models::System.instance.fetch_item(params[:id])
 
-      if item.owner.id == session[:user]
+      if item.owner.id == session[:account]
         item.to_active
       end
 
@@ -66,10 +66,10 @@ module Controllers
     post '/changestate/setinactive' do
       item = Models::System.instance.fetch_item(params[:id])
 
-      puts ("item: #{item}")
-      if item.owner.id == session[:user]
+      if item.owner.id == session[:account]
         item.to_inactive
       end
+
       redirect "/home/active"
     end
 
@@ -124,7 +124,7 @@ module Controllers
     post '/buy' do
       id = params[:id]
       item = Models::System.instance.fetch_item(id)
-      user_id = session[:user]
+      user_id = session[:account]
       new_user = Models::System.instance.fetch_account(user_id)
       if item.can_be_bought_by?(new_user)
         new_user.buy_item(item)

@@ -63,46 +63,6 @@ module Models
       Models::System.instance.add_account(self)
     end
 
-    #return user's item list active
-    # @param user_mail
-    def list_items
-      Models::System.instance.fetch_items_of(self.id).select { |s| s.is_active? }
-    end
-
-    #return user's item list inactive
-    def list_items_inactive
-      Models::System.instance.fetch_items_of(self.id).select {|s| !s.is_active?}
-    end
-
-
-    #return user's item list active
-    def list_items_active
-      Models::System.instance.fetch_items_of(self.id).select {|s| s.is_active?}
-    end
-
-    ##
-    #
-    # Returns true if an user owns a specific item
-    #
-    ##
-
-    def has_item?(itemId)
-      Models::System.instance.fetch_items_of(self.id).one? { |item| item.id == itemId.to_i }
-    end
-
-    ##
-    #
-    # Returns item with the given name. Throws error if
-    # user doesn't own the item.
-    #
-    ##
-
-    def get_item(item_Id)
-      fail "#{self.email} doesn't own object: \'#{item_Id}\'" unless (self.has_item?(item_Id.to_i))
-
-      Models::System.instance.fetch_item(item_Id)
-    end
-
     def self.login account, password
       return false unless Models::System.instance.accounts.one? { |id, user| user.respond_to?(:email) && user == account }
       user = Models::System.instance.fetch_account(account.id)

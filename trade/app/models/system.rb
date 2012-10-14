@@ -112,6 +112,10 @@ module Models
       accounts.values.select {|acc| acc.is_member?(account)}
     end
 
+    def fetch_organisation_by_name(organisation_name)
+      accounts.values.detect{|acc| !acc.respond_to?(:email) && acc.name == organisation_name}
+    end
+
     #Removes all users, all items and resets the counter
     def reset
       self.accounts = Hash.new

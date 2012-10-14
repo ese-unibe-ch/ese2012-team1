@@ -23,12 +23,12 @@ module Controllers
     end
 
     get '/home/active' do
-        user_id = session[:user]
+        user_id = session[:account]
         haml :home_active, :locals => {:active_items => Models::System.instance.fetch_account(user_id).list_items}
     end
 
     get '/home/inactive' do
-        user_id = session[:user]
+        user_id = session[:account]
         haml :home_inactive, :locals => {:inactive_items => Models::System.instance.fetch_account(user_id).list_items_inactive}
     end
 
@@ -37,7 +37,7 @@ module Controllers
     end
 
     get '/users' do
-        viewer_id = session[:user]
+        viewer_id = session[:account]
         haml :users, :locals => {:all_users => Models::System.instance.fetch_all_accounts_but(viewer_id)}
     end
 
@@ -47,7 +47,7 @@ module Controllers
     end
 
     get '/items' do
-        viewer_id = session[:user]
+        viewer_id = session[:account]
         haml :items, :locals => {:all_items => Models::System.instance.fetch_all_active_items_but_of(viewer_id)}
     end
 
@@ -72,11 +72,28 @@ module Controllers
 
       user = Models::System.instance.fetch_account(session[:user])
       user.create_organisation(params[:name], params[:description], "../images/users/default_avatar.png")
+
+      redirect '/home'
     end
 
     get '/organisations' do
       user = Models::System.instance.fetch_account(session[:user])
       haml :organisations, :locals => { :all_organisations => Models::System.instance.fetch_organisations_of(user.id) }
+    end
+
+    post '/organisation/switch' do
+      user = Models::System.instance.fetch_account(session[:user])
+      organisation_name = params[:organisation]
+
+      if user.email == organisation_name
+        session[:account] = user.id
+      else
+        organisation = Models::System.instance.fetch_organisation_by_name(organisation_name)
+        puts(organisation.class)
+        session[:account] = organisation.id
+      end
+
+      redirect '/home'
     end
   end
 end

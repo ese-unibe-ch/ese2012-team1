@@ -30,6 +30,7 @@ module Controllers
       user = Models::System.instance.fetch_user_by_email(params[:username])
       if User.login(user, params[:password])
         session[:user] = user.id
+        session[:account] = user.id
         session[:auth] = true
         redirect "/home"
       else
