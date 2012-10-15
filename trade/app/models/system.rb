@@ -101,10 +101,10 @@ module Models
 
     # Removes an item from the system
     # @see fetch_item
-    def remove_item(item)
+    def remove_item(item_id)
       fail "There are no items" if self.items.size == 0
-      fail "No such item" unless self.items.member?(item.id)
-      self.items.delete(item.id)
+      fail "No such item with id #{item_id}" unless self.items.member?(item_id)
+      self.items.delete_if { |id, item| item.id == item_id }
     end
 
     def fetch_organisations_of(account_nr)

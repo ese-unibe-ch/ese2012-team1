@@ -244,13 +244,13 @@ class SystemTest < Test::Unit::TestCase
 
     assert(system.items.size == 4, "Should have 4 items but where #{system.items.size}")
 
-    system.remove_item(items[:broom])
+    system.remove_item(items[:broom].id)
     assert(! system.items.include?(items[:broom].id), "Broom should no longer be in items: #{items}")
     assert(system.items.size == 3, "Should have 3 items but where #{system.items.size}")
 
-    system.remove_item(items[:sand])
-    system.remove_item(items[:curly_hair])
-    system.remove_item(items[:time])
+    system.remove_item(items[:sand].id)
+    system.remove_item(items[:curly_hair].id)
+    system.remove_item(items[:time].id)
     assert(system.items.size == 0)
   end
 
