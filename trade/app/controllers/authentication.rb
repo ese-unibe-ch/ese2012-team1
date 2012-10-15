@@ -32,6 +32,7 @@ module Controllers
         session[:user] = user.id
         session[:account] = user.id
         session[:auth] = true
+        session[:organisation] = "none"
         redirect "/home"
       else
         haml :login, :locals => { :error_message => 'No such user or password!'}

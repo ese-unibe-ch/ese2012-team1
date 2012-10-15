@@ -8,6 +8,7 @@ require_relative('controllers/registration')
 require_relative('controllers/sites')
 require_relative('controllers/item_actions')
 require_relative('controllers/uploader')
+require_relative('controllers/switch')
 require_relative('init.rb') unless ENV['RACK_ENV'] == 'test'
 require_relative('helpers/render')
 
@@ -26,6 +27,7 @@ class App < Sinatra::Base
   use Controllers::ItemActions
   use Controllers::Sites
   use Controllers::Uploader
+  use Controllers::Switch
 
 end
 

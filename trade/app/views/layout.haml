@@ -12,12 +12,10 @@
 
   %body{ defined?(onload) ? {:onload => "#{onload}"} : "" }
     - auth = "no"
-    - auth = "yes" if session['auth']
-    - puts(auth)
+    - auth = "yes" if session[:auth]
     - user = "none"
-    - user = session['user'] if session['auth']
-    - puts(user)
-    = render_file_with_argument('frame_header.haml', Array[auth, user])
+    - user = session[:user] if session[:auth]
+    = render_file_with_argument('frame_header.haml', Array[auth, user, session[:organisation]])
     = render_file('frame_menu_logged.haml') if session['auth']
     = render_file('frame_menu_unlogged.haml') if !session['auth']
     %div(id="main")

@@ -1,12 +1,13 @@
 - current_user = Models::System.instance.fetch_account(my_arguments[0])
-//- current_organisation = Models::System.instance.fetch_organisation(arg_array[2]) if arg_array[2] != "none"
-//- current_organisation = nil if arg_array[2] == "none"
+- current_organisation = Models::System.instance.fetch_organisation_by_name(my_arguments[1]) if my_arguments[1] != "none"
+- current_organisation = nil if my_arguments[1] == "none"
 %div(id='information')
-  %p= "User: #{current_user.name} - Credits: #{current_user.credits}"
+  %p= "User: #{current_user.name} - Credits: #{current_user.credits}" if current_organisation == nil
+  %p= "Organisation: #{current_organisation.name} - Organisation Credits: #{current_organisation.credits}" if current_organisation != nil
 %div(id='organisation')
-  %form(name="organisation_switch" action="/organisation/switch" method="post")
+  %form(name="organisation_switch" action="/organisationswitch" method="post")
     %input(type="submit" value="Watch as")
     %select(name="organisation" size="1")
-      %option(value="#{current_user.email}") #{current_user.email}
+      %option(value="#{current_user.email}") #{current_user.name}
       - for org in Models::System.instance.fetch_organisations_of(current_user.id)
         %option(value="#{org.name}") #{org.name}

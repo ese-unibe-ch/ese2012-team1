@@ -86,6 +86,7 @@ module Controllers
       user = User.created(name, password, email, description, file_path)
       session[:user] = user.id
       session[:auth] = true
+      session[:organisation] = "none"
       redirect '/'
     end
 
