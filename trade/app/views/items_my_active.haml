@@ -8,7 +8,7 @@
       %img(height=50 width=50){ :alt => item.name, :src => item.picture }
       \:
       %div(class="itembuttons")
-        %form(name="state" action="/changestate/setinactive" method="post")
+        %form(name="state" action="/item/changestate/setinactive" method="post")
           %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
           %input(type="submit" value="Set Inactive")
     %br

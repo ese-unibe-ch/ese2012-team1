@@ -22,23 +22,23 @@ module Controllers
         haml :home
     end
 
-    get '/home/active' do
+    get '/items/my/active' do
         user_id = session[:account]
-        haml :home_active, :locals => {:active_items => Models::System.instance.fetch_account(user_id).list_items}
+        haml :items_my_active, :locals => {:active_items => Models::System.instance.fetch_account(user_id).list_items}
     end
 
-    get '/home/inactive' do
+    get '/items/my/inactive' do
         user_id = session[:account]
-        haml :home_inactive, :locals => {:inactive_items => Models::System.instance.fetch_account(user_id).list_items_inactive}
+        haml :items_my_inactive, :locals => {:inactive_items => Models::System.instance.fetch_account(user_id).list_items_inactive}
     end
 
-    get '/home/new' do
-        haml :home_new
+    get '/item/create' do
+        haml :item_create
     end
 
-    get '/users' do
+    get '/users/all' do
         viewer_id = session[:account]
-        haml :users, :locals => {:all_users => Models::System.instance.fetch_all_accounts_but(viewer_id)}
+        haml :users_all, :locals => {:all_users => Models::System.instance.fetch_all_accounts_but(viewer_id)}
     end
 
     get '/users/:id' do
@@ -46,9 +46,9 @@ module Controllers
         haml :users_id, :locals => {:active_items => Models::System.instance.fetch_account(user_id.to_i).list_items_active}
     end
 
-    get '/items' do
+    get '/items/active' do
         viewer_id = session[:account]
-        haml :items, :locals => {:all_items => Models::System.instance.fetch_all_active_items_but_of(viewer_id)}
+        haml :items_active, :locals => {:all_items => Models::System.instance.fetch_all_active_items_but_of(viewer_id)}
     end
 
     get '/error/:title' do
@@ -62,11 +62,11 @@ module Controllers
         haml :error, :locals => {:error_title => params[:title], :error_message => msg}
     end
 
-    get '/create/organisation' do
-        haml :create_organisation
+    get '/organisation/create' do
+        haml :organisation_create
     end
 
-    post '/create/organisation' do
+    post '/organisation/create' do
       fail "Should have name" if params[:name].nil?
       fail "Should have description" if params[:description].nil?
 
@@ -76,9 +76,9 @@ module Controllers
       redirect '/home'
     end
 
-    get '/organisations' do
+    get '/organisations/all' do
       user = Models::System.instance.fetch_account(session[:user])
-      haml :organisations, :locals => { :all_organisations => Models::System.instance.fetch_organisations_of(user.id) }
+      haml :organisations_all, :locals => { :all_organisations => Models::System.instance.fetch_organisations_of(user.id) }
     end
 
     post '/organisation/switch' do

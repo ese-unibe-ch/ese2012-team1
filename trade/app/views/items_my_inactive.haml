@@ -8,13 +8,13 @@
       %img(height=50 width=50){ :alt => item.name, :src => item.picture }
       \:
     %div(class="itembuttons")
-      %form(name="state" action="/changestate/setactive" method="post")
+      %form(name="state" action="/item/changestate/setactive" method="post")
         %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
         %input(class="itembuttons" type="submit" value="Set Active")
-      %form(name="edit" action="/home/edit" method="post")
+      %form(name="edit" action="/item/edit" method="post")
         %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
         %input(class="itembuttons" type="submit" value="Edit Item")
-      %form(name="delete" action="/home/delete" method="post")
+      %form(name="delete" action="/item/delete" method="post")
         %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
         %input(class="itembuttons" type="submit" value="Delete Item")
     %br
