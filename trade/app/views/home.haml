@@ -6,13 +6,16 @@
 %br
 = "Currently logged in as User: #{Models::System.instance.fetch_account(session[:user]).name}"
 %br
+%br
 = "Your E-Mail: #{Models::System.instance.fetch_account(session[:user]).email}"
 %br
 = "Your Credits: #{Models::System.instance.fetch_account(session[:user]).credits}"
 %br
+%br
 = "You have #{Models::System.instance.fetch_account(session[:user]).list_items.size} active Items"
 %br
 = "You have #{Models::System.instance.fetch_account(session[:user]).list_items_inactive.size} inactive Items"
+%br
 %br
 = "Your Description:"
 %br

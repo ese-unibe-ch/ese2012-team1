@@ -4,6 +4,6 @@
   - for organisation in all_organisations
     %li
       %em= organisation.name
-      %em= "#{organisation.description}"
       %img(height=50 width=50){ :alt => organisation.name, :src => organisation.avatar }
+    %div= "#{organisation.description}"
 

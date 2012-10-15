@@ -39,7 +39,7 @@ div#header {
     padding-left: 5em
 }
 div#switch {
-    background: #A0C544;
+    background: #ffa500;
     position:absolute;
     top:2em;
     right:3em;
@@ -73,6 +73,14 @@ div#menu a {
     padding-left: 0.25em;
     text-decoration: none;
     color: black
+}
+
+div#menu a:hover {
+    display:block;
+    padding-left: 0.25em;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
 }
 
 div#footer div {
