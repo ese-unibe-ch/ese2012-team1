@@ -99,6 +99,11 @@ module Models
       self.items.values.select{|item| item.owner.id != account_id && item.active}
     end
 
+    # Returns all active items.
+    def fetch_all_active_items
+      self.items.values.select{|item| item.active}
+    end
+
     # Removes an item from the system
     # @see fetch_item
     def remove_item(item_id)

@@ -124,3 +124,21 @@ div#w3c img {
     border-width: 1px;
     border-color: red;
 }
+
+div#preview {
+    display: block;
+}
+
+div.item_preview {
+    background: lightyellow;
+    height: 200px;
+    margin: 10px;
+    padding: 20px;
+    border-bottom: 1px solid #000000;
+    border-top: 1px solid #000000;
+}
+
+img.preview_img {
+    position: absolute;
+    right: 3em;
+}

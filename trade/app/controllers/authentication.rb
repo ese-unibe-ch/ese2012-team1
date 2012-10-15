@@ -16,7 +16,15 @@ module Controllers
     get '/' do
       redirect "/home" if session[:auth]
 
-      haml :index
+      #get four random items
+      item_list = Models::System.instance.fetch_all_active_items
+      counter = item_list.size
+      return_list = Array.new
+      range = 0..3
+      for zahl in range do
+        return_list.push(item_list[rand(counter)])
+      end
+      haml :index, :locals => { :items_to_show => return_list }
     end
 
     get '/login' do

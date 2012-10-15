@@ -1,3 +1,17 @@
 #content
   %h1 Welcome to the Trading System!
-
+  %br
+  %h3 Preview:
+  %div(id='preview')
+    - for item in items_to_show
+      %div(class='item_preview')
+        %div= item.name
+        %div(class='bigmargin')
+          Description:
+          %br
+          = item.description
+        %div(class='bigmargin')
+          Price:
+          %br
+          = item.price
+        %img(class='preview_img' height=200 width=200){ :alt => "#{item.name}", :src => "#{item.picture}" }
