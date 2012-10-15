@@ -27,9 +27,5 @@ module Models
     def is_member?(user)
       users.one? { |email, member| email == user.email }
     end
-
-    def save
-      Models::System.instance.add_account(self)
-    end
   end
 end

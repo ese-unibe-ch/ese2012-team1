@@ -51,7 +51,7 @@ module Models
     end
 
     def save
-      fail("Template method to be implemented by subclass")
+      Models::System.instance.add_account(self)
     end
 
     #get string representation

@@ -59,10 +59,6 @@ module Models
       user
     end
 
-    def save
-      Models::System.instance.add_account(self)
-    end
-
     def self.login account, password
       return false unless Models::System.instance.accounts.one? { |id, user| user.respond_to?(:email) && user == account }
       user = Models::System.instance.fetch_account(account.id)
