@@ -14,6 +14,6 @@
       %em= item.price
       %img(height=50 width=50){ :alt => item.name, :src => item.picture }
       \:
-      %form(action="/buy" method="post")
+      %form(action="/item/buy" method="post")
         %input(type = 'hidden' name = 'id'){ :value => "#{item.id}.#{item.name}" }
         %input(type = 'submit' value = 'Buy Item')

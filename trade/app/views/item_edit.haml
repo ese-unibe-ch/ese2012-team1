@@ -3,7 +3,7 @@
   #item_img
     %img(height=50 width=50){ :alt => "#{name}", :src => "#{picture}" }
 
-%form(action="/home/edit/save" enctype="multipart/form-data" method="post")
+%form(action="/item/edit/save" enctype="multipart/form-data" method="post")
   %label= ("Name of Item: #{name}")
   %br
   %label Description of Item:

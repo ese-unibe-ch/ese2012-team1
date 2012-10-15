@@ -28,7 +28,7 @@ module Controllers
     #
     ##
 
-    post '/create' do
+    post '/item/create' do
       fail "Should have name." if params[:name] == nil
       fail "Should have price" if params[:price] == nil
       fail "Should have description" if params[:description] == nil
@@ -50,42 +50,42 @@ module Controllers
         new_item.add_picture(file_path)
       end
 
-      redirect "/home/inactive"
+      redirect "/items/my/inactive"
     end
 
-    post '/changestate/setactive' do
+    post '/item/changestate/setactive' do
       item = Models::System.instance.fetch_item(params[:id])
 
       if item.owner.id == session[:account]
         item.to_active
       end
 
-      redirect "/home/inactive"
+      redirect "/items/my/inactive"
     end
 
-    post '/changestate/setinactive' do
+    post '/item/changestate/setinactive' do
       item = Models::System.instance.fetch_item(params[:id])
 
       if item.owner.id == session[:account]
         item.to_inactive
       end
 
-      redirect "/home/active"
+      redirect "/items/my/active"
     end
 
-    post '/home/delete' do
+    post '/item/delete' do
       id = params[:id]
       Models::System.instance.fetch_item(id).clear
-      redirect "/home/inactive"
+      redirect "/items/my/inactive"
     end
 
-    post '/home/edit' do
+    post '/item/edit' do
       id = params[:id]
       name = Models::System.instance.fetch_item(id).name
       description = Models::System.instance.fetch_item(id).description
       price = Models::System.instance.fetch_item(id).price
       picture = Models::System.instance.fetch_item(id).picture
-      haml :home_edit, :locals => {:id => id, :name => name, :description => description, :price => price, :picture => picture}
+      haml :item_edit, :locals => {:id => id, :name => name, :description => description, :price => price, :picture => picture}
     end
 
     ###
@@ -99,9 +99,9 @@ module Controllers
     #
     ###
 
-    post '/home/edit/save' do
+    post '/item/edit/save' do
       id = params[:id]
-      redirect "/home/inactive" if Models::System.instance.fetch_item(id).editable?
+      redirect "/items/my/inactive" if Models::System.instance.fetch_item(id).editable?
       new_description = params[:new_description]
       new_price = params[:new_price]
       Models::System.instance.fetch_item(id).add_description(new_description)
@@ -118,17 +118,17 @@ module Controllers
         Models::System.instance.fetch_item(id).add_picture(file_path)
       end
 
-      redirect "/home/inactive"
+      redirect "/items/my/inactive"
     end
 
-    post '/buy' do
+    post '/item/buy' do
       id = params[:id]
       item = Models::System.instance.fetch_item(id)
       user_id = session[:account]
       new_user = Models::System.instance.fetch_account(user_id)
       if item.can_be_bought_by?(new_user)
         new_user.buy_item(item)
-        redirect "/home/inactive"
+        redirect "/items/my/inactive"
       else
         redirect "/error/Not_Enough_Credits"
       end
