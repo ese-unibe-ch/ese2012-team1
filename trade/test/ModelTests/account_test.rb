@@ -4,19 +4,19 @@ require 'require_relative'
 
 require_relative('../../app/models/account')
 
-class Models::Account
-  @saved = false
-
-  def save
-    @saved = true
-  end
-
-  def saved?
-    @saved
-  end
-end
-
 class AccountTest < Test::Unit::TestCase
+
+  class MockAccount < Models::Account
+    @saved = false
+
+    def save
+      @saved = true
+    end
+
+    def saved?
+      @saved
+    end
+  end
 
   def setup
     Models::System.instance.reset
@@ -31,7 +31,7 @@ class AccountTest < Test::Unit::TestCase
   end
 
   def create_account
-    account = Models::Account.created("Pascal", "Pascals account", "../images/users/default_avatar.png")
+    account = MockAccount.created("Pascal", "Pascals account", "../images/users/default_avatar.png")
 
     assert(account.name == "Pascal", "Should have name")
     assert(account.description == "Pascals account", "Should have description")
@@ -56,7 +56,7 @@ class AccountTest < Test::Unit::TestCase
     item = account1.create_item("Chaos", 100)
     assert(item.owner == account1, "Pascal should be owner of \'Chaos\'")
 
-    account2 = Models::Account.created("Judith", "Judiths account", "../images/users/default_avatar.png")
+    account2 = MockAccount.created("Judith", "Judiths account", "../images/users/default_avatar.png")
     account2.buy_item(item)
     assert(item.owner == account2, "Judith should be owner of \'Chaos\'")
     assert(account1.credits == 200, "Pascal should earn 100 credits")

@@ -35,7 +35,7 @@ class ItemActionsTest < Test::Unit::TestCase
 
       assert(item.is_active?, "Item should be active")
 
-      post '/changestate/setinactive', {:id => item.id }, 'rack.session' => {:user => users[:bart].id, :auth => true}
+      post '/changestate/setinactive', { :id => item.id }, 'rack.session' => {:user => users[:bart].id, :auth => true, :account => users[:bart].id}
 
       assert(!item.is_active?, "Item should be inactive")
     end
@@ -46,7 +46,7 @@ class ItemActionsTest < Test::Unit::TestCase
 
       assert(!item.is_active?, "Item should be inactive")
 
-      post '/changestate/setactive', {:id => item.id}, 'rack.session' => {:user => user.id, :auth => true}
+      post '/changestate/setactive', {:id => item.id}, 'rack.session' => {:user => user.id, :auth => true, :account => user.id}
 
       assert(item.is_active?, "Item should be active")
     end
@@ -71,7 +71,7 @@ class ItemActionsTest < Test::Unit::TestCase
 
       file = Rack::Test::UploadedFile.new("../../app/public/images/items/default_item.png", "image/png")
 
-      post '/create', { :item_picture => file, :name => 'Gold', :price => 100, :description => 'Very very valuable'}, 'rack.session' => { :user => user.id, :auth => true  }
+      post '/create', { :item_picture => file, :name => 'Gold', :price => 100, :description => 'Very very valuable'}, 'rack.session' => { :user => user.id, :auth => true, :account => user.id }
 
       homers_items = Models::System.instance.fetch_items_of(user.id)
       item = homers_items.detect{|item| item.name == 'Gold'}

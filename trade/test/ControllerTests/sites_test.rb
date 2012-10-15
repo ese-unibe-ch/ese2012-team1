@@ -26,6 +26,8 @@ class SitesTest < Test::Unit::TestCase
     end
 
     it 'post /organisation/switch should change session[:account]' do
+      TestHelper.reload
+
       users = TestHelper.get_users
 
       org = users[:homer].create_organisation("founding.inc", "founds things", "../images/users/default_avatar.png")

@@ -73,4 +73,8 @@ class TestHelper
     @@items = Hash.new
     @@users = Hash.new
   end
+
+  class << self
+    alias :reload :load
+  end
 end
