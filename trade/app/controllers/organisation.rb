@@ -50,7 +50,7 @@ module Controllers
 ###
 
     post '/organisation/switch' do
-      session[:account] = params[:account]
+      session[:account] = params[:account].to_i
 
       redirect '/home'
     end
