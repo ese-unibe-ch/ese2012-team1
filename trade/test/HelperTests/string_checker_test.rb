@@ -1,9 +1,9 @@
 require 'test/unit'
 require 'rubygems'
 require 'require_relative'
-require 'test_description_simplifier'
+require '../test_description_simplifier'
 
-require_relative('../app/helpers/string_checkers')
+require_relative('../../app/helpers/string_checkers')
 
 class StringCheckerTest < Test::Unit::TestCase
   should "accept mail@mail.ch as e-mail" do
