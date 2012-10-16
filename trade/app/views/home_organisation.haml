@@ -1,0 +1,26 @@
+%h2 Your Organisation's Profile
+%br
+#usr_img
+  %img(height=200 width=200){ :alt => Models::System.instance.fetch_account(session[:account].to_i).name, :src => Models::System.instance.fetch_account(session[:account].to_i).avatar }
+
+%br
+= "Currently logged in as User: #{Models::System.instance.fetch_account(session[:user]).name}"
+%br
+= "Currently in Account of Organisation: #{Models::System.instance.fetch_account(session[:account]).name}"
+%br
+%br
+= "Your Organisations Credits: #{Models::System.instance.fetch_account(session[:account]).credits}"
+%br
+%br
+= "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).list_items.size} active Items"
+%br
+= "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).list_items_inactive.size} inactive Items"
+%br
+%br
+= "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).users.size} Members (with you)"
+%br
+%br
+= "Your Organisations Description:"
+%br
+= "#{Models::System.instance.fetch_account(session[:account]).description}"
+

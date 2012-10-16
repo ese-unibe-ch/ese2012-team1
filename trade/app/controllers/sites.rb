@@ -19,7 +19,11 @@ module Controllers
     end
 
     get '/home' do
-        haml :home
+        if session[:user] == session[:account]
+          haml :home
+        else
+          haml :home_organisation
+        end
     end
 
     get '/items/my/active' do
