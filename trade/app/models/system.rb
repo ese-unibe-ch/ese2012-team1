@@ -122,7 +122,9 @@ module Models
     end
 
     def fetch_organisations_but(organisation_name)
-      accounts.values.select{|acc| acc.organisation && acc.name != organisation_name}
+      tmp = accounts.values.select{|acc| acc.organisation == true}
+      puts(tmp.size)
+      tmp.select{|acc| acc.name != organisation_name}
     end
 
     #Removes all users, all items and resets the counter

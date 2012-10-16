@@ -79,6 +79,7 @@ module Models
     # @param picture : picture of the organisation
     def create_organisation(name, description, picture)
       org = Models::Organisation.created(name, description, picture)
+      org.organisation = true
       org.add_member(self)
       org
     end
