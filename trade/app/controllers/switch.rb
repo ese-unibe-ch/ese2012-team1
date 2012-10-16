@@ -19,8 +19,10 @@ module Controllers
       user = session[:user]
       if Models::System.instance.fetch_account(user).email == value
         session[:organisation] = "none"
+        session[:account] = Models::System.instance.fetch_account(user).id
       else
         session[:organisation] = value
+        session[:account] = Models::System.instance.fetch_organisation_by_name(value).id
       end
       redirect '/home'
     end

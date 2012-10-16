@@ -21,7 +21,7 @@ module Models
     #  fails if the buyer has not enough credits.
 
     # generate getter and setter
-    attr_accessor :description, :avatar, :name, :credits, :id
+    attr_accessor :description, :avatar, :name, :credits, :id, :organisation
 
 
     ###
@@ -44,6 +44,7 @@ module Models
       account.name = name
       account.description = description
       account.avatar = avatar
+      account.organisation = false
 
       account.save
 

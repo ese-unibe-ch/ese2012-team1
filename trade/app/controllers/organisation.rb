@@ -80,6 +80,16 @@ module Controllers
 
     end
 
+    get '/organisations/self' do
+      user = Models::System.instance.fetch_account(session[:user])
+      haml :organisations_self, :locals => { :all_organisations => Models::System.instance.fetch_organisations_of(user.id) }
+    end
+
+    get '/organisations/all' do
+      organisation = session[:account]
+      haml :organisations_all, :locals => { :all_organisations => Models::System.instance.fetch_organisations_but(organisation) }
+    end
+
     error do
       haml :error, :locals => {:error_title => "", :error_message => "#{request.env['sinatra.error'].to_s}" }
     end
