@@ -36,16 +36,21 @@ module Controllers
       redirect '/home'
     end
 
-    post '/organisation/switch' do
-      user = Models::System.instance.fetch_account(session[:user])
-      organisation_id = params[:account]
+###
+#
+#  Switches from a user to an organisation or vice-versa.
+#  Called by organisation_switch.haml.
+#  At the moment there is a problem. If you are using this
+#  post you can yourself to an organisation where you are\
+#  not member.
+#
+#  Expects:
+#  params[:account] : id of the account the user wants to switch to 
+#
+###
 
-      if session[:user] == organisation_id
-        session[:account] = user.id
-      else
-        organisation = Models::System.instance.fetch_account(organisation_id.to_i)
-        session[:account] = organisation.id
-      end
+    post '/organisation/switch' do
+      session[:account] = params[:account]
 
       redirect '/home'
     end
