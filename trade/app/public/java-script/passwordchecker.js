@@ -29,20 +29,20 @@ function inputCheck(){
         messageField.innerHTML = "No special characters are allowed";
         strong = false
     } else if(eingabe.length < 6) {
-        setTextAndColor(messageField, "Weak password. Too short", "red");
+        setTextAndColor(messageField, "Please use at least 6 letters", "red");
         strong = false
     } else if (eingabe.match(/^[A-Z]+$/)) {
-        setTextAndColor(messageField, "Weak password. Only capitalized letters", "red");
+        setTextAndColor(messageField, "Please use capital letters, small letters and numbers", "red");
         strong = false
     } else if (eingabe.match(/^[a-z]+$/)) {
-        setTextAndColor(messageField, "Weak password. Only small letters", "red");
+        setTextAndColor(messageField, "Please use capital letters, small letters and numbers", "red");
         strong = false
     } else if (eingabe.match(/^\d+$/)) {
-        setTextAndColor(messageField, "Weak password. Only digits", "red");
+        setTextAndColor(messageField, "Please use capital letters, small letters and numbers", "red");
         strong = false
     } else if (eingabe.match(/^([a-zA-Z])+$/) || eingabe.match(/^([a-z]|\d)+$/)
         || eingabe.match(/^([A-Z]|\d)+$/) )  {
-        setTextAndColor(messageField, "Password must have lowercase, uppercase and digits", "red");
+        setTextAndColor(messageField, "Please use capital letters, small letters and numbers", "orange");
         strong = false
     } else {
         setTextAndColor(messageField, "Gracious password! You are now allowed to enter", "green");
