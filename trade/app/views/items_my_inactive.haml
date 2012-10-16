@@ -1,4 +1,6 @@
-%h2 My Inactive Items
+- text = "Our"
+- text = "My" if session[:organisation] == "none"
+%h2= "#{text} Inactive Items"
 %br
 %ul
   - for item in inactive_items

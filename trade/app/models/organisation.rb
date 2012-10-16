@@ -17,7 +17,6 @@ module Models
 
     def initialize
       super
-      self.organisation = true
       self.users = Hash.new
     end
 
