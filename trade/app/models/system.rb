@@ -20,7 +20,7 @@ module Models
 
     # ---------user------------------------------------------------------------
 
-    # Adds an user to the system.
+    # Adds an account to the system.
     def add_account(account)
       fail "No account" if (account == nil)
       fail "Account \'#{account}\' already exists" if (accounts.one? {|id, acc| acc == account })
@@ -34,7 +34,7 @@ module Models
       fail "User should be stored in users-hash" unless (self.accounts.member?(account_id_count-1))
     end
 
-    # Returns the user with associated email.
+    # Returns the user with associated account id.
     def fetch_account(account_id)
       fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
       self.accounts.fetch(account_id)

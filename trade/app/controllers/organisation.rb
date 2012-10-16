@@ -102,5 +102,19 @@ module Controllers
     error do
       haml :error, :locals => {:error_title => "", :error_message => "#{request.env['sinatra.error'].to_s}" }
     end
+
+    get '/organisation/delete' do
+      haml :organisation_delete
+    end
+
+    post '/organisation/delete' do
+      org = Models::System.instance.fetch_account(session[:account])
+      Models::System.instance.remove_account(org.id)
+
+      user = session[:user]
+      session[:account] = Models::System.instance.fetch_account(user).id
+
+      redirect '/home'
+    end
   end
 end
