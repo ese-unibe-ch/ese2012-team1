@@ -26,33 +26,33 @@ class RegistrationTest < Test::Unit::TestCase
     end
 
     it 'post /register should redirect to /register if password is too short' do
-      post "/register", {:password => 'aB1De', :re_password => 'aB1De'}, 'rack.session' => session =  { :user => nil, :auth => false  }
+      post "/register", {:password => 'aB1De', :re_password => 'aB1De', :email => 'larry@mail.ch'}, 'rack.session' => session =  { :user => nil, :auth => false  }
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
       assert last_response.location.include?('/register')
     end
 
     it 'post /register should redirect to /register if password holds special characters' do
-      post "/register", {:password => '$onn3nBad', :re_password => '$onn3nBad', :name => 'Larry'}, 'rack.session' => session =  { :user => nil, :auth => false  }
+      post "/register", {:password => '$onn3nBad', :re_password => '$onn3nBad', :name => 'Larry', :email => 'dummy@mail.ch'}, 'rack.session' => session =  { :user => nil, :auth => false  }
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
       assert last_response.location.include?('/register')
     end
 
     it 'post /register should redirect to /register if password retype is wrong' do
-      post "/register", {:password => 'Aonn3nBad', :re_password => 'fonn3nBad', :name => 'Larry'}, 'rack.session' => session =  { :user => nil, :auth => false  }
+      post "/register", {:password => 'Aonn3nBad', :re_password => 'fonn3nBad', :name => 'Larry', :email => 'dummy@mail.ch'}, 'rack.session' => session =  { :user => nil, :auth => false  }
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
       assert last_response.location.include?('/register')
     end
 
     it 'post /register should redirect to /register if password is too weak' do
-      post "/register", {:password => 'aaaagsfa', :re_password => 'aaaagsfa'}, 'rack.session' => session =  { :user => nil, :auth => false  }
+      post "/register", {:password => 'aaaagsfa', :re_password => 'aaaagsfa', :email => 'dummy@mail.ch'}, 'rack.session' => session =  { :user => nil, :auth => false  }
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
       assert last_response.location.include?('/register')
 
-      post "/register", {:password => '13232341', :re_password => '13232341'}, 'rack.session' => session =  { :user => nil, :auth => false  }
+      post "/register", {:password => '13232341', :re_password => '13232341', :email => 'dummy@mail.ch'}, 'rack.session' => session =  { :user => nil, :auth => false  }
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
       assert last_response.location.include?('/register')
 
-      post "/register", {:password => 'DGGEGHRSEGA', :re_password => 'DGGEGHRSEGA'}, 'rack.session' => session =  { :user => nil, :auth => false  }
+      post "/register", {:password => 'DGGEGHRSEGA', :re_password => 'DGGEGHRSEGA', :email => 'dummy@mail.ch'}, 'rack.session' => session =  { :user => nil, :auth => false  }
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
       assert last_response.location.include?('/register')
     end
