@@ -5,6 +5,7 @@
   %div(id='preview')
     - for item in items_to_show
       %div(class='item_preview')
+        %img(class='preview_img' height=200 width=200){ :alt => "#{item.name}", :src => "#{item.picture}" }
         %div= item.name
         %div(class='bigmargin')
           Description:
@@ -14,4 +15,3 @@
           Price:
           %br
           = item.price
-        %img(class='preview_img' height=200 width=200){ :alt => "#{item.name}", :src => "#{item.picture}" }
