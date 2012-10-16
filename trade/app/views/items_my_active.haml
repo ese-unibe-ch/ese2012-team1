@@ -1,5 +1,5 @@
 - text = "Our"
-- text = "My" if session[:organisation] == "none"
+- text = "My" if session[:account] == session[:user]
 %h2= "#{text} Active Items"
 %br
 %ul
