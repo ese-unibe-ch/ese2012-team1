@@ -22,9 +22,28 @@ module Controllers
       redirect "/" unless session[:auth]
     end
 
+###
+#
+# Shows form to create an organisation by user
+#
+##
+
     get '/organisation/create' do
       haml :organisation_create
     end
+
+##
+#
+#  Creates an organisation. 
+#  Called from organisation_create.haml
+#  
+#  Expects:
+#  params[:name] : Name of the organisation
+#  params[:description] : Description to organisation
+#
+#  optional params[:avatar] : Picture for organisation
+#
+##
 
     post '/organisation/create' do
       fail "Should have name" if params[:name].nil?
