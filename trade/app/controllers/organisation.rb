@@ -36,11 +36,6 @@ module Controllers
       redirect '/home'
     end
 
-    get '/organisations/all' do
-      user = Models::System.instance.fetch_account(session[:user])
-      haml :organisations_all, :locals => { :all_organisations => Models::System.instance.fetch_organisations_of(user.id) }
-    end
-
     post '/organisation/switch' do
       user = Models::System.instance.fetch_account(session[:user])
       organisation_id = params[:account]

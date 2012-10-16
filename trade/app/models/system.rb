@@ -131,10 +131,9 @@ module Models
       accounts.values.detect{|acc| !acc.respond_to?(:email) && acc.name == organisation_name}
     end
 
-    def fetch_organisations_but(organisation_name)
+    def fetch_organisations_but(organisation_id)
       tmp = accounts.values.select{|acc| acc.organisation == true}
-      puts(tmp.size)
-      tmp.select{|acc| acc.name != organisation_name}
+      tmp.select{|acc| acc.id != organisation_id}
     end
 
     #Removes all users, all items and resets the counter
