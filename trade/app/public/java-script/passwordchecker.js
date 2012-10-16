@@ -49,7 +49,8 @@ function inputCheck(){
         strong = true;
     }
 
-    setButtonState()
+    re_inputCheck()
+    //setButtonState()
 }
 
 function re_inputCheck(){

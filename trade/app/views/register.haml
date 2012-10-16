@@ -20,6 +20,9 @@
   %label Email:
   %br
   %input(type="text" name="email"){:value => session[:form_email]}
+  - class_to_set = ""
+  - class_to_set = "warning" if session[:is_email_error] == "yes"
+  %label(class="#{class_to_set}")= "#{session[:email_error]}"
   %br
   %br
   %label Description:

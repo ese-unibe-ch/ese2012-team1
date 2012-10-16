@@ -58,12 +58,27 @@ module Controllers
     post '/register' do
       if are_nil?(params[:password], params[:re_password], params[:email], params[:name]) ||
          ! params[:password].is_strong_password? || params[:password] != params[:re_password] ||
-          params[:email] == "" || ! params[:email].is_email? || params[:name] == ""
+          params[:email] == "" || ! params[:email].is_email? || params[:name] == "" || Models::System.instance.user_exists?(params[:email])
+
+        #Error Messages Sessions
+        session[:email_error] = ""
+        session[:email_error] = "E-Mail Address already in use." if Models::System.instance.user_exists?(params[:email])
+        session[:email_error] = "Not a correct E-Mail Address" if params[:email] == "" || !params[:email].is_email?
+        session[:is_email_error] = "yes" if Models::System.instance.user_exists?(params[:email])
+        session[:is_email_error] = "yes" if params[:email] == "" || !params[:email].is_email?
+
+        #Values from wrong form data
         session[:form_email] = params[:email]
         session[:form_name] = params[:name]
         session[:form_description] = params[:interests]
         redirect '/register'
       end
+
+      session[:email_error] = ""
+      session[:is_email_error] = ""
+      session[:form_email] = ""
+      session[:form_name] = ""
+      session[:form_description] = ""
 
       password = params[:password]
       email = params[:email]
