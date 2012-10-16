@@ -8,18 +8,18 @@ require 'test_helper'
 
 ENV['RACK_ENV'] = 'test'
 
-require_relative '../../app/controllers/sites'
+require_relative '../../app/controllers/organisation'
 require_relative '../../app/models/user'
 
-class SitesTest < Test::Unit::TestCase
+class OrganisationTest < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def app
-    Controllers::Sites
+    Controllers::Organisation
   end
 
   describe 'Simple Tests' do
-    class TestApp < Controllers::Sites
+    class TestApp < Controllers::Organisation
       configure do
         TestHelper.load
       end
@@ -32,8 +32,8 @@ class SitesTest < Test::Unit::TestCase
 
       org = users[:homer].create_organisation("founding.inc", "founds things", "../images/users/default_avatar.png")
 
-      session = { :user => users[:homer].id, :auth => true, :account => users[:homer].id  }
-      post "/organisation/switch", { :organisation => "founding.inc" }, 'rack.session' => session
+      session = { :user => users[:homer].id, :auth => true, :account => org.id  }
+      post "/organisation/switch", { :account => org.id }, 'rack.session' => session
 
       assert(session[:account] == org.id, "Should have id #{org.id} but had #{session[:account]}")
     end

@@ -29,7 +29,7 @@ class MainTest < Test::Unit::TestCase
       users = TestHelper.get_users
       puts(users)
       puts((users[:homer]).id)
-      get '/home', {}, 'rack.session' => { :user => users[:homer].id, :auth => true  }
+      get '/home', {}, 'rack.session' => { :user => users[:homer].id, :auth => true, :account => users[:homer].id  }
       assert last_response.ok?
       assert last_response.body.include?('Trading System'), "Should show title but was\n#{last_response.body}"
     end

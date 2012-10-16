@@ -1,0 +1,17 @@
+%form(name="memberform" action="/organisation/add/member" method="post")
+  -if defined?(success_message)
+    %br
+    %label(class="success")
+      = "#{success_message}"
+    %br
+  %br
+  %label Member:
+  %br
+  %input(type="text" name="member" value="")
+  -if defined?(error_message)
+    %br
+    %label(class="warning")
+      = "#{error_message}"
+  %br
+  %br
+  %input(type="submit" value="Add member")

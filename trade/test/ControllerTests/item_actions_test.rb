@@ -9,6 +9,9 @@ require 'test_helper'
 
 ENV['RACK_ENV'] = 'test'
 
+def error
+end #Just to make everyone happy. this method is defined in ItemsAction to catch raised exceptions
+
 require_relative '../../app/controllers/item_actions'
 require_relative '../../app/models/item'
 require_relative '../../app/models/system'

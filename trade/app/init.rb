@@ -1,6 +1,3 @@
-def relative path
-  File.join(File.expand_path(File.dirname(__FILE__)), path)
-end
 require 'rubygems'
 require 'require_relative'
 require_relative('../../trade/app/models/item')
@@ -32,5 +29,5 @@ cc.to_active
 Models::User.created( "ese", "ese" , "ese@mail.ch", "I'm ese", "../images/users/default_avatar.png")
 
 (68..72).each do |ascii_nr_of_character|
-  Models::User.created("user#{ascii_nr_of_character.chr}", "password#{ascii_nr_of_character.chr}" , "#{ascii_nr_of_character.chr}@mail.ch", "I'm #{ascii_nr_of_character.chr}", "../images/users/default_avatar.png")
+  Models::User.created("user#{ascii_nr_of_character.chr}", "password#{ascii_nr_of_character.chr}" , "user#{ascii_nr_of_character.chr}@mail.ch", "I'm #{ascii_nr_of_character.chr}", "../images/users/default_avatar.png")
 end

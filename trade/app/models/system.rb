@@ -44,6 +44,16 @@ module Models
       self.accounts.values.detect{|account| account.respond_to?(:email) && account.email == email}
     end
 
+    ##
+    #
+    # Returns true if user is in the system
+    #
+    ##
+
+    def user_exists?(email)
+      self.accounts.values.one?{|account| account.respond_to?(:email) && account.email == email}
+    end
+
     # Returns all users but the one specified in an array
     def fetch_all_accounts_but(account_id)
       fail "No account with id #{account_id}" unless self.accounts.member?(account_id)

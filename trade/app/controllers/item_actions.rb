@@ -15,6 +15,9 @@ module Controllers
   class ItemActions < Sinatra::Application
     set :views, "#{absolute_path('../views', __FILE__)}"
 
+    set :raise_errors, false unless development?
+    set :show_exceptions, false unless development?
+
     before do
       redirect "/" unless session[:auth]
     end
@@ -29,10 +32,11 @@ module Controllers
     ##
 
     post '/item/create' do
-      fail "Should have name." if params[:name] == nil
-      fail "Should have price" if params[:price] == nil
-      fail "Should have description" if params[:description] == nil
-      fail "Should be number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:price])
+      fail "Item should have name." if params[:name] == nil
+      fail "Item name should not be empty" if params[:name].length == 0
+      fail "Item should have price" if params[:price] == nil
+      fail "Price should be number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:price])
+      fail "Item should have description" if params[:description] == nil
 
       id = session[:account]
 
@@ -135,5 +139,9 @@ module Controllers
 
     end
 
+  end
+
+  error do
+    haml :error, :locals => {:error_title => "", :error_message => "#{request.env['sinatra.error'].to_s}" }
   end
 end
