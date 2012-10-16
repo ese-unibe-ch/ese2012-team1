@@ -38,7 +38,7 @@ module Controllers
 
     get '/users/all' do
         viewer_id = session[:account]
-        haml :users_all, :locals => {:all_users => Models::System.instance.fetch_all_accounts_but(viewer_id)}
+        haml :users_all, :locals => {:all_users => Models::System.instance.fetch_all_users_but(viewer_id)}
     end
 
     get '/users/:id' do

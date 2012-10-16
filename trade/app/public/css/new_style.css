@@ -104,6 +104,10 @@ div.bigmargin {
     margin-top: 20px;
 }
 
+li.bigmargin_bottom {
+     margin-bottom: 20px;
+ }
+
 div.itembuttons {
     margin-left: 20px;
 }

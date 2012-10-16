@@ -2,8 +2,8 @@
 %br
 %ul
   - for user in all_users
-    %li
+    %li(class='bigmargin_bottom')
       %em= user.name
-      %em= " has #{user.list_items.size} Items to sell"
-      \:
-      %a(href="/users/#{user.id}" ) Show Users Items
+      %em= " has #{user.list_items.size} Items to sell. "
+      %img(height=50 width=50){ :alt => user.name, :src => user.avatar }
+      %a(href="/users/#{user.id}" ) Show User Details

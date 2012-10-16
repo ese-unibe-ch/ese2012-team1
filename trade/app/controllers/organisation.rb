@@ -123,6 +123,11 @@ module Controllers
       haml :organisations_all, :locals => { :all_organisations => Models::System.instance.fetch_organisations_but(organisation) }
     end
 
+    get '/organisations/:id' do
+      organisation_id = params[:id]
+      haml :organisations_id, :locals => {:active_items => Models::System.instance.fetch_account(organisation_id.to_i).list_items_active}
+    end
+
     error do
       haml :error, :locals => {:error_title => "", :error_message => "#{request.env['sinatra.error'].to_s}" }
     end

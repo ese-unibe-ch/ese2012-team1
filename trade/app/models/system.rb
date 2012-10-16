@@ -54,10 +54,17 @@ module Models
       self.accounts.values.one?{|account| account.respond_to?(:email) && account.email == email}
     end
 
-    # Returns all users but the one specified in an array
+    # Returns all users and organisations but the one specified in an array
     def fetch_all_accounts_but(account_id)
       fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
       self.accounts.values - [self.fetch_account(account_id)]  # Array difference
+    end
+
+    # Returns all users but the one specified in an array
+    def fetch_all_users_but(account_id)
+      fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
+      tmp = accounts.values.select{|acc| acc.organisation == false}
+      tmp.select{|acc| acc.id != account_id}
     end
 
     # Removes an user from the system.

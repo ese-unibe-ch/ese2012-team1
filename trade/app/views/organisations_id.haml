@@ -1,4 +1,4 @@
-%h2= "#{Models::System.instance.fetch_account(params[:id].to_i).name}'s Profile"
+%h2= "#{Models::System.instance.fetch_account(params[:id].to_i).name}'s Organisation Profile"
 #usr_img
   %img(height=200 width=200){ :alt => Models::System.instance.fetch_account(params[:id].to_i).name, :src => Models::System.instance.fetch_account(params[:id].to_i).avatar }
 %br
@@ -7,7 +7,7 @@
   = "#{Models::System.instance.fetch_account(params[:id].to_i).description}"
 %br
 %br
-%h3 Check out my Items:
+%h3 Check out our Items:
 %ul
   - for item in active_items
     %li
