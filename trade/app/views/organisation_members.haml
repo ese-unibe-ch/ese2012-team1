@@ -1,0 +1,14 @@
+%h2 Members of Organisation
+%br
+%ul
+  - for user in all_members
+    %li
+      %em= user.name
+      %img(height=50 width=50){ :alt => user.name, :src => user.avatar }
+      \:
+    %div(class="itembuttons")
+      %form(name="remove" action="/organisation/members/remove" method="post")
+        %input(type="hidden" name="user_email" value="#{user.email}")
+        %input(class="itembuttons" type="submit" value="Remove from Organisation")
+    %br
+    %br

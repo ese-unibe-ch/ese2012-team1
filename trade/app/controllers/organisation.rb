@@ -55,6 +55,20 @@ module Controllers
       redirect '/home'
     end
 
+    get '/organisation/members' do
+      organisation = Models::System.instance.fetch_account(session[:account])
+      haml :organisation_members, :locals => { :all_members => organisation.users.values }
+    end
+
+    post '/organisation/members/remove' do
+      organisation = Models::System.instance.fetch_account(session[:account])
+      user = Models::System.instance.fetch_user_by_email(params[:user_email])
+      if user.id != session[:user]
+        organisation.users.delete(user.email)
+      end
+      redirect '/organisation/members'
+    end
+
     get '/organisation/add/member' do
       haml :organisation_add_member
     end
