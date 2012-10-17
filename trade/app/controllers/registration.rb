@@ -117,6 +117,7 @@ module Controllers
 
 
     post '/unregister' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
       user = Models::System.instance.fetch_account(session[:user])
       user.clear
 

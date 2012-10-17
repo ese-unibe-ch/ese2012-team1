@@ -46,8 +46,13 @@ module Controllers
 ##
 
     post '/organisation/create' do
-      fail "Should have name" if params[:name].nil?
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
+      redirect "/error/No_Name" if params[:name].nil? or params[:name]==''
+      redirect "/error/No_Description" if params[:description].nil? or params[:description]==''
+      redirect "/error/Choose_Another_Name" if Models::System.instance.organisation_exists?(params[:name])
+
       fail "Should have description" if params[:description].nil?
+      fail "Should have name" if params[:name].nil?
 
       dir = absolute_path('../public/images/organisations/', __FILE__)
       file_path = "/images/organisations/default_avatar.png"
@@ -86,11 +91,15 @@ module Controllers
     end
 
     get '/organisation/members' do
+      #only checks if :account is in the range of valid ids
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
       organisation = Models::System.instance.fetch_account(session[:account])
       haml :organisation_members, :locals => { :all_members => organisation.users.values }
     end
 
     post '/organisation/members/remove' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      redirect "/error/No_Valid_User" unless Models::System.instance.user_exists?(params[:user_email])
       organisation = Models::System.instance.fetch_account(session[:account])
       user = Models::System.instance.fetch_user_by_email(params[:user_email])
       if user.id != session[:user]
@@ -113,6 +122,8 @@ module Controllers
     ##
 
     post '/organisation/add/member' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      redirect "/error/No_Valid_User" unless Models::System.instance.user_exists?(params[:member])
       if Models::System.instance.user_exists?(params[:member])
         user =  Models::System.instance.fetch_user_by_email(params[:member])
         org = Models::System.instance.fetch_account(session[:account])
@@ -125,16 +136,19 @@ module Controllers
     end
 
     get '/organisations/self' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
       user = Models::System.instance.fetch_account(session[:user])
       haml :organisations_self, :locals => { :all_organisations => Models::System.instance.fetch_organisations_of(user.id) }
     end
 
     get '/organisations/all' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
       organisation = session[:account]
       haml :organisations_all, :locals => { :all_organisations => Models::System.instance.fetch_organisations_but(organisation) }
     end
 
     get '/organisations/:id' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(params[:id].to_i)
       organisation_id = params[:id]
       haml :organisations_id, :locals => {:active_items => Models::System.instance.fetch_account(organisation_id.to_i).list_items_active}
     end
@@ -148,6 +162,8 @@ module Controllers
     end
 
     post '/organisation/delete' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
       org = Models::System.instance.fetch_account(session[:account])
       Models::System.instance.remove_account(org.id)
 

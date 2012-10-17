@@ -27,11 +27,13 @@ module Controllers
     end
 
     get '/items/my/active' do
+        redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
         user_id = session[:account]
         haml :items_my_active, :locals => {:active_items => Models::System.instance.fetch_account(user_id).list_items}
     end
 
     get '/items/my/inactive' do
+        redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
         user_id = session[:account]
         haml :items_my_inactive, :locals => {:inactive_items => Models::System.instance.fetch_account(user_id).list_items_inactive}
     end
@@ -41,16 +43,19 @@ module Controllers
     end
 
     get '/users/all' do
+        redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
         viewer_id = session[:account]
         haml :users_all, :locals => {:all_users => Models::System.instance.fetch_all_users_but(viewer_id)}
     end
 
     get '/users/:id' do
+        redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(params[:id].to_i)
         user_id = params[:id]
         haml :users_id, :locals => {:active_items => Models::System.instance.fetch_account(user_id.to_i).list_items_active}
     end
 
     get '/items/active' do
+        redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
         viewer_id = session[:account]
         haml :items_active, :locals => {:all_items => Models::System.instance.fetch_all_active_items_but_of(viewer_id)}
     end
@@ -62,6 +67,24 @@ module Controllers
         end
         if params[:title] == "Not_Enough_Credits"
           msg = "Sorry, but you can't buy this item, because you have not enough credits!"
+        end
+        if params[:title] == "No_Valid_Account_Id"
+          msg = "Your account id could not be found"
+        end
+        if params[:title] == "No_Valid_User"
+          msg = "Your email could not be found"
+        end
+        if params[:title] == "No_Name"
+          msg = "Please enter a name"
+        end
+        if params[:title] == "No_Description"
+          msg = "Please enter a description"
+        end
+        if params[:title] == "No_Valid_Item_Id"
+          msg = "The requested item id could not be found"
+        end
+        if params[:title] == "Choose_Another_Name"
+          msg = "The name you chose is already taken, choose another one"
         end
         haml :error, :locals => {:error_title => params[:title], :error_message => msg}
     end

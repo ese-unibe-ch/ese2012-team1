@@ -15,6 +15,7 @@ module Controllers
     set :views , "#{absolute_path('../views', __FILE__)}"
 
     post '/organisationswitch' do
+      redirect "/error/No_valid_account_id" unless Models::System.instance.account_exists?(params[:id])
       value = params[:organisation]
       user = session[:user]
       if Models::System.instance.fetch_account(user).email == value
