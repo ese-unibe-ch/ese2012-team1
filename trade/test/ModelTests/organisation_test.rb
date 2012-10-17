@@ -29,11 +29,11 @@ class OrganisationTest < Test::Unit::TestCase
   end
 
   def init
-    organisation = Models::Organisation.created("Pascal", "Pascals account", "../images/users/default_avatar.png")
+    organisation = Models::Organisation.created("Pascal", "Pascals account", "/images/users/default_avatar.png")
 
     assert(organisation.name == "Pascal", "Should have name")
     assert(organisation.description == "Pascals account", "Should have description")
-    assert(organisation.avatar == "../images/users/default_avatar.png", "Should have avatar")
+    assert(organisation.avatar == "/images/users/default_avatar.png", "Should have avatar")
 
     assert(Models::System.instance.accounts.size == 1, "There should be one organisation")
     assert(Models::System.instance.accounts.one? {|id, org| org == organisation})

@@ -19,13 +19,13 @@ class TestHelper
     self.clear_all
     self.reset
 
-    bart = Models::User.created('Bart' , 'bart', 'bart@mail.ch', 'I\' should not...', '../images/users/default_avatar.png')
+    bart = Models::User.created('Bart' , 'bart', 'bart@mail.ch', 'I\' should not...', '/images/users/default_avatar.png')
     @@users.store(:bart, bart)
     @@items.store(:skateboard, bart.create_item('Skateboard', 100))
     @@items.store(:elephant, bart.create_item('Elephant', 50))
     @@items[:skateboard].to_active
 
-    homer = Models::User.created('Homer', 'homer', 'homer@mail.ch', 'Do!', '../images/users/default_avatar.png')
+    homer = Models::User.created('Homer', 'homer', 'homer@mail.ch', 'Do!', '/images/users/default_avatar.png')
     @@users.store(:homer, homer)
     @@items.store(:beer, homer.create_item('Beer', 200))
     @@items[:beer].to_active

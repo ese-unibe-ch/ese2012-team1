@@ -11,7 +11,7 @@ class ItemTest < Test::Unit::TestCase
 
   def setup
     Models::System.instance.reset
-    @owner = Models::User.created("testuser", "password", "user@mail.ch", "Hey there", "../images/users/default_avatar.png")
+    @owner = Models::User.created("testuser", "password", "user@mail.ch", "Hey there", "/images/users/default_avatar.png")
   end
 
   def teardown
@@ -63,8 +63,8 @@ class ItemTest < Test::Unit::TestCase
   #test if adding of picture generally works
   def test_picture_adding
     item = Models::Item.created("Test object", 20, @owner)
-    item.add_picture("../images/items/default_item.png")
-    assert_equal(item.picture, "../images/items/default_item.png")
+    item.add_picture("/images/items/default_item.png")
+    assert_equal(item.picture, "/images/items/default_item.png")
   end
 
   #test if the checking of editability works correctly
@@ -79,7 +79,7 @@ class ItemTest < Test::Unit::TestCase
     item = Models::Item.created("book", 50, @owner)
     item.to_active
 
-    buyer = Models::User.created("testuser2", "password", "user2@mail.ch", "Hey there", "../images/users/default_avatar.png")
+    buyer = Models::User.created("testuser2", "password", "user2@mail.ch", "Hey there", "/images/users/default_avatar.png")
 
     assert(item.can_be_bought_by?(buyer))
   end
@@ -87,7 +87,7 @@ class ItemTest < Test::Unit::TestCase
   def test_should_not_be_buyable_if_deactive
     item = Models::Item.created("book", 50, @owner)
 
-    buyer = Models::User.created("testuser2", "password", "user2@mail.ch", "Hey there", "../images/users/default_avatar.png")
+    buyer = Models::User.created("testuser2", "password", "user2@mail.ch", "Hey there", "/images/users/default_avatar.png")
 
     assert(! item.can_be_bought_by?(buyer))
   end
@@ -96,7 +96,7 @@ class ItemTest < Test::Unit::TestCase
     item = Models::Item.created("book", 150, @owner)
     item.to_active
 
-    buyer = Models::User.created("testuser2", "password", "user2@mail.ch", "Hey there", "../images/users/default_avatar.png")
+    buyer = Models::User.created("testuser2", "password", "user2@mail.ch", "Hey there", "/images/users/default_avatar.png")
 
     assert(! item.can_be_bought_by?(buyer))
   end

@@ -16,7 +16,7 @@ class UserTest < Test::Unit::TestCase
   def setup
     Models::System.instance.reset
 
-    @user = Models::User.created("testuser", "password", "user@mail.ch", "Hey there", "../images/users/default_avatar.png")
+    @user = Models::User.created("testuser", "password", "user@mail.ch", "Hey there", "/images/users/default_avatar.png")
   end
 
   def teardown
@@ -102,7 +102,7 @@ class UserTest < Test::Unit::TestCase
   #test for creation of an organisation by a user
   def test_user_organisation_create
     user = Models::System.instance.fetch_account(@user.id)
-    org = user.create_organisation("org", "I'm an organisation.", "../images/users/default_avatar.png")
+    org = user.create_organisation("org", "I'm an organisation.", "/images/users/default_avatar.png")
     org.add_member(user)
 
     assert_equal(org.name, "org")
@@ -119,8 +119,8 @@ class UserTest < Test::Unit::TestCase
   end
 
   def test_sales
-    old_owner = Models::User.created("Old", "password", "old@mail.ch", "i'm old", "../images/users/default_avatar.png")
-    new_owner = Models::User.created("New", "password", "new@mail.ch", "i'm new", "../images/users/default_avatar.png")
+    old_owner = Models::User.created("Old", "password", "old@mail.ch", "i'm old", "/images/users/default_avatar.png")
+    new_owner = Models::User.created("New", "password", "new@mail.ch", "i'm new", "/images/users/default_avatar.png")
 
     sock = old_owner.create_item("sock", 10)
     assert(!sock.is_active?, "item should not be active, is")
@@ -147,8 +147,8 @@ class UserTest < Test::Unit::TestCase
   end
 
   def test_sales_not_possible_because_of_price
-    old_owner = Models::User.created("Old", "password", "old@mail.ch", "i'm old", "../images/users/default_avatar.png")
-    new_owner = Models::User.created("New", "password", "new@mail.ch", "i'm new", "../images/users/default_avatar.png")
+    old_owner = Models::User.created("Old", "password", "old@mail.ch", "i'm old", "/images/users/default_avatar.png")
+    new_owner = Models::User.created("New", "password", "new@mail.ch", "i'm new", "/images/users/default_avatar.png")
 
     sock = old_owner.create_item("sock", 210)
     assert(!sock.is_active?, "item should not be active, is")
@@ -172,7 +172,7 @@ class UserTest < Test::Unit::TestCase
   end
 
   def test_fetch_items_of_a_user
-    user = Models::User.created("testuser", "password", "user@mail.ch", "Hey there", "../images/users/default_avatar.png")
+    user = Models::User.created("testuser", "password", "user@mail.ch", "Hey there", "/images/users/default_avatar.png")
     a = user.create_item("testobject", 10)
     b = user.create_item("testobject2", 50)
 

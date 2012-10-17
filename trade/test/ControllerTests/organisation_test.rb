@@ -30,7 +30,7 @@ class OrganisationTest < Test::Unit::TestCase
 
       users = TestHelper.get_users
 
-      org = users[:homer].create_organisation("founding.inc", "founds things", "../images/users/default_avatar.png")
+      org = users[:homer].create_organisation("founding.inc", "founds things", "/images/organisations/default_avatar.png")
 
       session = { :user => users[:homer].id, :auth => true, :account => org.id  }
       post "/organisation/switch", { :account => org.id }, 'rack.session' => session
