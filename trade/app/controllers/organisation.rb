@@ -49,8 +49,19 @@ module Controllers
       fail "Should have name" if params[:name].nil?
       fail "Should have description" if params[:description].nil?
 
+      dir = absolute_path('../public/images/organisations/', __FILE__)
+      file_path = "/images/organisations/default_avatar.png"
+
+      if params[:avatar] != nil
+        tempfile = params[:avatar][:tempfile]
+        filename = params[:avatar][:filename]
+        file_path ="#{dir}#{params[:name]}.#{filename.sub(/.*\./, "")  }"
+        File.copy(tempfile.path, file_path)
+        file_path = "/images/organisations/#{params[:name]}.#{filename.sub(/.*\./, "")}"
+      end
+
       user = Models::System.instance.fetch_account(session[:user])
-      user.create_organisation(params[:name], params[:description], "/images/organisations/default_avatar.png")
+      user.create_organisation(params[:name], params[:description], file_path)
 
       redirect '/home'
     end
