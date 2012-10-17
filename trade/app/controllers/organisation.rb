@@ -50,7 +50,7 @@ module Controllers
       fail "Should have description" if params[:description].nil?
 
       user = Models::System.instance.fetch_account(session[:user])
-      user.create_organisation(params[:name], params[:description], "../images/users/default_avatar.png")
+      user.create_organisation(params[:name], params[:description], "/images/organisations/default_avatar.png")
 
       redirect '/home'
     end

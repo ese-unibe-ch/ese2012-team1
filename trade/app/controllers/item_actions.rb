@@ -50,7 +50,7 @@ module Controllers
         filename = params[:item_picture][:filename]
         file_path ="#{dir}#{new_item.id}#{File.extname(filename)}"
         File.copy(tempfile.path, file_path)
-        file_path = "../images/items/#{new_item.id}#{File.extname(filename)}"
+        file_path = "/images/items/#{new_item.id}#{File.extname(filename)}"
         new_item.add_picture(file_path)
       end
 
@@ -118,7 +118,7 @@ module Controllers
         filename = params[:item_picture][:filename]
         file_path ="#{dir}#{id}#{File.extname(filename)}"
         File.copy(tempfile.path, file_path)
-        file_path = "../images/items/#{id}#{File.extname(filename)}"
+        file_path = "/images/items/#{id}#{File.extname(filename)}"
         Models::System.instance.fetch_item(id).add_picture(file_path)
       end
 
