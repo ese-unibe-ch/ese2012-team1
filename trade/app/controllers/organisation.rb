@@ -123,7 +123,7 @@ module Controllers
 
     post '/organisation/add/member' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
-      redirect "/error/No_Valid_User" unless Models::System.instance.user_exists?(params[:member])
+
       if Models::System.instance.user_exists?(params[:member])
         user =  Models::System.instance.fetch_user_by_email(params[:member])
         org = Models::System.instance.fetch_account(session[:account])
