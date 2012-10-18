@@ -5,6 +5,8 @@ require 'time'
 require 'require_relative'
 
 require_relative '../helpers/render'
+require_relative '../helpers/string_checkers'
+
 include Helpers
 
 ##
@@ -46,7 +48,7 @@ class SimpleEmailClient
   #
   ##
 
-  def self.setup()
+  def self.setup
     return self.new()
   end
 
@@ -71,7 +73,7 @@ class SimpleEmailClient
   def send_email(to, subject, content)
     fail "Missing receiver" if to.nil?
     fail "Missing content" if content.nil?
-    fail "Not a correct email address" unless to =~ /[A-Za-z123456789._-]+@[A-Z.a-z123456789-]+\.[a-z]+$/
+    fail "Not a correct email address" unless to.is_email?
 
     subject = subject.nil? ? "" : subject
 
@@ -79,7 +81,7 @@ class SimpleEmailClient
 content_file = <<-EOF
 From: #@from
 To: #{to}
-subject: Sending E-Mail via ruby code
+subject: #{subject}
 Date: #{Time.now.rfc2822}
 
 #{content}
@@ -90,7 +92,7 @@ EOF
     #Sending message via smtp server of gmail
     Net::SMTP.start('smtp.gmail.com', 587, 'gmail.com', @from, @password, :login) do |smtp|
       smtp.send_message(content_file, @from, to)
-    end     instead of
+    end
   end
 end
 

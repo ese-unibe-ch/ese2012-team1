@@ -2,6 +2,37 @@ require 'ftools'
 
 ##
 #
+# Mocks SimpleEmailClient so he does not send an
+# email all the time while testing
+#
+##
+
+class SimpleEmailClient
+  @email_send
+  @@client = nil
+
+  def self.setup
+    client = !@@client.nil? ? @@client : self.new
+    @@client = nil
+    @email_send = false
+    client
+  end
+
+  def send_email(to, subject, content)
+    @email_send = true
+  end
+
+  def email_send?
+    @email_send
+  end
+
+  def self.set_client(client)
+    @@client = client
+  end
+end
+
+##
+#
 # This class holds some helper method for testing
 #
 ##
