@@ -84,7 +84,7 @@ module Models
     end
 
     def can_be_bought_by?(user)
-      (user.credits >= self.price && self.active) ? true : false
+      (user.credits >= self.price && self.active) ? true : false # AK think about that...
     end
 
     def bought_by(new_owner)

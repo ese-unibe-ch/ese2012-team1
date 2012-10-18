@@ -11,8 +11,8 @@ class String
   # Check if string is an email
   #
   ##
-
-  def is_email?
+  
+  def is_email? 
     return false unless (self.include?('@'))
 
     parts = (self.split('@', 2))
@@ -36,6 +36,7 @@ class String
 #
 ##
 
+# AK obligatory XKCD comic: http://xkcd.com/936/
   def is_strong_password?
     if self.match(/[^a-zA-Z1-9]/)
         false
