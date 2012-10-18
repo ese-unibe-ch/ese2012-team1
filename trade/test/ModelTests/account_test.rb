@@ -31,11 +31,11 @@ class AccountTest < Test::Unit::TestCase
   end
 
   def create_account
-    account = MockAccount.created("Pascal", "Pascals account", "../images/users/default_avatar.png")
+    account = MockAccount.created("Pascal", "Pascals account", "/images/users/default_avatar.png")
 
     assert(account.name == "Pascal", "Should have name")
     assert(account.description == "Pascals account", "Should have description")
-    assert(account.avatar == "../images/users/default_avatar.png", "Should have avatar")
+    assert(account.avatar == "/images/users/default_avatar.png", "Should have avatar")
     assert(account.credits == 100, "Should have 100 credits")
     assert(account.saved?, "Should be saved to system")
 
@@ -56,7 +56,7 @@ class AccountTest < Test::Unit::TestCase
     item = account1.create_item("Chaos", 100)
     assert(item.owner == account1, "Pascal should be owner of \'Chaos\'")
 
-    account2 = MockAccount.created("Judith", "Judiths account", "../images/users/default_avatar.png")
+    account2 = MockAccount.created("Judith", "Judiths account", "/images/users/default_avatar.png")
     account2.buy_item(item)
     assert(item.owner == account2, "Judith should be owner of \'Chaos\'")
     assert(account1.credits == 200, "Pascal should earn 100 credits")

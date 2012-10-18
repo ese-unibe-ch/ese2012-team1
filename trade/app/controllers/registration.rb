@@ -88,14 +88,14 @@ module Controllers
       puts "#{name}"
 
       dir = absolute_path('../public/images/users/', __FILE__)
-      file_path = "../images/users/default_avatar.png"
+      file_path = "/images/users/default_avatar.png"
 
       if params[:avatar] != nil
         tempfile = params[:avatar][:tempfile]
         filename = params[:avatar][:filename]
         file_path ="#{dir}#{params[:name]}.#{filename.sub(/.*\./, "")  }"
         File.copy(tempfile.path, file_path)
-        file_path = "../images/users/#{params[:name]}.#{filename.sub(/.*\./, "")}"
+        file_path = "/images/users/#{params[:name]}.#{filename.sub(/.*\./, "")}"
       end
 
       user = User.created(name, password, email, description, file_path)
@@ -117,6 +117,7 @@ module Controllers
 
 
     post '/unregister' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
       user = Models::System.instance.fetch_account(session[:user])
       user.clear
 

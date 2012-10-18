@@ -33,6 +33,12 @@ module Controllers
 
     # AK shouldn't there be an 401 if the user is not authenticated?
     post '/item/create' do
+      redirect "/error/No_Name" if params[:name] == nil or params[:name].length == 0
+      redirect "/error/No_Price" if params[:price] == nil
+      redirect "/error/Not_A_Number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:price])
+      redirect "/error/No_Description" if params[:description] == nil
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+
       fail "Item should have name." if params[:name] == nil
       fail "Item name should not be empty" if params[:name].length == 0
       fail "Item should have price" if params[:price] == nil
@@ -51,7 +57,7 @@ module Controllers
         filename = params[:item_picture][:filename]
         file_path ="#{dir}#{new_item.id}#{File.extname(filename)}"
         File.copy(tempfile.path, file_path)
-        file_path = "../images/items/#{new_item.id}#{File.extname(filename)}"
+        file_path = "/images/items/#{new_item.id}#{File.extname(filename)}"
         new_item.add_picture(file_path)
       end
 
@@ -59,6 +65,7 @@ module Controllers
     end
 
     post '/item/changestate/setactive' do
+      redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
       item = Models::System.instance.fetch_item(params[:id])
 
       if item.owner.id == session[:account]
@@ -69,6 +76,7 @@ module Controllers
     end
 
     post '/item/changestate/setinactive' do
+      redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
       item = Models::System.instance.fetch_item(params[:id])
 
       if item.owner.id == session[:account]
@@ -79,12 +87,14 @@ module Controllers
     end
 
     post '/item/delete' do
+      redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
       id = params[:id]
       Models::System.instance.fetch_item(id).clear
       redirect "/items/my/inactive"
     end
 
     post '/item/edit' do
+      redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
       id = params[:id] # AK you can also pass the item directly to the view - as long as you only use safe methods
       name = Models::System.instance.fetch_item(id).name
       description = Models::System.instance.fetch_item(id).description
@@ -104,13 +114,15 @@ module Controllers
     #
     ###
 
-    post '/item/edit/save' do
-      id = params[:id] # AK prefer to put the item identification into the URL
+    post '/item/edit/save' do  # AK prefer to put the item identification into the URL
+      redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
+      id = params[:id] 
+      item=Models::System.instance.fetch_item(id)
       redirect "/items/my/inactive" if Models::System.instance.fetch_item(id).editable?
       new_description = params[:new_description]
       new_price = params[:new_price]
-      Models::System.instance.fetch_item(id).add_description(new_description)
-      Models::System.instance.fetch_item(id).price = new_price
+      item.add_description(new_description)
+      item.price = new_price
 
       dir = absolute_path('../public/images/items/', __FILE__)
 
@@ -119,14 +131,16 @@ module Controllers
         filename = params[:item_picture][:filename]
         file_path ="#{dir}#{id}#{File.extname(filename)}"
         File.copy(tempfile.path, file_path)
-        file_path = "../images/items/#{id}#{File.extname(filename)}"
-        Models::System.instance.fetch_item(id).add_picture(file_path)
+        file_path = "/images/items/#{id}#{File.extname(filename)}"
+        item.add_picture(file_path)
       end
 
       redirect "/items/my/inactive"
     end
 
     post '/item/buy' do
+      redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
       id = params[:id]
       item = Models::System.instance.fetch_item(id)
       user_id = session[:account]

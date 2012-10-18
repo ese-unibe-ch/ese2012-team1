@@ -81,7 +81,7 @@ class ItemActionsTest < Test::Unit::TestCase
       assert(item.name == 'Gold', "Should own gold but instead did own: #{homers_items}")
 
       # Removing File after test
-      File.delete("#{item.picture.sub("images", "../app/public/images")}")
+      File.delete("#{item.picture.sub("/images", "../../app/public/images")}")
     end
 
     it 'post /item/edit/save should save changes' do
@@ -97,10 +97,10 @@ class ItemActionsTest < Test::Unit::TestCase
       assert(users[:bart].has_item?(item.id), "Should own skateboard")
       assert(item.price.to_i == 200, "Should cost 200 but was #{item.price}")
       assert(item.description == 'Kind of used...', "Should be \'Kind of used...\' but was #{item.description}")
-      assert(item.picture == "../images/items/#{item.id}.png", "Path to file should be ../images/items/#{item.id}.png but was #{item.picture}")
+      assert(item.picture == "/images/items/#{item.id}.png", "Path to file should be /images/items/#{item.id}.png but was #{item.picture}")
 
       # Removing File after test
-      File.delete("#{item.picture.sub("images", "../app/public/images")}")
+      File.delete("#{item.picture.sub("/images", "../../app/public/images")}")
     end
   end
 end

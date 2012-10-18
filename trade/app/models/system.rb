@@ -36,7 +36,7 @@ module Models
 
     # Returns the user with associated account id.
     def fetch_account(account_id)
-      fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
+      fail "No account with id #{account_id}" unless account_exists?(account_id)
       self.accounts.fetch(account_id)
     end
 
@@ -52,6 +52,10 @@ module Models
 
     def user_exists?(email)
       self.accounts.values.one?{|account| account.respond_to?(:email) && account.email == email}
+    end
+
+    def account_exists?(account_id)
+      self.accounts.member?(account_id)
     end
 
     # Returns all users and organisations but the one specified in an array
@@ -83,6 +87,10 @@ module Models
       item.id = item_id_count
       items.store(self.item_id_count, item)
       self.item_id_count += 1
+    end
+
+    def item_exists?(item_id)
+      self.items.member?(item_id.to_i)
     end
 
     # Returns the item with associated id.
@@ -141,6 +149,10 @@ module Models
     def fetch_organisations_but(organisation_id)
       tmp = accounts.values.select{|acc| acc.organisation == true}
       tmp.select{|acc| acc.id != organisation_id}
+    end
+
+    def organisation_exists?(organisation_name)
+      self.accounts.values.one?{|acc| !acc.respond_to?(:email) && acc.name == organisation_name}
     end
 
     #Removes all users, all items and resets the counter

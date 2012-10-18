@@ -38,7 +38,7 @@ module Models
       fail "Missing name" if (name == nil)
       fail "Missing description" if (description == nil)
       fail "Missing path to avatar" if (avatar == nil)
-      fail "There's no avatar at #{avatar}" unless (File.exists?(absolute_path(avatar.sub("images", "public/images"), __FILE__)))
+      fail "There's no avatar at #{avatar}" unless (File.exists?(absolute_path(avatar.sub("/images", "../public/images"), __FILE__)))
 
       account = self.new
       account.name = name
