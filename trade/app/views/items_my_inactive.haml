@@ -2,22 +2,33 @@
 - text = "My" if session[:account] == session[:user]
 %h2= "#{text} Inactive Items"
 %br
-%ul
+%table
+  %tr
+    %th Name
+    %th Price
+    %th
+    %th Description
+    %th
+    %th
+    %th
+  - i = 0
   - for item in inactive_items
-    %li
-      %em= item.name
-      %em= item.price
-      %img(height=50 width=50){ :alt => item.name, :src => item.picture }
-      \:
-    %div(class="itembuttons")
-      %form(name="state" action="/item/changestate/setactive" method="post")
-        %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
-        %input(class="itembuttons" type="submit" value="Set Active")
-      %form(name="edit" action="/item/edit" method="post")
-        %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
-        %input(class="itembuttons" type="submit" value="Edit Item")
-      %form(name="delete" action="/item/delete" method="post")
-        %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
-        %input(class="itembuttons" type="submit" value="Delete Item")
-    %br
-    %br
+    - i = (i+1)%2
+    %tr{ :class => i == 0 ? "colored" : "normal" }
+      %td= item.name.size > 15 ? "#{item.name[0..14]}..." : item.name
+      %td= item.price
+      %td
+        %img(height=50 width=50){ :alt => item.name, :src => item.picture }
+      %td= item.description.size > 30 ? "#{item.description[0..29]}..." : item.description
+      %td
+        %form(name="state" action="/item/changestate/setactive" method="post")
+          %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
+          %input(class="itembuttons" type="submit" value="Set Active")
+      %td
+        %form(name="edit" action="/item/edit" method="post")
+          %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
+          %input(class="itembuttons" type="submit" value="Edit Item")
+      %td
+        %form(name="delete" action="/item/delete" method="post")
+          %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
+          %input(class="itembuttons" type="submit" value="Delete Item")

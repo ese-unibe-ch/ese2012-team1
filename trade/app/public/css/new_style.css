@@ -83,6 +83,22 @@ div#menu a:hover {
     font-weight: bold;
 }
 
+table{
+    border-collapse: collapse;
+}
+
+th{
+    text-align:left;
+}
+
+tr.colored {
+    background:#DBE9B9;
+}
+
+tr.normal {
+    background:white;
+}
+
 div#footer div {
     position:absolute;
     bottom:0.25em;
