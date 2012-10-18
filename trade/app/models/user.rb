@@ -65,10 +65,11 @@ module Models
       user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
     end
 
-    #Removes himself from the list of users and of the Models::System
+    #Removes himself from the list of users of the Models::System
+    #Removes his picture (not yet implemented)
     #Removes user's items beforehand
     def clear
-      Models::System.instance.fetch_items_of(self.id).each { |e| Models::System.instance.remove_item(e.id) }
+      Models::System.instance.fetch_items_of(self.id).each { |e| e.clear }
       Models::System.instance.remove_account(self.id)
     end
 

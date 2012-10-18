@@ -1,5 +1,7 @@
 require 'test/unit'
 require 'rubygems'
+require 'ftools'
+
 require 'require_relative'
 require_relative('../../app/models/user')
 require_relative('../../app/models/item')
@@ -102,7 +104,12 @@ class ItemTest < Test::Unit::TestCase
   end
 
   def test_should_remove_item_from_system
-    # Not happy that the item removes himself from the list. This should make the user because he is
-    # responsible to add it.
+    item = @owner.create_item("book", 150)
+    File.copy("../../app/public/images/users/default_avatar.png", "../../app/public/images/items/test.png")
+    item.add_picture("/images/items/test.png")
+
+    item.clear
+
+    assert(! File.exists?("../../app/public/images/items/test.png"))
   end
 end

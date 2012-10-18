@@ -103,7 +103,7 @@ class RegistrationTest < Test::Unit::TestCase
     it 'post /unregister should redirect to /unauthenticate' do
       users = TestHelper.get_users
 
-      post '/unregister', {}, 'rack.session' => { :user => users[:homer].id, :auth => true  }
+      post '/unregister', {}, 'rack.session' => { :user => users[:homer].id, :auth => true, :account => users[:homer].id  }
       assert last_response.redirect?
       assert last_response.location.include?('/unauthenticate'), "Should redirect to /unauthenticate"
     end
