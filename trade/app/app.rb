@@ -36,7 +36,6 @@ class App < Sinatra::Base
   use Controllers::Uploader
 
   use Rack::Protection
-  set :protection
 
 end
 
