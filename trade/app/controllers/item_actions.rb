@@ -53,7 +53,7 @@ module Controllers
       dir = absolute_path('../public/images/items/', __FILE__)
 
       file_extension = ".png"
-      fetch_file_path = "../public/images/items/default_item.png"
+      fetch_file_path = absolute_path("../public/images/items/default_item.png", __FILE__)
       if params[:item_picture] != nil
         tempfile = params[:item_picture][:tempfile]
         filename = params[:item_picture][:filename]
