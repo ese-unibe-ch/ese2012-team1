@@ -35,7 +35,7 @@ class App < Sinatra::Base
   use Controllers::Sites
   use Controllers::Uploader
 
-  use Rack::Protection::SessionHijacking
+  use Rack::Protection
   set :protection
 
 end
