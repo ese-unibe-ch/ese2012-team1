@@ -9,11 +9,9 @@ require_relative('controllers/sites')
 require_relative('controllers/item_actions')
 require_relative('controllers/organisation')
 require_relative('controllers/uploader')
-require_relative('controllers/switch')
 require_relative('init.rb') unless ENV['RACK_ENV'] == 'test'
 require_relative('helpers/render')
 
-use Rack::Protection::SessionHijacking
 
 include Helpers
 
@@ -35,7 +33,7 @@ class App < Sinatra::Base
   use Controllers::Organisation
   use Controllers::Sites
   use Controllers::Uploader
-  use Controllers::Switch
+  use Rack::Protection::SessionHijacking
 end
 
 App.run! unless ENV['RACK_ENV'] == 'test'
