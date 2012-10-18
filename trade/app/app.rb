@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'require_relative'
 require 'sinatra'
+require 'rack/protection'
 require 'haml'
 
 require_relative('controllers/authentication')
@@ -33,7 +34,9 @@ class App < Sinatra::Base
   use Controllers::Organisation
   use Controllers::Sites
   use Controllers::Uploader
-  use Rack::Protection::SessionHijacking
+
+  use Rack::Protection
+
 end
 
 App.run! unless ENV['RACK_ENV'] == 'test'

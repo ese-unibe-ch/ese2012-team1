@@ -16,9 +16,9 @@
     - user = "none"
     - user = session[:user] if session[:auth]
     = render_file_with_argument('frame_header.haml', Array[auth, user, session[:account]])
-    = render_file('frame_menu_org.haml') if session['auth'] && session[:account] != session[:user]
-    = render_file('frame_menu_logged.haml') if session['auth'] && session[:account] == session[:user]
-    = render_file('frame_menu_unlogged.haml') if !session['auth']
+    = render_file('frame_menu_org.haml') if session[:auth] && session[:account] != session[:user]
+    = render_file('frame_menu_logged.haml') if session[:auth] && session[:account] == session[:user]
+    = render_file('frame_menu_unlogged.haml') if !session[:auth]
     %div(id="main")
       = yield
     = render_file('frame_footer.haml')
