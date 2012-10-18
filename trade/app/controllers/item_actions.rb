@@ -31,6 +31,7 @@ module Controllers
     #
     ##
 
+    # AK shouldn't there be an 401 if the user is not authenticated?
     post '/item/create' do
       redirect "/error/No_Name" if params[:name] == nil or params[:name].length == 0
       redirect "/error/No_Price" if params[:price] == nil
@@ -47,6 +48,7 @@ module Controllers
       puts("WTF!")
 
       id = session[:account]
+
       new_item = Models::System.instance.fetch_account(id).create_item(params[:name], Integer((params[:price]).to_i))
       new_item.add_description(params[:description])
 
@@ -102,7 +104,7 @@ module Controllers
 
     post '/item/edit' do
       redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
-      id = params[:id]
+      id = params[:id] # AK you can also pass the item directly to the view - as long as you only use safe methods
       name = Models::System.instance.fetch_item(id).name
       description = Models::System.instance.fetch_item(id).description
       price = Models::System.instance.fetch_item(id).price
@@ -121,9 +123,9 @@ module Controllers
     #
     ###
 
-    post '/item/edit/save' do
+    post '/item/edit/save' do  # AK prefer to put the item identification into the URL
       redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
-      id = params[:id]
+      id = params[:id] 
       item=Models::System.instance.fetch_item(id)
       redirect "/items/my/inactive" if Models::System.instance.fetch_item(id).editable?
       new_description = params[:new_description]

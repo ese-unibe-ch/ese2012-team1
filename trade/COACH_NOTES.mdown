@@ -1,0 +1,46 @@
+# Some notes
+## General Notes
+* Pair programming => maybe that's the reason, some don't seem to contribute.
+
+## Code Quality
+* Some weird constructions 
+  ```haml
+    -# layout.haml
+    - auth = "no"
+    - auth = "yes" if session[:auth]
+    - user = "none"
+    - user = session[:user] if session[:auth]```
+  - Don't define variables in the view.
+  - You could use `auth = session[:auth] ? "yes" : "no"`
+  - also `user = session[:user] || "none"`
+* Views overuses `br`. Look at CSS to have fine-grained control over the layout.
+* Literal text doen't need to be inserted with `= "..."`, but better with just
+  `...`.
+* Forms: 
+  - Put `input` into `label`
+  - Try to move identifier of resource into URL
+* Many pre- and postconditions. At some places at least.
+* Some controller functions look exploitable. I didn't make a proof of concept,
+  but e.g. being free to tell that I belong to whatever organization I like
+  seems insecure. Especially, if I can delete that organization afterwards!
+  - Assume that every parameter in the controller can have any value, because
+    a hacker could do that quite easily.
+* The `sites` controller seems a bit unfocussed. What is its responsibility?
+* In `img` tags, setting both `height` and `width` seems like a bad idea, if I
+  don't upload a quadratic image.
+* You might want to consider using a structured view folder:
+  - you can do `haml :'item/create' and it will look for `view/item/create.haml`
+
+## Tests
+* Seems very well-tested. 
+* Not everyone seems to be as motivated to test, is there some policy?
+* Two coding styles in testing.
+  - one traditional 
+  - one `RSpec`-ish
+  - Don't interfer with each other, so no big deal
+  - If you switched to `RSpec`, you could even have unimplemented tests, that
+    are only described in natural language, so that another team member can do
+    the testing. Maybe that would increase the motivation to specify the
+    behaviour.
+* I like how you included many tests for the controller, eventhough they are
+  harder to do.

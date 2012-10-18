@@ -80,4 +80,8 @@ class StringCheckerTest < Test::Unit::TestCase
     string = "ABCD1234"
     assert(!string.is_strong_password?)
   end
+
+#  should "accept 44 bits worth of entropy as a password" do
+#    assert("correct horse battery staple".is_strong_password?)
+#  end
 end

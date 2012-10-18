@@ -13,15 +13,16 @@ module Controllers
   class Authentication < Sinatra::Application
     set :views , "#{absolute_path('../views', __FILE__)}"
 
+    # AK this seems to be an odd place to put it.
     get '/' do
       redirect "/home" if session[:auth]
 
       #get four random items
       item_list = Models::System.instance.fetch_all_active_items
-      counter = item_list.size
-      return_list = Array.new
-      range = 0..3
-      for zahl in range do
+      counter = item_list.size # AK: return_list = item_list.shuffle[0..3]
+      return_list = Array.new  # there should be no noticable performance impact
+      range = 0..3             # It also ensures that any item is at most once in the
+      for zahl in range do     # list.
         return_list.push(item_list[rand(counter)])
       end
       haml :index, :locals => { :items_to_show => return_list }
