@@ -13,6 +13,8 @@ require_relative('controllers/switch')
 require_relative('init.rb') unless ENV['RACK_ENV'] == 'test'
 require_relative('helpers/render')
 
+use Rack::Protection::SessionHijacking
+
 include Helpers
 
 class App < Sinatra::Base
