@@ -18,6 +18,8 @@ include Helpers
 
 class App < Sinatra::Base
 
+  use Rack::Protection
+
   enable :sessions unless ENV['RACK_ENV'] == 'test'
   set :root, File.dirname(__FILE__)
   set :views , "#{absolute_path('/views', __FILE__)}"
@@ -34,8 +36,6 @@ class App < Sinatra::Base
   use Controllers::Organisation
   use Controllers::Sites
   use Controllers::Uploader
-
-  use Rack::Protection
 
 end
 
