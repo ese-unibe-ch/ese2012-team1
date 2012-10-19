@@ -20,6 +20,7 @@ module Controllers
 
     before do
       redirect "/" unless session[:auth]
+      response.headers['Cache-Control'] = 'public, max-age=3600'
     end
 
 ###

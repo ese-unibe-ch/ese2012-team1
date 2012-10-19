@@ -14,6 +14,11 @@ module Controllers
   class Sites < Sinatra::Application
     set :views , "#{absolute_path('../views', __FILE__)}"
 
+    before do
+      redirect "/" unless session[:auth]
+      response.headers['Cache-Control'] = 'public, max-age=3600'
+    end
+
     get '/logout' do
         haml :logout
     end
