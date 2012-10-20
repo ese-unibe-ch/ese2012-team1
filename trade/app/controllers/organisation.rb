@@ -123,7 +123,15 @@ module Controllers
 
     post '/organisation/add/member' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      if Models::System.instance.user_exists?(params[:member])
+        haml :organisation_member_confirm, :locals => { :member => params[:member]}
+      else
+        haml :organisation_add_member, :locals => { :error_message => "User does not exist" }
+      end
+    end
 
+    post '/organisation/member/confirm' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
       if Models::System.instance.user_exists?(params[:member])
         user =  Models::System.instance.fetch_user_by_email(params[:member])
         org = Models::System.instance.fetch_account(session[:account])
@@ -132,7 +140,6 @@ module Controllers
       else
         haml :organisation_add_member, :locals => { :error_message => "User does not exist" }
       end
-
     end
 
     get '/organisations/self' do
