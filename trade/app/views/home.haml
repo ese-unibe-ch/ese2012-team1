@@ -14,7 +14,7 @@
 %br
 = "You have #{Models::System.instance.fetch_account(session[:user]).list_items.size} active Items"
 %br
-= "You have #{Models::System.instance.fetch_account(session[:user]).list_items_inactive.size} inactive Items"
+= "You have #{Models::System.instance.fetch_account(session[:user]).list_inactive_items.size} inactive Items"
 %br
 %br
 = "Your Description:"

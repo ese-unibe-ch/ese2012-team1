@@ -157,7 +157,7 @@ module Controllers
     get '/organisations/:id' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(params[:id].to_i)
       organisation_id = params[:id]
-      haml :organisations_id, :locals => {:active_items => Models::System.instance.fetch_account(organisation_id.to_i).list_items_active}
+      haml :organisations_id, :locals => {:active_items => Models::System.instance.fetch_account(organisation_id.to_i).list_active_items}
     end
 
     error do
