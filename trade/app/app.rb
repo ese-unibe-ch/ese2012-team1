@@ -3,6 +3,7 @@ require 'require_relative'
 require 'sinatra'
 require 'rack/protection'
 require 'haml'
+require 'haml/template/options'
 
 require_relative('controllers/authentication')
 require_relative('controllers/registration')
@@ -18,7 +19,10 @@ include Helpers
 
 class App < Sinatra::Base
 
+  Haml::Template.options[:escape_html] = true
+
   enable :sessions unless ENV['RACK_ENV'] == 'test'
+
   set :root, File.dirname(__FILE__)
   set :views , "#{absolute_path('/views', __FILE__)}"
 
