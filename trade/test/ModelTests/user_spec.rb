@@ -7,45 +7,14 @@ require_relative "../../app/models/user"
 require_relative "../../app/models/item"
 require_relative "../../app/models/system"
 require_relative "../../app/models/organisation"
-require_relative "account_spec"
+
+#should not load a second time if already loaded
+require_relative "account_shared_examples"
+
+require_relative "custom_matchers"
 
 include Models
-
-class BeLike
-  def initialize(comperer)
-    @comperer = comperer
-  end
-
-  def matches?(to_match)
-    to_match == @comperer
-  end
-
-  def failure_message_for_should
-    "expected to be like \'#{@comperer}\'"
-  end
-end
-
-class RespondTo
-  def initialize(symbol)
-    @symbol = symbol
-  end
-
-  def matches?(to_match)
-    to_match.respond_to?(@symbol)
-  end
-
-  def failure_message_for_should
-    "expected to respond to @symbol"
-  end
-end
-
-def be_like(expression)
-  BeLike.new(expression)
-end
-
-def respond_to(symbol)
-  RespondTo.new(symbol)
-end
+include CustomMatchers
 
 describe "Coupling to" do
   context "System" do
@@ -114,23 +83,23 @@ describe "User" do
     @system.stub(:user_exists?).and_return(false)
   end
 
-  def create_user
+  def create_account
     User.created("Bart", "password", "bart@mail.ch", "I'm Bart", "/images/users/default_avatar.png")
+  end
+
+  context "while creation" do
+    it_behaves_like "any Account while creation"
   end
 
   context "when created" do
     before(:each) do
-      @user = User.created("Bart", "password", "bart@mail.ch", "I'm Bart", "/images/users/default_avatar.png")
+      @user = create_account
     end
 
     it_behaves_like "any created Account"
 
     it "should have email" do
       @user.email.should be_like "bart@mail.ch"
-    end
-
-    it "should have 100 credits" do
-      @user.credits.should be_like 100
     end
 
     it "should have encrypted password" do
@@ -153,184 +122,52 @@ describe "User" do
         @user.login("password").should be_true
       end
     end
-  end
 
-  context "when creating an organisation" do
-    before(:each) do
-      @user = create_user
-      @organisation = double('organisation')
-      @organisation.stub(:organisation=)
-      # I would rather have that the creator of an organisation is automatically a member
-      @organisation.should_receive(:add_member).with(@user)
-      Organisation.stub(:created).and_return(@organisation)
-    end
+    it_behaves_like "any Account while item creation"
+    it_behaves_like "any Account after item creation"
 
-    it "should create an organisation" do
-      Organisation.should_receive(:created).with("org", "I'm organisation", "/images/organisations/default_avatar.png")
-      @user.create_organisation("org", "I'm organisation", "/images/organisations/default_avatar.png")
-    end
-  end
-
-
-  context "when buy things" do
-    before(:each) do
-      @user = User.created("Bart", "password", "bart@mail.ch", "I'm Bart", "/images/users/default_avatar.png")
-      @seller = double('seller')
-      @seller.stub(:credits).and_return(0)
-      @seller.stub(:credits=)
-
-      @item = double('item')
-      @item.stub(:owner).and_return(@seller)
-      @item.stub(:id).and_return(1)
-      @item.stub(:bought_by)
-      @system.stub(:items).and_return([1])
-    end
-
-    it "should buy it when price is lower than credits and subtract price" do
-      @item.stub(:price).and_return(50)
-      @user.buy_item(@item)
-      @user.credits.should be_like 50
-    end
-
-    it "should buy it when price is equal to credits and set credits to 0" do
-      @item.stub(:price).and_return(100)
-      @user.buy_item(@item)
-      @user.credits.should be_like 0
-    end
-
-    it "should raise exception when price is higher than credits and leave credits the same" do
-      @item.stub(:price).and_return(150)
-
-      lambda { @user.buy_item(@item) }.should raise_error
-
-      @user.credits.should be_like 100
-    end
-  end
-
-  context "while item creation" do
-    before(:each) do
-      @user = User.created("Bart", "password", "bart@mail.ch", "I'm Bart", "/images/users/default_avatar.png")
-      @item = double('item')
-    end
-
-    def create_item
-      @user.create_item('Skateboard', 100)
-    end
-
-    it "should create item" do
-      Item.should_receive(:created).with('Skateboard', 100, @user)
-      @system.stub(:add_item)
-      create_item
-    end
-
-    it "should add item to the system"  do
-      Item.stub(:created).and_return(@item)
-      @system.should_receive(:add_item).with(@item)
-      create_item
-    end
-
-    it "should return item" do
-      Item.stub(:created).and_return(@item)
-      @system.stub(:add_item)
-      received_item = create_item
-      received_item.should be @item
-    end
-  end
-
-  context "after item creation" do
-    before(:each) do
-      @user = User.created("Bart", "password", "bart@mail.ch", "I'm Bart", "/images/users/default_avatar.png")
-      @item = double('item')
-    end
-
-    it "should posses item" do
-      @system.stub(:item_exists?).and_return(true)
-      @system.stub(:fetch_item).and_return(@item)
-      @item.stub(:owner).and_return(@user)
-      @user.should have_item(1)
-    end
-
-    it "should return his item" do
-      @system.stub(:item_exists?).and_return(true)
-      @system.stub(:fetch_item).and_return(@item)
-      @item.stub(:owner).and_return(@user)
-
-      @user.get_item(1).should be @item
-    end
-
-    context "when listing items" do
-      it "should return item when item active" do
-        @system.stub(:fetch_items_of).and_return([@item])
-        @item.stub(:is_active?).and_return(true)
-        @user.list_items.should include(@item)
+    context "when creating an organisation" do
+      before(:each) do
+        @user = create_account
+        @organisation = double('organisation')
+        @organisation.stub(:organisation=)
+        # I would rather have that the creator of an organisation is automatically a member
+        @organisation.should_receive(:add_member).with(@user)
+        Organisation.stub(:created).and_return(@organisation)
       end
 
-      it "should return item when item inactive" do
-        @system.stub(:fetch_items_of).and_return([@item])
-        @item.stub(:is_active?).and_return(false)
-        @user.list_items.should include(@item)
+      it "should create an organisation" do
+        Organisation.should_receive(:created).with("org", "I'm organisation", "/images/organisations/default_avatar.png")
+        @user.create_organisation("org", "I'm organisation", "/images/organisations/default_avatar.png")
       end
     end
 
-    context "when listing active items" do
-      it "should return item when item active" do
-        @system.stub(:fetch_items_of).and_return([@item])
-        @item.stub(:is_active?).and_return(true)
-        @user.list_active_items.should include(@item)
-      end
-
-      it "should not return item when item inactive" do
-        @system.stub(:fetch_items_of).and_return([@item])
-        @item.stub(:is_active?).and_return(false)
-        @user.list_active_items.should_not include(@item)
-      end
-    end
-
-    context "when listing inactive items" do
-      it "should not return item when item active" do
-        @system.stub(:fetch_items_of).and_return([@item])
-        @item.stub(:is_active?).and_return(true)
-        @user.list_inactive_items.should_not include(@item)
-      end
-
-      it "should not return item when item inactive" do
-        @system.stub(:fetch_items_of).and_return([@item])
-        @item.stub(:is_active?).and_return(false)
-        @user.list_inactive_items.should include(@item)
-      end
-    end
-
-  end
-
-  context "#clear" do
-    before(:each) do
-      @user = create_user
-    end
-
-    it "should remove user from system" do
-      @system.stub(:fetch_items_of).and_return([])
-      @user.stub(:id).and_return(1)
-      @system.should_receive(:remove_account).with(1)
-      @user.clear
-    end
-
-    context "with one item" do
-      it "should clear one item" do
-        @item = double('item')
-        @system.stub(:fetch_items_of).and_return([@item])
-        @system.stub(:remove_account)
-        @item.should_receive(:clear)
+    context "#clear" do
+      it "should remove user from system" do
+        @system.stub(:fetch_items_of).and_return([])
+        @user.stub(:id).and_return(1)
+        @system.should_receive(:remove_account).with(1)
         @user.clear
       end
-    end
 
-    context "with three items" do
-      it "should clear three items" do
-        @item = double('item')
-        @system.stub(:fetch_items_of).and_return([@item, @item, @item])
-        @system.stub(:remove_account)
-        @item.should_receive(:clear).exactly(3).times
-        @user.clear
+      context "with one item" do
+        it "should clear one item" do
+          @item = double('item')
+          @system.stub(:fetch_items_of).and_return([@item])
+          @system.stub(:remove_account)
+          @item.should_receive(:clear)
+          @user.clear
+        end
+      end
+
+      context "with three items" do
+        it "should clear three items" do
+          @item = double('item')
+          @system.stub(:fetch_items_of).and_return([@item, @item, @item])
+          @system.stub(:remove_account)
+          @item.should_receive(:clear).exactly(3).times
+          @user.clear
+        end
       end
     end
   end

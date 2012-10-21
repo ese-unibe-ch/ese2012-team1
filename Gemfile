@@ -8,6 +8,7 @@ gem 'rcov'
 gem 'rspec'
 gem 'parseconfig'
 gem 'tlsmail'
+gem 'rake'
 
 
 
