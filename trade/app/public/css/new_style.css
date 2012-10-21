@@ -38,7 +38,7 @@ div#header {
     bottom: 80%;
     left: 0;
     right: 0;
-    background: #347C2C;
+    border-bottom: 2px solid #347C2C;
     padding-left: 1em;
     min-height: 125px
 }
@@ -62,7 +62,7 @@ div#footer {
     bottom: 0;
     left: 0;
     right: 0;
-    background: #347C2C;
+    border-top: 2px solid #347C2C;
     padding-left: 5em
 }
 
@@ -71,10 +71,6 @@ div#menu div {
     width: 100%;
     padding-top: 0.25em;
     padding-bottom: 0.25em;
-}
-
-div#menu div:hover {
-    background: #347C2C;
 }
 
 div#menu a {
@@ -87,9 +83,7 @@ div#menu a {
 div#menu a:hover {
     display:block;
     padding-left: 0.25em;
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
+    text-decoration: underline;
 }
 
 table{
