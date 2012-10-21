@@ -16,6 +16,8 @@ div#menu {
     left: 0;
     right: 80%;
     background: #A0C544;
+    background: -webkit-gradient(linear, left center, right center, from(#A0C544), to(#FFFFFF));
+    background: -moz-linear-gradient(left,  #A0C544,  #FFFFFF);
     padding-left: 1em;
     min-width: 170px;
 }
@@ -37,8 +39,14 @@ div#header {
     left: 0;
     right: 0;
     background: #347C2C;
-    padding-left: 5em
+    padding-left: 1em;
+    min-height: 125px
 }
+
+div#header img {
+    padding-top: 0.75em
+}
+
 div#switch {
     background: #ffa500;
     position:absolute;

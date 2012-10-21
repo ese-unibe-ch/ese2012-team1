@@ -4,7 +4,6 @@ require "require_relative"
 
 require_relative "../../app/models/organisation"
 
-#should not load a second time if already loaded
 require_relative "account_shared_examples"
 
 include Models
