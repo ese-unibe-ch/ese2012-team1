@@ -5,6 +5,10 @@ gem 'require_relative'
 gem 'bcrypt-ruby'
 gem 'haml'
 gem 'rcov'
+gem 'rspec'
+gem 'parseconfig'
+gem 'tlsmail'
+gem 'rake'
 
 
 

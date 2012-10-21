@@ -72,9 +72,8 @@ module Models
       new_item
     end
 
-    # buy an item
-    # @return true if user can buy item, false if his credit amount is to small
-    # Removes the price of the item from itself and give it to the owner
+    # Removes credits (price of item) from itself and give it to the owner
+
     def buy_item(item_to_buy)
       fail "not enough credits" if item_to_buy.price > self.credits
       fail "Item not in System" unless (System.instance.items.include?(item_to_buy.id))
@@ -82,6 +81,7 @@ module Models
       # fail "Item already belongs to you" if (System.instance.fetch_items_of(self.id))
 
       old_owner = item_to_buy.owner
+
       #Subtracts price from buyer
       self.credits = self.credits - item_to_buy.price
       #Adds price to owner
@@ -97,17 +97,17 @@ module Models
     #return user's item list active
     # @param user_mail
     def list_items
-      Models::System.instance.fetch_items_of(self.id).select { |s| s.is_active? }
+      Models::System.instance.fetch_items_of(self.id)
     end
 
     #return user's item list inactive
-    def list_items_inactive
+    def list_inactive_items
       Models::System.instance.fetch_items_of(self.id).select {|s| !s.is_active?}
     end
 
 
     #return user's item list active
-    def list_items_active
+    def list_active_items
       Models::System.instance.fetch_items_of(self.id).select {|s| s.is_active?}
     end
 
@@ -118,7 +118,8 @@ module Models
     ##
 
     def has_item?(itemId)
-      Models::System.instance.fetch_items_of(self.id).one? { |item| item.id == itemId.to_i }
+      Models::System.instance.item_exists?(self.id) &&
+      Models::System.instance.fetch_item(self.id).owner == self
     end
 
     ##

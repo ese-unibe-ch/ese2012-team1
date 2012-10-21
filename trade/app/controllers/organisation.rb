@@ -123,7 +123,15 @@ module Controllers
 
     post '/organisation/add/member' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
-      redirect "/error/No_Valid_User" unless Models::System.instance.user_exists?(params[:member])
+      if Models::System.instance.user_exists?(params[:member])
+        haml :organisation_member_confirm, :locals => { :member => params[:member]}
+      else
+        haml :organisation_add_member, :locals => { :error_message => "User does not exist" }
+      end
+    end
+
+    post '/organisation/member/confirm' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
       if Models::System.instance.user_exists?(params[:member])
         user =  Models::System.instance.fetch_user_by_email(params[:member])
         org = Models::System.instance.fetch_account(session[:account])
@@ -132,7 +140,6 @@ module Controllers
       else
         haml :organisation_add_member, :locals => { :error_message => "User does not exist" }
       end
-
     end
 
     get '/organisations/self' do
@@ -150,7 +157,7 @@ module Controllers
     get '/organisations/:id' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(params[:id].to_i)
       organisation_id = params[:id]
-      haml :organisations_id, :locals => {:active_items => Models::System.instance.fetch_account(organisation_id.to_i).list_items_active}
+      haml :organisations_id, :locals => {:active_items => Models::System.instance.fetch_account(organisation_id.to_i).list_active_items}
     end
 
     error do

@@ -16,7 +16,8 @@ div#menu {
     left: 0;
     right: 80%;
     background: #A0C544;
-    padding-left: 1em
+    padding-left: 1em;
+    min-width: 170px;
 }
 
 div#main {
@@ -61,7 +62,7 @@ div#menu div {
     float: left;
     width: 100%;
     padding-top: 0.25em;
-    padding-bottom: 0.25em
+    padding-bottom: 0.25em;
 }
 
 div#menu div:hover {
@@ -81,6 +82,22 @@ div#menu a:hover {
     text-decoration: none;
     color: white;
     font-weight: bold;
+}
+
+table{
+    border-collapse: collapse;
+}
+
+th{
+    text-align:left;
+}
+
+tr.colored {
+    background:#DBE9B9;
+}
+
+tr.normal {
+    background:white;
 }
 
 div#footer div {

@@ -24,6 +24,10 @@ module Models
       self.users.store(user.email, user)
     end
 
+    def remove_member(user)
+      self.users.delete(user.email)
+    end
+
     def is_member?(user)
       users.one? { |email, member| email == user.email }
     end

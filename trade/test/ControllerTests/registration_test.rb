@@ -4,14 +4,15 @@ require 'test/unit'
 require 'helper'
 require 'rack/test'
 
-require 'test_helper'
-
 ENV['RACK_ENV'] = 'test'
 
 require_relative '../../app/controllers/registration'
 require_relative '../../app/models/user'
 
+require 'test_helper'
+
 class RegistrationTest < Test::Unit::TestCase
+
   include Rack::Test::Methods
 
   def app
@@ -60,20 +61,32 @@ class RegistrationTest < Test::Unit::TestCase
     it 'post /register should redirect to /login if password is okey' do
       post "/register", {:password => 'aB12De', :re_password => 'aB12De', :name => 'Larry', :description => "Perl is a Pearl!",
                          :email => 'larry@mail.ch'},
-           'rack.session' => session =  { :user => nil, :auth => false  }
+           'rack.session' => { :user => nil, :auth => false  }
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
-      assert last_response.location =~ /\/$/, "Should redirect to /login but was #{last_response.location}"
+      assert last_response.location =~ /\/$/, "Should redirect to / but was #{last_response.location}"
     end
 
     it 'post /register should add user to system' do
       post "/register", {:password => 'aB12De', :re_password => 'aB12De', :name => 'Matz', :interests => "Ruby rocks!",
                          :email => 'matz@mail.ch'},
-           'rack.session' => session =  { :user => nil, :auth => false  }
+           'rack.session' => { :user => nil, :auth => false  }
       user = Models::System.instance.fetch_user_by_email('matz@mail.ch')
       assert(user != nil, "User should exist within system")
       assert(user.name == 'Matz', "User should be called Matz but was #{user.name}");
       assert(user.email == 'matz@mail.ch', "User should have email matz@mail.ch but was #{user.email}")
       assert(user.description == 'Ruby rocks!', "Description should be 'Ruby rocks!' but was '#{user.description}'")
+    end
+
+
+    it 'post /register should send email to user' do
+      client = SimpleEmailClient.new
+      SimpleEmailClient.set_client(client)
+
+      post "/register", {:password => 'aB12De', :re_password => 'aB12De', :name => 'James Gosling', :interests => "Java, an island?",
+                         :email => 'james@mail.ch'},
+           'rack.session' => { :user => nil, :auth => false, :account => nil  }
+
+      assert(client.email_send?, "Should have send email.")
     end
 
     it 'get /register should add script and load initialize' do
@@ -103,7 +116,7 @@ class RegistrationTest < Test::Unit::TestCase
     it 'post /unregister should redirect to /unauthenticate' do
       users = TestHelper.get_users
 
-      post '/unregister', {}, 'rack.session' => { :user => users[:homer].id, :auth => true  }
+      post '/unregister', {}, 'rack.session' => { :user => users[:homer].id, :auth => true, :account => users[:homer].id  }
       assert last_response.redirect?
       assert last_response.location.include?('/unauthenticate'), "Should redirect to /unauthenticate"
     end

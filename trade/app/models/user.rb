@@ -30,8 +30,8 @@ module Models
     #
     ##
 
-    def self.email_unique?(email_to_compare)
-      (Models::System.instance.users.member?(email_to_compare)) ? false : true
+    def invariant
+      Models::System.instance.fetch_user_by_email(self.email) == self
     end
 
     # factory method (constructor) on the class
@@ -46,7 +46,7 @@ module Models
       fail "Missing path to avatar" if (avatar == nil)
       fail "There's no avatar at #{avatar}" unless (File.exists?(Helpers::absolute_path(avatar.sub("/images", "../public/images"), __FILE__)))
       fail "Not a correct email address" unless email.is_email?
-#      fail "E-mail not unique" unless self.email_unique?(email)
+      fail "E-mail not unique" if Models::System.instance.user_exists?(email)
 
       user = super(name, description, avatar)
 
@@ -59,16 +59,15 @@ module Models
       user
     end
 
-    def self.login account, password
-      return false unless Models::System.instance.accounts.one? { |id, user| user.respond_to?(:email) && user == account }
-      user = Models::System.instance.fetch_account(account.id)
-      user.password_hash == BCrypt::Engine.hash_secret(password, user.password_salt)
+    def login password
+      self.password_hash == BCrypt::Engine.hash_secret(password, self.password_salt)
     end
 
-    #Removes himself from the list of users and of the Models::System
+    #Removes himself from the list of users of the Models::System
+    #Removes his picture (not yet implemented)
     #Removes user's items beforehand
     def clear
-      Models::System.instance.fetch_items_of(self.id).each { |e| Models::System.instance.remove_item(e.id) }
+      Models::System.instance.fetch_items_of(self.id).each { |e| e.clear }
       Models::System.instance.remove_account(self.id)
     end
 

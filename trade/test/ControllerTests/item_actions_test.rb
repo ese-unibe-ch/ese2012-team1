@@ -10,7 +10,7 @@ require 'test_helper'
 ENV['RACK_ENV'] = 'test'
 
 def error
-end #Just to make everyone happy. this method is defined in ItemsAction to catch raised exceptions
+end #Just to make everyone happy. this method is defined in ItemsAction to catch raised exception
 
 require_relative '../../app/controllers/item_actions'
 require_relative '../../app/models/item'
@@ -78,7 +78,10 @@ class ItemActionsTest < Test::Unit::TestCase
 
       homers_items = Models::System.instance.fetch_items_of(user.id)
       item = homers_items.detect{|item| item.name == 'Gold'}
+
       assert(item.name == 'Gold', "Should own gold but instead did own: #{homers_items}")
+      assert(item.description == 'Very very valuable', "Should have description \'Very very valuable' but was #{item.description}")
+      assert(item.price == 100, "Should cost 100 credits but was #{item.price}")
 
       # Removing File after test
       File.delete("#{item.picture.sub("/images", "../../app/public/images")}")

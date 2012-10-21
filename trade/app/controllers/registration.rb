@@ -3,9 +3,11 @@ require 'require_relative'
 require 'sinatra/base'
 require 'haml'
 require 'ftools'
+
 require_relative '../models/user'
 require_relative '../helpers/render'
 require_relative '../helpers/string_checkers'
+require_relative '../models/simple_email_client' unless ENV['RACK_ENV'] == 'test'
 
 include Models
 include Helpers
@@ -71,6 +73,7 @@ module Controllers
         session[:form_email] = params[:email]
         session[:form_name] = params[:name]
         session[:form_description] = params[:interests]
+
         redirect '/register'
       end
 
@@ -84,8 +87,6 @@ module Controllers
       email = params[:email]
       description = params[:interests].nil? ? "" : params[:interests]
       name = params[:name]
-
-      puts "#{name}"
 
       dir = absolute_path('../public/images/users/', __FILE__)
       file_path = "/images/users/default_avatar.png"
@@ -102,6 +103,9 @@ module Controllers
       session[:user] = user.id
       session[:auth] = true
       session[:account] = user.id
+
+      SimpleEmailClient.setup.send_email(email, "Welcome to the ESE-Tradingsystem!", "You are now registered in the ESE-Tradingsystem.\nHave fun!")
+
       redirect '/'
     end
 
@@ -120,6 +124,7 @@ module Controllers
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
       user = Models::System.instance.fetch_account(session[:user])
       user.clear
+      session.clear
 
       redirect '/unauthenticate'
     end

@@ -30,7 +30,7 @@ module Models
       item.price = price
       item.active = false
       item.owner = owner
-      item.picture = "/images/items/default_item.png"
+      item.picture = "not initialized yet!"
       item
     end
 
@@ -78,14 +78,25 @@ module Models
       self.is_active?
     end
 
-    #Removes itself from the list of items and of the system
+    # Removes itself from the list of items and of the system
+    # and removes his picture
+
     def clear
       System.instance.remove_item(self.id)
+      begin
+        File.delete("#{self.picture.sub("/images", "../../app/public/images")}")
+      rescue => e
+        puts(e)
+        puts("Picture does not exist on #{self.name}")
+        fail ""
+      end
     end
 
     def can_be_bought_by?(user)
-      (user.credits >= self.price && self.active) ? true : false
+      user.credits >= self.price && self.active
     end
+
+    #Set new owner and set item to inactive
 
     def bought_by(new_owner)
       self.owner = new_owner

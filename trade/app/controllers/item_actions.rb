@@ -15,9 +15,6 @@ module Controllers
   class ItemActions < Sinatra::Application
     set :views, "#{absolute_path('../views', __FILE__)}"
 
-    set :raise_errors, false unless development?
-    set :show_exceptions, false unless development?
-
     before do
       redirect "/" unless session[:auth]
     end
@@ -26,8 +23,11 @@ module Controllers
     #
     # Creates an item
     #
-    # Expects a name for the item, a price and a description as parameters
-    # Can also contain a picture.
+    # Expects:
+    # params[:name] : name for the item
+    # params[:price] : price for the item
+    # params[:description] :  description for the item
+    # optional params[:item_picture] : picture for the item
     #
     ##
 
@@ -44,20 +44,29 @@ module Controllers
       fail "Price should be number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:price])
       fail "Item should have description" if params[:description] == nil
 
+      puts("WTF!")
+
       id = session[:account]
       new_item = Models::System.instance.fetch_account(id).create_item(params[:name], Integer((params[:price]).to_i))
       new_item.add_description(params[:description])
 
       dir = absolute_path('../public/images/items/', __FILE__)
 
+      file_extension = ".png"
+      fetch_file_path = absolute_path("../public/images/items/default_item.png", __FILE__)
       if params[:item_picture] != nil
         tempfile = params[:item_picture][:tempfile]
         filename = params[:item_picture][:filename]
-        file_path ="#{dir}#{new_item.id}#{File.extname(filename)}"
-        File.copy(tempfile.path, file_path)
-        file_path = "/images/items/#{new_item.id}#{File.extname(filename)}"
-        new_item.add_picture(file_path)
+        fetch_file_path = tempfile.path
+        file_extension = File.extname(filename)
       end
+
+      store_file_path ="#{dir}#{new_item.id}#{file_extension}"
+      File.copy(fetch_file_path, store_file_path)
+
+      new_item.add_picture("/images/items/#{new_item.id}#{file_extension}")
+
+      puts("path: #{new_item.picture}")
 
       redirect "/items/my/inactive"
     end
@@ -152,9 +161,5 @@ module Controllers
 
     end
 
-  end
-
-  error do
-    haml :error, :locals => {:error_title => "", :error_message => "#{request.env['sinatra.error'].to_s}" }
   end
 end
