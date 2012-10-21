@@ -7,6 +7,7 @@ require_relative "../../app/models/user"
 require_relative "../../app/models/item"
 require_relative "../../app/models/system"
 require_relative "../../app/models/organisation"
+require_relative "account_spec"
 
 include Models
 
@@ -110,7 +111,7 @@ describe "User" do
     @system = double('system')
     System.stub(:instance).and_return(@system)
     @system.stub(:add_account)
-    @system.stub(:user_exists?).and_return(true)
+    @system.stub(:user_exists?).and_return(false)
   end
 
   def create_user
@@ -122,20 +123,10 @@ describe "User" do
       @user = User.created("Bart", "password", "bart@mail.ch", "I'm Bart", "/images/users/default_avatar.png")
     end
 
-    it "should have name" do
-      @user.name.should be_like  "Bart"
-    end
+    it_behaves_like "any created Account"
 
     it "should have email" do
       @user.email.should be_like "bart@mail.ch"
-    end
-
-    it "should have description" do
-      @user.description.should be_like "I'm Bart"
-    end
-
-    it "should have avatar path" do
-      @user.avatar.should be_like "/images/users/default_avatar.png"
     end
 
     it "should have 100 credits" do
@@ -149,18 +140,9 @@ describe "User" do
       @user.password_salt.should_not be_like "password"
     end
 
-    it "should not have an id" do
-      @user.id.should be_like nil
-    end
-
     it "should not have any member" do
       #This is not really a good test...
       @user.is_member?(nil).should be_false
-    end
-
-    it "should add himself to list in system" do
-      @system.should_receive(:add_account)
-      User.created("Bart", "password", "bart@mail.ch", "I'm Bart", "/images/users/default_avatar.png")
     end
 
     context "when logging in" do
