@@ -21,6 +21,8 @@ class App < Sinatra::Base
 
   Haml::Template.options[:escape_html] = true
 
+  use Rack::Protection
+
   enable :sessions unless ENV['RACK_ENV'] == 'test'
 
   set :root, File.dirname(__FILE__)
@@ -38,8 +40,6 @@ class App < Sinatra::Base
   use Controllers::Organisation
   use Controllers::Sites
   use Controllers::Uploader
-
-  use Rack::Protection
 
 end
 
