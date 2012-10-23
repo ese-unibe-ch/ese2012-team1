@@ -14,11 +14,10 @@
       %script(type="text/javascript" src="/java-script/#{script}")
 
   %body{ defined?(onload) ? {:onload => "#{onload}"} : "" }
-    - auth = "no"
-    - auth = "yes" if session[:auth]
-    - user = "none"
-    - user = session[:user] if session[:auth]
-    = render_file_with_argument('frame_header.haml', Array[auth, user, session[:account]])
+    - auth = session[:auth] ? "yes" : "no"
+    - user = session[:auth] ? session[:user] : "none"
+    - account = session[:auth] ? session[:account] : "none"
+    = render_file_with_argument('frame_header.haml', Array[auth, user, account])
     = render_file('frame_menu_org.haml') if session[:auth] && session[:account] != session[:user]
     = render_file('frame_menu_logged.haml') if session[:auth] && session[:account] == session[:user]
     = render_file('frame_menu_unlogged.haml') if !session[:auth]
