@@ -26,7 +26,10 @@ cb = userC.create_item("UserC_ItemB", 50)
 cc = userC.create_item("UserC_ItemC", 120)
 cc.to_active
 
-Models::User.created( "ese", "ese" , "ese@mail.ch", "I'm ese", "/images/users/default_avatar.png")
+ese = Models::User.created( "ese", "ese" , "ese@mail.ch", "I'm ese", "/images/users/ese.png")
+
+eseOrg = Models::Organisation.created("EseOrg", "a simple Test Organisation","/images/organisations/EseOrg.png" )
+eseOrg.add_member(ese)
 
 (68..72).each do |ascii_nr_of_character|
   Models::User.created("user#{ascii_nr_of_character.chr}", "password#{ascii_nr_of_character.chr}" , "user#{ascii_nr_of_character.chr}@mail.ch", "I'm #{ascii_nr_of_character.chr}", "/images/users/default_avatar.png")
