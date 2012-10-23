@@ -34,7 +34,7 @@ module Controllers
     get '/items/my/active' do
         redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
         user_id = session[:account]
-        haml :'item/my_active', :locals => {:active_items => Models::System.instance.fetch_account(user_id).list_items}
+        haml :'item/my_active', :locals => {:active_items => Models::System.instance.fetch_account(user_id).list_active_items}
     end
 
     get '/items/my/inactive' do
