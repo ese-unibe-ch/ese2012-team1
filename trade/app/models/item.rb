@@ -84,11 +84,10 @@ module Models
     def clear
       System.instance.remove_item(self.id)
       begin
-        File.delete("#{self.picture.sub("/images", "../../app/public/images")}")
+        File.delete("#{self.picture.sub("/images", "./public/images")}")
       rescue => e
         puts(e)
-        puts("Picture does not exist on #{self.name}")
-        fail ""
+        puts("Picture does not exist on #{self.picture.sub("/images", "./public/images")}")
       end
     end
 
