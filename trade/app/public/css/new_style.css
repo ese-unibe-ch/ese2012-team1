@@ -29,7 +29,7 @@ div#main {
     left: 20%;
     right: 0;
     padding: 2em;
-    overflow: scroll;
+    overflow: auto;
 }
 
 div#header {
