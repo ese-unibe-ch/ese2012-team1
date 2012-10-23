@@ -116,6 +116,8 @@ module Controllers
     #
     ##
     get '/unregister' do
+      redirect "/" unless session[:auth]
+      response.headers['Cache-Control'] = 'public, max-age=0'
       haml :'authentication/unregister'
     end
 

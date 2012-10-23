@@ -6,11 +6,13 @@ require 'haml'
 require 'haml/template/options'
 
 require_relative('controllers/authentication')
-require_relative('controllers/registration')
-require_relative('controllers/sites')
+require_relative('controllers/error')
+require_relative('controllers/home')
+require_relative('controllers/items')
 require_relative('controllers/item_actions')
 require_relative('controllers/organisation')
-require_relative('controllers/uploader')
+require_relative('controllers/registration')
+require_relative('controllers/users')
 require_relative('init.rb') unless ENV['RACK_ENV'] == 'test'
 require_relative('helpers/render')
 
@@ -34,12 +36,14 @@ class App < Sinatra::Base
   #To get userfriendly error messages set this to false
   set :development, true
 
-  use Controllers::Authentication
+  use Controllers::Home
   use Controllers::Registration
+  use Controllers::Authentication
+  use Controllers::Error
+  use Controllers::Items
   use Controllers::ItemActions
   use Controllers::Organisation
-  use Controllers::Sites
-  use Controllers::Uploader
+  use Controllers::Users
 
 end
 
