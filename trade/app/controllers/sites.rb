@@ -91,6 +91,9 @@ module Controllers
         if params[:title] == "Choose_Another_Name"
           msg = "The name you chose is already taken, choose another one"
         end
+        if params[:title] == "No_Self_Remove"
+          msg = "You can not remove yourself from your organisation"
+        end
         haml :error, :locals => {:error_title => params[:title], :error_message => msg}
     end
   end

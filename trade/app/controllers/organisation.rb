@@ -98,21 +98,9 @@ module Controllers
       haml :'organisation/members', :locals => { :all_members => organisation.users.values }
     end
 
-    post '/organisation/members/remove' do
-      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
-      redirect "/error/No_Valid_User" unless Models::System.instance.user_exists?(params[:user_email])
-      organisation = Models::System.instance.fetch_account(session[:account])
-      user = Models::System.instance.fetch_user_by_email(params[:user_email])
-      if user.id != session[:user]
-        organisation.users.delete(user.email)
-      end
-      redirect '/organisation/members'
-    end
-
     get '/organisation/add/member' do
       haml :'organisation/add_member'
     end
-
     ##
     #
     # Called by user_add_member.haml via form
@@ -142,6 +130,39 @@ module Controllers
         haml :'organisation/add_member', :locals => { :error_message => "User does not exist" }
       end
     end
+
+
+    ##
+    # Called by members.haml via form
+    #
+    # Expects:
+    # params[:member] : email of user to be deleted
+    ##
+
+    post '/organisation/member/delete' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      redirect "/error/No_Self_Remove" unless (Models::System.instance.fetch_account(session[:user]) != Models::System.instance.fetch_user_by_email(params[:member]))
+      if Models::System.instance.user_exists?(params[:member])
+        haml :'organisation/member_delete_confirm', :locals => { :member => params[:member]}
+      else
+        redirect 'organisation/members', :locals => { :error_message => "User does not exist" }
+      end
+    end
+
+
+    post '/organisation/member/delete/confirm' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      redirect "/error/No_Valid_User" unless Models::System.instance.user_exists?(params[:user_email])
+      organisation = Models::System.instance.fetch_account(session[:account])
+      user = Models::System.instance.fetch_user_by_email(params[:user_email])
+      if user.id != session[:user]
+        organisation.users.delete(user.email)
+      end
+      redirect '/organisation/members'
+    end
+
+
+
 
     get '/organisations/self' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
