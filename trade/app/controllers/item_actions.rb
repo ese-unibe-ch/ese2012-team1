@@ -108,7 +108,7 @@ module Controllers
       description = Models::System.instance.fetch_item(id).description
       price = Models::System.instance.fetch_item(id).price
       picture = Models::System.instance.fetch_item(id).picture
-      haml :item_edit, :locals => {:id => id, :name => name, :description => description, :price => price, :picture => picture}
+      haml :'item/edit', :locals => {:id => id, :name => name, :description => description, :price => price, :picture => picture}
     end
 
     ###

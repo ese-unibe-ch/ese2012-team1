@@ -25,7 +25,7 @@ module Controllers
     get '/login' do
       redirect "/home" if session[:auth]
 
-      haml :login, :locals => { :onload => 'document.loginform.username.focus()' }
+      haml :'authentication/login', :locals => { :onload => 'document.loginform.username.focus()' }
     end
 
     post "/authenticate" do
@@ -37,7 +37,7 @@ module Controllers
         session[:auth] = true
         redirect "/home"
       else
-        haml :login, :locals => { :error_message => 'No such user or password!'}
+        haml :'authentication/login', :locals => { :error_message => 'No such user or password!'}
       end
     end
 
