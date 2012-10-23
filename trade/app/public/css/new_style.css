@@ -16,9 +16,9 @@ div#menu {
     left: 0;
     right: 80%;
     background: #A0C544;
-    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1, startColorstr='#A0C544', endColorstr='#FFFFFF');
-    background: -webkit-gradient(linear, left center, right center, from(#A0C544), to(#FFFFFF));
-    background: -moz-linear-gradient(left,  #A0C544,  #FFFFFF);
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1, startColorstr='#a0c544', endColorstr='#ffffff');
+    background: -webkit-gradient(linear, left center, right center, from(#a0c544), to(#ffffff));
+    background: -moz-linear-gradient(left,  #a0c544,  #ffffff);
     padding-left: 1em;
     min-width: 170px;
 }
