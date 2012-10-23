@@ -64,11 +64,18 @@ module Models
     end
 
     #Removes himself from the list of users of the Models::System
-    #Removes his picture (not yet implemented)
+    #Removes his avatar (not yet implemented)
     #Removes user's items beforehand
     def clear
       Models::System.instance.fetch_items_of(self.id).each { |e| e.clear }
       Models::System.instance.remove_account(self.id)
+
+      begin
+        File.delete("#{self.avatar.sub("/images", "./public/images")}")
+      rescue => e
+        puts(e)
+        puts("avatar does not exist on #{self.avatar.sub("/users", "./public/images")}")
+      end
     end
 
     # Allows the user to create an organisation of which he automatically becomes the admin.
