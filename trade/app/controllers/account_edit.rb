@@ -81,8 +81,47 @@ module Controllers
         user.avatar = file_path
       end
 
+      redirect '/'
+    end
 
-      session[:auth] = true
+    ##
+    # Loads edit.haml where user can enter the new informations
+    ##
+
+    get '/account/edit/organisation/profile' do
+      haml :'organisation/edit'
+    end
+
+    ##
+    #
+    # Gets edited profile data from user. Redirected from edit.haml.haml with
+    # Form. Checks if incoming data is correct and redirects to home.
+    #
+    # Should get parameter
+    # optional :description - A description of the user
+    # optional :avatar - A file for the avatar
+    #
+    ##
+
+    post '/account/edit/organisation/profile' do
+      organisation = Models::System.instance.fetch_account(session[:account])
+
+
+      if (!params[:description].nil?)
+        organisation.description = params[:description].nil? ? "" : params[:description]
+      end
+
+      dir = absolute_path('../public/images/organisations/', __FILE__)
+      file_path = "/images/organisations/default_avatar.png"
+
+      if params[:avatar] != nil
+        tempfile = params[:avatar][:tempfile]
+        filename = params[:avatar][:filename]
+        file_path ="#{dir}"+organisation.name+".#{filename.sub(/.*\./, "")  }"
+        File.copy(tempfile.path, file_path)
+        file_path = "/images/organisations/"+organisation.name+".#{filename.sub(/.*\./, "")}"
+        organisation.avatar = file_path
+      end
 
       redirect '/'
     end
