@@ -17,7 +17,7 @@
 = "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).list_inactive_items.size} inactive Items"
 %br
 %br
-= "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).users.size} Members (with you)"
+= "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).members.size} Members (with you)"
 %br
 %br
 = "Your Organisations Description:"

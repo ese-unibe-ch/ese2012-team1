@@ -95,7 +95,7 @@ module Controllers
       #only checks if :account is in the range of valid ids
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
       organisation = Models::System.instance.fetch_account(session[:account])
-      haml :'organisation/members', :locals => { :all_members => organisation.users.values }
+      haml :'organisation/members', :locals => { :all_members => organisation.members.values }
     end
 
     get '/organisation/add/member' do
@@ -156,7 +156,7 @@ module Controllers
       organisation = Models::System.instance.fetch_account(session[:account])
       user = Models::System.instance.fetch_user_by_email(params[:user_email])
       if user.id != session[:user]
-        organisation.users.delete(user.email)
+        organisation.members.delete(user.email)
       end
       redirect '/organisation/members'
     end

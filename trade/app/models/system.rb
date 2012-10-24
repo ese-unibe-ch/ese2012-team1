@@ -18,7 +18,7 @@ module Models
       self.account_id_count = 0
     end
 
-    # ---------user------------------------------------------------------------
+    # ---------accounts------------------------------------------------------------
 
     # Adds an account to the system.
     def add_account(account)
@@ -34,11 +34,30 @@ module Models
       fail "User should be stored in users-hash" unless (self.accounts.member?(account_id_count-1))
     end
 
-    # Returns the user with associated account id.
+    # Returns the account with associated account id.
     def fetch_account(account_id)
       fail "No account with id #{account_id}" unless account_exists?(account_id)
       self.accounts.fetch(account_id)
     end
+
+    def account_exists?(account_id)
+      self.accounts.member?(account_id)
+    end
+
+    # Returns all accounts (users and organisations) but the one specified in an array
+    def fetch_all_accounts_but(account_id)
+      fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
+      self.accounts.values - [self.fetch_account(account_id)]  # Array difference
+    end
+
+    # Removes an account from the system.
+    def remove_account(account_id)
+      fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
+      self.accounts.delete(account_id)
+    end
+
+    # ---------users ------------------------------------------------------------
+
 
     def fetch_user_by_email(email)
       self.accounts.values.detect{|account| account.respond_to?(:email) && account.email == email}
@@ -54,16 +73,6 @@ module Models
       self.accounts.values.one?{|account| account.respond_to?(:email) && account.email == email}
     end
 
-    def account_exists?(account_id)
-      self.accounts.member?(account_id)
-    end
-
-    # Returns all users and organisations but the one specified in an array
-    def fetch_all_accounts_but(account_id)
-      fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
-      self.accounts.values - [self.fetch_account(account_id)]  # Array difference
-    end
-
     # Returns all users but the one specified in an array
     def fetch_all_users_but(account_id)
       fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
@@ -71,11 +80,6 @@ module Models
       tmp.select{|acc| acc.id != account_id}
     end
 
-    # Removes an user from the system.
-    def remove_account(account_id)
-      fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
-      self.accounts.delete(account_id)
-    end
 
     # --------item-------------------------------------------------------------
 
@@ -137,6 +141,7 @@ module Models
       fail "No such item with id #{item_id}" unless self.items.member?(item_id)
       self.items.delete_if { |id, item| item.id == item_id }
     end
+   # ------------------------- organisation --------------------------------------------
 
     def fetch_organisations_of(account_nr)
       account = fetch_account(account_nr)

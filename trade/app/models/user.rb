@@ -35,7 +35,7 @@ module Models
     end
 
     # factory method (constructor) on the class
-    # You have to save the picture at public/images/users/ before
+    # You have to save the avatar at public/images/users/ before
     # you call this method. If not, it will fail.
     def self.created(name,  password, email, description, avatar)
       # Preconditions
@@ -82,9 +82,9 @@ module Models
     # @param name   the name of the organisation
     # @param description    the description of the organisation
     # @return new_organization    the organisation which was created
-    # @param picture : picture of the organisation
-    def create_organisation(name, description, picture)
-      org = Models::Organisation.created(name, description, picture)
+    # @param avatar : avatar of the organisation
+    def create_organisation(name, description, avatar)
+      org = Models::Organisation.created(name, description, avatar)
       org.organisation = true
       org.add_member(self)
       org
