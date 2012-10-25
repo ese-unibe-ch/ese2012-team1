@@ -89,6 +89,7 @@ module Models
       org.add_member(self)
       org
     end
+
     def password(password)
       pw_salt = BCrypt::Engine.generate_salt
       pw_hash = BCrypt::Engine.hash_secret(password, pw_salt)

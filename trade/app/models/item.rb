@@ -84,13 +84,9 @@ module Models
 
     def clear
       System.instance.remove_item(self.id)
-      begin
-        unless self.picture =~ /default_item\.png$/
-          File.delete("#{self.picture.sub("/images", "./public/images")}")
-        end
-      rescue => e
-        puts(e)
-        puts("Picture does not exist on #{self.picture.sub("/images", "./public/images")}")
+
+      unless self.picture =~ /default_item\.png$/
+        File.delete(Helpers::absolute_path(self.picture.sub("/images", "../public/images"), __FILE__))
       end
     end
 
