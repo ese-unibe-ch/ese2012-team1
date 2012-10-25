@@ -11,6 +11,7 @@ require_relative('controllers/sites')
 require_relative('controllers/item_actions')
 require_relative('controllers/organisation')
 require_relative('controllers/uploader')
+require_relative('controllers/account_edit')
 require_relative('init.rb') unless ENV['RACK_ENV'] == 'test'
 require_relative('helpers/render')
 
@@ -20,6 +21,8 @@ include Helpers
 class App < Sinatra::Base
 
   Haml::Template.options[:escape_html] = true
+
+  use Rack::Protection
 
   enable :sessions unless ENV['RACK_ENV'] == 'test'
 
@@ -38,8 +41,7 @@ class App < Sinatra::Base
   use Controllers::Organisation
   use Controllers::Sites
   use Controllers::Uploader
-
-  use Rack::Protection
+  use Controllers::AccountEdit
 
 end
 

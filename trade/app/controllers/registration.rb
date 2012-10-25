@@ -24,7 +24,7 @@ module Controllers
     ##
 
     get '/register' do
-      haml :register, :locals => { :script => 'passwordchecker.js', :onload => 'initialize()' }
+      haml :'authentication/register', :locals => { :script => 'passwordchecker.js', :onload => 'initialize()' }
     end
 
     ##
@@ -116,7 +116,7 @@ module Controllers
     #
     ##
     get '/unregister' do
-      haml :unregister
+      haml :'authentication/unregister'
     end
 
 

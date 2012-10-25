@@ -14,7 +14,7 @@ module Models
     #Implementations of accounts may add a new item to the system with a name and a price;
     #  the item is originally inactive.
     #Implementations of accounts may own certain items
-    #Implementations of accounts may buy active items of another user
+    #Implementations of accounts may buy active items of another account
     #  (inactive items can't be bought). If an implementation of account buys an item,
     #  it becomes the owner; credits are transferred accordingly; immediately after
     #  the trade, the item is inactive. The transaction
@@ -72,7 +72,7 @@ module Models
       new_item
     end
 
-    # Removes credits (price of item) from itself and give it to the owner
+    # Removes credits (price of item) from itself and gives it to the owner
 
     def buy_item(item_to_buy)
       fail "not enough credits" if item_to_buy.price > self.credits

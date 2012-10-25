@@ -20,6 +20,7 @@ module Controllers
 
     before do
       redirect "/" unless session[:auth]
+      response.headers['Cache-Control'] = 'public, max-age=0'
     end
 
 ###
@@ -29,13 +30,13 @@ module Controllers
 ##
 
     get '/organisation/create' do
-      haml :organisation_create
+      haml :'organisation/create'
     end
 
 ##
 #
 #  Creates an organisation. 
-#  Called from organisation_create.haml
+#  Called from organisation/create.haml
 #  
 #  Expects:
 #  params[:name] : Name of the organisation
@@ -76,8 +77,8 @@ module Controllers
 #  Switches from a user to an organisation or vice-versa.
 #  Called by organisation_switch.haml.
 #  At the moment there is a problem. If you are using this
-#  post you can yourself to an organisation where you are\
-#  not member.
+#  post you can add yourself to an organisation although you
+#  are not a member.
 #
 #  Expects:
 #  params[:account] : id of the account the user wants to switch to 
@@ -94,24 +95,12 @@ module Controllers
       #only checks if :account is in the range of valid ids
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
       organisation = Models::System.instance.fetch_account(session[:account])
-      haml :organisation_members, :locals => { :all_members => organisation.users.values }
-    end
-
-    post '/organisation/members/remove' do
-      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
-      redirect "/error/No_Valid_User" unless Models::System.instance.user_exists?(params[:user_email])
-      organisation = Models::System.instance.fetch_account(session[:account])
-      user = Models::System.instance.fetch_user_by_email(params[:user_email])
-      if user.id != session[:user]
-        organisation.users.delete(user.email)
-      end
-      redirect '/organisation/members'
+      haml :'organisation/members', :locals => { :all_members => organisation.members.values }
     end
 
     get '/organisation/add/member' do
-      haml :organisation_add_member
+      haml :'organisation/add_member'
     end
-
     ##
     #
     # Called by user_add_member.haml via form
@@ -124,9 +113,9 @@ module Controllers
     post '/organisation/add/member' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
       if Models::System.instance.user_exists?(params[:member])
-        haml :organisation_member_confirm, :locals => { :member => params[:member]}
+        haml :'organisation/member_confirm', :locals => { :member => params[:member]}
       else
-        haml :organisation_add_member, :locals => { :error_message => "User does not exist" }
+        haml :'organisation/add_member', :locals => { :error_message => "User does not exist" }
       end
     end
 
@@ -136,28 +125,61 @@ module Controllers
         user =  Models::System.instance.fetch_user_by_email(params[:member])
         org = Models::System.instance.fetch_account(session[:account])
         org.add_member(user)
-        haml :organisation_add_member, :locals => { :success_message => "User was successfully added"}
+        haml :'organisation/add_member', :locals => { :success_message => "User was successfully added"}
       else
-        haml :organisation_add_member, :locals => { :error_message => "User does not exist" }
+        haml :'organisation/add_member', :locals => { :error_message => "User does not exist" }
       end
     end
+
+
+    ##
+    # Called by members.haml via form
+    #
+    # Expects:
+    # params[:member] : email of user to be deleted
+    ##
+
+    post '/organisation/member/delete' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      redirect "/error/No_Self_Remove" unless (Models::System.instance.fetch_account(session[:user]) != Models::System.instance.fetch_user_by_email(params[:member]))
+      if Models::System.instance.user_exists?(params[:member])
+        haml :'organisation/member_delete_confirm', :locals => { :member => params[:member]}
+      else
+        redirect 'organisation/members', :locals => { :error_message => "User does not exist" }
+      end
+    end
+
+
+    post '/organisation/member/delete/confirm' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      redirect "/error/No_Valid_User" unless Models::System.instance.user_exists?(params[:user_email])
+      organisation = Models::System.instance.fetch_account(session[:account])
+      user = Models::System.instance.fetch_user_by_email(params[:user_email])
+      if user.id != session[:user]
+        organisation.members.delete(user.email)
+      end
+      redirect '/organisation/members'
+    end
+
+
+
 
     get '/organisations/self' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
       user = Models::System.instance.fetch_account(session[:user])
-      haml :organisations_self, :locals => { :all_organisations => Models::System.instance.fetch_organisations_of(user.id) }
+      haml :'organisation/self', :locals => { :all_organisations => Models::System.instance.fetch_organisations_of(user.id) }
     end
 
     get '/organisations/all' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
       organisation = session[:account]
-      haml :organisations_all, :locals => { :all_organisations => Models::System.instance.fetch_organisations_but(organisation) }
+      haml :'organisation/all', :locals => { :all_organisations => Models::System.instance.fetch_organisations_but(organisation) }
     end
 
     get '/organisations/:id' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(params[:id].to_i)
       organisation_id = params[:id]
-      haml :organisations_id, :locals => {:active_items => Models::System.instance.fetch_account(organisation_id.to_i).list_active_items}
+      haml :'organisation/id', :locals => {:active_items => Models::System.instance.fetch_account(organisation_id.to_i).list_active_items}
     end
 
     error do
@@ -165,7 +187,7 @@ module Controllers
     end
 
     get '/organisation/delete' do
-      haml :organisation_delete
+      haml :'organisation/delete'
     end
 
     post '/organisation/delete' do

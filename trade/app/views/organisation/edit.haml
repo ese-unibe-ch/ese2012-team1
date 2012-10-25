@@ -1,0 +1,17 @@
+%h2 Edit Your Organisation
+%form(action="/account/edit/organisation/profile" enctype="multipart/form-data" method="post")
+  %label Name:
+  %br
+  #{Models::System.instance.fetch_account(session[:account]).name}
+  %br
+  %label Description:
+  %br
+  %textarea(name="description" cols=30 rows=10 )
+    = Models::System.instance.fetch_account(session[:account]).description.to_s
+  %br
+  %label Avatar:
+  %br
+  %input(type="file" name="avatar" size=50 maxlength="=100000" accept="image/*")
+  %br
+  %br
+  %input(type="submit" id="editOrg" value="edit organisation")

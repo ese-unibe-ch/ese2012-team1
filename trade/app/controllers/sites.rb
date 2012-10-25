@@ -14,50 +14,55 @@ module Controllers
   class Sites < Sinatra::Application
     set :views , "#{absolute_path('../views', __FILE__)}"
 
+    before do
+      redirect "/" unless session[:auth]
+      response.headers['Cache-Control'] = 'public, max-age=0'
+    end
+
     get '/logout' do
-        haml :logout
+        haml :'authentication/logout'
     end
 
     get '/home' do
         if session[:user] == session[:account]
-          haml :home
+          haml :'home/user'
         else
-          haml :home_organisation
+          haml :'home/organisation'
         end
     end
 
     get '/items/my/active' do
         redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
         user_id = session[:account]
-        haml :items_my_active, :locals => {:active_items => Models::System.instance.fetch_account(user_id).list_items}
+        haml :'item/my_active', :locals => {:active_items => Models::System.instance.fetch_account(user_id).list_active_items}
     end
 
     get '/items/my/inactive' do
         redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
         user_id = session[:account]
-        haml :items_my_inactive, :locals => {:inactive_items => Models::System.instance.fetch_account(user_id).list_inactive_items}
+        haml :'item/my_inactive', :locals => {:inactive_items => Models::System.instance.fetch_account(user_id).list_inactive_items}
     end
 
     get '/item/create' do
-        haml :item_create
+        haml :'item/create'
     end
 
     get '/users/all' do
         redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
         viewer_id = session[:account]
-        haml :users_all, :locals => {:all_users => Models::System.instance.fetch_all_users_but(viewer_id)}
+        haml :'user/all', :locals => {:all_users => Models::System.instance.fetch_all_users_but(viewer_id)}
     end
 
     get '/users/:id' do
         redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(params[:id].to_i)
         user_id = params[:id]
-        haml :users_id, :locals => {:active_items => Models::System.instance.fetch_account(user_id.to_i).list_active_items}
+        haml :'user/id', :locals => {:active_items => Models::System.instance.fetch_account(user_id.to_i).list_active_items}
     end
 
     get '/items/active' do
         redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
         viewer_id = session[:account]
-        haml :items_active, :locals => {:all_items => Models::System.instance.fetch_all_active_items_but_of(viewer_id)}
+        haml :'item/active', :locals => {:all_items => Models::System.instance.fetch_all_active_items_but_of(viewer_id)}
     end
 
     get '/error/:title' do
@@ -85,6 +90,9 @@ module Controllers
         end
         if params[:title] == "Choose_Another_Name"
           msg = "The name you chose is already taken, choose another one"
+        end
+        if params[:title] == "No_Self_Remove"
+          msg = "You can not remove yourself from your organisation"
         end
         haml :error, :locals => {:error_title => params[:title], :error_message => msg}
     end

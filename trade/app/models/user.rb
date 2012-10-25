@@ -35,7 +35,7 @@ module Models
     end
 
     # factory method (constructor) on the class
-    # You have to save the picture at public/images/users/ before
+    # You have to save the avatar at public/images/users/ before
     # you call this method. If not, it will fail.
     def self.created(name,  password, email, description, avatar)
       # Preconditions
@@ -64,23 +64,36 @@ module Models
     end
 
     #Removes himself from the list of users of the Models::System
-    #Removes his picture (not yet implemented)
+    #Removes his avatar (not yet implemented)
     #Removes user's items beforehand
     def clear
       Models::System.instance.fetch_items_of(self.id).each { |e| e.clear }
       Models::System.instance.remove_account(self.id)
+
+      begin
+        File.delete("#{self.avatar.sub("/images", "./public/images")}")
+      rescue => e
+        puts(e)
+        puts("avatar does not exist on #{self.avatar.sub("/users", "./public/images")}")
+      end
     end
 
     # Allows the user to create an organisation of which he automatically becomes the admin.
     # @param name   the name of the organisation
     # @param description    the description of the organisation
     # @return new_organization    the organisation which was created
-    # @param picture : picture of the organisation
-    def create_organisation(name, description, picture)
-      org = Models::Organisation.created(name, description, picture)
+    # @param avatar : avatar of the organisation
+    def create_organisation(name, description, avatar)
+      org = Models::Organisation.created(name, description, avatar)
       org.organisation = true
       org.add_member(self)
       org
+    end
+    def password(password)
+      pw_salt = BCrypt::Engine.generate_salt
+      pw_hash = BCrypt::Engine.hash_secret(password, pw_salt)
+      self.password_salt = pw_salt
+      self.password_hash = pw_hash
     end
   end
 end

@@ -32,11 +32,11 @@ describe "Organisation" do
     it_behaves_like "any created Account"
 
     it "should have user sink" do
-      @user.respond_to?(:users)
+      @user.respond_to?(:members)
     end
 
     it "should not have any member" do
-      @user.users.empty?.should be_true
+      @user.members.empty?.should be_true
     end
 
     it_behaves_like "any Account while item creation"

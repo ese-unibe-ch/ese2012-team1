@@ -20,4 +20,5 @@
 = "Your Description:"
 %br
 = "#{Models::System.instance.fetch_account(session[:user]).description}"
-
+%br
+%a(href="/account/edit/user/profile" name="edit_user_profile") Edit your profile
