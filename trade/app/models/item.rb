@@ -30,7 +30,7 @@ module Models
       item.price = price
       item.active = false
       item.owner = owner
-      item.picture = "not initialized yet!"
+      item.picture = "/images/items/default_item.png"
       item
     end
 
