@@ -1,9 +1,12 @@
 %h2 All Users
-%br
-%ul
+%table
+  %tr
+  - i = 0
   - for user in all_users
-    %li(class='bigmargin_bottom')
-      %em= user.name
-      %em= " has #{user.list_items.size} Items to sell. "
-      %img(height=50 width=50){ :alt => user.name, :src => user.avatar }
-      %a(href="/users/#{user.id}" ) Show User Details
+    - i = (i + 1)%2
+    %tr{ :class => i == 0 ? "colored" : "normal" }
+      %td= user.name.size > 15 ? "#{user.name[0..14]}..." : user.name + " has #{user.list_items.size} Items to sell. "
+      %td
+        %img(height=50 width=50){ :alt => user.name, :src => user.avatar }
+      %td
+        %a(href="/users/#{user.id}" ) Show User Details

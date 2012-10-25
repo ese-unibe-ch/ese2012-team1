@@ -30,6 +30,7 @@ module Models
       item.price = price
       item.active = false
       item.owner = owner
+      item.description = ""
       item.picture = "/images/items/default_item.png"
       item
     end
@@ -84,7 +85,9 @@ module Models
     def clear
       System.instance.remove_item(self.id)
       begin
-        File.delete("#{self.picture.sub("/images", "./public/images")}")
+        unless self.picture =~ /default_item\.png$/
+          File.delete("#{self.picture.sub("/images", "./public/images")}")
+        end
       rescue => e
         puts(e)
         puts("Picture does not exist on #{self.picture.sub("/images", "./public/images")}")

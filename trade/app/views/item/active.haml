@@ -1,13 +1,15 @@
 %h2 All Items
-%br
-%ul
+%table
+  %tr
+  - i = 0
   - for item in all_items
-    %li
-      %em= item.name
-      %em= " owned by #{item.owner.name} costs #{item.price} credits"
-      %img(height=50 width=50){ :alt => item.name, :src => item.picture }
-      \:
-      %form(action="/item/buy" method="post")
-        %input(type = 'hidden' name = 'id'){ :value => "#{item.id}.#{item.name}" }
-        %input(type = 'submit' value = 'Buy Item')
+    - i = (i + 1)%2
+    %tr{ :class => i == 0 ? "colored" : "normal" }
+      %td= item.name.size > 15 ? "#{item.name[0..14]}..." : item.name + " owned by #{item.owner.name} costs #{item.price} credits"
+      %td
+        %img(height=50 width=50){ :alt => item.name, :src => item.picture }
+      %td
+        %form(action="/item/buy" method="post")
+          %input(type = 'hidden' name = 'id'){ :value => "#{item.id}.#{item.name}" }
+          %input(type = 'submit' value = 'Buy Item')
 
