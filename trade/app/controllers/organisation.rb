@@ -77,8 +77,8 @@ module Controllers
 #  Switches from a user to an organisation or vice-versa.
 #  Called by organisation_switch.haml.
 #  At the moment there is a problem. If you are using this
-#  post you can yourself to an organisation where you are\
-#  not member.
+#  post you can add yourself to an organisation although you
+#  are not a member.
 #
 #  Expects:
 #  params[:account] : id of the account the user wants to switch to 

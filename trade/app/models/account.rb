@@ -72,7 +72,7 @@ module Models
       new_item
     end
 
-    # Removes credits (price of item) from itself and give it to the owner
+    # Removes credits (price of item) from itself and gives it to the owner
 
     def buy_item(item_to_buy)
       fail "not enough credits" if item_to_buy.price > self.credits

@@ -93,7 +93,7 @@ module Models
       self.item_id_count += 1
     end
 
-    # Returns true if items exists in system. False in all other cases.
+    # Returns true if item exists in system. False in all other cases.
     def item_exists?(item_id)
       self.items.member?(item_id.to_i)
     end

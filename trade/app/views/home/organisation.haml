@@ -9,7 +9,7 @@
 = "Currently in Account of Organisation: #{Models::System.instance.fetch_account(session[:account]).name}"
 %br
 %br
-= "Your Organisations Credits: #{Models::System.instance.fetch_account(session[:account]).credits}"
+= "Your Organisation's Credits: #{Models::System.instance.fetch_account(session[:account]).credits}"
 %br
 %br
 = "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).list_items.size} active Items"
@@ -20,7 +20,7 @@
 = "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).members.size} Members (with you)"
 %br
 %br
-= "Your Organisations Description:"
+= "Your Organisation's Description:"
 %br
 = "#{Models::System.instance.fetch_account(session[:account]).description}"
 %br
