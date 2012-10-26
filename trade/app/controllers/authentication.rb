@@ -30,14 +30,19 @@ module Controllers
 
     post "/authenticate" do
       #Nicht sauber!
-      user = Models::System.instance.fetch_user_by_email(params[:username])
-      if user.login(params[:password])
-        session[:user] = user.id
-        session[:account] = user.id
-        session[:auth] = true
-        redirect "/home"
-      else
+
+      if (!Models::System.instance.user_exists?(params[:username]))
         haml :'authentication/login', :locals => { :error_message => 'No such user or password!'}
+      else
+        user = Models::System.instance.fetch_user_by_email(params[:username])
+        if !user.login(params[:password])
+          haml :'authentication/login', :locals => { :error_message => 'No such user or password!'}
+        else
+          session[:user] = user.id
+          session[:account] = user.id
+          session[:auth] = true
+          redirect "/home"
+        end
       end
     end
 
