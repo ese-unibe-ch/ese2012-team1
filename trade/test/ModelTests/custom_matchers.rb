@@ -15,6 +15,17 @@ module CustomMatchers
     end
   end
 
+  ###
+  #
+  # Makes comparing strings easier.
+  #
+  # You don't have to write:
+  # string.should == "any text"
+  # You can do instead:
+  # string.should be_like "any text"
+  #
+  ###
+
   def be_like(expression)
     BeLike.new(expression)
   end
