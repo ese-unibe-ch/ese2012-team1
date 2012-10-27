@@ -37,7 +37,7 @@ describe CommentContainer do
     end
 
     it "should have zero comment" do
-      @container.size?.should == 0
+      @container.size.should == 0
     end
 
     it "should travers zero comments" do
@@ -72,7 +72,7 @@ describe CommentContainer do
       end
 
       it "should have one child" do
-        @container.size?.should == 1
+        @container.size.should == 1
       end
 
       it "should collect one comment" do
@@ -105,7 +105,7 @@ describe CommentContainer do
       end
 
       it "should have two children" do
-        @container.size?.should == 2
+        @container.size.should == 2
       end
 
       it "should meet both comments when traversing" do
@@ -159,7 +159,7 @@ describe CommentContainer do
       end
 
       it "should have one child" do
-        @container.size?.should == 1
+        @container.size.should == 1
       end
 
       it "should not meet CommentContainer when traversing" do
@@ -176,7 +176,7 @@ describe CommentContainer do
         end
 
         it "should have one child" do
-          @container.size?.should == 1
+          @container.size.should == 1
         end
 
         it "should collect one comment" do

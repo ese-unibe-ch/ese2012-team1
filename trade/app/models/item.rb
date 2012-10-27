@@ -3,9 +3,10 @@ require 'require_relative'
 
 require_relative '../helpers/render'
 require_relative 'system'
+require_relative 'comment_container'
 
 module Models
-  class Item
+  class Item < CommentContainer
     #Items have a name.
     #Items have a price.
     #An item can be active or inactive.
