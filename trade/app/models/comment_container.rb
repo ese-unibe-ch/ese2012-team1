@@ -6,9 +6,24 @@ class CommentContainer
     self.depth = 0
   end
 
-  def size?
+  ##
+  #
+  # Returns the count of direct children
+  #
+  ##
+
+  def size
     @comments.size
   end
+
+  ##
+  #
+  # Adds a new child to the container. Assigns his depth
+  # plus one as depth to the new child.
+  #
+  # You can not add nil as new child.
+  #
+  ##
 
   def add(comment)
     fail "Comment should not be nil" if (comment.nil?)
@@ -17,11 +32,28 @@ class CommentContainer
     comment.depth = self.depth+1
   end
 
+  ##
+  #
+  # Travers over all comments by calling #collect and iterating over each
+  # element.
+  #
+  # Example to print all comments:
+  # container.travers{ |comment| puts comment }
+  #
+  ##
+
   def travers
     self.collect.each do |comment|
       yield comment
     end
   end
+
+  ##
+  #
+  # Collects all children comments and returns them ordered in
+  # the way the were added. Simply skips all CommentContainers.
+  #
+  ##
 
   def collect
     collected_comments = Array.new
