@@ -11,25 +11,24 @@ div#header h1 {
 div#menu {
     padding-top: 1em;
     position: fixed;
-    top: 20%;
-    bottom: 10%;
+    top: 125px;
+    bottom: 75px;
     left: 0;
-    right: 80%;
     background: #A0C544;
     filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1, startColorstr='#a0c544', endColorstr='#ffffff');
     background: -webkit-gradient(linear, left center, right center, from(#a0c544), to(#ffffff));
     background: -moz-linear-gradient(left, #a0c544, #ffffff);
     background: -o-linear-gradient(left, #a0c544, #ffffff);
     padding-left: 1em;
-    min-width: 170px;
+    max-width: 180px;
+    min-width: 180px;
 }
 
 div#main {
     position: fixed;
-    top: 20%;
-    bottom: 10%;
-    left: 20%;
-    right: 0;
+    top: 125px;
+    bottom: 75px;
+    left: 180px;
     padding: 2em;
     overflow: auto;
 }
@@ -37,12 +36,12 @@ div#main {
 div#header {
     position: fixed;
     top: 0;
-    bottom: 80%;
     left: 0;
     right: 0;
     border-bottom: 2px solid #347C2C;
     padding-left: 1em;
-    min-height: 125px
+    min-height: 125px;
+    z-index: 11;
 }
 
 div#header img {
@@ -57,16 +56,6 @@ div#switch {
     padding: 10px;
     margin: 0px;
  }
-
-div#footer {
-    position: fixed;
-    top: 90%;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    border-top: 2px solid #347C2C;
-    padding-left: 5em
-}
 
 div#menu div {
     float: left;
@@ -125,6 +114,17 @@ tr.colored {
 
 tr.normal {
     background:white;
+}
+
+div#footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    min-height: 75px;
+    background: white;
+    border-top: 2px solid #347C2C;
+    padding-left: 5em
 }
 
 div#footer div {
