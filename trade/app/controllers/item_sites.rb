@@ -47,5 +47,11 @@ module Controllers
         haml :'item/active', :locals => {:all_items => Models::System.instance.fetch_all_active_items_but_of(viewer_id)}
     end
 
+    get '/items/:id' do
+      redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
+      id = params[:id]
+      haml :'item/item', :locals => {:item => Models::System.instance.fetch_item(id)}
+    end
+
   end
 end
