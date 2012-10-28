@@ -7,7 +7,18 @@ require_relative("../../app/models/comment_container")
 require_relative("../../app/models/comment")
 
 
-describe "Coupling to" do
+##
+#
+# Checks if objects provide the interface
+# used in CommentContainer.
+#
+# If those tests fail the interface for objects
+# used by CommentContainer (not CommentContainer itself)
+# has changed.
+#
+##
+
+describe "Coupling for CommentContainer:" do
   context "Comment" do
     before(:each) do
       user = double('User')
@@ -23,6 +34,13 @@ describe "Coupling to" do
     end
   end
 end
+
+##
+#
+# Tests CommentContainer without any coupling to
+# other objects.
+#
+##
 
 describe CommentContainer do
   context "after creation" do
@@ -203,7 +221,14 @@ describe CommentContainer do
     end
   end
 
-  context "Integration Test" do
+  ##
+  #
+  # Short integration test using real objects instead
+  # of stubs or mocks.
+  #
+  ##
+
+  context "Integration Test for CommentContainer" do
     it "should meet all requirements" do
       homer = double('Homer')
       bart = double('Bart')
