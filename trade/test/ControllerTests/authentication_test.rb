@@ -8,7 +8,6 @@ require 'test_helper'
 
 ENV['RACK_ENV'] = 'test'
 
-require_relative '../../app/controllers/home'
 require_relative '../../app/controllers/authentication'
 require_relative '../../app/models/user'
 
@@ -16,12 +15,12 @@ class AuthenticationTest < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def app
-    Controllers::Home
     Controllers::Authentication
   end
 
   describe 'Simple Tests' do
     class TestApp < Controllers::Authentication
+      use Controllers::Home
       configure do
         TestHelper.load
       end
@@ -32,13 +31,6 @@ class AuthenticationTest < Test::Unit::TestCase
       assert last_response.ok?
       assert last_response.body.include?('E-Mail:'), "Should ask for name but was\n#{last_response.body}"
       assert last_response.body.include?('Password:'), "Should ask for password but was\n#{last_response.body}"
-    end
-
-    it 'get / should show index.html' do
-      get '/', {}, 'rack.session' => { :user => nil, :auth => false  }
-      assert last_response.ok?
-      assert last_response.body.include?('Welcome to the Trading System!'), "Should give a warm welcome but was\n#{last_response.body}"
-      assert last_response.body.include?('href=\'/login\''), "Should have link to login"
     end
 
     it 'post /authenticate should redirect to /home' do
