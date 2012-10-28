@@ -91,18 +91,10 @@ module Controllers
           msg = "The name you chose is already taken, choose another one"
         elsif params[:title] == "No_Self_Remove"
           msg = "You can not remove yourself from your organisation"
-        elsif params[:title] == "No_Valid_Item_Id"
-          msg = "There exists no item with this id"
         else
           redirect '/home'
         end
         haml :error, :locals => {:error_title => params[:title], :error_message => msg}
-    end
-
-    get '/items/:id' do
-      redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
-      id = params[:id]
-      haml :'item/item', :locals => {:item => Models::System.instance.fetch_item(id)}
     end
   end
 end
