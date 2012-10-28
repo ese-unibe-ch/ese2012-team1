@@ -5,7 +5,7 @@
   - for user in all_users
     - i = (i + 1)%2
     %tr{ :class => i == 0 ? "colored" : "normal" }
-      %td= user.name.size > 15 ? "#{user.name[0..14]}..." : user.name + " has #{user.list_items.size} Items to sell. "
+      %td= user.name.size > 15 ? "#{user.name[0..14]}..." : user.name + " has #{user.list_active_items.size} Items to sell. "
       %td
         %img(height=50 width=50){ :alt => user.name, :src => user.avatar }
       %td
