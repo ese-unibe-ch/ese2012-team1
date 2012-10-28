@@ -17,6 +17,5 @@
       %td
         %img(height=50 width=50){ :alt => item.name, :src => item.picture }
       %td
-        %form(name="state" action="/item/changestate/setinactive" method="post")
-          %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
-          %input(type="submit" value="Set Inactive")
+        %a{ :href => "/item/comment/#{item.id}" }
+          Comments

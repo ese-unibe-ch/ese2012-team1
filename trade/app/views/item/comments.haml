@@ -1,0 +1,9 @@
+%h2
+  Comments for #{item.name}
+- for comment in item.collect
+  %div(class='comment'){ :style => "margin-left: #{(comment.depth-1)*10}px"}
+    %div(class='user_info')
+      =comment.creator.name.length > 15 ? "#{comment.creator.name[0..14]}..." : comment.creator.name
+      %img(height=50 width=50){ :alt => comment.creator.name, :src => comment.creator.avatar }
+    %div(class='comment_info')
+      =comment.comment

@@ -47,6 +47,12 @@ module Controllers
         haml :'item/create'
     end
 
+    get '/item/comment/:id' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      item = System.instance.fetch_item(params[:id].to_i)
+      haml :'item/comments', :locals => {:item => item }
+    end
+
     get '/users/all' do
         redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
         viewer_id = session[:account]

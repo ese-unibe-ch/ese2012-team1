@@ -2,6 +2,7 @@ require 'rubygems'
 require 'require_relative'
 require_relative('../../trade/app/models/item')
 require_relative('../../trade/app/models/user')
+require_relative('../../trade/app/models/comment')
 
 include Models
 
@@ -30,6 +31,10 @@ ese = Models::User.created( "ese", "ese" , "ese@mail.ch", "I'm ese", "/images/us
 ese.create_item("ESE_Item1", 20)
 eseitem = ese.create_item("ESE_Item2", 20)
 eseitem.to_active
+
+comment = Comment.create(userC, "I love that Item! And I love to write a lot. And I still write things nobody cares about. I don't even care. I just have to write a very very very long text so I can check if this works as well. It is still a bit too short because I can't still not see what happens if it is bigger than the user_info. Now it should work!")
+eseitem.add(comment)
+comment.add(Comment.create(userB, "That's true. Best I ever had!"))
 
 eseOrg = Models::Organisation.created("EseOrg", "a simple Test Organisation","/images/organisations/EseOrg.png" )
 eseOrg.add_member(ese)
