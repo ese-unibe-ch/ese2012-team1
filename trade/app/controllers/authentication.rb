@@ -47,7 +47,6 @@ module Controllers
     end
 
     post "/unauthenticate" do
-      redirect "/" unless session[:auth]
       session[:user] = nil
       session[:auth] = false
       session.clear

@@ -8,6 +8,7 @@ require 'test_helper'
 
 ENV['RACK_ENV'] = 'test'
 
+require_relative '../../app/controllers/home'
 require_relative '../../app/controllers/authentication'
 require_relative '../../app/models/user'
 
@@ -15,6 +16,7 @@ class AuthenticationTest < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def app
+    Controllers::Home
     Controllers::Authentication
   end
 
