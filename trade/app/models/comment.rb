@@ -4,7 +4,7 @@ require "require_relative"
 require_relative "comment_container"
 
 class Comment < CommentContainer
-  attr_accessor :comment, :creator
+  attr_accessor :comment, :creator, :header
 
   ##
   #
@@ -13,8 +13,9 @@ class Comment < CommentContainer
   #
   ##
 
-  def self.create(creator, comment_text)
+  def self.create(creator, header, comment_text)
     comment = self.new
+    comment.header = header
     comment.comment = comment_text
     comment.creator = creator
     comment

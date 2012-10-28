@@ -98,6 +98,10 @@ div.comment_info {
    padding: 4px;
 }
 
+div.comment_info h3 {
+    line-height: 3px;
+}
+
 div.user_info {
     float: left;
     background-color: #DBE9B9;

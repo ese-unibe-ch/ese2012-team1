@@ -6,4 +6,7 @@
       =comment.creator.name.length > 15 ? "#{comment.creator.name[0..14]}..." : comment.creator.name
       %img(height=50 width=50){ :alt => comment.creator.name, :src => comment.creator.avatar }
     %div(class='comment_info')
-      =comment.comment
+      %h3
+        #{comment.header}
+      %p
+        #{comment.comment}

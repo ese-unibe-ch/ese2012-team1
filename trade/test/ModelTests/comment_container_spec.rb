@@ -22,7 +22,7 @@ describe "Coupling for CommentContainer:" do
   context "Comment" do
     before(:each) do
       user = double('User')
-      @comment = Comment.create(user, "Hey there")
+      @comment = Comment.create(user, "header", "Hey there")
     end
 
     it "should respond to collect" do
@@ -233,10 +233,10 @@ describe CommentContainer do
       homer = double('Homer')
       bart = double('Bart')
       nelson = double('Nelson')
-      homer_comment1 = Comment.create(homer, "Do!")
-      homer_comment2 = Comment.create(homer, "Nuts!")
-      bart_comment = Comment.create(bart, "Ay, caramba!")
-      nelson_comment = Comment.create(nelson, "Ha, Ha!")
+      homer_comment1 = Comment.create(homer, "header", "Do!")
+      homer_comment2 = Comment.create(homer, "header", "Nuts!")
+      bart_comment = Comment.create(bart, "header", "Ay, caramba!")
+      nelson_comment = Comment.create(nelson, "header", "Ha, Ha!")
 
       container = CommentContainer.new
       container.add(homer_comment1)
