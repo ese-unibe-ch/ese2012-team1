@@ -28,7 +28,8 @@ div#main {
     position: fixed;
     top: 125px;
     bottom: 75px;
-    left: 180px;
+    right: 0;
+    left: 190px;
     padding: 2em;
     overflow: auto;
 }
