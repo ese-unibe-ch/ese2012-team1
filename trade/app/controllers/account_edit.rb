@@ -16,6 +16,11 @@ module Controllers
   class AccountEdit < Sinatra::Application
     set :views, "#{absolute_path('../views', __FILE__)}"
 
+    before do
+      redirect "/" unless session[:auth]
+      response.headers['Cache-Control'] = 'public, max-age=0'
+    end
+
     ##
     # Loads edit_profile.haml and includes passwordchecker.js to do
     # realtime checking of the password typed in.

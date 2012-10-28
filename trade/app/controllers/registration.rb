@@ -16,6 +16,10 @@ module Controllers
   class Registration < Sinatra::Application
     set :views , "#{absolute_path('../views', __FILE__)}"
 
+    before do
+      response.headers['Cache-Control'] = 'public, max-age=0'
+    end
+
     ##
     #
     # Loads register.haml and includes passwordchecker.js to do
@@ -116,11 +120,13 @@ module Controllers
     #
     ##
     get '/unregister' do
+      redirect "/" unless session[:auth]
       haml :'authentication/unregister'
     end
 
 
     post '/unregister' do
+      redirect "/" unless session[:auth]
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
       user = Models::System.instance.fetch_account(session[:user])
       user.clear
