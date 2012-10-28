@@ -12,7 +12,7 @@
 = "Your Credits: #{Models::System.instance.fetch_account(session[:user]).credits}"
 %br
 %br
-= "You have #{Models::System.instance.fetch_account(session[:user]).list_items.size} active Items"
+= "You have #{Models::System.instance.fetch_account(session[:user]).list_active_items.size} active Items"
 %br
 = "You have #{Models::System.instance.fetch_account(session[:user]).list_inactive_items.size} inactive Items"
 %br
