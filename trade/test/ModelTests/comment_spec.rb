@@ -26,6 +26,10 @@ describe Comment do
       @comment = create_comment
     end
 
+    it "should have unique nr 0" do
+      @comment.nr.should_not be_nil
+    end
+
     it "should hold comment" do
       @comment.comment.should be_like "Hi, I'm a comment!"
     end
@@ -54,6 +58,12 @@ describe Comment do
       @added_comment = Comment.create(@user, "header", "'m the comment added")
       @comment.add(@added_comment)
       @added_comment.depth = 1
+    end
+
+    it "should add comments and set unique nr one bigger" do
+      @added_comment = Comment.create(@user, "header", "'m the comment added")
+      @comment.add(@added_comment)
+      @added_comment.nr.should == @comment.nr+1
     end
 
     it "should travers himself" do

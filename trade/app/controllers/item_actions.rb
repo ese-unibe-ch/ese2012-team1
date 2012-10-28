@@ -171,7 +171,14 @@ module Controllers
 
       user = Models::System.instance.fetch_account(session[:account])
       item = Models::System.instance.fetch_item(params[:id])
-      item.add(Comment.create(user, params[:header], params[:comment]))
+
+      comment = Comment.create(user, params[:header], params[:comment])
+      if params[:comment_nr].nil?
+        item.add(comment)
+      else
+        precomment = item.get(params[:comment_nr])
+        precomment.add(comment)
+      end
 
       redirect "/item/#{item.id}"
     end

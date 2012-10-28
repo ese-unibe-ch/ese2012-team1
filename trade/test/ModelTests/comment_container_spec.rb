@@ -151,6 +151,11 @@ describe CommentContainer do
         meet_comment1.should be_true
         meet_comment2.should be_true
       end
+
+      it "should get comment by nr" do
+        @container.get(@comment1.nr).should equal @comment1
+        @container.get(@comment2.nr).should equal @comment2
+      end
     end
 
     context "add to a CommentContainer" do

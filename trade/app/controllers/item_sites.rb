@@ -46,9 +46,16 @@ module Controllers
 
     get '/item/:id' do
       redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
-      id = params[:id]
-      haml :'item/item', :locals => {:item => Models::System.instance.fetch_item(id)}
+
+      haml :'item/item', :locals => {:item => Models::System.instance.fetch_item(params[:id])}
     end
 
+    get '/item/add/comment/:item_id/:comment_nr' do
+      redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:item_id])
+
+      item = Models::System.instance.fetch_item(params[:item_id])
+
+      haml :'item/comment', :locals => {:item => item, :comment_nr => params[:comment_nr]}
+    end
   end
 end

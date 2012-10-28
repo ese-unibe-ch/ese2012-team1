@@ -50,6 +50,18 @@ class CommentContainer
 
   ##
   #
+  # Gets comment with the specific nr
+  #
+  ##
+
+  def get(comment_nr)
+    self.collect.each do |comment|
+      return comment if (comment.nr == comment_nr.to_i)
+    end
+  end
+
+  ##
+  #
   # Collects all children comments and returns them ordered in
   # the way the were added. Simply skips all CommentContainers.
   #
