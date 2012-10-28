@@ -3,8 +3,11 @@ require 'require_relative'
 require 'sinatra/base'
 require 'haml'
 require 'sinatra/content_for'
+
 require_relative('../models/user')
 require_relative('../models/item')
+require_relative('../models/comment')
+
 require_relative('../helpers/render')
 require_relative('../helpers/string_checkers')
 
@@ -159,8 +162,18 @@ module Controllers
       else
         redirect "/error/Not_Enough_Credits"
       end
-
     end
 
+    post '/item/add/comment/:id' do
+      redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      redirect "/error/No_Valid_Input" if params[:comment].nil? || params[:comment] == ""
+
+      user = Models::System.instance.fetch_account(session[:account])
+      item = Models::System.instance.fetch_item(params[:id])
+      item.add(Comment.create(user, params[:header], params[:comment]))
+
+      redirect "/item/#{item.id}"
+    end
   end
 end

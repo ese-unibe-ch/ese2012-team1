@@ -11,3 +11,27 @@
 %br
 = "#{item.description}"
 %br
+
+%form(enctype="text/form-data" method="post"){:action => "/item/add/comment/#{item.id}"}
+  %label Title:
+  %br
+  %input(type="text" name="header" id="header")
+  %br
+  %label Comment:
+  %br
+  %textarea(name="comment" cols=30 rows=10)
+    = session[:form_comment].to_s
+  %input(type="submit" id="comment" value="Comment")
+
+%h2
+  Comments
+- for comment in item.collect
+  %div(class='comment'){ :style => "margin-left: #{(comment.depth-1)*10}px"}
+    %div(class='user_info')
+      =comment.creator.name.length > 15 ? "#{comment.creator.name[0..14]}..." : comment.creator.name
+      %img(height=50 width=50){ :alt => comment.creator.name, :src => comment.creator.avatar }
+    %div(class='comment_info')
+      %h3
+        #{comment.header}
+      %p
+        #{comment.comment}

@@ -17,16 +17,15 @@ module Controllers
     before do
       redirect "/" unless session[:auth]
       response.headers['Cache-Control'] = 'public, max-age=0'
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
     end
 
     get '/items/my/active' do
-        redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
         user_id = session[:account]
         haml :'item/my_active', :locals => {:active_items => Models::System.instance.fetch_account(user_id).list_active_items}
     end
 
     get '/items/my/inactive' do
-        redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
         user_id = session[:account]
         haml :'item/my_inactive', :locals => {:inactive_items => Models::System.instance.fetch_account(user_id).list_inactive_items}
     end
@@ -36,18 +35,16 @@ module Controllers
     end
 
     get '/item/comment/:id' do
-      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
       item = System.instance.fetch_item(params[:id].to_i)
       haml :'item/comments', :locals => {:item => item }
     end
 
     get '/items/active' do
-        redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
         viewer_id = session[:account]
         haml :'item/active', :locals => {:all_items => Models::System.instance.fetch_all_active_items_but_of(viewer_id)}
     end
 
-    get '/items/:id' do
+    get '/item/:id' do
       redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
       id = params[:id]
       haml :'item/item', :locals => {:item => Models::System.instance.fetch_item(id)}

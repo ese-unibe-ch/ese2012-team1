@@ -12,7 +12,9 @@
   - for item in active_items
     - i = (i + 1)%2
     %tr{ :class => i == 0 ? "colored" : "normal" }
-      %td= item.name.size > 15 ? "#{item.name[0..14]}..." : item.name
+      %td
+        %a{:href => "/item/#{item.id}"}
+          = item.name.size > 15 ? "#{item.name[0..14]}..." : item.name
       %td= item.price
       %td
         %img(height=50 width=50){ :alt => item.name, :src => item.picture }
@@ -20,6 +22,3 @@
         %form(name="state" action="/item/changestate/setinactive" method="post")
           %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
           %input(class="itembuttons" type="submit" value="Set Inactive")
-      %td
-        %a{ :href => "/item/comment/#{item.id}" }
-          Comments
