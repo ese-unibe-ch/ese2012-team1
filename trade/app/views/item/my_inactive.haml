@@ -15,7 +15,9 @@
   - for item in inactive_items
     - i = (i+1)%2
     %tr{ :class => i == 0 ? "colored" : "normal" }
-      %td= item.name.size > 15 ? "#{item.name[0..14]}..." : item.name
+      %td
+        %a{:href => "/item/#{item.id}"}
+          = item.name.size > 15 ? "#{item.name[0..14]}..." : item.name
       %td= item.price
       %td
         %img(height=50 width=50){ :alt => item.name, :src => item.picture }

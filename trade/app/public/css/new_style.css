@@ -92,13 +92,17 @@ div.comment_info h3 {
     line-height: 3px;
 }
 
-div.user_info {
+div.user_info, div.self_info {
     float: left;
     background-color: #DBE9B9;
     padding: 4px;
     position: relative;
     max-width: 150px;
     min-width: 150px;
+}
+
+div.self_info {
+    background-color: #9acd32;
 }
 
 table{

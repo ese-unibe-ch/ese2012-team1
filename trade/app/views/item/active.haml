@@ -5,7 +5,14 @@
   - for item in all_items
     - i = (i + 1)%2
     %tr{ :class => i == 0 ? "colored" : "normal" }
-      %td= item.name.size > 15 ? "#{item.name[0..14]}..." : item.name + " owned by #{item.owner.name} costs #{item.price} credits"
+      %td
+        %a{:href => "/item/#{item.id}"}
+          = item.name.size > 15 ? "#{item.name[0..14]}..." : item.name
+      %td=" owned by #{item.owner.name} costs #{item.price} credits"
+      %td
+        %a{:href => "/users/#{item.owner.id}"}
+          = "#{item.owner.name}"
+      %td= " costs #{item.price} credits"
       %td
         %img(height=50 width=50){ :alt => item.name, :src => item.picture }
       %td
