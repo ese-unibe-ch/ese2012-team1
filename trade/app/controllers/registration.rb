@@ -7,6 +7,7 @@ require 'ftools'
 require_relative '../models/user'
 require_relative '../helpers/render'
 require_relative '../helpers/string_checkers'
+require_relative '../helpers/mailer'
 require_relative '../models/simple_email_client' unless ENV['RACK_ENV'] == 'test'
 
 include Models
@@ -108,7 +109,8 @@ module Controllers
       session[:auth] = true
       session[:account] = user.id
 
-      SimpleEmailClient.setup.send_email(email, "Welcome to the ESE-Tradingsystem!", "You are now registered in the ESE-Tradingsystem.\nHave fun!")
+      #SimpleEmailClient.setup.send_email(email, "Welcome to the ESE-Tradingsystem!", "You are now registered in the ESE-Tradingsystem.\nHave fun!")
+      Mailer.setup.sendRegMail(user.id, "#{request.host}:#{request.port}")
 
       redirect '/'
     end

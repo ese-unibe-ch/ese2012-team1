@@ -16,6 +16,7 @@ require_relative('controllers/account_edit')
 require_relative('controllers/error')
 require_relative('init.rb') unless ENV['RACK_ENV'] == 'test'
 require_relative('helpers/render')
+require_relative('helpers/mailer')
 
 
 include Helpers

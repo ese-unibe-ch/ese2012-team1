@@ -1,6 +1,6 @@
 body {
     font-family:Verdana;
-    overflow-x:hidden;
+    overflow-x:auto;
 }
 
 div#header h1 {
@@ -31,7 +31,13 @@ div#main {
     right: 0;
     left: 190px;
     padding: 2em;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: auto;
+    min-width: 500px;
+}
+
+div#main img {
+    float: right;
 }
 
 div#header {

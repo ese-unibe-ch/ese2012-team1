@@ -22,7 +22,7 @@ module Models
     #  fails if the buyer has not enough credits.
 
     # generate getter and setter for name and price
-    attr_accessor :email, :pw, :password_hash, :password_salt
+    attr_accessor :email, :pw, :password_hash, :password_salt, :reg_hash
 
     ##
     #
@@ -53,8 +53,10 @@ module Models
       user.email = email
       pw_salt = BCrypt::Engine.generate_salt
       pw_hash = BCrypt::Engine.hash_secret(password, pw_salt)
+      rg_hash = BCrypt::Engine.hash_secret("#{user.name}.#{user.email}.#{user.description}", pw_salt)
       user.password_salt = pw_salt
       user.password_hash = pw_hash
+      user.reg_hash = rg_hash
 
       user
     end
