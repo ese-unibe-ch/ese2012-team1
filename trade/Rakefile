@@ -1,0 +1,12 @@
+require 'rubygems'
+require 'rcov/rcovtask'
+require 'rake/testtask'
+
+Rcov::RcovTask.new do |t|
+  t.test_files = FileList['**/*_test.rb']
+  t.rcov_opts << "--threshold 50"
+end
+
+Rake::TestTask.new do |t|
+  t.test_files = FileList['**/*_test.rb']
+end
