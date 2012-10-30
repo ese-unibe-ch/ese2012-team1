@@ -37,7 +37,7 @@ end
 
 ##
 #
-# Tests CommentContainer without any coupling to
+# Tests CommentContainer without any real coupling to
 # other objects.
 #
 ##

@@ -5,6 +5,8 @@ require_relative '../helpers/render'
 require_relative 'system'
 require_relative 'comment_container'
 
+include Helpers
+
 module Models
   class Item < CommentContainer
     #Items have a name.
@@ -67,7 +69,7 @@ module Models
     # @param  picture : path to picture file for the item
     def add_picture (picture)
       fail "Missing picture." if (picture == nil)
-      path = Helpers::absolute_path(picture.sub("/images", "../public/images"), __FILE__)
+      path = absolute_path(picture.sub("/images", "../public/images"), __FILE__)
       fail "There exists no file on path #{path}" unless (File.exists?(path))
 
       self.picture = picture
