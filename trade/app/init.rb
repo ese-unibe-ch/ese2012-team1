@@ -32,9 +32,9 @@ ese.create_item("ESE_Item1", 20)
 eseitem = ese.create_item("ESE_Item2", 20)
 eseitem.to_active
 
-comment = Comment.create(userC, "I love it!", "I love that Item! And I love to write a lot. And I still write things nobody cares about. I don't even care. I just have to write a very very very long text so I can check if this works as well. It is still a bit too short because I can't still not see what happens if it is bigger than the user_info. Now it should work!")
+comment = Comment.create(userC, "I love it!", "I love that Item! And I love to write a lot. And I still write things nobody cares about. I don't even care. I just have to write a very very very long text so I can check if this works as well. It is still a bit too short because I can still not see what happens if it is bigger than the user_info. Now it should work!")
 eseitem.add(comment)
-comment.add(Comment.create(userB, "Yap!", "That's true. Best I ever had!"))
+comment.add(Comment.create(userB, "Yap!", "That's true. Best I've ever had!"))
 
 eseOrg = Models::Organisation.created("EseOrg", "a simple Test Organisation","/images/organisations/EseOrg.png" )
 eseOrg.add_member(ese)

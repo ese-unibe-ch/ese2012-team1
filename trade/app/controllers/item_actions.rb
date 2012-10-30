@@ -42,11 +42,11 @@ module Controllers
       redirect "/error/No_Description" if params[:description] == nil
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
 
-      fail "Item should have name." if params[:name] == nil
+      fail "Item should have a name." if params[:name] == nil
       fail "Item name should not be empty" if params[:name].length == 0
-      fail "Item should have price" if params[:price] == nil
-      fail "Price should be number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:price])
-      fail "Item should have description" if params[:description] == nil
+      fail "Item should have a price" if params[:price] == nil
+      fail "Price should be a number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:price])
+      fail "Item should have a description" if params[:description] == nil
 
       puts("WTF!")
 

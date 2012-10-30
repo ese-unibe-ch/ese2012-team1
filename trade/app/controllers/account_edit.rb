@@ -90,7 +90,7 @@ module Controllers
     end
 
     ##
-    # Loads edit.haml where user can enter the new informations
+    # Loads edit.haml where user can enter the new information
     ##
 
     get '/account/edit/organisation/profile' do
