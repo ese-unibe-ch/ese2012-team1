@@ -38,7 +38,7 @@
         #{comment.comment}
         %br
         %br
-        posted on: #{comment.date_stamp}
+        posted on: #{comment.date_stamp.strftime("%H:%M:%S, %a %d.%m.%Y")}
       %p
         %a{ :href => "/item/add/comment/#{item.id}/#{comment.nr}" }
           Comment

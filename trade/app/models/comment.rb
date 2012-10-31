@@ -21,7 +21,7 @@ class Comment < CommentContainer
     comment.header = header
     comment.comment = comment_text
     comment.creator = creator
-    comment.date_stamp = Time.now.inspect
+    comment.date_stamp = Time.now
 
     comment.nr = @@unique_nr
     @@unique_nr += 1
