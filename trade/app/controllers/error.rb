@@ -15,11 +15,12 @@ module Controllers
     set :views , "#{absolute_path('../views', __FILE__)}"
 
     before do
-      redirect "/" unless session[:auth]
+      #redirect "/" unless session[:auth]
       response.headers['Cache-Control'] = 'public, max-age=0'
     end
 
     get '/error/:title' do
+        title = params[:title]
         msg = ""
         if params[:title] == "Not_A_Number"
           msg = "Price should be a number!"
@@ -39,10 +40,15 @@ module Controllers
           msg = "The name you chose is already taken, choose another one"
         elsif params[:title] == "No_Self_Remove"
           msg = "You can not remove yourself from your organisation"
+        elsif params[:title] == "Wrong_Activation_Code"
+          msg = "The activation code in the URL is not correct.<br />Try with copy and paste the complete URL from the e-mail into your Browser."
+        elsif params[:title] == "Already_Activated"
+          msg = "You've already activated your User Account.<br /><a href=\"/login\" >Go To Login Page</a>"
         else
-          redirect '/home'
+          title = "Not_An_Error"
+          msg = "This is a wrong Error Code."
         end
-        haml :error, :locals => {:error_title => params[:title], :error_message => msg}
+        haml :error, :locals => {:error_title => title, :error_message => msg}
     end
   end
 end

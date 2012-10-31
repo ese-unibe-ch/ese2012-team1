@@ -63,6 +63,11 @@ module Models
       self.accounts.values.detect{|account| account.respond_to?(:email) && account.email == email}
     end
 
+    def fetch_user_by_reg_hash(hash)
+      self.accounts.values.detect{|account| !account.organisation && account.reg_hash == hash}
+    end
+
+
     ##
     #
     # Returns true if user is in the system
@@ -71,6 +76,15 @@ module Models
 
     def user_exists?(email)
       self.accounts.values.one?{|account| account.respond_to?(:email) && account.email == email}
+    end
+
+    ##
+    #
+    # Returns true if there is a user with this reg_hash in the system
+    #
+    ##
+    def reg_hash_exists?(hash)
+      self.accounts.values.one?{|account| !account.organisation && account.reg_hash == hash}
     end
 
     # Returns all users but the one specified in an array

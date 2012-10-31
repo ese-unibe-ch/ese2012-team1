@@ -39,6 +39,7 @@ class App < Sinatra::Base
   set :development, true
 
   use Controllers::Home
+  use Controllers::Error
   use Controllers::Authentication
   use Controllers::Registration
   use Controllers::ItemActions

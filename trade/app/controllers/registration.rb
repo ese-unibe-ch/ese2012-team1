@@ -23,16 +23,17 @@ module Controllers
     ##
     # activates a user
     ##
-    get '/registration/confirm/:user' do
-      if Models::System.instance.user_exists?(params[:user])
-        #mail = BCrypt::Password.new(params[:user])
-        mail=params[:user]
-
-        user = Models::System.instance.fetch_user_by_email(mail)
+    get '/registration/confirm/:reg_hash' do
+      hash = params[:reg_hash]
+      if Models::System.instance.reg_hash_exists?(hash)
+        user = Models::System.instance.fetch_user_by_reg_hash(hash)
+        redirect '/error/Already_Activated' if user.activated
         user.activate
+      else
+        redirect '/error/Wrong_Activation_Code'
       end
 
-      redirect "/"
+      redirect '/login'
     end
 
 
@@ -120,12 +121,8 @@ module Controllers
       end
 
       user = User.created(name, password, email, description, file_path)
-      #session[:user] = user.id
-      #session[:auth] = true
-      #session[:account] = user.id
       
       Mailer.setup.sendRegMail(user.id, "#{request.host}:#{request.port}")
-      #SimpleEmailClient.setup.send_email(email, "Welcome to the ESE-Tradingsystem!", "You are now registered in the ESE-Tradingsystem.\nBefore you can use your account activate it by clicking here: http://localhost:4567/account/edit/user/activate/#{email}\nHave fun!")
 
       redirect '/'
     end

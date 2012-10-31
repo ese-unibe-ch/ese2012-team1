@@ -53,11 +53,11 @@ module Models
       user.email = email
       pw_salt = BCrypt::Engine.generate_salt
       pw_hash = BCrypt::Engine.hash_secret(password, pw_salt)
+      rg_hash = BCrypt::Engine.hash_secret("#{user.name}.#{user.email}.#{user.description}", pw_salt)
       user.password_salt = pw_salt
       user.password_hash = pw_hash
-
-      #user.reg_hash=BCrypt::Password.create(email)
-      user.reg_hash=email
+      user.reg_hash = rg_hash.gsub("/", "")
+      user.activated = false
 
       user
     end
