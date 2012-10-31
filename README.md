@@ -13,9 +13,9 @@ run the app
 'ruby app/app.rb'
 
 ##Login
-login the system using
-ese@mail.ch
-PW: ese
-
-
+login the system using  
+ese@mail.ch  
+PW: ese  
+  
+  
 enjoy!
