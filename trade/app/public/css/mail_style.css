@@ -14,14 +14,8 @@ div#main {
     bottom: 75px;
     right: 0;
     left: 0px;
-    padding: 2em;
-    overflow-y: auto;
-    overflow-x: auto;
-    min-width: 500px;
-}
-
-div#main img {
-    float: right;
+    margin-top: 20px;
+    margin-bottom: 50px;
 }
 
 div#header {
@@ -55,16 +49,24 @@ div#footer div {
     left:0.25em;
 }
 
-div#usr_img img {
-    position:absolute;
-    top:3em;
-    right:3em;
+table.mtable {
+    width: 700px;
 }
 
-div#item_img img{
-    position:absolute;
-    top:3em;
-    right:3em;
+#mail tr {
+    width: 700px;
+}
+
+#mail td {
+    vertical-align: top;
+}
+#mail td.headline {
+    width: 500px;
+    text-align: left;
+}
+#mail td.img {
+    width: 200px;
+    text-align: right;
 }
 
 div.bigmargin {
