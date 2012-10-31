@@ -17,6 +17,18 @@ module Controllers
       response.headers['Cache-Control'] = 'public, max-age=0'
     end
 
+    ##
+    # activates a user
+    ##
+    get '/account/edit/user/activate/:user' do
+      if Models::System.instance.user_exists?(params[:user])
+        user = Models::System.instance.fetch_user_by_email(params[:user])
+        user.activate
+      end
+
+      redirect "/"
+    end
+
     get '/login' do
       redirect "/home" if session[:auth]
 
@@ -38,10 +50,14 @@ module Controllers
         if !user.login(params[:password])
           haml :'authentication/login', :locals => { :error_message => 'No such user or password!'}
         else
-          session[:user] = user.id
-          session[:account] = user.id
-          session[:auth] = true
-          redirect "/home"
+          if !user.activated
+            haml:'authentication/login', :locals => { :error_message => 'This user is not activated. Check your emails!'}
+          else
+            session[:user] = user.id
+            session[:account] = user.id
+            session[:auth] = true
+            redirect "/home"
+          end
         end
       end
     end

@@ -21,6 +21,8 @@ module Controllers
       response.headers['Cache-Control'] = 'public, max-age=0'
     end
 
+
+
     ##
     # Loads edit_profile.haml and includes passwordchecker.js to do
     # realtime checking of the password typed in.
