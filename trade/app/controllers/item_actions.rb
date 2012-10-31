@@ -48,7 +48,6 @@ module Controllers
       fail "Price should be a number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:price])
       fail "Item should have a description" if params[:description] == nil
 
-      puts("WTF!")
 
       id = session[:account]
       new_item = Models::System.instance.fetch_account(id).create_item(params[:name], Integer((params[:price]).to_i))
