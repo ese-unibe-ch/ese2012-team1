@@ -51,7 +51,7 @@ module Helpers
 
     ##
     #
-    # Methot to send e-mail with generated content.
+    # Method to send e-mail with generated content.
     #
     ##
     def sendMail(receiver, content)
