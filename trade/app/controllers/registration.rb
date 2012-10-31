@@ -21,6 +21,22 @@ module Controllers
     end
 
     ##
+    # activates a user
+    ##
+    get '/registration/confirm/:user' do
+      if Models::System.instance.user_exists?(params[:user])
+        #mail = BCrypt::Password.new(params[:user])
+        mail=params[:user]
+
+        user = Models::System.instance.fetch_user_by_email(mail)
+        user.activate
+      end
+
+      redirect "/"
+    end
+
+
+    ##
     #
     # Loads register.haml and includes passwordchecker.js to do
     # realtime checking of the password typed in.

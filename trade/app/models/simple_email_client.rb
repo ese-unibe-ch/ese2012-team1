@@ -53,14 +53,11 @@ class SimpleEmailClient
   end
 
   def initialize()
-    #path = absolute_path('../private/email.conf', __FILE__)
-    #email_config = ParseConfig.new(path).params
+    path = absolute_path('../private/email.conf', __FILE__)
+    email_config = ParseConfig.new(path).params
 
-    #@from = email_config['from_address']
-    #@password = email_config['p']
-
-    @from = 'krayziemind@gmail.com'
-    @password = 'NYking15'
+    @from = email_config['from_address']
+    @password = email_config['p']
   end
 
   ##

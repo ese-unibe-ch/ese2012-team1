@@ -56,11 +56,18 @@ module Models
       user.password_salt = pw_salt
       user.password_hash = pw_hash
 
+      #user.reg_hash=BCrypt::Password.create(email)
+      user.reg_hash=email
+
       user
     end
 
     def login password
       self.password_hash == BCrypt::Engine.hash_secret(password, self.password_salt)
+    end
+
+    def activate
+      self.activated=true
     end
 
     #Removes himself from the list of users of the Models::System

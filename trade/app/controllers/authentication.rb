@@ -17,18 +17,6 @@ module Controllers
       response.headers['Cache-Control'] = 'public, max-age=0'
     end
 
-    ##
-    # activates a user
-    ##
-    get '/account/edit/user/activate/:user' do
-      if Models::System.instance.user_exists?(params[:user])
-        user = Models::System.instance.fetch_user_by_email(params[:user])
-        user.activate
-      end
-
-      redirect "/"
-    end
-
     get '/login' do
       redirect "/home" if session[:auth]
 
