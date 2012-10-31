@@ -1,5 +1,7 @@
 Team #1
 ===============
+##Prerequisites
+Ruby 1.8.7  
 ##Installation
 ###Gems
 
