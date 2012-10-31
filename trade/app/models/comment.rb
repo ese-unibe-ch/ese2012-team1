@@ -4,7 +4,7 @@ require "require_relative"
 require_relative "comment_container"
 
 class Comment < CommentContainer
-  attr_accessor :comment, :creator, :header, :nr
+  attr_accessor :comment, :creator, :header, :nr, :date_stamp
 
   @@unique_nr = 0
 
@@ -21,6 +21,7 @@ class Comment < CommentContainer
     comment.header = header
     comment.comment = comment_text
     comment.creator = creator
+    comment.date_stamp = Time.now.inspect
 
     comment.nr = @@unique_nr
     @@unique_nr += 1

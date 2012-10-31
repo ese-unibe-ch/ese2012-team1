@@ -36,6 +36,9 @@
         #{comment.header}
       %p
         #{comment.comment}
+        %br
+        %br
+        posted on: #{comment.date_stamp}
       %p
         %a{ :href => "/item/add/comment/#{item.id}/#{comment.nr}" }
           Comment
