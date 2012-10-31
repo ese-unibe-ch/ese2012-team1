@@ -1,4 +1,4 @@
-Team /#1
+Team #1
 ===============
 ##Installation
 
@@ -16,5 +16,6 @@ run the app
 login the system using
 ese@mail.ch
 PW: ese
+
 
 enjoy!
