@@ -2,26 +2,37 @@
 %html(xmlns="http://www.w3.org/1999/xhtml")
   %head
     %meta(http-equiv="Content-type" content="text/html;charset=UTF-8")
-    %link(rel="icon" href="http://#{mail_arguments[0]}/images/logo/TradingSystemIcon.png" type="image/png")
     %title Welcome to the ESE-Tradingsystem!
     %link(rel="stylesheet" href="http://#{mail_arguments[0]}/css/mail_style.css" type="text/css")
   %body
-    %div(id='header')
-      %img(height=115 alt = "Logo" src = "http://#{mail_arguments[0]}/images/logo/TradingSystem.png")
-    %div(id="main")
-      #usr_img
-        %img(height=200 width=200){ :alt => mail_arguments[1], :src => mail_arguments[2] }
-      %h1= "Hi #{mail_arguments[1]}"
-      %div(class='bigmargin')
-        Welcome to the ESE-Tradingsystem!
-      %div(class='bigmargin')
-        To finish your registration, you must confirm your E-Mail address following this link:
-        %br
-        %a(href = "#{mail_arguments[3]}") Confirm E-Mail Address
-      %div(class='bigmargin')
-        if this link did not work correctly, copy the following URL and open it in your Browser:
-        %br
-        = "#{mail_arguments[3]}"
-      %div(class='bigmargin')
-        The ESE Team #1 wishes you good luck.
-    = render_file('frame/footer.haml')
+    %div(id='mail')
+      %table(class='mtable')
+        %tr
+          %td(colspan='2' style='width:900px;')
+            %div(id='header')
+              %img(height=115 alt = "Logo" src = "http://#{mail_arguments[0]}/images/logo/TradingSystem.png")
+        %tr
+          %td(class='headline' style='width:700px; vertical-align: top;')
+            %h1= "Hi #{mail_arguments[1]}"
+          %td(class='img' style='width:200px;')
+            %img(height=200 width=200){ :alt => mail_arguments[1], :src => mail_arguments[2]}
+        %tr
+          %td(colspan='2' style='width:900px;')
+            %div(id='main')
+              %div(class='bigmargin')
+                Welcome to the ESE-Tradingsystem!
+              %div(class='bigmargin')
+                To finish your registration, you must confirm your E-Mail address following this link:
+                %br
+                %a(href = "#{mail_arguments[3]}") Confirm E-Mail Address
+              %div(class='bigmargin')
+                If this link did not work correctly, copy the following URL and open it in your Browser:
+                %br
+                = "#{mail_arguments[3]}"
+              %div(class='bigmargin')
+                The ESE Team #1 wishes you good luck.
+              %br
+              %br
+        %tr
+          %td(colspan='2' style='width:900px;')
+            = render_file('frame/footer.haml')

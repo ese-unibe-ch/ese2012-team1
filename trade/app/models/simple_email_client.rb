@@ -83,6 +83,8 @@ From: #@from
 To: #{to}
 subject: #{subject}
 Date: #{Time.now.rfc2822}
+MIME-Version: 1.0
+Content-type: text/html;charset=UTF-8;
 
 #{content}
 EOF

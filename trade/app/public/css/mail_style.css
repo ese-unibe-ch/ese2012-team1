@@ -18,6 +18,8 @@ div#main {
     overflow-y: auto;
     overflow-x: auto;
     min-width: 500px;
+    margin-top: 20px;
+    margin-bottom: 50px;
 }
 
 div#main img {
@@ -59,6 +61,26 @@ div#usr_img img {
     position:absolute;
     top:3em;
     right:3em;
+}
+
+table.mtable {
+    width: 700px;
+}
+
+#mail tr {
+    width: 700px;
+}
+
+#mail td {
+    vertical-align: top;
+}
+#mail td.headline {
+    width: 500px;
+    text-align: left;
+}
+#mail td.img {
+    width: 200px;
+    text-align: right;
 }
 
 div#item_img img{
