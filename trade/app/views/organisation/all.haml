@@ -1,9 +1,12 @@
 %h2 All Organisations
-%br
-%ul
+%table
+  %tr
+  - i = 0
   - for organisation in all_organisations
-    %li(class='bigmargin_bottom')
-      %em= organisation.name
-      %em= " has #{organisation.list_items.size} Items to sell. "
-      %img(height=50 width=50){ :alt => organisation.name, :src => organisation.avatar }
-      %a(href="/organisations/#{organisation.id}" ) Show Organisation Details
+    - i = (i + 1)%2
+    %tr{ :class => i == 0 ? "colored" : "normal" }
+      %td= organisation.name.size > 15 ? "#{organisation.name[0..14]}..." : organisation.name + " has #{organisation.list_active_items.size} Items to sell. "
+      %td
+        %img(height=50 width=50){ :alt => organisation.name, :src => organisation.avatar }
+      %td
+        %a(href="/organisations/#{organisation.id}" ) Show Organisation Details
