@@ -7,21 +7,15 @@
 = "Price: #{item.price}"
 %br
 %br
-= "Your Description:"
+= "Item Description:"
 %br
 = "#{item.description}"
 %br
-
-%form(enctype="text/form-data" method="post"){:action => "/item/add/comment/#{item.id}"}
-  %label Title:
-  %br
-  %input(type="text" name="header" id="header")
-  %br
-  %label Comment:
-  %br
-  %textarea(name="comment" cols=30 rows=10)
-    = session[:form_comment].to_s
-  %input(type="submit" id="comment" value="Comment")
+  - if item.owner.id != session[:account]
+    %form(action="/item/buy" method="post")
+      %input(type = 'hidden' name = 'id'){ :value => "#{item.id}.#{item.name}" }
+      %input(type = 'submit' value = 'Buy Item')
+%br
 
 %h2
   Comments
@@ -43,5 +37,14 @@
         %a{ :href => "/item/add/comment/#{item.id}/#{comment.nr}" }
           Comment
 
-
-
+%h2 Write a Comment
+%form(enctype="text/form-data" method="post" class="bigmargin"){:action => "/item/add/comment/#{item.id}"}
+  %label Title:
+  %br
+  %input(type="text" name="header" id="header")
+  %br
+  %label Comment:
+  %br
+  %textarea(name="comment" cols=30 rows=10)
+    = session[:form_comment].to_s
+  %input(type="submit" id="comment" value="Comment")
