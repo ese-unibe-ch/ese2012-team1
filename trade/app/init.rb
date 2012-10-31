@@ -41,6 +41,7 @@ eseitem.add(comment)
 comment.add(Comment.create(userB, "Yap!", "That's true. Best I've ever had!"))
 
 eseOrg = Models::Organisation.created("EseOrg", "a simple Test Organisation","/images/organisations/EseOrg.png" )
+eseOrg.organisation = true
 eseOrg.add_member(ese)
 eseOrg.organisation = true
 eseOrg.add_member(userA)
