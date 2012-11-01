@@ -33,7 +33,7 @@ module Controllers
         redirect '/error/Wrong_Activation_Code'
       end
 
-      redirect '/login'
+      haml :'authentication/activation_confirm'
     end
 
 
