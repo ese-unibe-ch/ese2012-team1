@@ -9,87 +9,84 @@ include Helpers
 
 module Models
   class Auction
-    #Items have a name.
-    #Items have a price.
-    #An item can be active or inactive.
-    #An item has an owner.
-    #An item can have a description.
-    #An item can have a picture.
 
     # generate getter and setter for name and price
     attr_accessor :id, :item, :price, :increment, :start_time, :end_time, :money_storage_hash,
+
+
     # factory method (constructor) on the class
-    def self.created( name, price, owner)
+    def self.created(item, start_price, increment, end_time)
       #Preconditions
-      fail "Item needs a name." if (name == nil)
-      fail "Item needs a price." if (price == nil)
-      fail "Item needs an owner." if (owner == nil)
-      fail "Price can't be negative" if (price < 0)
+      fail "Auction needs an item." if (item == nil)
+      fail "Auction needs a start price." if (start_price == nil)
+      fail "Auction needs a time limit." if (end_time == nil)
+      fail "Auction needs a valid time limit." if (end_time <= time_now)
+      fail "Price can't be negative" if (start_price < 0)
+      fail "Increment can't be negative" if (increment < 0)
 
-      item = self.new
-      item.id = nil
-      item.name = name
-      item.price = price
-      item.active = false
-      item.owner = owner
-      item.description = ""
-      item.picture = "/images/items/default_item.png"
-      item
-    end
-
-    # get state
-    def is_active?
-      self.active
+      time_now = Time.new
+      auction = self.new
+      auction.id = nil
+      auction.item = item
+      auction.start_price = start_price
+      auction.increment = increment
+      auction.start_time = time_now
+      auction.end_time = end_time
+      auction
     end
 
     # to String-method
     def to_s
-      "#{self.name}, #{self.price}"
+
     end
 
-    # to set active
-    def to_active
-      self.active = true
+
+    # Stores auction in system hashmap
+    def store()
+
     end
 
-    # to set inactive
-    def to_inactive
-      self.active = false
+    def change_starting_price(new_price)
+      # if no bids done yet
+
     end
 
-    # Adds a description to the item.
-    # @param  description   the string containing the description for the item
-    def add_description (description)
-      fail "Missing description." if (description == nil)
-      self.description = description
+    def change_end_time(new_end_time)
+      # if no bids done yet
+
     end
 
-    # Adds a path to a picture to the item.
-    # @param  picture : path to picture file for the item
-    def add_picture (picture)
-      fail "Missing picture." if (picture == nil)
-      path = absolute_path(picture.sub("/images", "../public/images"), __FILE__)
-      fail "There exists no file on path #{path}" unless (File.exists?(path))
-
-      self.picture = picture
+    def change_increment(new_increment)
+      # if no bids done yet
     end
 
-    # Checks if an item's attributes can be changed depending on its state.
-    # @@return    true if state of the item is active;
-    #             false otherwise.
-    def editable?
-      self.is_active?
+    def make_bet(user,max_price)
+
     end
 
-    # Removes itself from the list of items and of the system
+    def finalize_auction
+      #give loosers their money back
+      #give winner the item and max_price - item_price
+    end
+
+    def notify_all
+      # notify new leader
+      # notify overbidden people
+    end
+
+    def notify_winner
+      #after auction
+    end
+
+    def notify_looser
+      #after auction
+    end
+
+    # Removes itself from the list of auctions and of the system
     # and removes his picture
 
     def clear
-      System.instance.remove_item(self.id)
-
-      unless self.picture =~ /default_item\.png$/
-        File.delete(Helpers::absolute_path(self.picture.sub("/images", "../public/images"), __FILE__))
-      end
+      System.instance.remove_auction(self.id)
     end
 
     def can_be_bought_by?(user)

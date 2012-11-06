@@ -9,11 +9,12 @@ module Models
   class System
     include Singleton
 
-    attr_accessor :accounts, :items, :item_id_count, :account_id_count
+    attr_accessor :accounts, :items, :item_id_count, :account_id_count, :auctions
 
     def initialize
       self.accounts = Hash.new
       self.items = Hash.new
+      self.auctions = Hash.new
       self.item_id_count = 0
       self.account_id_count = 0
     end
@@ -99,7 +100,7 @@ module Models
 
     # Adds an item to the system and increments the id counter for items.
     def add_item(item)
-      #preconditions
+             #preconditions
       fail "An items id should initially be nil, but was #{item.id}" unless (item.id == nil)
       fail "An item must have an owner when added to the system." if (item.owner == nil)
       item.id = item_id_count
@@ -182,5 +183,18 @@ module Models
       self.item_id_count = 0
       self.account_id_count = 0
     end
+
+# --------auction-------------------------------------------------------------
+
+  def add_auction(auction)
+   #save auction in hash
+
+  end
+
+  def clean_auction_hash()
+   #delete timed out auctions from hash
+  end
+
+
   end
 end

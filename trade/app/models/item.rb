@@ -17,7 +17,7 @@ module Models
     #An item can have a picture.
 
     # generate getter and setter for name and price
-    attr_accessor :name, :price, :active, :owner, :id, :description, :picture
+    attr_accessor :name, :price, :active, :owner, :id, :description, :picture, :in_auction
 
     # factory method (constructor) on the class
     def self.created( name, price, owner)
@@ -35,6 +35,7 @@ module Models
       item.owner = owner
       item.description = ""
       item.picture = "/images/items/default_item.png"
+      item.in_auction = false
       item
     end
 
