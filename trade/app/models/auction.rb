@@ -10,8 +10,11 @@ include Helpers
 module Models
   class Auction
 
+
     # generate getter and setter for name and price
     attr_accessor :id, :item, :price, :increment, :start_time, :end_time, :money_storage_hash,
+
+
 
 
     # factory method (constructor) on the class
@@ -32,6 +35,7 @@ module Models
       auction.increment = increment
       auction.start_time = time_now
       auction.end_time = end_time
+      auction.money_storage_hash = Hash.new
       auction
     end
 
@@ -39,7 +43,6 @@ module Models
     def to_s
 
     end
-
 
     # Stores auction in system hashmap
     def store()
@@ -61,11 +64,21 @@ module Models
     end
 
     def make_bet(user,max_price)
+      #check if user already exists in money storage hash
+
+      #add bet to hash
+
+      #update_auction
+      self.update()
+    end
+
+    def update()
+      #check if storage hash has higher values than current bid
 
     end
 
     def finalize_auction
-      #give loosers their money back
+      #give loosers their money back from money storage
       #give winner the item and max_price - item_price
     end
 
@@ -83,22 +96,16 @@ module Models
     end
 
     # Removes itself from the list of auctions and of the system
-    # and removes his picture
-
     def clear
       System.instance.remove_auction(self.id)
     end
 
-    def can_be_bought_by?(user)
-      user.credits >= self.price && self.active
+    def can_be_bid_by?(user,max_bid)
+      user.credits >= max_bid
     end
 
-    #Set new owner and set item to inactive
 
-    def bought_by(new_owner)
-      self.owner = new_owner
-      self.to_inactive
-    end
+
   end
 
 end
