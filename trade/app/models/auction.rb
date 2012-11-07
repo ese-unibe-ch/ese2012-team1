@@ -10,16 +10,13 @@ include Helpers
 module Models
   class Auction
 
-
     # generate getter and setter for name and price
     attr_accessor :id, :item, :price, :bidder, :increment, :start_time, :end_time, :money_storage_hash
-
-
-
 
     # factory method (constructor) on the class
     def self.created(item, start_price, increment, end_time)
       #Preconditions
+      time_now = Time.new
       fail "Auction needs an item." if (item == nil)
       fail "Auction needs a start price." if (start_price == nil)
       fail "Auction needs a time limit." if (end_time == nil)
@@ -42,7 +39,7 @@ module Models
 
     # to String-method
     def to_s
-
+      "#{self.id}, #{self.item}, #{self.price}"
     end
 
     # Stores auction in system hashmap
@@ -69,26 +66,56 @@ module Models
       if no_bid_done_yet?
         self.increment = new_increment
       end
-
     end
 
     def make_bet(user, max_price)
       #check if user already exists in money storage hash
-
+      exists = false
+      self.money_storage_hash.each_key {|user_db|
+        if user_db == user
+          exists = true
+        end
+      }
       #add bet to hash
-      self.money_storage_hash.push(user, max_price)
+      if exists && self.price < max_price
+        self.money_storage_hash[user] = max_price
+      else
+        self.money_storage_hash.store(user, max_price)
+      end
       #update_auction
       self.update()
     end
 
     def update()
       #check if storage hash has higher values than current bid
-
+      max = self.money_storage_hash.values.max
+      all_bids_except_max = self.money_storage_hash.values.delete(max)
+      if max > self.price
+        #increment until second highest bid overtaked
+        while all_bids_except_max.max >= self.price
+          self.price += increment
+        end
+        #set new bidder
+        self.money_storage_hash.each_key {|user_db|
+          if self.money_storage_hash[user_db] == max
+            self.bidder = user_db
+          end
+        }
+      end
+      notify_all()
     end
 
     def finalize_auction
-      #give loosers their money back from money storage
-      #give winner the item and max_price - item_price
+      self.money_storage_hash.each_key {|user_db|
+        if user_db == self.bidder then
+          #give winner the item and max_price - item_price
+          self.item.bought_by(user_db)
+          user_db.credits += self.money_storage_hash[user_db] - self.price
+        else
+          #give looser the max_price
+          user_db.credits += self.money_storage_hash[user_db]
+        end
+      }
     end
 
     def notify_all
@@ -97,16 +124,30 @@ module Models
     end
 
     def notify_winner
-      #after auction
+      if auction_closed then
+        Mailer.setup.sendWinnerMail(self.bidder.id, "#{request.host}:#{request.port}")
+      end
     end
 
     def notify_looser
-      #after auction
+      if auction_closed then
+        self.money_storage_hash.each_key {|user_db|
+          if user_db != self.bidder then
+            Mailer.setup.sendLooserMail(user_db.id, "#{request.host}:#{request.port}")
+          end
+        }
+      end
     end
 
     # Removes itself from the list of auctions and of the system
     def clear
       System.instance.remove_auction(self.id)
+    end
+
+    # Reports if auction is running or finished
+    def auction_closed
+      time_now = Time.new
+      self.end_time < time_now
     end
 
     def can_be_bid_by?(user,max_bid)
@@ -118,5 +159,4 @@ module Models
     end
 
   end
-
 end

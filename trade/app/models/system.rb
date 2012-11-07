@@ -9,12 +9,13 @@ module Models
   class System
     include Singleton
 
-    attr_accessor :accounts, :items, :item_id_count, :account_id_count, :auctions
+    attr_accessor :accounts, :items, :item_id_count, :account_id_count, :auctions, :auction_id_count
 
     def initialize
       self.accounts = Hash.new
       self.items = Hash.new
       self.auctions = Hash.new
+      self.auction_id_count = 0
       self.item_id_count = 0
       self.account_id_count = 0
     end
@@ -94,7 +95,6 @@ module Models
       tmp = accounts.values.select{|acc| acc.organisation == false}
       tmp.select{|acc| acc.id != account_id}
     end
-
 
     # --------item-------------------------------------------------------------
 
@@ -186,15 +186,20 @@ module Models
 
 # --------auction-------------------------------------------------------------
 
-  def add_auction(auction)
-   self.auctions.push(auction)
-  end
+    def add_auction(auction)
+      auction.id = self.auction_id_count
+      self.auctions.store(auction.id, auction)
+      self.auction_id_count += 1
+    end
 
-  def clean_auction_hash()
-   #delete timed out auctions from hash
-    self.auctions.delete{|auction| auction.end_time <= time_now}
-  end
+    def remove_auction(auction_id)
+      self.auctions.delete_if { |id, auction| auction.id == auction_id }
+    end
 
-
+    def clean_auction_hash()
+      #delete timed out auctions from hash
+      time_now = Time.new
+      self.auctions.delete_if {|id, auction| auction.end_time <= time_now}
+    end
   end
 end

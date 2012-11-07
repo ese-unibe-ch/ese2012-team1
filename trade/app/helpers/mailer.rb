@@ -35,6 +35,18 @@ module Helpers
       sendMail(email, content)
     end
 
+    def sendWinnerMail(userid, current_host)
+      content = 'Gratulation, du hast die Auktion gewonnen'
+      email = 'test@gmail.com'
+      sendMail(email, content)
+    end
+
+    def sendLooserMail(userid, current_host)
+      content = 'Sorry, die Auktion wurde von jemand Anderem gewonnen.'
+      email = 'test@gmail.com'
+      sendMail(email, content)
+    end
+
     ##
     #
     #  Method to generate the HTML Mail content for user.
