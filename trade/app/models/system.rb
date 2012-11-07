@@ -187,12 +187,12 @@ module Models
 # --------auction-------------------------------------------------------------
 
   def add_auction(auction)
-   #save auction in hash
-
+   self.auctions.push(auction)
   end
 
   def clean_auction_hash()
    #delete timed out auctions from hash
+    self.auctions.delete{|auction| auction.end_time <= time_now}
   end
 
 

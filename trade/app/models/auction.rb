@@ -12,7 +12,7 @@ module Models
 
 
     # generate getter and setter for name and price
-    attr_accessor :id, :item, :price, :increment, :start_time, :end_time, :money_storage_hash,
+    attr_accessor :id, :item, :price, :bidder, :increment, :start_time, :end_time, :money_storage_hash
 
 
 
@@ -31,7 +31,8 @@ module Models
       auction = self.new
       auction.id = nil
       auction.item = item
-      auction.start_price = start_price
+      auction.bidder = nil
+      auction.price = start_price
       auction.increment = increment
       auction.start_time = time_now
       auction.end_time = end_time
@@ -46,28 +47,36 @@ module Models
 
     # Stores auction in system hashmap
     def store()
-
+      Models::System.instance.add_auction(self)
     end
 
     def change_starting_price(new_price)
       # if no bids done yet
-
+      if no_bid_done_yet?
+        self.price = new_price
+      end
     end
 
     def change_end_time(new_end_time)
       # if no bids done yet
-
+      if no_bid_done_yet?
+        self.end_time = new_end_time
+      end
     end
 
     def change_increment(new_increment)
       # if no bids done yet
+      if no_bid_done_yet?
+        self.increment = new_increment
+      end
+
     end
 
-    def make_bet(user,max_price)
+    def make_bet(user, max_price)
       #check if user already exists in money storage hash
 
       #add bet to hash
-
+      self.money_storage_hash.push(user, max_price)
       #update_auction
       self.update()
     end
@@ -104,7 +113,9 @@ module Models
       user.credits >= max_bid
     end
 
-
+    def no_bid_done_yet?()
+      self.bidder==nil
+    end
 
   end
 
