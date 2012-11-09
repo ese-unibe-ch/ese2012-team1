@@ -17,6 +17,7 @@ module Models
     def self.created(item, start_price, increment, end_time)
       #Preconditions
       time_now = Time.new
+
       fail "Auction needs an item." if (item == nil)
       fail "Auction needs a start price." if (start_price == nil)
       fail "Auction needs a time limit." if (end_time == nil)

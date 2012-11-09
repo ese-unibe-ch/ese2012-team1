@@ -111,6 +111,11 @@ module Models
       Models::System.instance.fetch_items_of(self.id).select {|s| s.is_active?}
     end
 
+    #return user's auction list
+    def list_auctions
+      Models::System.instance.fetch_auctions_of(self.id)
+    end
+
     ##
     #
     # Returns true if an user owns a specific item

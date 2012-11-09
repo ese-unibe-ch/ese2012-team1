@@ -196,9 +196,17 @@ module Models
       self.auctions.delete_if { |id, auction| auction.id == auction_id }
     end
 
-    #wird das benötigt??
     def fetch_auction(auction_id)
       self.auctions.fetch(auction_id.to_i)
+    end
+
+    def fetch_auctions_of(user_id)
+      auctions = []
+      self.auctions.each_key{|key|
+        if self.fetch_auction(key).item.owner.id = user_id
+        auctions.push(self.fetch_auction(key))
+        end
+      }
     end
 
     def clean_auction_hash()

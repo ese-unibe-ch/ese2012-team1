@@ -83,7 +83,7 @@ module Controllers
       redirect "/error/No_Description" if params[:description] == nil
       redirect "/error/No_Increment" if params[:increment] == nil
       redirect "/error/Inc_Not_A_Number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:increment])
-      redirect "/error/No_Valid_Time" if params[:date_time] < time_now
+      redirect "/error/No_Valid_Time" if Time.parse(params[:date_time]) < time_now
 
       fail "Auction item should have a name." if params[:name] == nil
       fail "Auction item name should not be empty" if params[:name].length == 0
@@ -91,14 +91,14 @@ module Controllers
       fail "Price should be a number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:start_price])
       fail "Auction item should have a description" if params[:description] == nil
       fail "Auction item should have an increment amount" if params[:increment] == nil
-      fail "The end date should be in future" if params[:date_time] < time_now
+      fail "The end date should be in future" if Time.parse(params[:date_time]) < time_now
 
       id = session[:account]
-      new_item = Models::System.instance.fetch_account(id).create_item(params[:name], Integer((params[:start_price]).to_i))
+      new_item = Models::System.instance.fetch_account(id).create_item(params[:name], params[:start_price].to_i)
       new_item.add_description(params[:description])
       new_item.in_auction = true
 
-      new_auction = Models::Auction.created(new_item, params[:start_price], params[:increment], params[:date_time])
+      new_auction = Models::Auction.created(new_item, params[:start_price].to_i, params[:increment].to_i, Time.parse(params[:date_time]))
       Models::System.instance.add_auction(new_auction)
 
       #----Picture upload
@@ -121,8 +121,7 @@ module Controllers
       puts("path: #{new_item.picture}")
       #------
 
-
-      redirect "/items/my/inactive"
+      redirect "/item/my/auctions"
     end
 
     post '/item/changestate/setactive' do

@@ -38,6 +38,10 @@ module Controllers
       haml :'item/auctionize'
     end
 
+    get '/item/my/auctions' do
+      haml :'item/my_auctions'
+    end
+
     get '/item/comment/:id' do
       item = System.instance.fetch_item(params[:id].to_i)
       haml :'item/comments', :locals => {:item => item }
