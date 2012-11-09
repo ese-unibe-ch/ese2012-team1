@@ -200,10 +200,10 @@ module Models
       self.auctions.fetch(auction_id.to_i)
     end
 
-    def fetch_auctions_of(user_id)
+    def fetch_auctions_of(account_id)
       auctions = []
       self.auctions.each_key{|key|
-        if self.fetch_auction(key).item.owner.id = user_id
+        if self.fetch_auction(key).item.owner.id = account_id
         auctions.push(self.fetch_auction(key))
         end
       }
