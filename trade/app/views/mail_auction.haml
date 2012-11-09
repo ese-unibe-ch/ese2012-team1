@@ -1,0 +1,32 @@
+!!!
+%html(xmlns="http://www.w3.org/1999/xhtml")
+  %head
+    %meta(http-equiv="Content-type" content="text/html;charset=UTF-8")
+    %title Information about your auction!
+    %link(rel="stylesheet" href="http://#{mail_arguments[0]}/css/mail_style.css" type="text/css")
+  %body
+    %div(id='mail')
+      %table(class='mtable')
+        %tr
+          %td(colspan='2' style='width:900px;')
+            %div(id='header')
+              %img(height=115 alt = "Logo" src = "http://#{mail_arguments[0]}/images/logo/TradingSystem.png")
+        %tr
+          %td(class='headline' style='width:700px; vertical-align: top;')
+            %h1= "Hi #{mail_arguments[1]}"
+          %td(class='img' style='width:200px;')
+            %img(height=200 width=200){ :alt => mail_arguments[1], :src => mail_arguments[2]}
+        %tr
+          %td(colspan='2' style='width:900px;')
+            %div(id='main')
+              %div(class='bigmargin')
+                Information about your auction!
+              %div(class='bigmargin')
+                = "#{mail_arguments[3]}"
+              %div(class='bigmargin')
+                The ESE Team #1 wishes you good luck.
+              %br
+              %br
+        %tr
+          %td(colspan='2' style='width:900px;')
+            = render_file('frame/footer.haml')

@@ -196,6 +196,11 @@ module Models
       self.auctions.delete_if { |id, auction| auction.id == auction_id }
     end
 
+    #wird das benötigt??
+    def fetch_auction(auction_id)
+      self.auctions.fetch(auction_id.to_i)
+    end
+
     def clean_auction_hash()
       #delete timed out auctions from hash
       time_now = Time.new

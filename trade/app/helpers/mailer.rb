@@ -32,7 +32,8 @@ module Helpers
 
       content = generateMailContent(name, avatar, reg_hash, current_host)
 
-      sendMail(email, content)
+      subject = "Welcome to the ESE-Tradingsystem!"
+      sendMail(email, content, subject)
     end
 
     ##
@@ -42,20 +43,61 @@ module Helpers
     ##
 
     def sendWinnerMail(userid, current_host)
-      content = 'Gratulation, du hast die Auktion gewonnen'
-      email = 'test@gmail.com'
-      sendMail(email, content)
+      new_user = Models::System.instance.fetch_account(userid)
+      email = new_user.email
+      name = new_user.name
+      avatar = new_user.avatar
+      mail_text = "Congratulations. You are the winner of the auction. The item is now yours."
+
+      content = generateAuctionMailContent(name, avatar, current_host, mail_text)
+
+      subject = "You're the auction winner!"
+      sendMail(email, content, subject)
     end
 
     def sendLooserMail(userid, current_host)
-      content = 'Sorry, die Auktion wurde von jemand Anderem gewonnen.'
-      email = 'test@gmail.com'
-      sendMail(email, content)
+      new_user = Models::System.instance.fetch_account(userid)
+      email = new_user.email
+      name = new_user.name
+      avatar = new_user.avatar
+      mail_text = "Unfortunately, another user won the auction. Good luck for your next auction."
+
+      content = generateAuctionMailContent(name, avatar, current_host, mail_text)
+
+      subject = "Sorry, you lost the auction."
+      sendMail(email, content, subject)
+    end
+
+    def sendLeaderMail(userid, current_host)
+      new_user = Models::System.instance.fetch_account(userid)
+      email = new_user.email
+      name = new_user.name
+      avatar = new_user.avatar
+      mail_text = "Your the actual leader of the auction."
+
+
+      content = generateAuctionMailContent(name, avatar, current_host, mail_text)
+
+      subject = "You're the current leader!"
+      sendMail(email, content, subject)
+    end
+
+    def sendOutbidMail(userid, current_host)
+      new_user = Models::System.instance.fetch_account(userid)
+      email = new_user.email
+      name = new_user.name
+      avatar = new_user.avatar
+      mail_text = "Unfortunately another user made a higher bid. But you still can make a higher bid."
+
+      content = generateAuctionMailContent(name, avatar, current_host, mail_text)
+
+      subject = "Sorry, you were outbid."
+      sendMail(email, content, subject)
     end
 
     ##
     #
-    #  Method to generate the HTML Mail content for user.
+    #  Methods to generate the HTML Mail content for user.
     #
     ##
     def generateMailContent(name, avatar, reg_hash, current_host)
@@ -67,17 +109,22 @@ module Helpers
       return content
     end
 
+    def generateAuctionMailContent(name, avatar, current_host, mail_type)
+      host = current_host
+      img_url = "http://#{host}#{avatar}"
+
+      content = render_file_for_mail('mail_auction.haml', Array[host, name, img_url, mail_type])
+      return content
+    end
+
     ##
     #
     # Method to send e-mail with generated content.
     #
     ##
-    def sendMail(receiver, content)
-      subject = "Welcome to the ESE-Tradingsystem!"
+    def sendMail(receiver, content, subject)
       SimpleEmailClient.setup.send_email(receiver, subject, content)
     end
-
-
 
   end
 

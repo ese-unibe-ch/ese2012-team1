@@ -7,6 +7,7 @@ require 'sinatra/content_for'
 require_relative('../models/user')
 require_relative('../models/item')
 require_relative('../models/comment')
+require_relative('../models/auction')
 
 require_relative('../helpers/render')
 require_relative('../helpers/string_checkers')
@@ -70,6 +71,56 @@ module Controllers
       new_item.add_picture("/images/items/#{new_item.id}#{file_extension}")
 
       puts("path: #{new_item.picture}")
+
+      redirect "/items/my/inactive"
+    end
+
+    post '/item/auctionize' do
+      time_now = Time.new
+      redirect "/error/No_Name" if params[:name] == nil or params[:name].length == 0
+      redirect "/error/No_Price" if params[:start_price] == nil
+      redirect "/error/Not_A_Number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:start_price])
+      redirect "/error/No_Description" if params[:description] == nil
+      redirect "/error/No_Increment" if params[:increment] == nil
+      redirect "/error/Inc_Not_A_Number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:increment])
+      redirect "/error/No_Valid_Time" if params[:date_time] < time_now
+
+      fail "Auction item should have a name." if params[:name] == nil
+      fail "Auction item name should not be empty" if params[:name].length == 0
+      fail "Auction item should have a start price" if params[:start_price] == nil
+      fail "Price should be a number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:start_price])
+      fail "Auction item should have a description" if params[:description] == nil
+      fail "Auction item should have an increment amount" if params[:increment] == nil
+      fail "The end date should be in future" if params[:date_time] < time_now
+
+      id = session[:account]
+      new_item = Models::System.instance.fetch_account(id).create_item(params[:name], Integer((params[:start_price]).to_i))
+      new_item.add_description(params[:description])
+      new_item.in_auction = true
+
+      new_auction = Models::Auction.created(new_item, params[:start_price], params[:increment], params[:date_time])
+      Models::System.instance.add_auction(new_auction)
+
+      #----Picture upload
+      dir = absolute_path('../public/images/items/', __FILE__)
+
+      file_extension = ".png"
+      fetch_file_path = absolute_path("../public/images/items/default_item.png", __FILE__)
+      if params[:item_picture] != nil
+        tempfile = params[:item_picture][:tempfile]
+        filename = params[:item_picture][:filename]
+        fetch_file_path = tempfile.path
+        file_extension = File.extname(filename)
+      end
+
+      store_file_path ="#{dir}#{new_item.id}#{file_extension}"
+      File.copy(fetch_file_path, store_file_path)
+
+      new_item.add_picture("/images/items/#{new_item.id}#{file_extension}")
+
+      puts("path: #{new_item.picture}")
+      #------
+
 
       redirect "/items/my/inactive"
     end
