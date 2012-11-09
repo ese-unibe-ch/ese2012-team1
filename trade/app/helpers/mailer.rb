@@ -35,6 +35,12 @@ module Helpers
       sendMail(email, content)
     end
 
+    ##
+    #
+    # Methods to call for sending an e-mail to auction participators with id "userid".
+    #
+    ##
+
     def sendWinnerMail(userid, current_host)
       content = 'Gratulation, du hast die Auktion gewonnen'
       email = 'test@gmail.com'

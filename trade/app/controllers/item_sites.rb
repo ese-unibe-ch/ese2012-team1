@@ -34,6 +34,10 @@ module Controllers
         haml :'item/create'
     end
 
+    get '/item/auctionize' do
+      haml :'item/auctionize'
+    end
+
     get '/item/comment/:id' do
       item = System.instance.fetch_item(params[:id].to_i)
       haml :'item/comments', :locals => {:item => item }
@@ -57,5 +61,8 @@ module Controllers
 
       haml :'item/comment', :locals => {:item => item, :comment_nr => params[:comment_nr]}
     end
+
+
+
   end
 end
