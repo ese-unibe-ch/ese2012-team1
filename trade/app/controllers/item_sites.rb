@@ -63,6 +63,11 @@ module Controllers
       haml :'item/item', :locals => {:item => Models::System.instance.fetch_item(params[:id])}
     end
 
+    get '/auction/:id' do
+      redirect "/error/No_Valid_Auction_Id" unless Models::System.instance.auction_exists?(params[:id])
+      haml :'item/auction', :locals => {:auction => Models::System.instance.fetch_auction(params[:id])}
+    end
+
     get '/item/add/comment/:item_id/:comment_nr' do
       redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:item_id])
 

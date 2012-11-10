@@ -173,5 +173,36 @@ module Models
       self.bidder==nil
     end
 
+    def bid_exists?(bid)
+      unique_bid_quotas = []
+      self.money_storage_hash.each { |user|
+        unique_bid_quotas.push((self.money_storage_hash[user]/self.increment).to_i)
+      }
+      unique_bid_quotas.include?((bid/self.increment).to_i)
+    end
+
+    def time_till_end
+      time_till_end = (Time.now - self.end_time)
+      seconds = ""
+      hours = ""
+      days = ""
+
+      if time_till_end/60 >= 1
+        seconds = "#{time_till_end/60} seconds."
+      else
+        seconds = "Auction is over"
+      end
+
+      if time_till_end/60/60 >= 1
+        hours = "#{time_till_end/60} hours,"
+      end
+
+      if time_till_end/60/60/24 >= 1
+        days = "#{time_till_end/60} days, "
+      end
+
+      return "#{days}#{hours}#{seconds}"
+    end
+
   end
 end

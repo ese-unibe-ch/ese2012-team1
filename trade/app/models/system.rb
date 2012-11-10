@@ -218,6 +218,11 @@ module Models
       }
     end
 
+    # Returns true if auction exists in system. False in all other cases.
+    def auction_exists?(auction_id)
+      self.auctions.member?(auction_id.to_i)
+    end
+
     def clean_auction_hash()
       #delete timed out auctions from hash
       time_now = Time.new

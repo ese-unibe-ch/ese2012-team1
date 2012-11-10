@@ -1,0 +1,55 @@
+%h2  #{auction.item.name}
+%br
+#usr_img
+  %img(height=200 width=200){ :alt => auction.item.name, :src => auction.item.picture }
+
+%br
+= "Current highest bid: #{auction.item.price[auction.item.price.size-1]}"
+%br
+%br
+= "The Auction Ends in #{auction.time_till_end}"
+%br
+= "Item Description:"
+%br
+= "#{auction.item.description}"
+%br
+  - if auction.item.owner.id != session[:account]
+    %label Please enter your maximum bid here
+    %form(action="/auction/bid" method="post")
+      %input(type="text" name="max_price" value="")
+      %br
+      %input(type = 'hidden' name = 'id'){ :value => "#{auction.item.id}" }
+      %input(type = 'submit' value = 'Place Bid')
+%br
+
+%h2
+  Comments
+- for comment in auction.item.collect
+  %div(class='comment'){ :style => "margin-left: #{(comment.depth-1)*20}px"}
+    %div{:class => auction.item.owner.id == comment.creator.id ? 'self_info': 'user_info'}
+      %a{ :href => "/users/#{comment.creator.id}" }
+        =comment.creator.name.length > 15 ? "#{comment.creator.name[0..14]}..." : comment.creator.name
+      %img(height=50 width=50){ :alt => comment.creator.name, :src => comment.creator.avatar }
+    %div(class='comment_info')
+      %h3
+        #{comment.header}
+      %p
+        #{comment.comment}
+        %br
+        %br
+        posted on: #{comment.date_stamp.strftime("%H:%M:%S, %a %d.%m.%Y")}
+      %p
+        %a{ :href => "/item/add/comment/#{auction.item.id}/#{comment.nr}" }
+          Comment
+
+%h2 Write a Comment
+%form(enctype="text/form-data" method="post" class="bigmargin"){:action => "/item/add/comment/#{auction.item.id}"}
+  %label Title:
+  %br
+  %input(type="text" name="header" id="header")
+  %br
+  %label Comment:
+  %br
+  %textarea(name="comment" cols=30 rows=10)
+    = session[:form_comment].to_s
+  %input(type="submit" id="comment" value="Comment")
