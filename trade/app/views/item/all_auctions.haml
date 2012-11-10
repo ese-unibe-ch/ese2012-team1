@@ -1,0 +1,41 @@
+- text = "ours"
+- text = "yours" if session[:account] == session[:user]
+%h2= "All Auctions, but #{text}"
+%br
+-if auctions.size != 0
+  %table
+    %tr
+      %th Name
+      %th
+      %th Description
+      %th Starting Price
+      %th Highest Bid
+      %th Start Time
+      %th End Time
+      %th
+      %th
+    - i = 0
+    - auctions.each do |auction_id,auction|
+      - i = (i+1)%2
+      %tr{ :class => i == 0 ? "colored" : "normal" }
+        %td
+          %a{:href => "/item/#{auction.item.id}"}
+          = auction.item.name.size() > 15 ? "#{auction.item.name[0..14]}..." : auction.item.name
+        %td
+          %img(height=50 width=50){ :alt => auction.item.name, :src => auction.item.picture }
+        %td= auction.item.description.size > 30 ? "#{auction.item.description[0..29]}..." : auction.item.description
+        %td= auction.price[0] > 30 ? "#{auction.price[0..29]}..." : auction.price
+        %td= auction.price[auction.price.size-1] > 30 ? "#{auction.price[0..29]}..." : auction.price
+        %td= auction.start_time.to_s
+        %td= auction.end_time.to_s
+        %td
+          %form(name="edit" action="/item/auction/edit" method="post")
+            %input(type="hidden" name="id" value="#{auction.id}.#{auction.item.name}")
+            %input(class="itembuttons" type="submit" value="Edit Auction")
+        %td
+          %form(name="delete" action="/item/auction/delete" method="post")
+            %input(type="hidden" name="id" value="#{auction.id}.#{auction.item.name}")
+            %input(class="itembuttons" type="submit" value="Delete Auction")
+-else
+  %p
+    #{"There are no auctions yet"}

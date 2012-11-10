@@ -203,8 +203,17 @@ module Models
     def fetch_auctions_of(account_id)
       auctions = []
       self.auctions.each_key{|key|
-        if self.fetch_auction(key).item.owner.id = account_id
+        if self.fetch_auction(key).item.owner.id == account_id
         auctions.push(self.fetch_auction(key))
+        end
+      }
+    end
+
+    def fetch_all_auctions_but_of(account_id)
+      auctions = []
+      self.auctions.each_key{|key|
+        if self.fetch_auction(key).item.owner.id != account_id
+          auctions.push(self.fetch_auction(key))
         end
       }
     end

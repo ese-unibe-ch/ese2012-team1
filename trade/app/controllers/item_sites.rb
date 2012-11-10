@@ -52,6 +52,11 @@ module Controllers
         haml :'item/active', :locals => {:all_items => Models::System.instance.fetch_all_active_items_but_of(viewer_id)}
     end
 
+    get '/items/all_auctions' do
+      viewer_id = session[:account]
+      haml :'item/all_auctions', :locals => {:auctions => Models::System.instance.fetch_all_auctions_but_of(viewer_id)}
+    end
+
     get '/item/:id' do
       redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
 
