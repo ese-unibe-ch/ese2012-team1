@@ -217,6 +217,7 @@ module Controllers
       id = params[:id]
       max_bid = params[:max_price]
       auction = Models::System.instance.fetch_auction(id)
+
       redirect "/error/No_Valid_Item_Id" unless Models::System.instance.auction_exists?(id)
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
       redirect "/error/Bid_Already_Exists" unless auction.bid_exists?(max_bid)
@@ -224,10 +225,10 @@ module Controllers
       user_id = session[:account]
       new_user = Models::System.instance.fetch_account(user_id)
       if auction.can_be_bid_by?(new_user,max_bid) && !auction.bid_exists?(max_bid)
-        auction.make_bet(user, max_bid)
+        auction.make_bet(new_user, max_bid)
         redirect "/auction/#{id}"
       else
-        redirect "/error/Not_Enough_Credits"
+        redirect "/error/Not_Enough_Credits_or_Bid_Exists"
       end
     end
 
