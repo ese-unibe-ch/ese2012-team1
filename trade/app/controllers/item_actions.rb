@@ -163,6 +163,19 @@ module Controllers
       haml :'item/edit', :locals => {:id => id, :name => name, :description => description, :price => price, :picture => picture}
     end
 
+    post '/item/auction/edit' do
+      redirect "/error/No_Valid_Auction_Id" unless Models::System.instance.auction_exists?(params[:id])
+      id = params[:id]
+      auction = Models::System.instance.fetch_auction(id)
+      name = auction.item.name
+      description = auction.item.description
+      price = auction.price
+      increment = auction.increment
+      end_time = auction.end_time
+      picture = auction.item.picture
+      haml :'item/edit_auctionize', :locals => {:id => id, :name => name, :description => description, :price => price, :increment =>increment, :end_time => end_time, :picture => picture}
+    end
+
     ###
     #
     #  Does edit an item.
@@ -197,6 +210,39 @@ module Controllers
 
       redirect "/items/my/inactive"
     end
+
+    post '/item/edit/save_auction' do
+      auction = Models::System.instance.fetch_auction(params[:id])
+      item = auction.item
+      redirect "/error/No_Valid_Auction_Id" unless Models::System.instance.auction_exists?(params[:id])
+      redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(item.id)
+      #redirect "/error/Auction_Has_Already_Been_Bidden" unless auction.no_bid_done_yet?
+
+      new_description = params[:description]
+      new_name = params[:name]
+      item.add_description(new_description)
+      item.add_name(new_name)
+
+      new_price = params[:start_price]
+      auction.change_starting_price(new_price)
+
+      new_increment = params[:increment]
+      auction.change_increment(new_increment)
+
+      dir = absolute_path('../public/images/items/', __FILE__)
+
+      if params[:item_picture] != nil
+        tempfile = params[:item_picture][:tempfile]
+        filename = params[:item_picture][:filename]
+        file_path ="#{dir}#{id}#{File.extname(filename)}"
+        File.copy(tempfile.path, file_path)
+        file_path = "/images/items/#{id}#{File.extname(filename)}"
+        item.add_picture(file_path)
+      end
+
+      redirect "/items/my/auctions"
+    end
+
 
     post '/item/buy' do
       redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
@@ -252,16 +298,7 @@ module Controllers
     end
   end
 
-  get '/item/auction/edit/:id' do
-
-    haml :'item/edit_auction', :locals => {:auction => Models::System.instance.fetch_auction(params[:id])}
-
-  end
 
 
-  post '/item/auction/delete' do
-    Models::System.instance.remove_auction(params[:id])
-    redirect "/"
-  end
 
 end

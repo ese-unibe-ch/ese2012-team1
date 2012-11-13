@@ -59,6 +59,13 @@ module Models
       self.active = false
     end
 
+    # Adds a name to the item.
+    # @param  name   the string containing the name for the item
+    def add_name (name)
+      fail "Missing name." if (name == nil)
+      self.name = name
+    end
+
     # Adds a description to the item.
     # @param  description   the string containing the description for the item
     def add_description (description)

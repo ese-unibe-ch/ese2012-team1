@@ -33,12 +33,9 @@
           %td= auction.end_time.to_s
 
           %td
-            %form(name="edit" action="/item/auction/edit/#{auction.id}" method="get")
-              %input(class="itembuttons" type="submit" value="Edit")
-          %td
-            %form(name="delete" action="/item/auction/delete" method="post")
+            %form(name="edit" action="/item/auction/edit" method="post")
               %input(type="hidden" name="id" value="#{auction.id}")
-              %input(class="itembuttons" type="submit" value="Delete Auction")
+              %input(class="itembuttons" type="submit" value="Edit Auction")
       -elsif own_auctions_count == 0
         %tr{:class => i == 0 ? "colored" : "normal" }
           %td(colspan = "9")

@@ -30,12 +30,11 @@
         %td= auction.end_time.to_s
 
         %td
-
-          %form(name="delete" action="/auction/bid" method="post")
-
+          increase by:
+          %form(enctype="multipart/form-data" action="/auction/bid" method="post")
             %input(type="hidden" name="auction" value="#{auction.id}")
-            %input(class="itembuttons" type="submit" value="increase by:")
             %input(type="text" name="max_price" value="#{auction.increment}")
+            %input(class="itembuttons" type="submit" value="bid")
 -else
   %p
     #{"There are no auctions yet"}

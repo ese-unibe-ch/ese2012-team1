@@ -1,28 +1,31 @@
-%h2 Auctionize Item
+%h2 Edit Auction
 %br
-%form(action="/item/auctionize" enctype="multipart/form-data" method="post")
+%form(action="/item/edit/save_auction" enctype="multipart/form-data" method="post")
   %label Name of Item:
   %br
-  %input(type="text" name="name" value="")
+  %input(type="text" name="name" value="#{name}")
   %br
   %label Description of Item:
   %br
   %textarea(name="description" cols=30 rows=10)
+    = "#{description}"
   %br
   %label Start Price:
   %br
-  %input(type="text" name="start_price" value="")
+  %input(type="text" name="start_price" value="#{price}")
   %br
   %label Increment:
   %br
-  %input(type="text" name="increment" value="")
+  %input(type="text" name="increment" value="#{increment}")
   %br
   %label Please enter Date and Time for the auction to end:
   %br
   %input(type="datetime" name="date_time" value="")
+  %br (if Browser doesn't support input type datetime, please format date like this: 'yyyy-mm-ddThh:mm:ssZ'. letters T and Z remain unchanged)
   %br
   %label Item Picture:
   %br
   %input(type="file" name="item_picture" size=50 maxlength="=100000" accept="text/*")
+  %input(type="hidden" name="id" value="#{id}")
   %br
-  %input(type="submit" value="Auctionize")
+  %input(type="submit" value="Edit Auction")
