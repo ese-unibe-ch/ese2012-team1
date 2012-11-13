@@ -75,6 +75,20 @@ module Controllers
       redirect "/items/my/inactive"
     end
 
+    ##
+    #
+    # Creates an auction
+    #
+    # Expects:
+    # params[:name] : name for the auction item
+    # params[:start_price] : start price for the auction item
+    # params[:description] :  description for the auction item
+    # params[:increment] :  increment step of the auction
+    # params[:date_time] :  time when the auction ends
+    # optional params[:item_picture] : picture for the auction item
+    #
+    ##
+
     post '/item/auctionize' do
       time_now = Time.new
       redirect "/error/No_Name" if params[:name] == nil or params[:name].length == 0
@@ -212,6 +226,15 @@ module Controllers
         redirect "/error/Not_Enough_Credits"
       end
     end
+
+    ###
+    #
+    #  A bid can be made if its possible
+    #  Needs params:
+    #  :id : id of auction depending auction
+    #  :max_bid: maximal price you're able to bid
+    #
+    ###
 
     post '/auction/bid' do
       id = params[:id]

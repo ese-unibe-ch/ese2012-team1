@@ -186,20 +186,24 @@ module Models
 
 # --------auction-------------------------------------------------------------
 
+    # Adds an auction to the system and increments the id counter for auctions
     def add_auction(auction)
       auction.id = self.auction_id_count
       self.auctions.store(auction.id, auction)
       self.auction_id_count += 1
     end
 
+    # Delete auction from the system
     def remove_auction(auction_id)
       self.auctions.delete_if { |id, auction| auction.id == auction_id }
     end
 
+    # Returns the auction with associated id.
     def fetch_auction(auction_id)
       self.auctions.fetch(auction_id.to_i)
     end
 
+    # Returns a hash with all auctions of this user.
     def fetch_auctions_of(account_id)
       auctions = []
       self.auctions.each_key{|key|
@@ -208,7 +212,7 @@ module Models
         end
       }
     end
-
+    # Returns all auctions but the ones of the specified user.
     def fetch_all_auctions_but_of(account_id)
       auctions = []
       self.auctions.each_key{|key|
