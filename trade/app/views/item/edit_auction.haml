@@ -1,0 +1,23 @@
+%h2 Edit Auction
+%br
+#usr_img
+  %img(height=200 width=200){ :alt => auction.item.name, :src => auction.item.picture }
+
+%form(action="/auction/edit/save" enctype="multipart/form-data" method="post")
+  %label= ("Name of Item: #{name}")
+  %br
+  %label Description of Item:
+  %br
+  %textarea(name="new_description" cols=30 rows=10)
+    = "#{description}"
+  %br
+  %label Price:
+  %br
+  %input(type="text" name="new_price" value="#{price}")
+  %br
+  %label Item Picture:
+  %br
+  %input(type="file" name="item_picture" size=50 maxlength="=100000" accept="text/*")
+  %input(type="hidden" name="id" value="#{id}")
+  %br
+  %input(type="submit" value="Save")
