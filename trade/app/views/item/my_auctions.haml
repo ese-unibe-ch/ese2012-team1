@@ -31,13 +31,13 @@
           %td= auction.price[auction.price.size-1] > 30 ? "#{auction.price[0..29]}..." : auction.price
           %td= auction.start_time.to_s
           %td= auction.end_time.to_s
+
           %td
-            %form(name="edit" action="/item/auction/edit" method="post")
-              %input(type="hidden" name="id" value="#{auction.id}.#{auction.item.name}")
-              %input(class="itembuttons" type="submit" value="Edit Auction")
+            %form(name="edit" action="/item/auction/edit/#{auction.id}" method="get")
+              %input(class="itembuttons" type="submit" value="Edit")
           %td
             %form(name="delete" action="/item/auction/delete" method="post")
-              %input(type="hidden" name="id" value="#{auction.id}.#{auction.item.name}")
+              %input(type="hidden" name="id" value="#{auction.id}")
               %input(class="itembuttons" type="submit" value="Delete Auction")
       -elsif own_auctions_count == 0
         %tr{:class => i == 0 ? "colored" : "normal" }

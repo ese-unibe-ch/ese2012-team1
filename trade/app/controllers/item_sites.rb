@@ -82,6 +82,27 @@ module Controllers
       haml :'item/comment', :locals => {:item => item, :comment_nr => params[:comment_nr]}
     end
 
+    post '/item/auction/bit' do
+      increase = params[:increase]
+      auction= System.instance.fetch_auction(params[:auction])
+      buyer=  System.instance.fetch_account(session[:account])
+      auction.make_bet(buyer, (increase.to_i))
+
+      redirect "/"
+
+    end
+
+    get '/item/auction/edit/:id' do
+
+      haml :'item/edit_auction', :locals => {:auction => Models::System.instance.fetch_auction(params[:id])}
+
+    end
+
+
+    post '/item/auction/delete' do
+      Models::System.instance.remove_auction(params[:id])
+      redirect "/"
+    end
 
 
   end

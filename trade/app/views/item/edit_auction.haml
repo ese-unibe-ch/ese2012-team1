@@ -1,23 +1,28 @@
 %h2 Edit Auction
 %br
-#usr_img
-  %img(height=200 width=200){ :alt => auction.item.name, :src => auction.item.picture }
-
-%form(action="/auction/edit/save" enctype="multipart/form-data" method="post")
-  %label= ("Name of Item: #{name}")
+%form(action="/item/auctionize" enctype="multipart/form-data" method="post")
+  %label Name of Item:
+  %br
+  %input(type="text" name="name" value="")
   %br
   %label Description of Item:
   %br
-  %textarea(name="new_description" cols=30 rows=10)
-    = "#{description}"
+  %textarea(name="description" cols=30 rows=10)
   %br
-  %label Price:
+  %label Start Price:
   %br
-  %input(type="text" name="new_price" value="#{price}")
+  %input(type="text" name="start_price" value="")
+  %br
+  %label Increment:
+  %br
+  %input(type="text" name="increment" value="")
+  %br
+  %label Please enter Date and Time for the auction to end:
+  %br
+  %input(type="datetime" name="date_time" value="")
   %br
   %label Item Picture:
   %br
   %input(type="file" name="item_picture" size=50 maxlength="=100000" accept="text/*")
-  %input(type="hidden" name="id" value="#{id}")
   %br
-  %input(type="submit" value="Save")
+  %input(type="submit" value="Auctionize")
