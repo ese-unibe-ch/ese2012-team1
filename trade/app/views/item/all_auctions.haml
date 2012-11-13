@@ -31,11 +31,11 @@
 
         %td
 
-          %form(name="delete" action="/item/auction/bit" method="post")
+          %form(name="delete" action="/auction/bid" method="post")
 
             %input(type="hidden" name="auction" value="#{auction.id}")
             %input(class="itembuttons" type="submit" value="increase by:")
-            %input(type="text" name="increase" value="#{auction.increment}")
+            %input(type="text" name="max_price" value="#{auction.increment}")
 -else
   %p
     #{"There are no auctions yet"}

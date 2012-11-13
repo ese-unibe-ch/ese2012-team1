@@ -215,7 +215,7 @@ module Controllers
 
     post '/auction/bid' do
       id = params[:id]
-      max_bid = params[:max_price]
+      max_bid = (params[:max_price]).to_i
       auction = Models::System.instance.fetch_auction(id)
 
       redirect "/error/No_Valid_Item_Id" unless Models::System.instance.auction_exists?(id)
@@ -251,4 +251,17 @@ module Controllers
       redirect "/item/#{item.id}"
     end
   end
+
+  get '/item/auction/edit/:id' do
+
+    haml :'item/edit_auction', :locals => {:auction => Models::System.instance.fetch_auction(params[:id])}
+
+  end
+
+
+  post '/item/auction/delete' do
+    Models::System.instance.remove_auction(params[:id])
+    redirect "/"
+  end
+
 end
