@@ -165,6 +165,7 @@ module Controllers
 
     post '/item/auction/edit' do
       redirect "/error/No_Valid_Auction_Id" unless Models::System.instance.auction_exists?(params[:id])
+      redirect "/error/Auction_Has_Already_Been_Bidden" unless auction.no_bid_done_yet?
       id = params[:id]
       auction = Models::System.instance.fetch_auction(id)
       name = auction.item.name

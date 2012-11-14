@@ -27,7 +27,7 @@
             %img(height=50 width=50){ :alt => auction.item.name, :src => auction.item.picture }
           %td= auction.price[0]
           %td= auction.price.last
-          %td= auction.bidder.last
+          %td= auction.bidder.last.name
           %td= auction.increment
           %td= auction.time_till_end
 
