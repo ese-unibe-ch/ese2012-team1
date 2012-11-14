@@ -1,6 +1,4 @@
-- text = "ours"
-- text = "yours" if session[:account] == session[:user]
-%h2= "All Auctions, but #{text}"
+%h2= "All Auctions"
 %br
 -if auctions.size != 0
   %table
@@ -9,7 +7,6 @@
       %th
       %th Start Price
       %th Highest Bid
-      %th Bidder
       %th Increment
       %th Time remaining
       %th
@@ -24,7 +21,6 @@
           %img(height=50 width=50){ :alt => auction.item.name, :src => auction.item.picture }
         %td= auction.price[0]
         %td= auction.price.last
-        %td= auction.bidder.last.name
         %td= auction.increment
         %td= auction.time_till_end
 

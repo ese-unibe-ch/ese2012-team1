@@ -103,6 +103,9 @@ module Models
     def update()
       #check if storage hash has higher values than current bid
       max = self.money_storage_hash.values.max
+      if max ==nil
+        max = 0
+      end
       all_bids_except_max = self.money_storage_hash.values.delete(max)
       if max > self.price.last
         temp_price = self.price.last
