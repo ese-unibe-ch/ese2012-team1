@@ -7,34 +7,27 @@
     %tr
       %th Name
       %th
-      %th Description
-      %th Starting Price
+      %th Start Price
       %th Highest Bid
-      %th Start Time
-      %th End Time
-      %th
+      %th Bidder
+      %th Increment
+      %th Time remaining
       %th
     - i = 0
     - auctions.each do |auction_id,auction|
       - i = (i+1)%2
       %tr{ :class => i == 0 ? "colored" : "normal" }
         %td
-          %a{:href => "/item/#{auction.item.id}"}
-          = auction.item.name.size() > 15 ? "#{auction.item.name[0..14]}..." : auction.item.name
+          %a{:href => "/auction/#{auction.id}"}
+            = auction.item.name
         %td
           %img(height=50 width=50){ :alt => auction.item.name, :src => auction.item.picture }
-        %td= auction.item.description.size > 30 ? "#{auction.item.description[0..29]}..." : auction.item.description
-        %td= auction.price[0] > 30 ? "#{auction.price[0..29]}..." : auction.price
-        %td= auction.price[auction.price.size-1] > 30 ? "#{auction.price[0..29]}..." : auction.price
-        %td= auction.start_time.to_s
-        %td= auction.end_time.to_s
+        %td= auction.price[0]
+        %td= auction.price[auction.price.length-1]
+        %td= auction.bidder[(auction.bidder.length) -1]
+        %td= auction.increment
+        %td= auction.time_till_end
 
-        %td
-          increase by:
-          %form(enctype="multipart/form-data" action="/auction/bid" method="post")
-            %input(type="hidden" name="auction" value="#{auction.id}")
-            %input(type="text" name="max_price" value="#{auction.increment}")
-            %input(class="itembuttons" type="submit" value="bid")
 -else
   %p
     #{"There are no auctions yet"}

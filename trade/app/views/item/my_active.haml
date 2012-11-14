@@ -13,7 +13,7 @@
     - i = (i + 1)%2
     %tr{ :class => i == 0 ? "colored" : "normal" }
       %td
-        %a{:href => "/item/#{item.id}"}
+        %a{:href => ""}
           = item.name.size > 15 ? "#{item.name[0..14]}..." : item.name
       %td= item.price
       %td

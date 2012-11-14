@@ -16,12 +16,10 @@ module Models
     # factory method (constructor) on the class
     def self.created(item, start_price, increment, end_time)
       #Preconditions
-      time_now = Time.new
 
       fail "Auction needs an item." if (item == nil)
       fail "Auction needs a start price." if (start_price == nil)
       fail "Auction needs a time limit." if (end_time == nil)
-      fail "Auction needs a valid time limit." if (end_time <= time_now)
       fail "Price can't be negative" if (start_price < 0)
       fail "Increment can't be negative" if (increment < 0)
 
@@ -30,9 +28,11 @@ module Models
       auction.id = nil
       auction.item = item
       auction.bidder = Array.new
-      auction.price = start_price
+      auction.bidder.push(nil)
+      auction.price = Array.new
+      auction.price.push(start_price)
       auction.increment = increment
-      auction.start_time = time_now
+      auction.start_time = Time.now
       auction.end_time = end_time
       auction.money_storage_hash = Hash.new
       auction
@@ -51,7 +51,7 @@ module Models
     def change_starting_price(new_price)
       # if no bids done yet
       if no_bid_done_yet?
-        self.price = new_price
+        self.price[0] = new_price
       end
     end
 
@@ -78,8 +78,8 @@ module Models
         end
       }
       #add bet to hash
-      if self.price < max_price then
-        if exists then
+      if self.price[(self.price.length) -1] < max_price
+        if exists
           self.money_storage_hash[user] = max_price
         else
           self.money_storage_hash.store(user, max_price)
@@ -93,9 +93,9 @@ module Models
       #check if storage hash has higher values than current bid
       max = self.money_storage_hash.values.max
       all_bids_except_max = self.money_storage_hash.values.delete(max)
-      if max > self.price
+      if max > self.price[(self.price.length) -1]
         #increment until second highest bid overtaked
-        while all_bids_except_max.max >= self.price
+        while all_bids_except_max >= self.price
           self.price += increment
         end
         #set new bidder (add to array)
@@ -170,38 +170,27 @@ module Models
     end
 
     def no_bid_done_yet?()
-      self.bidder==nil
+      self.bidder[(self.bidder.length) -1]==nil
     end
 
     def bid_exists?(bid)
-      unique_bid_quotas = []
-      self.money_storage_hash.each { |user|
-        unique_bid_quotas.push((self.money_storage_hash[user]/self.increment).to_i)
-      }
-      unique_bid_quotas.include?((bid/self.increment).to_i)
+      #bid = bid.to_i
+      #unique_bid_quotas = []
+      #self.money_storage_hash.each { |user|
+      #   unique_bid_quotas.push((self.money_storage_hash[user]/self.increment).to_i) unless self.money_storage_hash[user]==nil
+      #}
+      #unique_bid_quotas.include?((bid/self.increment).to_i)
+      false
     end
 
     def time_till_end
-      time_till_end = (Time.now - self.end_time)
-      seconds = ""
-      hours = ""
-      days = ""
+      time_till_end = (Time.parse(self.end_time) - Time.now)
 
-      if time_till_end/60 >= 1
-        seconds = "#{time_till_end/60} seconds."
-        else
-          seconds = "Auction is over"
+      if time_till_end > 0
+        time_till_end
+      else
+        "Auction is over"
       end
-
-
-      if time_till_end/60/60 >= 1
-        hours = "#{time_till_end/60/60} hours,"
-      end
-
-      if time_till_end/60/60/24 >= 1
-        days = "#{time_till_end/60/60/24} days, "
-      end
-      string_return = "#{days}#{hours}#{seconds}"
     end
 
   end

@@ -76,14 +76,13 @@ module Controllers
     end
 
     post '/item/auctionize' do
-      time_now = Time.new
       redirect "/error/No_Name" if params[:name] == nil or params[:name].length == 0
       redirect "/error/No_Price" if params[:start_price] == nil
       redirect "/error/Not_A_Number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:start_price])
       redirect "/error/No_Description" if params[:description] == nil
       redirect "/error/No_Increment" if params[:increment] == nil
       redirect "/error/Inc_Not_A_Number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:increment])
-      redirect "/error/No_Valid_Time" if Time.parse(params[:date_time]) < time_now
+      redirect "/error/No_Valid_Time" if Time.parse(params[:date_time]) < Time.now
 
       fail "Auction item should have a name." if params[:name] == nil
       fail "Auction item name should not be empty" if params[:name].length == 0
@@ -91,14 +90,15 @@ module Controllers
       fail "Price should be a number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:start_price])
       fail "Auction item should have a description" if params[:description] == nil
       fail "Auction item should have an increment amount" if params[:increment] == nil
-      fail "The end date should be in future" if Time.parse(params[:date_time]) < time_now
+      fail "The end date should be in future" if Time.parse(params[:date_time]) < Time.now
 
       id = session[:account]
       new_item = Models::System.instance.fetch_account(id).create_item(params[:name], params[:start_price].to_i)
       new_item.add_description(params[:description])
       new_item.in_auction = true
 
-      new_auction = Models::Auction.created(new_item, params[:start_price].to_i, params[:increment].to_i, Time.parse(params[:date_time]))
+
+      new_auction = Models::Auction.created(new_item, params[:start_price].to_i, params[:increment].to_i, params[:date_time])
       Models::System.instance.add_auction(new_auction)
 
       #----Picture upload
@@ -121,7 +121,7 @@ module Controllers
       puts("path: #{new_item.picture}")
       #------
 
-      redirect "/item/my/auctions"
+      redirect "/items/my/auctions"
     end
 
     post '/item/changestate/setactive' do
@@ -216,7 +216,7 @@ module Controllers
       item = auction.item
       redirect "/error/No_Valid_Auction_Id" unless Models::System.instance.auction_exists?(params[:id])
       redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(item.id)
-      #redirect "/error/Auction_Has_Already_Been_Bidden" unless auction.no_bid_done_yet?
+      redirect "/error/Auction_Has_Already_Been_Bidden" unless auction.no_bid_done_yet?
 
       new_description = params[:description]
       new_name = params[:name]
@@ -224,7 +224,9 @@ module Controllers
       item.add_name(new_name)
 
       new_price = params[:start_price]
+      new_time = params[:date_time]
       auction.change_starting_price(new_price)
+      auction.change_end_time(new_time)
 
       new_increment = params[:increment]
       auction.change_increment(new_increment)
@@ -266,7 +268,7 @@ module Controllers
 
       redirect "/error/No_Valid_Item_Id" unless Models::System.instance.auction_exists?(id)
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
-      redirect "/error/Bid_Already_Exists" unless auction.bid_exists?(max_bid)
+      #redirect "/error/Bid_Already_Exists" if auction.bid_exists?(max_bid)
 
       user_id = session[:account]
       new_user = Models::System.instance.fetch_account(user_id)

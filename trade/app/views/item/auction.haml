@@ -4,10 +4,13 @@
   %img(height=200 width=200){ :alt => auction.item.name, :src => auction.item.picture }
 
 %br
-= "Current highest bid: #{auction.item.price[auction.item.price.size-1]}"
+= "Current highest bid: #{auction.item.price[0]}"
 %br
+= "Current highest bidder: #{auction.bidder[(auction.bidder.length) -1]}"
 %br
-= "The Auction Ends in #{auction.time_till_end}"
+= "Increment: #{auction.increment}"
+%br
+= "The Auction Ends in: #{auction.time_till_end}"
 %br
 = "Item Description:"
 %br
@@ -18,7 +21,7 @@
     %form(action="/auction/bid" method="post")
       %input(type="text" name="max_price" value="")
       %br
-      %input(type = 'hidden' name = 'id'){ :value => "#{auction.item.id}" }
+      %input(type = 'hidden' name = 'id'){ :value => "#{auction.id}" }
       %input(type = 'submit' value = 'Place Bid')
 %br
 

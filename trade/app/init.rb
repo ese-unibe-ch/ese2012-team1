@@ -9,6 +9,7 @@ include Models
 userA = Models::User.created( "userA", "passwordA", "userA@mail.ch", "I'm User A", "/images/users/default_avatar.png")
 userA.activate
 aa = userA.create_item("UserA_ItemA", 10)
+
 ab = userA.create_item("UserA_ItemB", 50)
 ab.to_active
 ac = userA.create_item("UserA_ItemC", 120)

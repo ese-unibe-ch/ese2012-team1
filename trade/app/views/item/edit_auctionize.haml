@@ -18,11 +18,9 @@
   %br
   %input(type="text" name="increment" value="#{increment}")
   %br
-  %label Please enter Date and Time for the auction to end:
+  %label Please enter end time:
   %br
-  %input(type="datetime" name="date_time" value="")
-  %br (if Browser doesn't support input type datetime, please format date like this: 'yyyy-mm-ddThh:mm:ssZ'. letters T and Z remain unchanged)
-  %br
+  %input(type="text" name="date_time" value="#{Time.now}")
   %label Item Picture:
   %br
   %input(type="file" name="item_picture" size=50 maxlength="=100000" accept="text/*")

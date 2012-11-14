@@ -38,7 +38,7 @@ module Controllers
       haml :'item/auctionize'
     end
 
-    get '/item/my/auctions' do
+    get '/items/my/auctions' do
       haml :'item/my_auctions' , :locals => {:auctions => Models::System.instance.fetch_auctions_of(session[:account])}
     end
 
