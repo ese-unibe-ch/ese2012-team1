@@ -47,6 +47,8 @@ module Models
       Models::System.instance.add_auction(self)
     end
 
+    # Change starting price of the running auction (just possible if no bid is done yet)
+    # @param new_price New starting price for the auction
     def change_starting_price(new_price)
       # if no bids done yet
       if no_bid_done_yet?
@@ -54,6 +56,8 @@ module Models
       end
     end
 
+    # Change end time of the running auction (just possible if no bid is done yet)
+    # @param new_end_time New end time for the auction
     def change_end_time(new_end_time)
       # if no bids done yet
       if no_bid_done_yet?
@@ -61,6 +65,8 @@ module Models
       end
     end
 
+    # Change the increment step of the running auction (just possible if no bid is done yet)
+    # @param new_increment New increment step for the auction
     def change_increment(new_increment)
       # if no bids done yet
       if no_bid_done_yet?
@@ -68,6 +74,9 @@ module Models
       end
     end
 
+    # A bid can be done if the user hasn't already done a bid with a higher price and is added to the hash
+    # @param [account] user The user (account) which bids
+    # @param max_price The highest price the user wants to pay for the item
     def make_bet(user, max_price)
       #check if user already exists in money storage hash
       exists = false
@@ -88,6 +97,9 @@ module Models
       self.update()
     end
 
+    # Updated values are: self.price and the actual bidder (last entry of the self.bidder array)
+    # Check first if the highest entry in the hash is higher than the actual auction price. If so,
+    # then the auction price is incremented until it is higher than the second highest price of the hash.
     def update()
       #check if storage hash has higher values than current bid
       max = self.money_storage_hash.values.max
@@ -123,10 +135,13 @@ module Models
       }
     end
 
+    # Reports highest bidder (last entry of the bidder array)
     def getWinner()
       self.bidder.last
     end
 
+    # Send mail to all users which were outbid (all users except the winner).
+    # Just possible if the auction already ended.
     def notify_all
       if !auction_closed then
         # notify new leader
@@ -140,12 +155,16 @@ module Models
       end
     end
 
+    # Send mail to the winner.
+    # Just possible if the auction already ended.
     def notify_winner
       if auction_closed then
         Mailer.setup.sendWinnerMail(getWinner.id, "1:1")
       end
     end
 
+    # Send mail to all loosers.
+    # Just possible if the auction already ended.
     def notify_looser
       if auction_closed then
         self.money_storage_hash.each_key {|user_db|
@@ -167,14 +186,18 @@ module Models
       Time.parse(self.end_time) < Time.now
     end
 
+    # Reports if the bid can be made by user (if he has enough credits)
     def can_be_bid_by?(user,max_bid)
       user.credits >= max_bid
     end
 
+    # Reports true if the auction hasnt a bidder yet
     def no_bid_done_yet?()
       self.bidder.last==nil
     end
 
+    # Checks if a bid with this amount is already in the hash
+    # @param bid Amount to check
     def bid_exists?(bid)
       #bid = bid.to_i
       #unique_bid_quotas = []
@@ -185,6 +208,7 @@ module Models
       false
     end
 
+    # Returns the remaining time or the report that the auction ended
     def time_till_end
       time_till_end = (Time.parse(self.end_time) - Time.now)
 

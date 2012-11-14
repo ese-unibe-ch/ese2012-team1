@@ -75,6 +75,20 @@ module Controllers
       redirect "/items/my/inactive"
     end
 
+    ##
+    #
+    # Creates an auction
+    #
+    # Expects:
+    # params[:name] : name for the auction item
+    # params[:start_price] : start price for the auction item
+    # params[:description] :  description for the auction item
+    # params[:increment] :  increment step of the auction
+    # params[:date_time] :  time when the auction ends
+    # optional params[:item_picture] : picture for the auction item
+    #
+    ##
+
     post '/item/auctionize' do
       redirect "/error/No_Name" if params[:name] == nil or params[:name].length == 0
       redirect "/error/No_Price" if params[:start_price] == nil
@@ -301,8 +315,5 @@ module Controllers
       redirect "/item/#{item.id}"
     end
   end
-
-
-
 
 end
