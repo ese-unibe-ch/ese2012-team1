@@ -3,7 +3,7 @@
 %form(action="/item/auctionize" enctype="multipart/form-data" method="post")
   %label Name of Item:
   %br
-  %input(type="text" name="name" value="")
+  %input(type="text" name="name" value="name")
   %br
   %label Description of Item:
   %br
@@ -11,15 +11,16 @@
   %br
   %label Start Price:
   %br
-  %input(type="text" name="start_price" value="")
+  %input(type="text" name="start_price" value="2")
   %br
   %label Increment:
   %br
-  %input(type="text" name="increment" value="")
+  %input(type="text" name="increment" value="1")
   %br
   %label Please enter end time
   %br
-  %input(type="text" name="date_time" value="#{Time.now}")
+  //%input(type="text" name="date_time" value="#{Time.now}")
+  %input(type="text" name="date_time" value="Wed Nov 14 02:12:57 +0100 2012")
   %br
   %label Item Picture:
   %br

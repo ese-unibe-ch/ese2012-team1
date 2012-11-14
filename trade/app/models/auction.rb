@@ -28,7 +28,6 @@ module Models
       auction.id = nil
       auction.item = item
       auction.bidder = Array.new
-      auction.bidder.push(nil)
       auction.price = Array.new
       auction.price.push(start_price)
       auction.increment = increment
@@ -93,19 +92,22 @@ module Models
       #check if storage hash has higher values than current bid
       max = self.money_storage_hash.values.max
       all_bids_except_max = self.money_storage_hash.values.delete(max)
-      if max > self.price[(self.price.length) -1]
+      if max > self.price.last
+        temp_price = self.price.last
         #increment until second highest bid overtaked
-        while all_bids_except_max >= self.price
-          self.price += increment
+        while all_bids_except_max > temp_price
+          temp_price += increment
         end
+        self.price.push(temp_price)
         #set new bidder (add to array)
         self.money_storage_hash.each_key {|user_db|
           if self.money_storage_hash[user_db] == max
             self.bidder.push(user_db)
+            user_db.credits -= max
           end
         }
       end
-      notify_all()
+      #notify_all()
     end
 
     def finalize_auction
@@ -128,11 +130,11 @@ module Models
     def notify_all
       if !auction_closed then
         # notify new leader
-        Mailer.setup.sendLeaderMail(getWinner.id, "#{request.host}:#{request.port}")
+        Mailer.setup.sendLeaderMail(getWinner.id, "1:1")
         # notify overbidden people
         self.bidder.select {|bidder|
           if bidder != getWinner then
-            Mailer.setup.sendOutbidMail(bidder.id, "#{request.host}:#{request.port}")
+            Mailer.setup.sendOutbidMail(bidder.id, "1:1")
           end
         }
       end
@@ -140,7 +142,7 @@ module Models
 
     def notify_winner
       if auction_closed then
-        Mailer.setup.sendWinnerMail(getWinner.id, "#{request.host}:#{request.port}")
+        Mailer.setup.sendWinnerMail(getWinner.id, "1:1")
       end
     end
 
@@ -148,7 +150,8 @@ module Models
       if auction_closed then
         self.money_storage_hash.each_key {|user_db|
           if user_db != getWinner then
-            Mailer.setup.sendLooserMail(user_db.id, "#{request.host}:#{request.port}")
+            Mailer.setup.sendLooserMail(user_db.id, "1:1")
+            # #{request.host}:#{request.port}
           end
         }
       end
@@ -161,8 +164,7 @@ module Models
 
     # Reports if auction is running or finished
     def auction_closed
-      time_now = Time.new
-      self.end_time < time_now
+      Time.parse(self.end_time) < Time.now
     end
 
     def can_be_bid_by?(user,max_bid)
@@ -170,7 +172,7 @@ module Models
     end
 
     def no_bid_done_yet?()
-      self.bidder[(self.bidder.length) -1]==nil
+      self.bidder.last==nil
     end
 
     def bid_exists?(bid)

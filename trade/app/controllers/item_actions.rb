@@ -266,6 +266,7 @@ module Controllers
       max_bid = (params[:max_price]).to_i
       auction = Models::System.instance.fetch_auction(id)
 
+      redirect "/error/Bid_Too_Small" unless (max_bid >= auction.price.last + auction.increment or (auction.bidder.last==nil and max_bid >= auction.price.last))
       redirect "/error/No_Valid_Item_Id" unless Models::System.instance.auction_exists?(id)
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
       #redirect "/error/Bid_Already_Exists" if auction.bid_exists?(max_bid)

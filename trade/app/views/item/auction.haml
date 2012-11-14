@@ -2,11 +2,13 @@
 %br
 #usr_img
   %img(height=200 width=200){ :alt => auction.item.name, :src => auction.item.picture }
-
 %br
-= "Current highest bid: #{auction.item.price[0]}"
+= "Current highest bid: #{auction.price.last}"
 %br
-= "Current highest bidder: #{auction.bidder[(auction.bidder.length) -1]}"
+  - if auction.bidder.last==nil
+    = "no bid yet"
+  - else
+    = "Current highest bidder: #{auction.bidder.last.name}"
 %br
 = "Increment: #{auction.increment}"
 %br

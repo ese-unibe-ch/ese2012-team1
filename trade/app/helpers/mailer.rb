@@ -44,55 +44,63 @@ module Helpers
 
     def sendWinnerMail(userid, current_host)
       new_user = Models::System.instance.fetch_account(userid)
-      email = new_user.email
-      name = new_user.name
-      avatar = new_user.avatar
-      mail_text = "Congratulations. You are the winner of the auction. The item is now yours."
+      if !new_user.organisation
+        email = new_user.email
+        name = new_user.name
+        avatar = new_user.avatar
+        mail_text = "Congratulations. You are the winner of the auction. The item is now yours."
 
-      content = generateAuctionMailContent(name, avatar, current_host, mail_text)
+        content = generateAuctionMailContent(name, avatar, current_host, mail_text)
 
-      subject = "You're the auction winner!"
-      sendMail(email, content, subject)
+        subject = "You're the auction winner!"
+        sendMail(email, content, subject)
+      end
     end
 
     def sendLooserMail(userid, current_host)
       new_user = Models::System.instance.fetch_account(userid)
-      email = new_user.email
-      name = new_user.name
-      avatar = new_user.avatar
-      mail_text = "Unfortunately, another user won the auction. Good luck for your next auction."
+      if !new_user.organisation
+        email = new_user.email
+        name = new_user.name
+        avatar = new_user.avatar
+        mail_text = "Unfortunately, another user won the auction. Good luck for your next auction."
 
-      content = generateAuctionMailContent(name, avatar, current_host, mail_text)
+        content = generateAuctionMailContent(name, avatar, current_host, mail_text)
 
-      subject = "Sorry, you lost the auction."
-      sendMail(email, content, subject)
+        subject = "Sorry, you lost the auction."
+        sendMail(email, content, subject)
+      end
     end
 
     def sendLeaderMail(userid, current_host)
       new_user = Models::System.instance.fetch_account(userid)
-      email = new_user.email
-      name = new_user.name
-      avatar = new_user.avatar
-      mail_text = "Your the actual leader of the auction."
+      if !new_user.organisation
+        email = new_user.email
+        name = new_user.name
+        avatar = new_user.avatar
+        mail_text = "Your the actual leader of the auction."
 
 
-      content = generateAuctionMailContent(name, avatar, current_host, mail_text)
+        content = generateAuctionMailContent(name, avatar, current_host, mail_text)
 
-      subject = "You're the current leader!"
-      sendMail(email, content, subject)
+        subject = "You're the current leader!"
+        sendMail(email, content, subject)
+      end
     end
 
     def sendOutbidMail(userid, current_host)
       new_user = Models::System.instance.fetch_account(userid)
-      email = new_user.email
-      name = new_user.name
-      avatar = new_user.avatar
-      mail_text = "Unfortunately another user made a higher bid. But you still can make a higher bid."
+      if !new_user.organisation
+        email = new_user.email
+        name = new_user.name
+        avatar = new_user.avatar
+        mail_text = "Unfortunately another user made a higher bid. But you still can make a higher bid."
 
-      content = generateAuctionMailContent(name, avatar, current_host, mail_text)
+        content = generateAuctionMailContent(name, avatar, current_host, mail_text)
 
-      subject = "Sorry, you were outbid."
-      sendMail(email, content, subject)
+        subject = "Sorry, you were outbid."
+        sendMail(email, content, subject)
+      end
     end
 
     ##
