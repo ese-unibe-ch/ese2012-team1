@@ -23,17 +23,21 @@
   %input(type="submit" value="Save")
 
 %br
-- if description_list.size > 1%h3 Use old description
-%table
-  %tr
-  - i = 0
-  - description_list.traverse do |version, description|
-    - i = (i + 1)%2
-    %tr{ :class => i == 0 ? "colored" : "normal" }
-      %td
-        %p= description
-      %td
-        %form(action="/item/edit/save_description" method="post")
-          %input(type = 'hidden' name = 'id'){ :value => id }
-          %input(type = 'hidden' name = 'desc_to_use'){ :value => version }
-          %input(type = 'submit' value = 'Use')
+- if description_list.descriptions.size > 1
+  %h3 Use old description
+  %table
+    %tr
+    - i = 0
+    - description_list.traverse do |version, description|
+      - i = (i + 1)%2
+      - if version != description_position
+        %tr{ :class => i == 0 ? "colored" : "normal" }
+          %td
+            %p= description
+          %td
+            %form(action="/item/edit/save_description" method="post")
+              %input(type = 'hidden' name = 'id'){ :value => id }
+              %input(type = 'hidden' name = 'desc_to_use'){ :value => version }
+              %input(type = 'submit' value = 'Use')
+      -else
+        - i = i + 1
