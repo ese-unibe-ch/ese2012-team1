@@ -20,7 +20,7 @@ class ReversableDescription
   def show_version(version)
     fail "Can't show negative version" if version < 0
     fail "Version must be a positive integer" unless version.to_s =~ /^[0-9]+$/
-    fail "This version of a description does not exist"  unless descriptions.size >= version
+    fail "This version of a description does not exist"  unless descriptions.size >= version-1
 
 
     puts(version)
