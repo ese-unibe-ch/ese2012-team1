@@ -133,12 +133,19 @@ describe "User" do
         # I would rather have that the creator of an organisation is automatically a member
         @organisation.should_receive(:add_member).with(@user)
         Organisation.stub(:created).and_return(@organisation)
+        @organisation.stub(:set_as_admin)
       end
 
       it "should create an organisation" do
         Organisation.should_receive(:created).with("org", "I'm organisation", "/images/organisations/default_avatar.png")
         @user.create_organisation("org", "I'm organisation", "/images/organisations/default_avatar.png")
       end
+
+      it "should be admin" do
+        @organisation.should_receive(:set_as_admin).with(@user)
+        @user.create_organisation("org", "I'm organisation", "/images/organisations/default_avatar.png")
+      end
+
     end
 
     context "#clear" do
