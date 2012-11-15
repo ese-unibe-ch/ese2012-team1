@@ -124,7 +124,16 @@ module Controllers
       
       Mailer.setup.sendRegMail(user.id, "#{request.host}:#{request.port}")
 
-      redirect '/'
+      redirect '/register/successful'
+    end
+
+    ##
+    #
+    # Displays Message that Registration was successful
+    #
+    ##
+    get '/register/successful' do
+      haml :'authentication/successful_registered'
     end
 
     ##
