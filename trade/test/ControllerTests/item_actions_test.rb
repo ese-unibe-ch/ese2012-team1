@@ -80,7 +80,7 @@ class ItemActionsTest < Test::Unit::TestCase
       item = homers_items.detect{|item| item.name == 'Gold'}
 
       assert(item.name == 'Gold', "Should own gold but instead did own: #{homers_items}")
-      assert(item.description == 'Very very valuable', "Should have description \'Very very valuable' but was #{item.description}")
+      assert(item.description.show == 'Very very valuable', "Should have description \'Very very valuable' but was #{item.show.description}")
       assert(item.price == 100, "Should cost 100 credits but was #{item.price}")
 
       # Removing File after test
@@ -99,7 +99,7 @@ class ItemActionsTest < Test::Unit::TestCase
       post '/item/edit/save', { :id => item.id, :item_picture => file, :new_description => 'Kind of used...', :new_price => 200 }, 'rack.session' => { :user => 'bart@mail.ch', :auth => true  }
       assert(users[:bart].has_item?(item.id), "Should own skateboard")
       assert(item.price.to_i == 200, "Should cost 200 but was #{item.price}")
-      assert(item.description == 'Kind of used...', "Should be \'Kind of used...\' but was #{item.description}")
+      assert(item.description.show == 'Kind of used...', "Should be \'Kind of used...\' but was #{item.show.description}")
       assert(item.picture == "/images/items/#{item.id}.png", "Path to file should be /images/items/#{item.id}.png but was #{item.picture}")
 
       # Removing File after test

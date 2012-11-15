@@ -21,7 +21,7 @@
       %td= item.price
       %td
         %img(height=50 width=50){ :alt => item.name, :src => item.picture }
-      %td= item.description.size > 30 ? "#{item.description[0..29]}..." : item.description
+      %td= item.description.show.size > 30 ? "#{item.description.show[0..29]}..." : item.description.show
       %td
         %form(name="state" action="/item/changestate/setactive" method="post")
           %input(type="hidden" name="id" value="#{item.id}.#{item.name}")

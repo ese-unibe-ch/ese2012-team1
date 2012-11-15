@@ -22,7 +22,7 @@ include Models
 #
 ##
 
-describe "Coupling for CommentContainer:" do
+describe "Coupling for Item:" do
   context "System" do
     before(:each) do
       @system = System.instance
@@ -83,7 +83,7 @@ describe Models::Item do
     end
 
     it "should have an empty description" do
-      @item.description.should be_like ""
+      @item.description.show.should be_like ""
     end
 
     context "when added a description" do
@@ -92,7 +92,7 @@ describe Models::Item do
       end
 
       it "should have a description" do
-        @item.description.should be_like "very valuable"
+        @item.description.show.should be_like "very valuable"
       end
     end
 

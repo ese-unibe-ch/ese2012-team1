@@ -4,6 +4,7 @@ require 'require_relative'
 require_relative '../helpers/render'
 require_relative 'system'
 require_relative 'comment_container'
+require_relative 'reversable_description'
 
 include Helpers
 
@@ -33,7 +34,7 @@ module Models
       item.price = price
       item.active = false
       item.owner = owner
-      item.description = ""
+      item.description = ReversableDescription.new
       item.picture = "/images/items/default_item.png"
       item
     end
@@ -62,7 +63,7 @@ module Models
     # @param  description   the string containing the description for the item
     def add_description (description)
       fail "Missing description." if (description == nil)
-      self.description = description
+      self.description.add(description)
     end
 
     # Adds a path to a picture to the item.

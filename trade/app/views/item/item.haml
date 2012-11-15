@@ -9,7 +9,7 @@
 %br
 = "Item Description:"
 %br
-= "#{item.description}"
+= "#{item.description.show}"
 %br
   - if item.owner.id != session[:account]
     %form(action="/item/buy" method="post")

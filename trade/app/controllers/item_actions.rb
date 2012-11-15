@@ -107,7 +107,7 @@ module Controllers
       redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
       id = params[:id]
       name = Models::System.instance.fetch_item(id).name
-      description = Models::System.instance.fetch_item(id).description
+      description = Models::System.instance.fetch_item(id).description.show
       price = Models::System.instance.fetch_item(id).price
       picture = Models::System.instance.fetch_item(id).picture
       haml :'item/edit', :locals => {:id => id, :name => name, :description => description, :price => price, :picture => picture}

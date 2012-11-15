@@ -73,7 +73,7 @@ module Controllers
         user.email = params[:email]
       end
       if (!params[:interests].nil?)
-        user.description = params[:interests].nil? ? "" : params[:interests]
+        user.description = params[:interests]
       end
 
       dir = absolute_path('../public/images/users/', __FILE__)
