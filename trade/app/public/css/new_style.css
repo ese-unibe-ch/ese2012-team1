@@ -22,6 +22,7 @@ div#menu {
     padding-left: 1em;
     max-width: 180px;
     min-width: 180px;
+    overflow-x: auto;
 }
 
 div#main {
@@ -58,8 +59,8 @@ div#header img {
 div#switch {
     background: #ffa500;
     position:absolute;
-    top:2em;
-    right:3em;
+    top:1em;
+    right:2em;
     padding: 10px;
     margin: 0px;
  }

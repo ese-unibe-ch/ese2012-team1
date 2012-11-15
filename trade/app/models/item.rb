@@ -17,7 +17,7 @@ module Models
     #An item can have a picture.
 
     # generate getter and setter for name and price
-    attr_accessor :name, :price, :active, :owner, :id, :description, :picture
+    attr_accessor :name, :price, :active, :owner, :id, :description_list, :description_position, :picture
 
     # factory method (constructor) on the class
     def self.created( name, price, owner)
@@ -33,7 +33,9 @@ module Models
       item.price = price
       item.active = false
       item.owner = owner
-      item.description = ""
+      item.description_list = Array.new
+      item.description_list.push("")
+      item.description_position = 0
       item.picture = "/images/items/default_item.png"
       item
     end
@@ -62,7 +64,14 @@ module Models
     # @param  description   the string containing the description for the item
     def add_description (description)
       fail "Missing description." if (description == nil)
-      self.description = description
+      self.description_list.push(description)
+      self.description_position = description_list.size - 1
+    end
+
+    # Returns the current description
+    #
+    def description
+      return self.description_list[self.description_position]
     end
 
     # Adds a path to a picture to the item.
