@@ -104,13 +104,14 @@ module Controllers
     end
 
     post '/item/edit' do
-      redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
       id = params[:id]
+      redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
       name = Models::System.instance.fetch_item(id).name
       description = Models::System.instance.fetch_item(id).description
+      description_list = Models::System.instance.fetch_item(id).description_list
       price = Models::System.instance.fetch_item(id).price
       picture = Models::System.instance.fetch_item(id).picture
-      haml :'item/edit', :locals => {:id => id, :name => name, :description => description, :price => price, :picture => picture}
+      haml :'item/edit', :locals => {:id => id, :name => name, :description => description, :description_list => description_list, :price => price, :picture => picture}
     end
 
     ###
@@ -131,7 +132,7 @@ module Controllers
       redirect "/items/my/inactive" if Models::System.instance.fetch_item(id).editable?
       new_description = params[:new_description]
       new_price = params[:new_price]
-      item.add_description(new_description)
+      item.add_description(new_description) if item.description != new_description
       item.price = new_price
 
       dir = absolute_path('../public/images/items/', __FILE__)
@@ -146,6 +147,21 @@ module Controllers
       end
 
       redirect "/items/my/inactive"
+    end
+
+    ##
+    #  Save the current description which should be displayed
+    #
+    ##
+    post '/item/edit/save_description' do
+      redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
+
+      id = params[:id]
+      desc_to_use = params[:desc_to_use].to_i
+      item = Models::System.instance.fetch_item(id)
+      item.description_position = desc_to_use
+
+      haml :'item/save_description_success', :locals => {:id => id}
     end
 
     post '/item/buy' do
