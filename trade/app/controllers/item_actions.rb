@@ -109,9 +109,10 @@ module Controllers
       name = Models::System.instance.fetch_item(id).name
       description = Models::System.instance.fetch_item(id).description
       description_list = Models::System.instance.fetch_item(id).description_list
+      description_position = Models::System.instance.fetch_item(id).description_position
       price = Models::System.instance.fetch_item(id).price
       picture = Models::System.instance.fetch_item(id).picture
-      haml :'item/edit', :locals => {:id => id, :name => name, :description => description, :description_list => description_list, :price => price, :picture => picture}
+      haml :'item/edit', :locals => {:id => id, :name => name, :description => description, :description_list => description_list, :description_position => description_position, :price => price, :picture => picture}
     end
 
     ###

@@ -23,19 +23,23 @@
   %input(type="submit" value="Save")
 
 %br
-%h3 Use old description
-%table
-  %tr
-  - c = 0
-  - i = 0
-  - for desc in description_list
-    - i = (i + 1)%2
-    %tr{ :class => i == 0 ? "colored" : "normal" }
-      %td
-        %p= desc
-      %td
-        %form(action="/item/edit/save_description" method="post")
-          %input(type = 'hidden' name = 'id'){ :value => id }
-          %input(type = 'hidden' name = 'desc_to_use'){ :value => c }
-          %input(type = 'submit' value = 'Use')
-    - c = c + 1
+- if description_list.size > 1
+  %h3 Use old description
+  %table
+    %tr
+    - c = 0
+    - i = 0
+    - for desc in description_list
+      - if description_position != c
+        - i = (i + 1)%2
+        %tr{ :class => i == 0 ? "colored" : "normal" }
+          %td
+            %p= desc
+          %td
+            %form(action="/item/edit/save_description" method="post")
+              %input(type = 'hidden' name = 'id'){ :value => id }
+              %input(type = 'hidden' name = 'desc_to_use'){ :value => c }
+              %input(type = 'submit' value = 'Use')
+      - else
+        - i = i + 1
+      - c = c + 1
