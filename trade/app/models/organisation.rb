@@ -34,27 +34,23 @@ module Models
       members.one? { |email, member| email == user.email }
     end
 
-    #Todo tests
     def is_admin?(user)
       self.admins.one? { |email, admin| email == user.email }
     end
 
-    #Todo tests
     def admin_count
       admins.size
     end
 
-    #Todo tests
     def set_as_admin(member)
 #      fail "#{member.email} is not a member of this organisation" unless members[member.email]
       self.admins.store(member.email, member)
     end
 
-    #Todo tests
     def revoke_admin_rights(member)
       fail "#{member.email} is not a admin of this organisation" unless admins[member.email]
       fail "not enough admins left" unless self.admin_count > 1
-      self.admins.delet(member.email)
+      self.admins.delete(member.email)
     end
 
   end
