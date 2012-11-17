@@ -38,50 +38,64 @@ div#header {
   margin-left: 10px;
 }
 
-#navbar {
+#navigation-bar {
 	float: none;
 	width: 100%;
 }
 
-#navbar * {
+#navigation-bar * {
 	margin: 0;
 	padding: 0;
-} 
-
-#navbar #nav {
-
-	margin-left: auto;
-        margin-right: 0;  
-	background: url('/images/design/rect.png') no-repeat; 
-	height: 250px; 
-	width: 360px; 
-	position: relative; 
 }
 
-#navbar #nav span { 
+#navigation-bar .navigation {
+    margin-left: auto;
+    margin-right: 0;
+    position: relative;
+}
+
+#navigation-bar #navigation-registered {
+	background: url('/images/design/rect.png') no-repeat;
+	height: 250px;
+	width: 360px;
+}
+
+#navigation-bar #navigation-unregistered {
+    background: url('/images/design/navigation-unregistered.png') no-repeat;
+    height: 250px;
+    width: 270px;
+}
+
+#navigation-bar .navigation span {
 	text-indent: -9999px; 
 	display: block; 
 }
 
-#navbar #nav li, #nav a { 
+#navigation-bar .navigation li, .navigation a {
 	display: block; 
 	height: 250px; 
 	outline: none; }
 
-#navbar #nav li { 
+#navigation-bar .navigation li {
 	float: left; 
 	list-style: none; 
 	outline: none; 
 }
 
-#navbar #nav-1 { width: 70px; }
-#navbar #nav-2 { margin-left: 20px; width: 70px; }
-#navbar #nav-3 { margin-left: 20px; width: 70px; }
-#navbar #nav-4 { margin-left: 20px; width: 70px; }
-#navbar #nav-1 #nav-1-active, #nav-1-inactive a:hover { background: url('/images/design/rect-hover.png') no-repeat; }
-#navbar #nav-2 #nav-2-active, #nav-2-inactive a:hover { background: url( '/images/design/rect-hover.png') -90px -0px no-repeat; }
-#navbar #nav-3 #nav-3-active, #nav-3-inactive a:hover { background: url('/images/design/rect-hover.png') -180px -0px no-repeat; }
-#navbar #nav-4 #nav-4-active, #nav-4-inactive a:hover { background: url('/images/design/rect-hover.png') -270px -0px no-repeat; }
+#navigation-bar #navigation-1 { width: 70px; }
+#navigation-bar #navigation-2 { margin-left: 20px; width: 70px; }
+#navigation-bar #navigation-3 { margin-left: 20px; width: 70px; }
+#navigation-bar #navigation-4 { margin-left: 20px; width: 70px; }
+#navigation-registered-1-active, #navigation-registered-1-inactive a:hover { background: url('/images/design/rect-hover.png') no-repeat; }
+#navigation-unregistered-1-active, #navigation-unregistered-1-inactive a:hover { background: url('/images/design/navigation-unregistered-hover.png') no-repeat; }
+
+#navigation-registered-2-active, #navigation-registered-2-inactive a:hover { background: url( '/images/design/rect-hover.png') -90px -0px no-repeat; }
+#navigation-unregistered-2-active, #navigation-unregistered-2-inactive a:hover { background: url( '/images/design/navigation-unregistered-hover.png') -90px -0px no-repeat; }
+
+#navigation-registered-3-active, #navigation-registered-3-inactive a:hover { background: url('/images/design/rect-hover.png') -180px -0px no-repeat; }
+#navigation-unregistered-3-active, #navigation-unregistered-3-inactive a:hover { background: url('/images/design/navigation-unregistered-hover.png') -180px -0px no-repeat; }
+
+#navigation-registerd-4-active, #navigation-registered-4-inactive a:hover { background: url('/images/design/rect-hover.png') -270px -0px no-repeat; }
 
 div.profile-information {
   padding-left: 10px;
@@ -147,7 +161,6 @@ div#message {
   color: black;
   margin-bottom: 1em;
   text-align: center;
-
 }
 
 .success {
@@ -160,7 +173,14 @@ div#message {
   background-image: url('/images/design/error.png');
 }
 
+.labeled-input input, .labeled-input label, .labeled-input textarea {
+    display: block;
+}
 
+.labeled-input input, .labeled-input textarea {
+    margin-top: 1px;
+    margin-bottom: 10px;
+}
 
 div#main {
 	position: relative;
@@ -203,6 +223,9 @@ a {
   color:black;
 }
 
+div#main img {
+    float: right;
+}
 
 div#footer {
   margin-top: 2px;
@@ -210,7 +233,7 @@ div#footer {
   margin-left: 20px;
 }
 
-button, input {
+button, input, textarea {
   padding: 0; 
   padding: 2px; 
   font-weight:bold; 
@@ -218,10 +241,44 @@ button, input {
   text-align:center;
   color: black;
   background: transparent;
-  background-image: url('/images/desing/normal.png');
+  background-image: url('/images/design/normal.png');
 }
 
 button:hover {
   color: lightgrey;
   background-image: url('/images/design/transparent-background.png');
+}
+
+table{
+    border-collapse: collapse;
+}
+
+th{
+    text-align:left;
+}
+
+tr.colored {
+    background-image: url('/images/design/message.png');
+}
+
+tr.normal {
+    background-image: url('/images/design/normal.png');
+}
+
+div#preview {
+    display: block;
+}
+
+div.item_preview {
+    background-image: url('/images/design/normal.png');
+    height: 200px;
+    margin: 10px;
+    padding: 20px;
+    border-bottom: 1px solid #000000;
+    border-top: 1px solid #000000;
+}
+
+img.preview_img {
+    position: absolute;
+    right: 4em;
 }

@@ -1,28 +1,10 @@
 %div(id='header')
-  %img(height=115 alt = "Logo" src = "/images/logo/TradingSystem.png")
+  %img(alt = "Logo" id="header-logo" src = "/images/logo/TradingSystem.png")
   - id = "none"
   - id = "switch" if my_arguments[0] == "yes"
-  %div(id="navbar")
-    %ul(id="nav")
-      %li(id="nav-1")
-        %span(id="nav-1-active")
-          %a(href="" title="")
-            %span
-              home
-      %li(id="nav-2")
-        %span(id="nav-2-inactive")
-          %a(href="" title="")
-            %span
-              community
-      %li(id="nav-3")
-        %span(id="nav-3-inactive")
-          %a(href="" title="")
-            %span
-              market
-      %li(id="nav-4")
-        %span(id="nav-4-active")
-          %a(href="" title="")
-            %span
-              logout
+  - if my_arguments[0] == "yes"
+    = render_file_with_argument('frame/navigation_registered.haml', { :navigation_selected => my_arguments[3] })
+  - else
+    = render_file_with_argument('frame/navigation_unregistered.haml', { :navigation_selected => my_arguments[3] })
   %div(id=id)
     = render_file_with_argument('switch_and_account.haml', [my_arguments[1], my_arguments[2]]) if my_arguments[0] == "yes"

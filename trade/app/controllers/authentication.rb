@@ -20,6 +20,7 @@ module Controllers
     get '/login' do
       redirect "/home" if session[:auth]
 
+      session[:navigation_selected] = 2
       haml :'authentication/login', :locals => { :onload => 'document.loginform.username.focus()' }
     end
 
@@ -32,14 +33,17 @@ module Controllers
       #Nicht sauber!
 
       if (!Models::System.instance.user_exists?(params[:username]))
-        haml :'authentication/login', :locals => { :error_message => 'No such user or password!'}
+        session[:alert] = Alert.create("", "No such user or password", true)
+        redirect '/login'
       else
         user = Models::System.instance.fetch_user_by_email(params[:username])
         if !user.login(params[:password])
-          haml :'authentication/login', :locals => { :error_message => 'No such user or password!'}
+          session[:alert] = Alert.create("", "No such user or password", true)
+          redirect '/login'
         else
           if !user.activated
-            haml:'authentication/login', :locals => { :error_message => 'This user is not activated. Check your emails!'}
+            session[:alert] = Alert.create("", "You haven't activated you're account yet. Please check your mailbox", true)
+            redirect '/login'
           else
             session[:user] = user.id
             session[:account] = user.id

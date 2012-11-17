@@ -20,6 +20,7 @@ module Controllers
 
     get '/' do
       redirect "/home" if session[:auth]
+      session[:navigation_selected] = 1
 
       #get four random items
       item_list = Models::System.instance.fetch_all_active_items
@@ -28,6 +29,7 @@ module Controllers
     end
 
     get '/home' do
+      session[:navigation_selected] = 1
       redirect "/" unless session[:auth]
       if session[:user] == session[:account]
         haml :'home/user'

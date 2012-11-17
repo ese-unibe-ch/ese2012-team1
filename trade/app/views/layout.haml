@@ -18,12 +18,17 @@
       - auth = session[:auth] ? "yes" : "no"
       - user = session[:auth] ? session[:user] : "none"
       - account = session[:auth] ? session[:account] : "none"
-      = render_file_with_argument('frame/header.haml', Array[auth, user, account])
+      = render_file_with_argument('frame/header.haml', Array[auth, user, account, session[:navigation_selected]])
       = render_file('frame/menu_org.haml') if session[:auth] && session[:account] != session[:user]
       = render_file('frame/menu_logged.haml') if session[:auth] && session[:account] == session[:user]
-      = render_file('frame/menu_unlogged.haml') if !session[:auth]
 
       = render_file_with_argument('frame/subnavigation.haml', session[:subnavigation])
       %div(id="main")
+        -if ! session[:alert].nil?
+          %div{ :id => "message", :class => session[:alert].error? ? "error" : "success" }
+            %strong
+              = "#{session[:alert].title}"
+            = "#{session[:alert].message}"
+        - session[:alert] = nil
         = yield
       = render_file('frame/footer.haml')

@@ -1,0 +1,17 @@
+%div(id="navigation-bar")
+  %ul(id="navigation-unregistered" class="navigation")
+    - name = [["home", "/"], ["login", "/login"], ["register", "/register"]]
+    - my_arguments[:navigation_selected] = 1 if my_arguments[:navigation_selected].nil?
+    - name.each_with_index do |name_and_route, index|
+      - navigation_name = "navigation-unregistered-#{index+1}"
+      %li{:id => navigation_name.sub("-unregistered", "")}
+        - if my_arguments[:navigation_selected].to_i == index+1
+          %span{:id => "#{navigation_name}-active"}
+            %a{ :href=>name_and_route[1],  :title=>""}
+              %span
+                = "#{name_and_route[0]}"
+        - else
+          %span{ :id => "#{navigation_name}-inactive"}
+            %a{ :href=>name_and_route[1],  :title=>""}
+              %span
+                = "#{name_and_route[0]}"
