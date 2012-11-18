@@ -95,12 +95,24 @@ div#header {
 #navigation-registered-3-active, #navigation-registered-3-inactive a:hover { background: url('/images/design/rect-hover.png') -180px -0px no-repeat; }
 #navigation-unregistered-3-active, #navigation-unregistered-3-inactive a:hover { background: url('/images/design/navigation-unregistered-hover.png') -180px -0px no-repeat; }
 
-#navigation-registerd-4-active, #navigation-registered-4-inactive a:hover { background: url('/images/design/rect-hover.png') -270px -0px no-repeat; }
+
+#navigation-registered button:hover { background: url('/images/design/rect-hover.png') -270px -0px no-repeat; }
+#navigation-registered button,  #navigation-registered form {
+    width: 70px;
+    height: 150px;
+    display: block;
+    background: transparent;
+    border: none;
+}
 
 div.profile-information {
   padding-left: 10px;
   position: relative;
   top: 20px;
+}
+
+.profile-information form {
+    display: inline;
 }
 
 div.subnavigation {
@@ -109,6 +121,7 @@ div.subnavigation {
   float: clear;
   width: 100%;
   min-width: 500px;
+  min-height: 30px;
 }
 
 .subnavigation * {
@@ -187,36 +200,6 @@ div#main {
 	overflow: hidden;
 	padding: 1em;
   	background-image: url('/images/design/transparent-background.png');
-}
-
-.image-toplink {
- margin-bottom: 10px;
- padding-left: 10px;
- padding-top: 10px;
- float: left;
- width: 250px;
- height:150px;
- display:block;
- background:transparent url('/images/design/rect.png') left top no-repeat;
-}
-
-.image-toplink:hover {
-   background-image: url('/images/design/rect-hover.png');
-}
-
-.image-menulink {
- padding-top: 25px;
- width: 251px;
- height:50px;
- display:block;
- color: white;
- text-decoration: none;
- text-align: center;
- background:transparent url('/images/design/link.png') left top no-repeat;
-}
-
-.image-menulink:hover {
-  text-decoration: underline;
 }
 
 a {

@@ -18,11 +18,13 @@
       - auth = session[:auth] ? "yes" : "no"
       - user = session[:auth] ? session[:user] : "none"
       - account = session[:auth] ? session[:account] : "none"
-      = render_file_with_argument('frame/header.haml', Array[auth, user, account, session[:navigation_selected]])
+      = render_file_with_argument('frame/header.haml', Array[auth, user, account])
       = render_file('frame/menu_org.haml') if session[:auth] && session[:account] != session[:user]
       = render_file('frame/menu_logged.haml') if session[:auth] && session[:account] == session[:user]
 
-      = render_file_with_argument('frame/subnavigation.haml', session[:subnavigation])
+      = render_file_with_argument('frame/profile_information.haml', {:user => session[:user], :account => session[:account]}) if session[:auth]
+      = puts Navigations.get_selected.navigation
+      = render_file_with_argument('frame/subnavigation.haml', {:auth => session[:auth], :navigation => Navigations.get_selected })
       %div(id="main")
         -if ! session[:alert].nil?
           %div{ :id => "message", :class => session[:alert].error? ? "error" : "success" }

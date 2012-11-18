@@ -1,11 +1,8 @@
 %div(class="subnavigation")
-  %ul
-    %li(class="selected")
-      %a(href="http://www.web.de")
-        Navigate 1
-    %li
-      %a(href="http://www.web.de")
-        Navigate 2
-    %li
-      %a(href="http://www.web.de")
-        Navigate 3
+  - if my_arguments[:auth]
+    %ul
+      - puts(my_arguments[:navigation].selected)
+      - my_arguments[:navigation].subnavigation.travers do |name, route, index, selected|
+        %li{:class => selected ? "selected" : ""}
+          %a{ :href=>route,  :title=>""}
+            = "#{name}"

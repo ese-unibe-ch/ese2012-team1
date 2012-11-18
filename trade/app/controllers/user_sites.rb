@@ -21,8 +21,11 @@ module Controllers
 
     get '/users/all' do
         redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
-        viewer_id = session[:account]
-        haml :'user/all', :locals => {:all_users => Models::System.instance.fetch_all_users_but(viewer_id)}
+
+        Navigations.get_selected.select_by_name("community")
+        Navigations.get_selected.subnavigation.select_by_name("users")
+
+        haml :'user/all', :locals => {:all_users => Models::System.instance.fetch_all_users_but(session[:account])}
     end
 
     get '/users/:id' do

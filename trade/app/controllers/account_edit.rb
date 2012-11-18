@@ -29,6 +29,9 @@ module Controllers
     ##
 
     get '/account/edit/user/profile' do
+      Navigations.get_selected.select_by_name("home")
+      Navigations.get_selected.subnavigation.select_by_name("edit profile")
+
       haml :'user/edit_profile', :locals => {:script => 'passwordchecker.js', :onload => 'initialize()'}
     end
 
@@ -96,6 +99,9 @@ module Controllers
     ##
 
     get '/account/edit/organisation/profile' do
+      Navigations.get_selected.select_by_name("home")
+      Navigations.get_selected.subnavigation.select_by_name("edit organisation")
+
       haml :'organisation/edit'
     end
 

@@ -4,6 +4,7 @@ require 'sinatra/base'
 require 'haml'
 require 'sinatra/content_for'
 require_relative '../models/user'
+require_relative 'alert'
 require_relative('../helpers/render')
 
 include Models
@@ -20,7 +21,7 @@ module Controllers
     get '/login' do
       redirect "/home" if session[:auth]
 
-      session[:navigation_selected] = 2
+      Navigations.get[:unregistered].select(2)
       haml :'authentication/login', :locals => { :onload => 'document.loginform.username.focus()' }
     end
 
@@ -58,6 +59,8 @@ module Controllers
       session[:user] = nil
       session[:auth] = false
       session.clear
+
+      session[:alert] = Alert.create("", "You succesfully logged out. Have a nice day!", false)
       redirect "/"
     end
   end

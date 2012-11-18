@@ -94,11 +94,18 @@ module Controllers
     get '/organisation/members' do
       #only checks if :account is in the range of valid ids
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+
+      Navigations.get_selected.select_by_name("home")
+      Navigations.get_selected.subnavigation.select_by_name("members")
+
       organisation = Models::System.instance.fetch_account(session[:account])
       haml :'organisation/members', :locals => { :all_members => organisation.members.values }
     end
 
     get '/organisation/add/member' do
+      Navigations.get_selected.select_by_name("home")
+      Navigations.get_selected.subnavigation.select_by_name("add member")
+
       haml :'organisation/add_member'
     end
     ##
@@ -112,6 +119,7 @@ module Controllers
 
     post '/organisation/add/member' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+
       if Models::System.instance.user_exists?(params[:member])
         haml :'organisation/member_confirm', :locals => { :member => params[:member]}
       else
@@ -161,17 +169,22 @@ module Controllers
       redirect '/organisation/members'
     end
 
-
-
-
     get '/organisations/self' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
+
+      Navigations.get_selected.select("home")
+      Navigations.get_selected.subnavigation.select("organisations")
+
       user = Models::System.instance.fetch_account(session[:user])
       haml :'organisation/self', :locals => { :all_organisations => Models::System.instance.fetch_organisations_of(user.id) }
     end
 
     get '/organisations/all' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+
+      Navigations.get_selected.select_by_name("community")
+      Navigations.get_selected.subnavigation.select_by_name("organisations")
+
       organisation = session[:account]
       haml :'organisation/all', :locals => { :all_organisations => Models::System.instance.fetch_organisations_but(organisation) }
     end
