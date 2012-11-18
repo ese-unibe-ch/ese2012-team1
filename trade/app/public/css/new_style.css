@@ -181,7 +181,7 @@ div#message {
   background-image: url('/images/design/message.png');
 }
 
-.error {
+.error, .warning {
   border: 1px solid #d0472f;
   background-image: url('/images/design/error.png');
 }

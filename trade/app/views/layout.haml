@@ -19,8 +19,6 @@
       - user = session[:auth] ? session[:user] : "none"
       - account = session[:auth] ? session[:account] : "none"
       = render_file_with_argument('frame/header.haml', Array[auth, user, account])
-      = render_file('frame/menu_org.haml') if session[:auth] && session[:account] != session[:user]
-      = render_file('frame/menu_logged.haml') if session[:auth] && session[:account] == session[:user]
 
       = render_file_with_argument('frame/profile_information.haml', {:user => session[:user], :account => session[:account]}) if session[:auth]
       = puts Navigations.get_selected.navigation

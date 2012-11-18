@@ -172,8 +172,8 @@ module Controllers
     get '/organisations/self' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
 
-      Navigations.get_selected.select("home")
-      Navigations.get_selected.subnavigation.select("organisations")
+      Navigations.get_selected.select_by_name("home")
+      Navigations.get_selected.subnavigation.select_by_name("organisations")
 
       user = Models::System.instance.fetch_account(session[:user])
       haml :'organisation/self', :locals => { :all_organisations => Models::System.instance.fetch_organisations_of(user.id) }
