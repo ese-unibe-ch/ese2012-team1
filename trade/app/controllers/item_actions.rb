@@ -103,6 +103,9 @@ module Controllers
       redirect "/items/my/inactive"
     end
 
+    get '/item/edit' do
+      redirect '/'
+    end
     post '/item/edit' do
       id = params[:id]
       redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
