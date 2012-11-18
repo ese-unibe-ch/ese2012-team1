@@ -1,0 +1,15 @@
+%div(id="navigation-bar")
+  %ul(id="navigation-unregistered" class="navigation")
+    - my_arguments[:navigation].travers do |name, route, index, selected|
+      - navigation_name = "navigation-unregistered-#{index}"
+      %li{:id => navigation_name.sub("-unregistered", "")}
+        - if selected
+          %span{:id => "#{navigation_name}-active"}
+            %a{ :href=>route,  :title=>""}
+              %span
+                = "#{name}"
+        - else
+          %span{ :id => "#{navigation_name}-inactive"}
+            %a{ :href=>route,  :title=>""}
+              %span
+                = "#{name}"

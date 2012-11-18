@@ -1,0 +1,14 @@
+%div(class="profile-information")
+  - current_user = Models::System.instance.fetch_account(my_arguments[:user])
+  - current_organisation = Models::System.instance.fetch_account(my_arguments[:account]) if my_arguments[:account] != my_arguments[:user]
+  - current_organisation = nil if my_arguments[:account] == my_arguments[:user]
+  - if current_organisation == nil
+    = "Logged in as: #{current_user.name} - Credits: #{current_user.credits} -"
+  - else
+    = "Logged in as: #{current_organisation.name} - Credits: #{current_organisation.credits} - " if current_organisation != nil
+  %form(name="organisation_switch" action="/organisation/switch" method="post")
+    %input(type="submit" value="Watch as")
+    %select(name="account" size="1")
+      %option(value="#{current_user.id}"){ :selected => current_user.id == my_arguments[:account] ? true : false } #{current_user.name}
+      - for org in Models::System.instance.fetch_organisations_of(current_user.id)
+        %option(value="#{org.id}"){ :selected => org.id == my_arguments[:account] ? true : false } #{org.name}

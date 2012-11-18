@@ -30,7 +30,19 @@ module Controllers
         haml :'item/my_inactive', :locals => {:inactive_items => Models::System.instance.fetch_account(user_id).list_inactive_items}
     end
 
+    get '/items/my/all' do
+      Navigations.get_selected.select_by_name("home")
+      Navigations.get_selected.subnavigation.select_by_name("items")
+
+      account = Models::System.instance.fetch_account(session[:account])
+      haml :'item/my_all', :locals => {:inactive_items => account.list_inactive_items,
+                                       :active_items => account.list_active_items }
+    end
+
     get '/item/create' do
+       Navigations.get_selected.select_by_name("market")
+       Navigations.get_selected.subnavigation.select_by_name("create item")
+
         haml :'item/create'
     end
 
@@ -40,6 +52,9 @@ module Controllers
     end
 
     get '/items/active' do
+        Navigations.get_selected.select_by_name("market")
+        Navigations.get_selected.subnavigation.select_by_name("on sale")
+
         viewer_id = session[:account]
         haml :'item/active', :locals => {:all_items => Models::System.instance.fetch_all_active_items_but_of(viewer_id)}
     end
