@@ -73,6 +73,7 @@ module Models
     #Removes himself from the list of users of the Models::System
     #Removes his avatar (not yet implemented)
     #Removes user's items beforehand
+    #TODO test if admin by init works
     def clear
       Models::System.instance.fetch_items_of(self.id).each { |e| e.clear }
       Models::System.instance.remove_account(self.id)
@@ -94,6 +95,7 @@ module Models
       org = Models::Organisation.created(name, description, avatar)
       org.organisation = true
       org.add_member(self)
+      org.set_as_admin(self)
       org
     end
 

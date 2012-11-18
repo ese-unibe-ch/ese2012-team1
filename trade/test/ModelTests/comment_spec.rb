@@ -39,7 +39,7 @@ describe Comment do
     end
 
     it "should know its creator" do
-      @comment.creator.should equal(@user)
+      @comment.member_to_be_admin.should equal(@user)
     end
 
     it "should collect one comment" do

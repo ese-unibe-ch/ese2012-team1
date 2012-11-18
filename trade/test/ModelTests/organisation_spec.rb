@@ -31,7 +31,7 @@ describe "Organisation" do
 
     it_behaves_like "any created Account"
 
-    it "should have user sink" do
+    it "should have user sink" do  # @pas what does this mean?? is not a sink, where you wash your dishes? xD
       @user.respond_to?(:members)
     end
 
@@ -64,24 +64,85 @@ describe "Organisation" do
       end
 
       it "multiple add users add should be member" do
-        @member1 = double('member1')
+        @admin1 = double('member1')
         @member2 = double('member2')
         @member3 = double('member3')
 
-        @member1.stub(:email).and_return("bart@mail.ch")
+        @admin1.stub(:email).and_return("bart@mail.ch")
         @member2.stub(:email).and_return("homer@mail.ch")
         @member3.stub(:email).and_return("maggie@mail.ch")
 
-        @user.add_member(@member1)
+        @user.add_member(@admin1)
         @user.add_member(@member2)
         @user.add_member(@member3)
 
-        @user.is_member?(@member1).should be_true
+        @user.is_member?(@admin1).should be_true
         @user.is_member?(@member2).should be_true
         @user.is_member?(@member3).should be_true
       end
     end
 
+    context "adding and removing admin rights" do
+      before(:each) do
+        @member_to_be_admin = double('member_to_be_admin')
+        @member_to_be_admin.stub(:email).and_return("bart@mail.ch")
+        @organisation = create_account
+      end
+
+      it "creator should have admin right" do
+        # It's not a good test, but I dont know how I should imitate
+        # the situation, that the creator should automatically have
+        # admin rights. This would have to be in user, right?
+        # But there is already a such a test.
+        @organisation.set_as_admin(@member_to_be_admin)
+        @organisation.is_admin?(@member_to_be_admin).should be_true
+      end
+
+      it "should not revoke admin right if only one admin" do
+        @organisation.set_as_admin(@member_to_be_admin).should raise_error
+      end
+
+      it "should revoke admin rights" do
+        # Cannot remove admin rights, if only one admin is left ;)
+        @member_to_be_admin2 = double('member_to_be_admin2')
+        @member_to_be_admin2.stub(:email).and_return("lisa@mail.ch")
+
+        @organisation.set_as_admin(@member_to_be_admin)
+        @organisation.set_as_admin(@member_to_be_admin2)
+
+        @organisation.revoke_admin_rights(@member_to_be_admin)
+        @organisation.is_admin?(@member_to_be_admin).should_not be_true
+      end
+
+      it "should count number of admins" do
+        @admin1 = double('admin1')
+        @admin2 = double('admin2')
+        @admin3 = double('admin3')
+
+        @admin1.stub(:email).and_return("bart@mail.ch")
+        @admin2.stub(:email).and_return("homer@mail.ch")
+        @admin3.stub(:email).and_return("maggie@mail.ch")
+
+        @user.add_member(@admin1)
+        @user.add_member(@admin2)
+        @user.add_member(@admin3)
+
+        @user.admin_count.should eq(0)
+
+        @user.set_as_admin(@admin1)
+        @user.set_as_admin(@admin2)
+        @user.set_as_admin(@admin3)
+
+        @user.admin_count.should eq(3)
+        @user.revoke_admin_rights(@admin3)
+
+        @user.admin_count.should eq(2)
+        @user.revoke_admin_rights(@admin2)
+        @user.admin_count.should eq(1)
+      end
+
+
+    end
 
     context "#clear" do
       it "should remove organisation from system" do
