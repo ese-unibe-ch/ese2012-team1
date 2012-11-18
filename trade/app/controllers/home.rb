@@ -43,5 +43,20 @@ module Controllers
       end
     end
 
+    get '/home/user' do
+      Navigations.select(:user)
+      Navigations.get_selected.select_by_name("home")
+      Navigations.get_selected.subnavigation.select_by_name("profile")
+
+      haml :'home/user'
+    end
+
+    get '/home/organisation' do
+      Navigations.select(:organisation)
+      Navigations.get_selected.select_by_name("home")
+      Navigations.get_selected.subnavigation.select_by_name("profile")
+
+      haml :'home/organisation'
+    end
   end
 end

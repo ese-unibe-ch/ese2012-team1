@@ -18,7 +18,7 @@ class Navigations
     @@navigations[:user].add_navigation("logout", "/logout")
 
     @@navigations[:user].select(1)
-    @@navigations[:user].add_subnavigation("profile", "/home")
+    @@navigations[:user].add_subnavigation("profile", "/home/user")
     @@navigations[:user].add_subnavigation("organisations", "/organisations/self")
     @@navigations[:user].add_subnavigation("items", "/items/my/all")
     @@navigations[:user].add_subnavigation("edit profile", "/account/edit/user/profile")
@@ -44,7 +44,7 @@ class Navigations
     @@navigations[:organisation].add_navigation("logout", "/logout")
 
     @@navigations[:organisation].select(1)
-    @@navigations[:organisation].add_subnavigation("profile", "/home")
+    @@navigations[:organisation].add_subnavigation("profile", "/home/organisation")
     @@navigations[:organisation].add_subnavigation("items", "/items/my/all")
     @@navigations[:organisation].add_subnavigation("members", "/organisation/members")
     @@navigations[:organisation].add_subnavigation("add member", "/organisation/add/member")
