@@ -132,7 +132,9 @@ module Controllers
       item=Models::System.instance.fetch_item(id)
       redirect "/items/my/inactive" if Models::System.instance.fetch_item(id).editable?
       new_description = params[:new_description]
-      new_price = params[:new_price]
+      redirect "/error/No_Price" if params[:new_price] == nil
+      redirect "/error/Not_A_Number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:new_price])
+      new_price = params[:new_price].to_i
       item.add_description(new_description) if item.description != new_description
       item.price = new_price
 
