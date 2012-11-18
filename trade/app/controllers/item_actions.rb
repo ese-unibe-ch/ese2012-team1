@@ -69,9 +69,11 @@ module Controllers
 
       new_item.add_picture("/images/items/#{new_item.id}#{file_extension}")
 
-      puts("path: #{new_item.picture}")
+      session[:navigation].get_selected.select("home")
+      session[:navigation].get_selected.subnavigation.select("items")
 
-      redirect "/items/my/inactive"
+      session[:alert] = Alert.create("Success!", "You created a new item", false)
+      redirect "/items/my/all"
     end
 
     post '/item/changestate/setactive' do
@@ -82,7 +84,7 @@ module Controllers
         item.to_active
       end
 
-      redirect "/items/my/inactive"
+      redirect "/items/my/all"
     end
 
     post '/item/changestate/setinactive' do
@@ -93,7 +95,7 @@ module Controllers
         item.to_inactive
       end
 
-      redirect "/items/my/active"
+      redirect "/items/my/inactive"
     end
 
     post '/item/delete' do
@@ -106,6 +108,7 @@ module Controllers
     get '/item/edit' do
       redirect '/'
     end
+
     post '/item/edit' do
       id = params[:id]
       redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])

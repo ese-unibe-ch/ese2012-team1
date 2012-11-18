@@ -1,6 +1,6 @@
-%button(type="submit" formmethod="get" formaction="/organisation/create" name="create organisation" value="create organisation" id="createOrg")
-  create organisation
-%br
+%form(action="/organisation/create" method="get")
+  %button(type="submit" name="create organisation" value="create organisation" id="createOrg")
+    create organisation
 %ul
   - for organisation in all_organisations
     %li
