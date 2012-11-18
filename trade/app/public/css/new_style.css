@@ -195,6 +195,35 @@ div#message {
     margin-bottom: 10px;
 }
 
+.description {
+    display: block;
+    padding-bottom: 5px;
+}
+
+.description .entry {
+    display: block;
+}
+
+.entry-horizontal .label {
+    display: inline-block;
+    width: 250px;
+}
+
+.entry-horizontal .description {
+    display: inline-block;
+    font-weight: bold;
+}
+
+.entry-vertical .label {
+    display: block;
+    width: 250px;
+}
+
+.entry-vertical .description {
+    display: block;
+    font-weight: bold;
+}
+
 div#main {
 	position: relative;
 	overflow: hidden;
@@ -227,16 +256,17 @@ button, input, textarea {
   background-image: url('/images/design/normal.png');
 }
 
-button:hover {
+button:hover, input:hover {
   color: lightgrey;
   background-image: url('/images/design/transparent-background.png');
 }
 
-table{
+table {
     border-collapse: collapse;
+    width: 100%;
 }
 
-th{
+th {
     text-align:left;
 }
 

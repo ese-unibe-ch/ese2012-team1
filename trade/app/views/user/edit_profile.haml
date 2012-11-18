@@ -1,39 +1,22 @@
-%h2 Edit Your Profile
 %form(action="/account/edit/user/profile" enctype="multipart/form-data" method="post")
-  %label Name:
-  %br
-  #{Models::System.instance.fetch_account(session[:user]).name}
-  %br
-  %br
-  %label Password:
-  %br
-  %input(type="password" name="password" id="password")
-  %br
-  %label(id="message")
-  %br
-  %label Retype Password:
-  %br
-  %input(type="password" name="re_password" id="re_password")
-  %br
-  %label(id="re_message")
-  %br
-  %br
-  %label Email:
-  %br
-  %input(type="text" name="email"){:value => Models::System.instance.fetch_account(session[:user]).email}
-  - class_to_set = ""
-  - class_to_set = "warning" if session[:is_email_error] == "yes"
-  %label(class="#{class_to_set}")= "#{session[:email_error]}"
-  %br
-  %br
-  %label Description:
-  %br
-  %textarea(name="interests" cols=30 rows=10)
-    = Models::System.instance.fetch_account(session[:user]).description.to_s
-  %br
-  %br
-  %label Avatar:
-  %input(type="file" name="avatar" size=50 maxlength="=100000" accept="text/*")
-  %input(type="submit" id="register" value="Edit Profile")
-  %button(class="warning" type="submit" formmethod="get" formaction="/unregister" name="delete account" value="delete account" id="deleteAcc")
-    delete account
+  %div(class="labeled-input")
+    = render_file_with_argument('description-entry-horizontal.haml', { :label => "Name:", :description => Models::System.instance.fetch_account(session[:user]).name })
+    %label Password:
+    %input(type="password" name="password" id="password")
+    %label(id="message")
+    %label Retype Password:
+    %input(type="password" name="re_password" id="re_password")
+    %label(id="re_message")
+    %label Email:
+    %input(type="text" name="email"){:value => Models::System.instance.fetch_account(session[:user]).email}
+    - class_to_set = ""
+    - class_to_set = "warning" if session[:is_email_error] == "yes"
+    %label(class="#{class_to_set}")= "#{session[:email_error]}"
+    %label Description:
+    %textarea(name="interests" cols=30 rows=10)
+      = Models::System.instance.fetch_account(session[:user]).description.to_s
+    %label Avatar:
+    %input(type="file" name="avatar" size=50 maxlength="=100000" accept="text/*")
+    %input(type="submit" id="register" value="Edit Profile")
+    %button(class="warning" type="submit" formmethod="get" formaction="/unregister" name="delete account" value="delete account" id="deleteAcc")
+      delete account
