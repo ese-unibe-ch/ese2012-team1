@@ -175,7 +175,7 @@ module Models
       self.accounts.values.one?{|acc| !acc.respond_to?(:email) && acc.name == organisation_name}
     end
 
- #TODO test
+    #TODO test
     def admin_of_an_organisation?(user)
       org = self.fetch_organisations_of(user.id)
       org.one? { |organisation| organisation.is_admin?(user) }

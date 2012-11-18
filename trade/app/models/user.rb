@@ -99,6 +99,17 @@ module Models
       org
     end
 
+    #TODO tests
+    def is_last_admin_of?(organisation)
+      organisation.is_admin(self) && organisation.size == 1
+    end
+
+    #TODO tests
+    def is_last_admin?
+      organisations = Models::System.fetch_organisations_of(self.id)
+      organisations.one? { |organisation| self.is_last_admin_of?(organisation)}
+    end
+
     def password(password)
       pw_salt = BCrypt::Engine.generate_salt
       pw_hash = BCrypt::Engine.hash_secret(password, pw_salt)
