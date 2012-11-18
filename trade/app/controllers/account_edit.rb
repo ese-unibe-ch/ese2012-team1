@@ -5,7 +5,9 @@ require 'haml'
 require 'ftools'
 
 require_relative '../models/user'
+
 require_relative '../helpers/render'
+require_relative '../helpers/before'
 require_relative '../helpers/string_checkers'
 require_relative '../models/simple_email_client' unless ENV['RACK_ENV'] == 'test'
 
@@ -14,14 +16,11 @@ include Helpers
 
 module Controllers
   class AccountEdit < Sinatra::Application
-    set :views, "#{absolute_path('../views', __FILE__)}"
-
     before do
-      redirect "/" unless session[:auth]
-      response.headers['Cache-Control'] = 'public, max-age=0'
+      before_for_user_authenticated
     end
 
-
+    set :views, "#{absolute_path('../views', __FILE__)}"
 
     ##
     # Loads edit_profile.haml and includes passwordchecker.js to do
@@ -29,8 +28,8 @@ module Controllers
     ##
 
     get '/account/edit/user/profile' do
-      Navigations.get_selected.select_by_name("home")
-      Navigations.get_selected.subnavigation.select_by_name("edit profile")
+      session[:navigation].get_selected.select_by_name("home")
+      session[:navigation].get_selected.subnavigation.select_by_name("edit profile")
 
       haml :'user/edit_profile', :locals => {:script => 'passwordchecker.js', :onload => 'initialize()'}
     end
@@ -99,8 +98,8 @@ module Controllers
     ##
 
     get '/account/edit/organisation/profile' do
-      Navigations.get_selected.select_by_name("home")
-      Navigations.get_selected.subnavigation.select_by_name("edit organisation")
+      session[:navigation].get_selected.select_by_name("home")
+      session[:navigation].get_selected.subnavigation.select_by_name("edit organisation")
 
       haml :'organisation/edit'
     end

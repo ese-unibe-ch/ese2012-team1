@@ -6,22 +6,20 @@ require 'sinatra/content_for'
 require_relative('../models/user')
 require_relative('../models/item')
 require_relative('../helpers/render')
+require_relative '../helpers/before'
 require_relative('../helpers/string_checkers')
+
 
 include Models
 include Helpers
 
 module Controllers
   class Organisation < Sinatra::Application
-    set :views, "#{absolute_path('../views', __FILE__)}"
-
-    set :raise_errors, false unless development?
-    set :show_exceptions, false unless development?
-
     before do
-      redirect "/" unless session[:auth]
-      response.headers['Cache-Control'] = 'public, max-age=0'
+      before_for_user_authenticated
     end
+
+    set :views, "#{absolute_path('../views', __FILE__)}"
 
 ###
 #
@@ -95,16 +93,16 @@ module Controllers
       #only checks if :account is in the range of valid ids
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
 
-      Navigations.get_selected.select_by_name("home")
-      Navigations.get_selected.subnavigation.select_by_name("members")
+      session[:navigation].get_selected.select_by_name("home")
+      session[:navigation].get_selected.subnavigation.select_by_name("members")
 
       organisation = Models::System.instance.fetch_account(session[:account])
       haml :'organisation/members', :locals => { :all_members => organisation.members.values }
     end
 
     get '/organisation/add/member' do
-      Navigations.get_selected.select_by_name("home")
-      Navigations.get_selected.subnavigation.select_by_name("add member")
+      session[:navigation].get_selected.select_by_name("home")
+      session[:navigation].get_selected.subnavigation.select_by_name("add member")
 
       haml :'organisation/add_member'
     end
@@ -172,8 +170,8 @@ module Controllers
     get '/organisations/self' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
 
-      Navigations.get_selected.select_by_name("home")
-      Navigations.get_selected.subnavigation.select_by_name("organisations")
+      session[:navigation].get_selected.select_by_name("home")
+      session[:navigation].get_selected.subnavigation.select_by_name("organisations")
 
       user = Models::System.instance.fetch_account(session[:user])
       haml :'organisation/self', :locals => { :all_organisations => Models::System.instance.fetch_organisations_of(user.id) }
@@ -182,8 +180,8 @@ module Controllers
     get '/organisations/all' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
 
-      Navigations.get_selected.select_by_name("community")
-      Navigations.get_selected.subnavigation.select_by_name("organisations")
+      session[:navigation].get_selected.select_by_name("community")
+      session[:navigation].get_selected.subnavigation.select_by_name("organisations")
 
       organisation = session[:account]
       haml :'organisation/all', :locals => { :all_organisations => Models::System.instance.fetch_organisations_but(organisation) }
@@ -193,10 +191,6 @@ module Controllers
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(params[:id].to_i)
       organisation_id = params[:id]
       haml :'organisation/id', :locals => {:active_items => Models::System.instance.fetch_account(organisation_id.to_i).list_active_items}
-    end
-
-    error do
-      haml :error, :locals => {:error_title => "", :error_message => "#{request.env['sinatra.error'].to_s}" }
     end
 
     get '/organisation/delete' do

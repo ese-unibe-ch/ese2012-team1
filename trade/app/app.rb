@@ -14,8 +14,8 @@ require_relative('controllers/user_sites')
 require_relative('controllers/organisation')
 require_relative('controllers/account_edit')
 require_relative('controllers/error')
-require_relative('controllers/navigation')
-require_relative('controllers/navigations')
+require_relative('helpers/navigation')
+require_relative('helpers/navigations')
 require_relative('init.rb') unless ENV['RACK_ENV'] == 'test'
 require_relative('helpers/render')
 require_relative('helpers/mailer')
@@ -39,8 +39,6 @@ class App < Sinatra::Base
 
   #To get user friendly error messages set this to false
   set :development, true
-
-  Navigations.set
 
   use Controllers::Home
   use Controllers::Error

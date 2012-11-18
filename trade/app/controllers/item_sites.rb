@@ -5,13 +5,19 @@ require 'haml'
 require 'sinatra/content_for'
 require_relative('../models/user')
 require_relative('../models/item')
+
 require_relative('../helpers/render')
+require_relative '../helpers/before'
 
 include Models
 include Helpers
 
 module Controllers
   class ItemSites < Sinatra::Application
+    before do
+      before_for_user_authenticated
+    end
+
     set :views , "#{absolute_path('../views', __FILE__)}"
 
     before do
@@ -31,8 +37,8 @@ module Controllers
     end
 
     get '/items/my/all' do
-      Navigations.get_selected.select_by_name("home")
-      Navigations.get_selected.subnavigation.select_by_name("items")
+      session[:navigation].get_selected.select_by_name("home")
+      session[:navigation].get_selected.subnavigation.select_by_name("items")
 
       account = Models::System.instance.fetch_account(session[:account])
       haml :'item/my_all', :locals => {:inactive_items => account.list_inactive_items,
@@ -40,8 +46,8 @@ module Controllers
     end
 
     get '/item/create' do
-       Navigations.get_selected.select_by_name("market")
-       Navigations.get_selected.subnavigation.select_by_name("create item")
+       session[:navigation].get_selected.select_by_name("market")
+       session[:navigation].get_selected.subnavigation.select_by_name("create item")
 
         haml :'item/create'
     end
@@ -52,8 +58,8 @@ module Controllers
     end
 
     get '/items/active' do
-        Navigations.get_selected.select_by_name("market")
-        Navigations.get_selected.subnavigation.select_by_name("on sale")
+        session[:navigation].get_selected.select_by_name("market")
+        session[:navigation].get_selected.subnavigation.select_by_name("on sale")
 
         viewer_id = session[:account]
         haml :'item/active', :locals => {:all_items => Models::System.instance.fetch_all_active_items_but_of(viewer_id)}

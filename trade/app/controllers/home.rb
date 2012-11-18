@@ -6,22 +6,23 @@ require 'sinatra/content_for'
 require_relative('../models/user')
 require_relative('../models/item')
 require_relative('../helpers/render')
+require_relative '../helpers/before'
 
 include Models
 include Helpers
 
 module Controllers
   class Home < Sinatra::Application
-    set :views , "#{absolute_path('../views', __FILE__)}"
-
     before do
-      response.headers['Cache-Control'] = 'public, max-age=0'
+      before_for_user_not_authenticated
     end
+
+    set :views , "#{absolute_path('../views', __FILE__)}"
 
     get '/' do
       redirect "/home" if session[:auth]
-      Navigations.select(:unregistered)
-      Navigations.get_selected.select(1)
+      session[:navigation].select(:unregistered)
+      session[:navigation].get_selected.select(1)
 
       #get four random items
       item_list = Models::System.instance.fetch_all_active_items
@@ -33,28 +34,28 @@ module Controllers
       redirect "/" unless session[:auth]
 
       if session[:user] == session[:account]
-        Navigations.select(:user)
-        Navigations.get_selected.select(1)
+        session[:navigation].select(:user)
+        session[:navigation].get_selected.select(1)
         haml :'home/user'
       else
-        Navigations.select(:organisation)
-        Navigations.get_selected.select(1)
+        session[:navigation].select(:organisation)
+        session[:navigation].get_selected.select(1)
         haml :'home/organisation'
       end
     end
 
     get '/home/user' do
-      Navigations.select(:user)
-      Navigations.get_selected.select_by_name("home")
-      Navigations.get_selected.subnavigation.select_by_name("profile")
+      session[:navigation].select(:user)
+      session[:navigation].get_selected.select_by_name("home")
+      session[:navigation].get_selected.subnavigation.select_by_name("profile")
 
       haml :'home/user'
     end
 
     get '/home/organisation' do
-      Navigations.select(:organisation)
-      Navigations.get_selected.select_by_name("home")
-      Navigations.get_selected.subnavigation.select_by_name("profile")
+      session[:navigation].select(:organisation)
+      session[:navigation].get_selected.select_by_name("home")
+      session[:navigation].get_selected.subnavigation.select_by_name("profile")
 
       haml :'home/organisation'
     end

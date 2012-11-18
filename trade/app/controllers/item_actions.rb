@@ -9,6 +9,7 @@ require_relative('../models/item')
 require_relative('../models/comment')
 
 require_relative('../helpers/render')
+require_relative '../helpers/before'
 require_relative('../helpers/string_checkers')
 
 include Models
@@ -16,12 +17,11 @@ include Helpers
 
 module Controllers
   class ItemActions < Sinatra::Application
-    set :views, "#{absolute_path('../views', __FILE__)}"
-
     before do
-      redirect "/" unless session[:auth]
-      response.headers['Cache-Control'] = 'public, max-age=0'
+      before_for_user_authenticated
     end
+
+    set :views, "#{absolute_path('../views', __FILE__)}"
 
     ##
     #

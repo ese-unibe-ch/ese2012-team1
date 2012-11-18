@@ -4,24 +4,25 @@ require 'sinatra/base'
 require 'haml'
 require 'sinatra/content_for'
 require_relative '../models/user'
-require_relative 'alert'
+require_relative '../helpers/alert'
 require_relative('../helpers/render')
+require_relative '../helpers/before'
 
 include Models
 include Helpers
 
 module Controllers
   class Authentication < Sinatra::Application
-    set :views , "#{absolute_path('../views', __FILE__)}"
-
     before do
-      response.headers['Cache-Control'] = 'public, max-age=0'
+      before_for_user_not_authenticated
     end
+
+    set :views , "#{absolute_path('../views', __FILE__)}"
 
     get '/login' do
       redirect "/home" if session[:auth]
 
-      Navigations.get[:unregistered].select(2)
+      session[:navigation].get[:unregistered].select(2)
       haml :'authentication/login', :locals => { :onload => 'document.loginform.username.focus()' }
     end
 

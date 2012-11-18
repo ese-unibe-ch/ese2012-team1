@@ -250,15 +250,17 @@ button, input, textarea {
   padding: 2px; 
   font-weight:bold; 
   border: 1px solid white;
-  text-align:center;
   color: black;
   background: transparent;
   background-image: url('/images/design/normal.png');
 }
 
-button:hover, input:hover {
-  color: lightgrey;
-  background-image: url('/images/design/transparent-background.png');
+button {
+  text-align: center;
+}
+
+button:hover, input:hover, textarea:hover {
+  background-image: url('/images/design/message.png');
 }
 
 table {
@@ -294,4 +296,31 @@ div.item_preview {
 img.preview_img {
     position: absolute;
     right: 4em;
+}
+
+div.comment {
+    clear: both;
+    min-width: 600px;
+}
+
+.comment div.comment_info {
+    margin-left: 160px;
+    padding: 4px;
+}
+
+.comment div.comment_info h3 {
+    line-height: 3px;
+}
+
+.comment div.user_info, .comment div.self_info {
+    float: left;
+    background-image: url('/images/design/message.png');
+    padding: 4px;
+    position: relative;
+    max-width: 150px;
+    min-width: 150px;
+}
+
+.comment div.self_info {
+    background-image: url('/images/design/item-owner.png');
 }
