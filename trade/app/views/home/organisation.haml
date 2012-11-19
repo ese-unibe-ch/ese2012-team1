@@ -9,7 +9,7 @@
   - inputs = [user.name, organisation.name, organisation.credits]
 
   - labels.each_with_index do |label, index|
-    = haml :'partials/description-entry-horizontal.haml', :locals => {:description => inputs[index], :label => label}
+    = haml :'partials/description-entry-horizontal', :locals => {:description => inputs[index], :label => label}
 
   %div(class="description")
     = "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).list_active_items.size} active Items"
@@ -20,5 +20,5 @@
   %div(class="description")
     = "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).members.size} Members (with you)"
 
-  = haml :'partials/description-entry-vertical.haml', :locals => {:description => organisation.description, :label =>   "Description:" }
+  = haml :'partials/description-entry-vertical', :locals => {:description => organisation.description, :label =>   "Description:" }
 %a(href="/account/edit/organisation/profile" name="edit_user_profile") Edit organisation profile

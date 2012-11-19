@@ -3,7 +3,7 @@
 - user = Models::System.instance.fetch_account(session[:user])
 
   %div(class="labeled-input")
-    = haml :'partials/description-entry-horizontal.haml', :locals => { :label => "Name:", :description => user.name }
+    = haml :'partials/description-entry-horizontal', :locals => { :label => "Name:", :description => user.name }
     %label Password:
     %input(type="password" name="password" id="password")
     %label(id="message")
