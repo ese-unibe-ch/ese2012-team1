@@ -101,7 +101,7 @@ module Models
 
     #TODO tests
     def is_last_admin_of?(organisation)
-      organisation.is_admin(self) && organisation.size == 1
+      organisation.is_admin?(self) && organisation.size == 1
     end
 
     #TODO tests
