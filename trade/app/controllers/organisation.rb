@@ -147,8 +147,6 @@ module Controllers
     post '/organisation/member/delete' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
       redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
-      admin = Models::System.instance.fetch_account(session[:user])
-      redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(admin)
       redirect "/error/No_Self_Remove" unless (Models::System.instance.fetch_account(session[:user]) != Models::System.instance.fetch_user_by_email(params[:member]))
       if Models::System.instance.user_exists?(params[:member])
         haml :'organisation/member_delete_confirm', :locals => { :member => params[:member]}
@@ -165,12 +163,70 @@ module Controllers
       organisation = Models::System.instance.fetch_account(session[:account])
       user = Models::System.instance.fetch_user_by_email(params[:user_email])
       if user.id != session[:user]
-        organisation.members.delete(user.email)
+        organisation.remove_member_by_email(user.email)
       end
       redirect '/organisation/members'
     end
 
+    ##
+    #
+    # Confirmation form for providing admin privileges to normal user.
+    #
+    ##
+    post '/organisation/member/to_admin' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+      redirect "/error/Is_already_Admin" unless !Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_user_by_email(params[:member]))
+      if Models::System.instance.user_exists?(params[:member])
+        haml :'organisation/member_to_admin_confirm', :locals => { :member => params[:member]}
+      else
+        redirect '/organisation/members'
+      end
+    end
 
+    post '/organisation/member/to_admin/confirm' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+      redirect "/error/Is_already_Admin" unless !Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_user_by_email(params[:user_email]))
+
+      organisation = Models::System.instance.fetch_account(session[:account])
+      user = Models::System.instance.fetch_user_by_email(params[:user_email])
+      if user.id != session[:user]
+        organisation.set_as_admin(user)
+      end
+
+      redirect '/organisation/members'
+    end
+
+    ##
+    #
+    # Confirmation form for revoking admin privileges from admin user
+    #
+    ##
+    post '/organisation/admin/to_member' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+      redirect "/error/No_Self_Right_Revoke" unless (Models::System.instance.fetch_account(session[:user]) != Models::System.instance.fetch_user_by_email(params[:member]))
+      if Models::System.instance.user_exists?(params[:member])
+        haml :'organisation/admin_to_member_confirm', :locals => { :member => params[:member]}
+      else
+        redirect '/organisation/members'
+      end
+    end
+
+    post '/organisation/admin/to_member/confirm' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+      redirect "/error/No_Self_Right_Revoke" unless (Models::System.instance.fetch_account(session[:user]) != Models::System.instance.fetch_user_by_email(params[:user_email]))
+
+      organisation = Models::System.instance.fetch_account(session[:account])
+      user = Models::System.instance.fetch_user_by_email(params[:user_email])
+      if user.id != session[:user]
+        organisation.revoke_admin_rights(user)
+      end
+
+      redirect '/organisation/members'
+    end
 
 
     get '/organisations/self' do

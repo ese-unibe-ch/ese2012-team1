@@ -31,7 +31,7 @@
         %form(name="remove" action="/organisation/member/delete" method="post")
           %input(type="hidden" name="member" value="#{admin.email}")
           %input(class="itembuttons" type="submit" value="Remove from Organisation")
-        %form(name="remove_admin" action="/organisation/member/to_member" method="post")
+        %form(name="remove_admin" action="/organisation/admin/to_member" method="post")
           %input(type="hidden" name="member" value="#{admin.email}")
           %input(class="itembuttons" type="submit" value="Revoke Admin Privileges")
     %br
