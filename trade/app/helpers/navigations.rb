@@ -21,24 +21,24 @@ class Navigations
     self.navigations[:user].add_navigation("market", "/items/active")
     self.navigations[:user].add_navigation("logout", "/logout")
 
-    self.navigations[:user].select(1)
+    self.navigations[:user].select_by_name("home")
     self.navigations[:user].add_subnavigation("profile", "/home/user")
     self.navigations[:user].add_subnavigation("organisations", "/organisations/self")
     self.navigations[:user].add_subnavigation("items", "/items/my/all")
     self.navigations[:user].add_subnavigation("edit profile", "/account/edit/user/profile")
-    self.navigations[:user].subnavigation.select(1)
+    self.navigations[:user].subnavigation.select_by_name("profile")
 
-    self.navigations[:user].select(2)
+    self.navigations[:user].select_by_name("community")
     self.navigations[:user].add_subnavigation("users", "/users/all")
     self.navigations[:user].add_subnavigation("organisations", "/organisations/all")
-    self.navigations[:user].subnavigation.select(1)
+    self.navigations[:user].subnavigation.select_by_name("users")
 
-    self.navigations[:user].select(3)
+    self.navigations[:user].select_by_name("market")
     self.navigations[:user].add_subnavigation("on sale", "/items/active")
     self.navigations[:user].add_subnavigation("create item", "/item/create")
-    self.navigations[:user].subnavigation.select(1)
+    self.navigations[:user].subnavigation.select_by_name("on sale")
 
-    self.navigations[:user].select(1)
+    self.navigations[:user].select_by_name("home")
 
     #Create navigations for organisation
 
