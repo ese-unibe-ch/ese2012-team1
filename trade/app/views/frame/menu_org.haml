@@ -1,3 +1,4 @@
+- admin_view = my_arguments[0]
 %div(id='menu')
   %div
     %a(href="/home") Home (ORG)
@@ -9,8 +10,9 @@
     %a(href="/organisation/members" name="inactive_items") Our Members
   %div(class="bigmargin")
     %a(href="/item/create" name="create_item") Create Item
-  %div
-    %a(href="/organisation/add/member" name="create_item") Add Member
+  - if admin_view
+    %div
+      %a(href="/organisation/add/member" name="create_item") Add Member
   %div(class="bigmargin")
     %a(href="/users/all" name="users") All Users
   %div
@@ -19,5 +21,6 @@
     %a(href="/items/active" name="items") All Items
   %div(class="bigmargin")
     %a(href="/logout" name="logout") Logout
-  %div
-    %a(href="/organisation/delete" name="delete_org") Delete Organisation
+  - if admin_view
+    %div
+      %a(href="/organisation/delete" name="delete_org") Delete Organisation

@@ -95,10 +95,13 @@ module Controllers
       #only checks if :account is in the range of valid ids
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
       organisation = Models::System.instance.fetch_account(session[:account])
-      haml :'organisation/members', :locals => { :all_members => organisation.members.values }
+      admin_view = Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+      haml :'organisation/members', :locals => { :all_members => organisation.members_without_admins, :all_admins => organisation.admins.values, :admin_view => admin_view }
     end
 
     get '/organisation/add/member' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
       haml :'organisation/add_member'
     end
     ##
@@ -112,6 +115,7 @@ module Controllers
 
     post '/organisation/add/member' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
       if Models::System.instance.user_exists?(params[:member])
         haml :'organisation/member_confirm', :locals => { :member => params[:member]}
       else
@@ -121,6 +125,7 @@ module Controllers
 
     post '/organisation/member/confirm' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
       if Models::System.instance.user_exists?(params[:member])
         user =  Models::System.instance.fetch_user_by_email(params[:member])
         org = Models::System.instance.fetch_account(session[:account])
@@ -141,6 +146,9 @@ module Controllers
 
     post '/organisation/member/delete' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+      admin = Models::System.instance.fetch_account(session[:user])
+      redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(admin)
       redirect "/error/No_Self_Remove" unless (Models::System.instance.fetch_account(session[:user]) != Models::System.instance.fetch_user_by_email(params[:member]))
       if Models::System.instance.user_exists?(params[:member])
         haml :'organisation/member_delete_confirm', :locals => { :member => params[:member]}
@@ -152,6 +160,7 @@ module Controllers
 
     post '/organisation/member/delete/confirm' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
       redirect "/error/No_Valid_User" unless Models::System.instance.user_exists?(params[:user_email])
       organisation = Models::System.instance.fetch_account(session[:account])
       user = Models::System.instance.fetch_user_by_email(params[:user_email])
@@ -187,12 +196,14 @@ module Controllers
     end
 
     get '/organisation/delete' do
+      redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
       haml :'organisation/delete'
     end
 
     post '/organisation/delete' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
+      redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
       org = Models::System.instance.fetch_account(session[:account])
       Models::System.instance.remove_account(org.id)
 

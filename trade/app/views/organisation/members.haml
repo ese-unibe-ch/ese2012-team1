@@ -6,9 +6,33 @@
       %em= user.name
       %img(height=50 width=50){ :alt => user.name, :src => user.avatar }
       \:
-    %div(class="itembuttons")
-      %form(name="remove" action="/organisation/member/delete" method="post")
-        %input(type="hidden" name="member" value="#{user.email}")
-        %input(class="itembuttons" type="submit" value="Remove from Organisation")
+    - if admin_view
+      %div(class="itembuttons")
+        %form(name="remove" action="/organisation/member/delete" method="post")
+          %input(type="hidden" name="member" value="#{user.email}")
+          %input(class="itembuttons" type="submit" value="Remove from Organisation")
+        %form(name="add_admin" action="/organisation/member/to_admin" method="post")
+          %input(type="hidden" name="member" value="#{user.email}")
+          %input(class="itembuttons" type="submit" value="Provide Admin Privileges")
+    %br
+    %br
+%br
+%br
+%h2 Administrators of Organisation
+%br
+%ul
+  - for admin in all_admins
+    %li
+      %em= admin.name
+      %img(height=50 width=50){ :alt => admin.name, :src => admin.avatar }
+      \:
+    - if admin_view
+      %div(class="itembuttons")
+        %form(name="remove" action="/organisation/member/delete" method="post")
+          %input(type="hidden" name="member" value="#{admin.email}")
+          %input(class="itembuttons" type="submit" value="Remove from Organisation")
+        %form(name="remove_admin" action="/organisation/member/to_member" method="post")
+          %input(type="hidden" name="member" value="#{admin.email}")
+          %input(class="itembuttons" type="submit" value="Revoke Admin Privileges")
     %br
     %br

@@ -25,4 +25,5 @@
 = "#{Models::System.instance.fetch_account(session[:account]).description}"
 %br
 %br
-%a(href="/account/edit/organisation/profile" name="edit_user_profile") Edit organisation profile
+- if admin_view
+  %a(href="/account/edit/organisation/profile" name="edit_user_profile") Edit organisation profile

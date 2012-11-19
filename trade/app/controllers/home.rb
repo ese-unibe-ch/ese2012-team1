@@ -32,7 +32,8 @@ module Controllers
       if session[:user] == session[:account]
         haml :'home/user'
       else
-        haml :'home/organisation'
+        admin_view = Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+        haml :'home/organisation', :locals => { :admin_view => admin_view }
       end
     end
 

@@ -96,6 +96,7 @@ module Controllers
     ##
 
     get '/account/edit/organisation/profile' do
+      redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
       haml :'organisation/edit'
     end
 
@@ -111,6 +112,7 @@ module Controllers
     ##
 
     post '/account/edit/organisation/profile' do
+      redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
       organisation = Models::System.instance.fetch_account(session[:account])
 
 

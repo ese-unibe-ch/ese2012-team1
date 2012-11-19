@@ -44,6 +44,8 @@ module Controllers
           msg = "The activation code in the URL is not correct.<br />Try with copy and paste the complete URL from the e-mail into your Browser."
         elsif params[:title] == "Already_Activated"
           msg = "You've already activated your User Account.<br /><a href=\"/login\" >Go To Login Page</a>"
+        elsif params[:title] == "Not_an_Admin"
+          msg = "You're not an administrator of this Organisation."
         else
           title = "Not_An_Error"
           msg = "This is a wrong Error Code."

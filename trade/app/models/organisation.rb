@@ -34,6 +34,10 @@ module Models
       members.one? { |email, member| email == user.email }
     end
 
+    def members_without_admins
+      self.members.values.select { |member| !self.is_admin?(member) }
+    end
+
     def is_admin?(user)
       self.admins.one? { |email, admin| email == user.email }
     end
