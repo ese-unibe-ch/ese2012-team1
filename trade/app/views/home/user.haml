@@ -2,11 +2,11 @@
   %img(height=200 width=200){ :alt => Models::System.instance.fetch_account(session[:user].to_i).name, :src => Models::System.instance.fetch_account(session[:user].to_i).avatar }
 
 %div(class="description")
-  = render_file_with_argument('description-entry-horizontal.haml', {:description => Models::System.instance.fetch_account(session[:user]).name, :label => "Currently logged in as User:" })
+  = render_file_with_argument('partials/description-entry-horizontal.haml', {:description => Models::System.instance.fetch_account(session[:user]).name, :label => "Currently logged in as User:" })
 
-  = render_file_with_argument('description-entry-horizontal.haml', {:description => Models::System.instance.fetch_account(session[:user]).email, :label => "Your E-mail:" })
+  = render_file_with_argument('partials/description-entry-horizontal.haml', {:description => Models::System.instance.fetch_account(session[:user]).email, :label => "Your E-mail:" })
 
-  = render_file_with_argument('description-entry-horizontal.haml', {:description => Models::System.instance.fetch_account(session[:user]).credits, :label => "Your Credits:" })
+  = render_file_with_argument('partials/description-entry-horizontal.haml', {:description => Models::System.instance.fetch_account(session[:user]).credits, :label => "Your Credits:" })
 
   %div(class="description")
     = "You have #{Models::System.instance.fetch_account(session[:user]).list_active_items.size} active Items"
@@ -14,6 +14,6 @@
   %div(class="description")
     = "You have #{Models::System.instance.fetch_account(session[:user]).list_inactive_items.size} inactive Items"
 
-  = render_file_with_argument('description-entry-vertical.haml', {:description => Models::System.instance.fetch_account(session[:user]).description, :label =>   "Your Description:" })
+  = render_file_with_argument('partials/description-entry-vertical.haml', {:description => Models::System.instance.fetch_account(session[:user]).description, :label =>   "Your Description:" })
 
 %a(href="/account/edit/user/profile" name="edit_user_profile") Edit your profile

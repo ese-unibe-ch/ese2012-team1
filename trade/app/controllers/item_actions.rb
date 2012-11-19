@@ -11,6 +11,7 @@ require_relative('../models/comment')
 require_relative('../helpers/render')
 require_relative '../helpers/before'
 require_relative('../helpers/string_checkers')
+require_relative '../helpers/error_messages'
 
 include Models
 include Helpers
@@ -36,18 +37,14 @@ module Controllers
     ##
 
     post '/item/create' do
-      redirect "/error/No_Name" if params[:name] == nil or params[:name].length == 0
-      redirect "/error/No_Price" if params[:price] == nil
-      redirect "/error/Not_A_Number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:price])
-      redirect "/error/No_Description" if params[:description] == nil
-      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      @error[:name] = ErrorMessages.get("No_Name") if params[:name] == nil || params[:name].length == 0
+      @error[:price] =  ErrorMessages.get("Not_A_Number") unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:price])
+      @error[:price] = ErrorMessages.get("No_Price") if params[:price] == nil || params[:price].length == 0
+      @error[:description] = ErrorMessages.get("No_Description") if params[:description] == nil || params[:description].length == 0
 
-      fail "Item should have a name." if params[:name] == nil
-      fail "Item name should not be empty" if params[:name].length == 0
-      fail "Item should have a price" if params[:price] == nil
-      fail "Price should be a number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:price])
-      fail "Item should have a description" if params[:description] == nil
-
+      unless (@error.empty?)
+        halt haml :'/item/create'
+      end
 
       id = session[:account]
       new_item = Models::System.instance.fetch_account(id).create_item(params[:name], Integer((params[:price]).to_i))
@@ -72,7 +69,7 @@ module Controllers
       session[:navigation].get_selected.select("home")
       session[:navigation].get_selected.subnavigation.select("items")
 
-      session[:alert] = Alert.create("Success!", "You created a new item", false)
+      session[:alert] = Alert.create("Success!", "You created a new item: #{create_link(new_item)}", false)
       redirect "/items/my/all"
     end
 
@@ -84,7 +81,12 @@ module Controllers
         item.to_active
       end
 
+      session[:alert] = Alert.create("Success!", "You created have activated #{create_link(item)}", false)
       redirect "/items/my/all"
+    end
+
+    def create_link(item)
+      "<a href=\'/item/#{item.id}\'>#{item.name}</a>"
     end
 
     post '/item/changestate/setinactive' do
@@ -95,14 +97,17 @@ module Controllers
         item.to_inactive
       end
 
-      redirect "/items/my/inactive"
+      session[:alert] = Alert.create("Success!", "You have deactivated #{create_link(item)}", false)
+      redirect "/items/my/all"
     end
 
     post '/item/delete' do
       redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
       id = params[:id]
       Models::System.instance.fetch_item(id).clear
-      redirect "/items/my/inactive"
+
+      session[:alert] = Alert.create("Success!", "You created have deleted item: #{item.name}", false)
+      redirect "/items/my/all"
     end
 
     get '/item/edit' do

@@ -1,7 +1,7 @@
 module Helpers
   def before_for_user_authenticated
     redirect "/" unless session[:auth]
-    response.headers['Cache-Control'] = 'public, max-age=0'
+    common_before
 
     if (session[:navigation].nil?)
       session[:navigation] = Navigations.new.build
@@ -11,10 +11,15 @@ module Helpers
   end
 
   def before_for_user_not_authenticated
-    response.headers['Cache-Control'] = 'public, max-age=0'
+     common_before
 
     if (session[:navigation].nil?)
       session[:navigation] = Navigations.new.build
     end
+  end
+
+  def common_before
+    @error = Hash.new
+    response.headers['Cache-Control'] = 'public, max-age=0'
   end
 end

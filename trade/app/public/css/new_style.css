@@ -181,9 +181,18 @@ div#message {
   background-image: url('/images/design/message.png');
 }
 
-.error, .warning {
+.error, .warning, .error input:hover .error textarea:hover {
   border: 1px solid #d0472f;
   background-image: url('/images/design/error.png');
+}
+
+.alert-input input {
+  margin-top: 1px;
+}
+
+.alert-input .help {
+  font-size: 14px;
+  padding-left: 4px;
 }
 
 .labeled-input input, .labeled-input label, .labeled-input textarea {

@@ -1,6 +1,6 @@
 %form(action="/account/edit/user/profile" enctype="multipart/form-data" method="post")
   %div(class="labeled-input")
-    = render_file_with_argument('description-entry-horizontal.haml', { :label => "Name:", :description => Models::System.instance.fetch_account(session[:user]).name })
+    = render_file_with_argument('partials/description-entry-horizontal.haml', { :label => "Name:", :description => Models::System.instance.fetch_account(session[:user]).name })
     %label Password:
     %input(type="password" name="password" id="password")
     %label(id="message")

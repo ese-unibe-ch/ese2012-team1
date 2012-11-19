@@ -20,12 +20,6 @@ module Controllers
 
     set :views , "#{absolute_path('../views', __FILE__)}"
 
-    before do
-      redirect "/" unless session[:auth]
-      response.headers['Cache-Control'] = 'public, max-age=0'
-      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
-    end
-
     get '/items/my/active' do
         user_id = session[:account]
         haml :'item/my_active', :locals => {:active_items => Models::System.instance.fetch_account(user_id).list_active_items}
@@ -41,6 +35,7 @@ module Controllers
       session[:navigation].get_selected.subnavigation.select_by_name("items")
 
       account = Models::System.instance.fetch_account(session[:account])
+
       haml :'item/my_all', :locals => {:inactive_items => account.list_inactive_items,
                                        :active_items => account.list_active_items }
     end
@@ -49,7 +44,7 @@ module Controllers
        session[:navigation].get_selected.select_by_name("market")
        session[:navigation].get_selected.subnavigation.select_by_name("create item")
 
-        haml :'item/create'
+       haml :'item/create'
     end
 
     get '/item/comment/:id' do

@@ -1,18 +1,11 @@
 %form(action="/item/create" enctype="multipart/form-data" method="post")
-  %label Name of Item:
-  %br
-  %input(type="text" name="name" value="")
-  %br
-  %label Description of Item:
-  %br
-  %textarea(name="description" cols=30 rows=10)
-  %br
-  %label Price:
-  %br
-  %input(type="text" name="price" value="")
-  %br
-  %label Item Picture:
-  %br
+  = haml :'partials/alert-input', :locals => { :name => :name, :label => "Name of Item:"}
+
+  = haml :'partials/alert-textarea', :locals => { :name => :description, :label => "Description of Item"}
+
+  = haml :'partials/alert-input', :locals => { :name => :price, :label => "Price:"}
+
+  %label(style="display:block")
+    Item Picture:
   %input(type="file" name="item_picture" size=50 maxlength="=100000" accept="text/*")
-  %br
   %input(type="submit" value="Create")
