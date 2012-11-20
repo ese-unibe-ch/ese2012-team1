@@ -1,3 +1,8 @@
+require 'require_relative'
+require 'nokogiri'
+
+require_relative "../helpers/render"
+
 class Navigations
   attr_accessor :navigations, :selected
 
@@ -7,65 +12,45 @@ class Navigations
   end
   
   def build
-    self.navigations = { :unregistered => Navigation.new, :user => Navigation.new, :organisation => Navigation.new}
-    self.selected = self.navigations[:unregistered]
 
-    #Create Navigation for unregistered users
-    self.navigations[:unregistered].add_navigation("home", "/home")
-    self.navigations[:unregistered].add_navigation("login", "/login")
-    self.navigations[:unregistered].add_navigation("register", "/register")
+    xml = Nokogiri::XML(File.open(absolute_path("navigation.xml", __FILE__)))
 
-    #Create Navigations for users
-    self.navigations[:user].add_navigation("home", "")
-    self.navigations[:user].add_navigation("community", "")
-    self.navigations[:user].add_navigation("market", "/items/active")
-    self.navigations[:user].add_navigation("logout", "/logout")
+    puts xml
 
-    self.navigations[:user].select_by_name("home")
-    self.navigations[:user].add_subnavigation("profile", "/home/user")
-    self.navigations[:user].add_subnavigation("organisations", "/organisations/self")
-    self.navigations[:user].add_subnavigation("items", "/items/my/all")
-    self.navigations[:user].add_subnavigation("edit profile", "/account/edit/user/profile")
-    self.navigations[:user].subnavigation.select_by_name("profile")
+    navigations = Hash.new
 
-    self.navigations[:user].select_by_name("community")
-    self.navigations[:user].add_subnavigation("users", "/users/all")
-    self.navigations[:user].add_subnavigation("organisations", "/organisations/all")
-    self.navigations[:user].subnavigation.select_by_name("users")
+    xml.css("context").each do |context|
+      symbol_context =  context.xpath("./name").text.to_sym
+      navigation = navigations.store(symbol_context, Navigation.new)
 
-    self.navigations[:user].select_by_name("market")
-    self.navigations[:user].add_subnavigation("on sale", "/items/active")
-    self.navigations[:user].add_subnavigation("create item", "/item/create")
-    self.navigations[:user].subnavigation.select_by_name("on sale")
+      context.css("navigation").each do |navigation_xml|
+        navigation_name = navigation_xml.xpath("./name").text
+        navigation_route =  navigation_xml.xpath("./route").text
 
-    self.navigations[:user].select_by_name("home")
+        fail "You're xml file is corrupted: No name tag (<name><\name>) given for a navigation in context: \'#{symbol_context}\'" if navigation_name.size == 0
 
-    #Create navigations for organisation
+        navigation.add_navigation(navigation_name, navigation_route)
+        navigation.select_by_name(navigation_name)
 
-    self.navigations[:organisation].add_navigation("home", "")
-    self.navigations[:organisation].add_navigation("community", "")
-    self.navigations[:organisation].add_navigation("market", "/items/active")
-    self.navigations[:organisation].add_navigation("logout", "/logout")
+        navigation_xml.css("subnavigation").each do |subnavigation|
+          subnavigation_name = subnavigation.xpath("./name").text
+          subnavigation_route =  subnavigation.xpath("./route").text
 
-    self.navigations[:organisation].select(1)
-    self.navigations[:organisation].add_subnavigation("profile", "/home/organisation")
-    self.navigations[:organisation].add_subnavigation("items", "/items/my/all")
-    self.navigations[:organisation].add_subnavigation("members", "/organisation/members")
-    self.navigations[:organisation].add_subnavigation("add member", "/organisation/add/member")
-    self.navigations[:organisation].add_subnavigation("edit organisation", "/account/edit/organisation/profile")
-    self.navigations[:organisation].subnavigation.select(1)
+          fail "You're xml file is corrupted: No name tag (<name><\name>) given for a subnavigation in navigation: \'#{navigation_name}\' for context: \'#{context}\'" if subnavigation_name.size == 0
+          fail "You're xml file is corrupted: No route tag (<name><\name>) given for a subnavigation in navigation: \'#{navigation_name}\' for context: \'#{context}\'" if subnavigation_route.size == 0
 
-    self.navigations[:organisation].select(2)
-    self.navigations[:organisation].add_subnavigation("users", "/users/all")
-    self.navigations[:organisation].add_subnavigation("organisations", "/organisations/all")
-    self.navigations[:organisation].subnavigation.select(1)
+          navigation.add_subnavigation(subnavigation_name, subnavigation_route)
 
-    self.navigations[:organisation].select(3)
-    self.navigations[:organisation].add_subnavigation("on sale", "/items/active")
-    self.navigations[:organisation].add_subnavigation("create item", "/item/create")
-    self.navigations[:organisation].subnavigation.select(1)
+          navigation.subnavigation.select(1)
+        end
 
-    self.navigations[:organisation].select(1)
+        navigation.select(1)
+
+        self.navigations = navigations
+
+        self
+      end
+    end
 
     self
   end

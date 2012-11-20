@@ -79,4 +79,15 @@ class Navigation
       yield name, direct_to, index, selected
     end
   end
+
+  def show
+    self.travers do |name, direct_to, index, selected|
+      puts "#{name} => #{direct_to}"
+
+
+      self.navigation[index-1][:subnavigation].travers do |name, direct_to, index, selected|
+        puts "  #{name} => #{direct_to}"
+      end
+    end
+  end
 end
