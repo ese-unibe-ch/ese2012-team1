@@ -1,0 +1,135 @@
+<root>
+  <context>
+    <name>user</name>
+
+    <navigation>
+      <name>home</name>
+
+      <subnavigation>
+        <name>profile</name>
+        <route>/home/user</route>
+      </subnavigation>
+      <subnavigation>
+        <name>organisations</name>
+        <route>/organisations/self</route>
+      </subnavigation>
+      <subnavigation>
+        <name>items</name>
+        <route>/items/my/all</route>
+      </subnavigation>
+      <subnavigation>
+        <name>edit profile</name>
+        <route>/account/edit/user/profile</route>
+      </subnavigation>
+    </navigation>
+
+    <navigation>
+      <name>community</name>
+
+      <subnavigation>
+        <name>users</name>
+        <route>/users/all</route>
+      </subnavigation>
+      <subnavigation>
+        <name>organisations</name>
+        <route>/organisations/all</route>
+      </subnavigation>
+    </navigation>
+
+    <navigation>
+      <name>market</name>
+      <route>/items/active</route>
+
+      <subnavigation>
+        <name>on sale</name>
+        <route>/items/active</route>
+      </subnavigation>
+      <subnavigation>
+        <name>create item</name>
+        <route>/item/create</route>
+      </subnavigation>
+    </navigation>
+
+    <navigation>
+      <name>logout</name>
+      <route>/logout</route>
+    </navigation>
+  </context>
+
+  <context>
+    <name>organisation</name>
+
+    <navigation>
+      <name>home</name>
+
+      <subnavigation>
+        <name>profile</name>
+        <route>/home/organisation</route>
+      </subnavigation>
+      <subnavigation>
+        <name>items</name>
+        <route>/items/my/all</route>
+      </subnavigation>
+      <subnavigation>
+        <name>members</name>
+        <route>/organisation/members</route>
+      </subnavigation>
+      <subnavigation>
+        <name>add member</name>
+        <route>/organisation/add/member</route>
+      </subnavigation>
+      <subnavigation>
+        <name>edit organisation</name>
+        <route>/account/edit/organisation/profile</route>
+      </subnavigation>
+    </navigation>
+
+    <navigation>
+      <name>community</name>
+
+      <subnavigation>
+        <name>users</name>
+        <route>/users/all</route>
+      </subnavigation>
+      <subnavigation>
+        <name>organisations</name>
+        <route>/organisations/all</route>
+      </subnavigation>
+    </navigation>
+
+    <navigation>
+      <name>market</name>
+      <route>/items/active</route>
+
+      <subnavigation>
+        <name>on sale</name>
+        <route>/items/active</route>
+      </subnavigation>
+      <subnavigation>
+        <name>create item</name>
+        <route>/item/create</route>
+      </subnavigation>
+    </navigation>
+
+    <navigation>
+      <name>logout</name>
+      <route>/logout</route>
+    </navigation>
+  </context>
+
+  <context>
+    <name>unregistered</name>
+    <navigation>
+      <name>home</name>
+      <route>/home</route>
+    </navigation>
+    <navigation>
+      <name>login</name>
+      <route>/login</route>
+    </navigation>
+    <navigation>
+      <name>register</name>
+      <route>/register</route>
+    </navigation>
+  </context>
+</root>

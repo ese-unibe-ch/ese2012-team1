@@ -106,7 +106,7 @@ shared_examples_for "any Account while item creation" do
   end
 end
 
-shared_examples "any Account after item creation" do
+shared_examples_for "any Account after item creation" do
   before(:each) do
     @item = double('item')
   end
