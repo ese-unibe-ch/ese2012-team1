@@ -59,8 +59,6 @@ class ItemActionsTest < Test::Unit::TestCase
 
        assert(!item.is_active?, "Item should be inactive")
 
-       puts (Models::System.instance.items)
-
        post '/item/changestate/setinactive', {:id => item.id}, 'rack.session' => {:user => 'bart@mail.ch', :auth => true}
 
        assert(!item.is_active?, "Item should be inactive")

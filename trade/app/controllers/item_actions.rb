@@ -69,8 +69,6 @@ module Controllers
 
       new_item.add_picture("/images/items/#{new_item.id}#{file_extension}")
 
-      puts("path: #{new_item.picture}")
-
       redirect "/items/my/inactive"
     end
 
