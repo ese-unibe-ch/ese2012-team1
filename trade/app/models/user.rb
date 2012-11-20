@@ -78,11 +78,8 @@ module Models
       Models::System.instance.fetch_items_of(self.id).each { |e| e.clear }
       Models::System.instance.remove_account(self.id)
 
-      begin
+      unless (self.avatar == "/images/users/default_avatar.png")
         File.delete("#{self.avatar.sub("/images", "./public/images")}")
-      rescue => e
-        puts(e)
-        puts("avatar does not exist on #{self.avatar.sub("/users", "./public/images")}")
       end
     end
 
