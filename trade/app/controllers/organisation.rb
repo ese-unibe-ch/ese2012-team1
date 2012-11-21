@@ -227,9 +227,7 @@ module Controllers
       redirect "/error/No_Self_Right_Revoke" if self_revoke && only_admin
 
       user = Models::System.instance.fetch_user_by_email(params[:user_email])
-      if user.id != session[:user]
-        organisation.revoke_admin_rights(user)
-      end
+      organisation.revoke_admin_rights(user)
 
       redirect '/organisation/members'
     end
