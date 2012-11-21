@@ -41,7 +41,7 @@ module Controllers
         elsif params[:title] == "No_Self_Remove"
           msg = "You can not remove yourself from your organisation"
         elsif params[:title] == "No_Self_Right_Revoke"
-          msg = "You can not revoke administrator privileges from yourself"
+          msg = "You can not revoke administrator privileges from yourself if you are the only Administrator of an Organisation."
         elsif params[:title] == "Wrong_Activation_Code"
           msg = "The activation code in the URL is not correct.<br />Try with copy and paste the complete URL from the e-mail into your Browser."
         elsif params[:title] == "Already_Activated"
