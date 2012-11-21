@@ -147,7 +147,10 @@ module Controllers
     post '/organisation/member/delete' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
       redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
-      redirect "/error/No_Self_Remove" unless (Models::System.instance.fetch_account(session[:user]) != Models::System.instance.fetch_user_by_email(params[:member]))
+      self_remove = (Models::System.instance.fetch_account(session[:user]) == Models::System.instance.fetch_user_by_email(params[:user_email]))
+      organisation = Models::System.instance.fetch_account(session[:account])
+      only_admin = true if organisation.admin_count == 1
+      redirect "/error/No_Self_Remove" if self_remove && only_admin
       if Models::System.instance.user_exists?(params[:member])
         haml :'organisation/member_delete_confirm', :locals => { :member => params[:member]}
       else
@@ -159,12 +162,14 @@ module Controllers
     post '/organisation/member/delete/confirm' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
       redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
-      redirect "/error/No_Valid_User" unless Models::System.instance.user_exists?(params[:user_email])
+      self_remove = (Models::System.instance.fetch_account(session[:user]) == Models::System.instance.fetch_user_by_email(params[:user_email]))
       organisation = Models::System.instance.fetch_account(session[:account])
+      only_admin = true if organisation.admin_count == 1
+      redirect "/error/No_Self_Remove" if self_remove && only_admin
+      redirect "/error/No_Valid_User" unless Models::System.instance.user_exists?(params[:user_email])
       user = Models::System.instance.fetch_user_by_email(params[:user_email])
-      if user.id != session[:user]
-        organisation.remove_member_by_email(user.email)
-      end
+      organisation.remove_member_by_email(user.email)
+
       redirect '/organisation/members'
     end
 
@@ -255,6 +260,39 @@ module Controllers
       haml :error, :locals => {:error_title => "", :error_message => "#{request.env['sinatra.error'].to_s}" }
     end
 
+    ##
+    # Leaving an Organisation
+    ##
+    get '/organisation/leave' do
+      redirect "/error/Not_In_Organisation" if session[:user] == session[:account]
+      organisation = Models::System.instance.fetch_account(session[:account])
+      is_admin = organisation.is_admin?(Models::System.instance.fetch_account(session[:user]))
+      only_admin = true if organisation.admin_count == 1
+      redirect "/error/No_Self_Remove" if is_admin && only_admin
+
+      haml :'organisation/leave'
+    end
+
+    post '/organisation/leave' do
+      redirect "/error/Not_In_Organisation" if session[:user] == session[:account]
+      redirect "/error/No_Valid_User" unless Models::System.instance.user_exists?(params[:user_email])
+      organisation = Models::System.instance.fetch_account(session[:account])
+      is_admin = organisation.is_admin?(Models::System.instance.fetch_account(session[:user]))
+      only_admin = true if organisation.admin_count == 1
+      redirect "/error/No_Self_Remove" if is_admin && only_admin
+
+      user = Models::System.instance.fetch_user_by_email(params[:user_email])
+      redirect "/error/Try_Remove_Other" if params[:user_email] != user.email
+
+      organisation.remove_member_by_email(user.email)
+
+      session[:account] = session[:user]
+      redirect "/home"
+    end
+
+    ##
+    # Deleting an Organisation
+    ##
     get '/organisation/delete' do
       redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
       haml :'organisation/delete'
