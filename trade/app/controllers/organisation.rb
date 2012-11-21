@@ -147,7 +147,7 @@ module Controllers
     post '/organisation/member/delete' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
       redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
-      self_remove = (Models::System.instance.fetch_account(session[:user]) == Models::System.instance.fetch_user_by_email(params[:user_email]))
+      self_remove = (Models::System.instance.fetch_account(session[:user]) == Models::System.instance.fetch_user_by_email(params[:member]))
       organisation = Models::System.instance.fetch_account(session[:account])
       only_admin = true if organisation.admin_count == 1
       redirect "/error/No_Self_Remove" if self_remove && only_admin
@@ -170,7 +170,12 @@ module Controllers
       user = Models::System.instance.fetch_user_by_email(params[:user_email])
       organisation.remove_member_by_email(user.email)
 
-      redirect '/organisation/members'
+      if self_remove
+        session[:account] = session[:user]
+        redirect '/home'
+      else
+        redirect '/organisation/members'
+      end
     end
 
     ##
