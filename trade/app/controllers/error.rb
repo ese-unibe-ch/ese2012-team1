@@ -60,6 +60,7 @@ module Controllers
           title = "Not_An_Error"
           msg = "This is a wrong Error Code."
         end
+        title = title.gsub("_", " ")
         haml :error, :locals => {:error_title => title, :error_message => msg}
     end
   end
