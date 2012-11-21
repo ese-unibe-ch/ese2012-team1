@@ -28,10 +28,20 @@ module Models
 
     def remove_member(user)
       self.members.delete(user.email)
+      self.admins.delete(user.email) if self.is_admin?(user)
+    end
+
+    def remove_member_by_email(user_mail)
+      self.members.delete(user_mail)
+      self.admins.delete(user_mail) if self.admins.one? { |email, admin| email == user_mail }
     end
 
     def is_member?(user)
       members.one? { |email, member| email == user.email }
+    end
+
+    def members_without_admins
+      self.members.values.select { |member| !self.is_admin?(member) }
     end
 
     def is_admin?(user)

@@ -157,6 +157,25 @@ module Controllers
       redirect "/" unless session[:auth]
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
       user = Models::System.instance.fetch_account(session[:user])
+
+      # Do Organisation Check
+      deletable = true;
+      org_list = Models::System.instance.fetch_organisations_of(session[:user])
+      for org in org_list do
+         if org.is_admin?(user) && org.admin_count() == 1
+           deletable = false;
+         end
+      end
+
+      # Remove User From Organisation
+      if deletable
+        for org in org_list do
+          org.remove_member_by_email(user.email);
+        end
+      else
+        redirect "/error/Yor_Are_Only_Admin"
+      end
+
       user.clear
       session.clear
 

@@ -13,11 +13,11 @@ include Helpers
 
 module Controllers
   class Home < Sinatra::Application
+    set :views , "#{absolute_path('../views', __FILE__)}"
+
     before do
       before_for_user_not_authenticated
     end
-
-    set :views , "#{absolute_path('../views', __FILE__)}"
 
     get '/' do
       redirect "/home" if session[:auth]
@@ -38,9 +38,11 @@ module Controllers
         session[:navigation].get_selected.select(1)
         haml :'home/user'
       else
+		admin_view = Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+
         session[:navigation].select(:organisation)
         session[:navigation].get_selected.select(1)
-        haml :'home/organisation'
+        haml :'home/organisation', :locals => { :admin_view => admin_view }
       end
     end
 

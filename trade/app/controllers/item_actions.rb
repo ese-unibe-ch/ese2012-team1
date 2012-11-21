@@ -18,11 +18,11 @@ include Helpers
 
 module Controllers
   class ItemActions < Sinatra::Application
+    set :views, "#{absolute_path('../views', __FILE__)}"
+
     before do
       before_for_user_authenticated
     end
-
-    set :views, "#{absolute_path('../views', __FILE__)}"
 
     ##
     #

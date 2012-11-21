@@ -269,7 +269,6 @@ class SystemTest < Test::Unit::TestCase
 
     system.add_account(organisation)
 
-    puts(organisation.id)
     assert(system.fetch_account(organisation.id) == organisation, "Should fetch account out of #{system.accounts}")
   end
 

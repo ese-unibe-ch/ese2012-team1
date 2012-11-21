@@ -63,6 +63,7 @@ module Models
     # Adds a description to the item.
     # @param  description   the string containing the description for the item
     def add_description (description)
+      # Precondition
       fail "Missing description." if (description == nil)
       self.description_list.add(description)
       self.description_position = self.description_list.version
@@ -78,7 +79,7 @@ module Models
     # Adds a path to a picture to the item.
     # @param  picture : path to picture file for the item
     def add_picture (picture)
-      fail "Missing picture." if (picture == nil)
+      fail "Missing picture path." if (picture == nil)
       path = absolute_path(picture.sub("/images", "../public/images"), __FILE__)
       fail "There exists no file on path #{path}" unless (File.exists?(path))
 
@@ -104,12 +105,16 @@ module Models
     end
 
     def can_be_bought_by?(user)
+      # Precondition
+      fail "Missing user" if (user == nil)
       user.credits >= self.price && self.active
     end
 
     #Set new owner and set item to inactive
 
     def bought_by(new_owner)
+      # Precondition
+      fail "Missing new owner" if (new_owner == nil)
       self.owner = new_owner
       self.to_inactive
     end

@@ -78,11 +78,8 @@ module Models
       Models::System.instance.fetch_items_of(self.id).each { |e| e.clear }
       Models::System.instance.remove_account(self.id)
 
-      begin
+      unless (self.avatar == "/images/users/default_avatar.png")
         File.delete("#{self.avatar.sub("/images", "./public/images")}")
-      rescue => e
-        puts(e)
-        puts("avatar does not exist on #{self.avatar.sub("/users", "./public/images")}")
       end
     end
 
@@ -92,6 +89,10 @@ module Models
     # @return new_organization    the organisation which was created
     # @param avatar : avatar of the organisation
     def create_organisation(name, description, avatar)
+      # Preconditions
+      fail "Missing name" if (name == nil)
+      fail "Missing description" if (description == nil)
+      fail "Missing avatar path" if (avatar == nil)
       org = Models::Organisation.created(name, description, avatar)
       org.organisation = true
       org.add_member(self)
@@ -101,6 +102,8 @@ module Models
 
     #TODO tests
     def is_last_admin_of?(organisation)
+      #Precondition
+      fail "Missing organisation to check" if (organisation == nil)
       organisation.is_admin?(self) && organisation.size == 1
     end
 
@@ -111,6 +114,8 @@ module Models
     end
 
     def password(password)
+      # Precondition
+      fail "Missing password" if (password == nil)
       pw_salt = BCrypt::Engine.generate_salt
       pw_hash = BCrypt::Engine.hash_secret(password, pw_salt)
       self.password_salt = pw_salt

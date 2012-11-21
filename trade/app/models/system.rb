@@ -53,6 +53,12 @@ module Models
     # Removes an account from the system.
     def remove_account(account_id)
       fail "No account with id #{account_id}" unless self.accounts.member?(account_id)
+
+      account = self.fetch_account(account_id)
+      unless (account.avatar == "/images/users/default_avatar.png" || account.avatar == "/images/organisations/default_avatar.png")
+        File.delete("#{account.avatar.sub("/images", "./public/images")}")
+      end
+
       self.accounts.delete(account_id)
     end
 

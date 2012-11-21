@@ -22,11 +22,6 @@ class ReversableDescription
     fail "Version must be a positive integer" unless version.to_s =~ /^[0-9]+$/
     fail "This version of a description does not exist"  unless descriptions.size >= version-1
 
-
-    puts(version)
-    puts(descriptions.size)
-    puts(descriptions)
-
     self.descriptions[version-1]
   end
 
