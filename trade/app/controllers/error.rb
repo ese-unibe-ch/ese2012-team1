@@ -50,6 +50,8 @@ module Controllers
           msg = "You're not an administrator of this Organisation"
         elsif params[:title] == "Is_already_Admin"
           msg = "This user is already an Administrator of this Organisation"
+        elsif params[:title] == "Yor_Are_Only_Admin"
+          msg = "You are the only administrator in one of your Organisations.<br />You should provide Admin privileges to one of your Members or delete the Organisation first."
         else
           title = "Not_An_Error"
           msg = "This is a wrong Error Code."
