@@ -5,7 +5,9 @@ require 'haml'
 require 'ftools'
 
 require_relative '../models/user'
+require_relative '../helpers/alert'
 require_relative '../helpers/render'
+require_relative '../helpers/before'
 require_relative '../helpers/string_checkers'
 require_relative '../models/simple_email_client' unless ENV['RACK_ENV'] == 'test'
 
@@ -14,11 +16,11 @@ include Helpers
 
 module Controllers
   class Registration < Sinatra::Application
-    set :views , "#{absolute_path('../views', __FILE__)}"
-
     before do
-      response.headers['Cache-Control'] = 'public, max-age=0'
+      before_for_user_not_authenticated
     end
+
+    set :views , "#{absolute_path('../views', __FILE__)}"
 
     ##
     # activates a user
@@ -33,7 +35,9 @@ module Controllers
         redirect '/error/Wrong_Activation_Code'
       end
 
-      haml :'authentication/activation_confirm'
+      session[:alert] = Alert.create("Activation successful!", "Your account is now activated. Please login.", false)
+
+      haml :'authentication/login'
     end
 
 
@@ -45,6 +49,7 @@ module Controllers
     ##
 
     get '/register' do
+      session[:navigation].get[:unregistered].select(3)
       haml :'authentication/register', :locals => { :script => 'passwordchecker.js', :onload => 'initialize()' }
     end
 

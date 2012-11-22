@@ -1,5 +1,5 @@
-require "rspec"
 require 'rubygems'
+require "rspec"
 
 require 'require_relative'
 require_relative('../../app/models/item')

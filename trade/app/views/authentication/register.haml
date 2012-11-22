@@ -1,36 +1,27 @@
-%form(action="/register" enctype="multipart/form-data" method="post")
-  %label Name:
-  %br
-  %input(type="text" name="name"){:value => session[:form_name]}
-  %br
-  %br
-  %label Password:
-  %br
-  %input(type="password" name="password" id="password")
-  %br
-  %label(id="message")
-  %br
-  %label Retype Password:
-  %br
-  %input(type="password" name="re_password" id="re_password")
-  %br
-  %label(id="re_message")
-  %br
-  %br
-  %label Email:
-  %br
-  %input(type="text" name="email"){:value => session[:form_email]}
-  - class_to_set = ""
-  - class_to_set = "warning" if session[:is_email_error] == "yes"
-  %label(class="#{class_to_set}")= "#{session[:email_error]}"
-  %br
-  %br
-  %label Description:
-  %br
-  %textarea(name="interests" cols=30 rows=10)
-    = session[:form_description].to_s
-  %br
-  %br
-  %label Avatar:
-  %input(type="file" name="avatar" size=50 maxlength="=100000" accept="text/*")
-  %input(type="submit" id="register" value="Register" disabled=true)
+%div(class="labeled-input")
+  %form(action="/register" enctype="multipart/form-data" method="post")
+    %label Name:
+    %input(type="text" name="name"){:value => session[:form_name]}
+
+    %label Password:
+    %input(type="password" name="password" id="password")
+    %label(id="message")
+
+    %label Retype Password:
+    %input(type="password" name="re_password" id="re_password")
+    %label(id="re_message")
+
+    %label Email:
+    %input(type="text" name="email"){:value => session[:form_email]}
+    - class_to_set = ""
+    - class_to_set = "warning" if session[:is_email_error] == "yes"
+    %label(class="#{class_to_set}")= "#{session[:email_error]}"
+
+    %label Description:
+    %textarea(name="interests" cols=27 rows=10)
+      = session[:form_description].to_s
+
+    %label Avatar:
+    %input(type="file" name="avatar" size=30 maxlength="=100000" accept="text/*")
+
+    %input(type="submit" id="register" value="Register" disabled=true)

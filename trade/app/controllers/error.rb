@@ -6,18 +6,18 @@ require 'sinatra/content_for'
 require_relative('../models/user')
 require_relative('../models/item')
 require_relative('../helpers/render')
+require_relative '../helpers/before'
 
 include Models
 include Helpers
 
 module Controllers
   class Error < Sinatra::Application
-    set :views , "#{absolute_path('../views', __FILE__)}"
-
     before do
-      #redirect "/" unless session[:auth]
-      response.headers['Cache-Control'] = 'public, max-age=0'
+      before_for_user_not_authenticated
     end
+
+    set :views , "#{absolute_path('../views', __FILE__)}"
 
     get '/error/:title' do
         title = params[:title]

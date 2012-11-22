@@ -7,13 +7,17 @@ require 'haml/template/options'
 
 require_relative('controllers/home')
 require_relative('controllers/authentication')
+require_relative('controllers/organisation_admin')
 require_relative('controllers/registration')
 require_relative('controllers/item_actions')
 require_relative('controllers/item_sites')
 require_relative('controllers/user_sites')
 require_relative('controllers/organisation')
 require_relative('controllers/account_edit')
+require_relative('controllers/item_manipulation')
 require_relative('controllers/error')
+require_relative('helpers/navigation')
+require_relative('helpers/navigations')
 require_relative('init.rb') unless ENV['RACK_ENV'] == 'test'
 require_relative('helpers/render')
 require_relative('helpers/mailer')
@@ -46,12 +50,13 @@ class App < Sinatra::Base
   use Controllers::Authentication
   use Controllers::Registration
   use Controllers::ItemActions
+  use Controllers::ItemManipulation
   use Controllers::ItemSites
   use Controllers::UserSites
-  use Controllers::Organisation
   use Controllers::AccountEdit
   use Controllers::Error
-
+  use Controllers::Organisation
+  use Controllers::OrganisationAdmin
 end
 
 App.run! unless ENV['RACK_ENV'] == 'test'

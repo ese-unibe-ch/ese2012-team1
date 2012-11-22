@@ -1,5 +1,6 @@
-%h2 My Organisations
-%br
+%form(action="/organisation/create" method="get")
+  %button(type="submit" name="create organisation" value="create organisation" id="createOrg")
+    create organisation
 %ul
   - for organisation in all_organisations
     %li

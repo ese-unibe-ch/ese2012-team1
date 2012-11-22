@@ -1,29 +1,26 @@
-%h2 Your Organisation's Profile
-%br
-#usr_img
-  %img(height=200 width=200){ :alt => Models::System.instance.fetch_account(session[:account].to_i).name, :src => Models::System.instance.fetch_account(session[:account].to_i).avatar }
+- organisation = Models::System.instance.fetch_account(session[:account].to_i)
+- user = Models::System.instance.fetch_account(session[:user].to_i)
 
-%br
-= "Currently logged in as User: #{Models::System.instance.fetch_account(session[:user]).name}"
-%br
-= "Currently in Account of Organisation: #{Models::System.instance.fetch_account(session[:account]).name}"
-%br
-%br
-= "Your Organisation's Credits: #{Models::System.instance.fetch_account(session[:account]).credits}"
-%br
-%br
-= "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).list_active_items.size} active Items"
-%br
-= "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).list_inactive_items.size} inactive Items"
-%br
-%br
-= "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).members.size} Members (with you)"
-%br
-%br
-= "Your Organisation's Description:"
-%br
-= "#{Models::System.instance.fetch_account(session[:account]).description}"
-%br
-%br
+#usr_img
+  %img(height=200 width=200){ :alt => organisation.name, :src => organisation.avatar }
+
+%div(class="description")
+  - labels = ["Logged in as User:", "Organisation:", "Credits:"]
+  - inputs = [user.name, organisation.name, organisation.credits]
+
+  - labels.each_with_index do |label, index|
+    = haml :'partials/description-entry-horizontal', :locals => {:description => inputs[index], :label => label}
+
+  %div(class="description")
+    = "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).list_active_items.size} active Items"
+
+  %div(class="description")
+    = "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).list_inactive_items.size} inactive Items"
+
+  %div(class="description")
+    = "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).members.size} Members (with you)"
+
+  = haml :'partials/description-entry-vertical', :locals => {:description => organisation.description, :label =>   "Description:" }
+
 - if admin_view
   %a(href="/account/edit/organisation/profile" name="edit_user_profile") Edit organisation profile
