@@ -94,24 +94,6 @@ module Controllers
       session[:navigation].get_selected.select_by_name("home")
       session[:navigation].get_selected.subnavigation.select_by_name("organisations")
 
-      self_revoke = (Models::System.instance.fetch_account(session[:user]) == Models::System.instance.fetch_user_by_email(params[:user_email]))
-      organisation = Models::System.instance.fetch_account(session[:account])
-      only_admin = true if organisation.admin_count == 1
-      redirect "/error/No_Self_Right_Revoke" if self_revoke && only_admin
-
-      user = Models::System.instance.fetch_user_by_email(params[:user_email])
-      organisation.revoke_admin_rights(user)
-
-      redirect '/organisation/members'
-    end
-
-
-    get '/organisations/self' do
-      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
-
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("organisations")
-
       user = Models::System.instance.fetch_account(session[:user])
       haml :'organisation/self', :locals => { :all_organisations => Models::System.instance.fetch_organisations_of(user.id) }
     end

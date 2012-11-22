@@ -11,6 +11,12 @@ module Helpers
      common_before
   end
 
+  def before_for_item_manipulation
+    before_for_user_authenticated
+
+    redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
+  end
+
   def before_for_admin
     before_for_user_authenticated
 

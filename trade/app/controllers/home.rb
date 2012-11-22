@@ -38,8 +38,7 @@ module Controllers
         session[:navigation].get_selected.select(1)
         haml :'home/user'
       else
-		admin_view = Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
-
+		    admin_view = Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
         session[:navigation].select(:organisation)
         session[:navigation].get_selected.select(1)
         haml :'home/organisation', :locals => { :admin_view => admin_view }
@@ -59,7 +58,9 @@ module Controllers
       session[:navigation].get_selected.select_by_name("home")
       session[:navigation].get_selected.subnavigation.select_by_name("profile")
 
-      haml :'home/organisation'
+      admin_view = Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+
+      haml :'home/organisation', :locals => { :admin_view => admin_view }
     end
   end
 end
