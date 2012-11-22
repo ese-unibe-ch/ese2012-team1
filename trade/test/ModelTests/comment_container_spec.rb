@@ -120,6 +120,9 @@ describe CommentContainer do
 
         @comment1.stub(:collect).and_return([@comment1])
         @comment2.stub(:collect).and_return([@comment2])
+
+        @comment1.stub(:nr).and_return(1)
+        @comment2.stub(:nr).and_return(2)
       end
 
       it "should have two children" do
