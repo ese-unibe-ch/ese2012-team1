@@ -35,6 +35,9 @@ class App < Sinatra::Base
   set :public_folder, 'public'
   set :static, true
 
+  #To set Port on Server
+  ##replace_for_port##
+
   #To get userfriendly error messages set this to false
   set :development, true
 
