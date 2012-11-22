@@ -11,6 +11,15 @@ module Helpers
      common_before
   end
 
+  def before_for_admin
+    before_for_user_authenticated
+
+    account = Models::System.instance.fetch_account(session[:account])
+    user = Models::System.instance.fetch_account(session[:user])
+
+    redirect "/error/Not_an_Admin" unless account.is_admin?(user)
+  end
+
   def common_before
     @error = Hash.new
     response.headers['Cache-Control'] = 'public, max-age=0'

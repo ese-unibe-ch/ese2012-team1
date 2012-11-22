@@ -7,6 +7,7 @@ require 'haml/template/options'
 
 require_relative('controllers/home')
 require_relative('controllers/authentication')
+require_relative('controllers/organisation_admin')
 require_relative('controllers/registration')
 require_relative('controllers/item_actions')
 require_relative('controllers/item_sites')
@@ -48,6 +49,7 @@ class App < Sinatra::Base
   use Controllers::ItemSites
   use Controllers::UserSites
   use Controllers::Organisation
+  use Controllers::OrganisationAdmin
   use Controllers::AccountEdit
   use Controllers::Error
 end
