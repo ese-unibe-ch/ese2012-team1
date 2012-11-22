@@ -106,7 +106,7 @@ module Controllers
 
     ##
     #
-    # Gets edited profile data from user. Redirected from edit.haml.haml with
+    # Gets edited profile data from user. Redirected from edit.haml with
     # Form. Checks if incoming data is correct and redirects to home.
     #
     # Should get parameter
@@ -117,7 +117,6 @@ module Controllers
 
     post '/account/edit/organisation/profile' do
       organisation = Models::System.instance.fetch_account(session[:account])
-
 
       if (!params[:description].nil?)
         organisation.description = params[:description].nil? ? "" : params[:description]
