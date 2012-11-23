@@ -23,6 +23,7 @@ module Helpers
     account = Models::System.instance.fetch_account(session[:account])
     user = Models::System.instance.fetch_account(session[:user])
 
+    redirect "/home" if session[:user] == session[:account]
     redirect "/error/Not_an_Admin" unless account.is_admin?(user)
   end
 

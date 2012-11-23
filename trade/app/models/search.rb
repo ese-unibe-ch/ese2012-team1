@@ -2,7 +2,7 @@ class Search
   attr_accessor :items
 
   class SearchResult
-    attr_accessor :result
+    attr_accessor :result, :pattern
 
     def initialize
       self.result = Hash.new
@@ -17,7 +17,7 @@ class Search
     end
 
     def get(name)
-      fail "There is no result for this class" unless self.found?(name)
+      fail "There is no result for \'#{name}\'" unless self.found?(name)
 
       self.result[name]
     end
@@ -54,6 +54,7 @@ class Search
 
   def find(search_string)
     result = SearchResult.new
+    result.pattern = search_string
 
     items.each do |item|
       item.symbol_methods.each do |symbol_method|
