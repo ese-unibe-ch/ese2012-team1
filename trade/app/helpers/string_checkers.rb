@@ -53,20 +53,4 @@ class String
         true
     end
   end
-
-  ##
-  #
-  # Surrounds given part of string with <strong></strong> html
-  # tags.
-  #
-  # Example:
-  # string = "hold"
-  # string.boldify("old") # h<strong>old</strong>
-  #
-  ##
-
-  def boldify(string)
-    self.gsub(string, "<strong>#{string}</strong>")
-  end
-
 end

@@ -1,3 +1,5 @@
+require_relative('../helpers/HTML_constructor')
+
 class Search
   attr_accessor :items
 
