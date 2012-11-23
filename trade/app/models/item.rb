@@ -20,6 +20,11 @@ module Models
     # generate getter and setter for name and price
     attr_accessor :name, :price, :active, :owner, :id, :description_list, :description_position, :picture
 
+    def initialize
+      super
+      System.instance.search.register(self, "item", [:name, :description])
+    end
+
     # factory method (constructor) on the class
     def self.created( name, price, owner)
       #Preconditions
@@ -98,6 +103,7 @@ module Models
 
     def clear
       System.instance.remove_item(self.id)
+      System.search.unregister(self)
 
       unless self.picture =~ /default_item\.png$/
         File.delete(Helpers::absolute_path(self.picture.sub("/images", "../public/images"), __FILE__))

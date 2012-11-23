@@ -2,6 +2,8 @@ require 'singleton'
 require 'rubygems'
 require 'require_relative'
 
+require_relative 'search'
+
 module Models
   # This class serves as some kind of database. It holds all organisations (identified by name),
   # all users (identified by email) and all items (identified by id).
@@ -9,13 +11,14 @@ module Models
   class System
     include Singleton
 
-    attr_accessor :accounts, :items, :item_id_count, :account_id_count
+    attr_accessor :accounts, :items, :item_id_count, :account_id_count, :search
 
     def initialize
       self.accounts = Hash.new
       self.items = Hash.new
       self.item_id_count = 0
       self.account_id_count = 0
+      self.search = Search.new
     end
 
     # ---------accounts------------------------------------------------------------

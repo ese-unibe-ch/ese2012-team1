@@ -1,32 +1,77 @@
 class Search
   attr_accessor :items
 
-  @item
-  @params
+  class SearchResult
+    attr_accessor :result
+
+    def initialize
+      self.result = Hash.new
+    end
+
+    def add(item, name)
+      unless result[name]
+        self.result[name] = Array.new
+      end
+
+      self.result[name].push(item)
+    end
+
+    def get(name)
+      fail "There is no result for this class" unless self.found?(name)
+
+      self.result[name]
+    end
+
+    def found?(name)
+      result.member?(name)
+    end
+
+    def empty?
+      self.result.empty?
+    end
+
+    def size
+      self.result.size
+    end
+  end
+
+  class SearchItem
+    attr_accessor :item, :symbol_methods, :name
+
+    def self.create(item, name, symbol_methods)
+      search_item = SearchItem.new
+      search_item.item = item
+      search_item.name = name
+      search_item.symbol_methods = symbol_methods
+
+      search_item
+    end
+  end
 
   def initialize
     self.items = Array.new
-    @item = nil
-    @params = Array.new
   end
 
   def find(search_string)
-    result = Array.new
+    result = SearchResult.new
 
-    unless (@item.nil?)
-      @params.each do |symbol_method|
-        if @item.send(symbol_method).include?(search_string)
-          result.push(@item)
+    items.each do |item|
+      item.symbol_methods.each do |symbol_method|
+        if item.item.send(symbol_method).include?(search_string)
+          result.add(item.item, item.name)
           break
         end
       end
     end
 
-    Array.new
+    result
   end
 
-  def register(to_be_searched, methods)
-    @item = to_be_searched
-    @params = methods
+  def register(to_be_searched, name, methods)
+    items.push(SearchItem.create(to_be_searched, name, methods))
+  end
+
+  def unregister(to_be_unregistered)
+    self.items = self.items.delete_if { |search_item| search_item.item == to_be_unregistered }
   end
 end

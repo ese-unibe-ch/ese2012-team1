@@ -16,6 +16,7 @@ require_relative('controllers/organisation')
 require_relative('controllers/account_edit')
 require_relative('controllers/item_manipulation')
 require_relative('controllers/error')
+require_relative('controllers/search')
 require_relative('helpers/navigation')
 require_relative('helpers/navigations')
 require_relative('init.rb') unless ENV['RACK_ENV'] == 'test'
@@ -49,6 +50,7 @@ class App < Sinatra::Base
   use Controllers::Error
   use Controllers::Authentication
   use Controllers::Registration
+  use Controllers::Search
   use Controllers::ItemActions
   use Controllers::ItemManipulation
   use Controllers::ItemSites

@@ -34,6 +34,12 @@ module Models
       Models::System.instance.fetch_user_by_email(self.email) == self
     end
 
+    def initialize
+      super
+
+      System.instance.search.register(self, "user", [:name, :description])
+    end
+
     # factory method (constructor) on the class
     # You have to save the avatar at public/images/users/ before
     # you call this method. If not, it will fail.

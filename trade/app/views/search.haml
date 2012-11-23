@@ -1,0 +1,7 @@
+%h1 Show results of search: TODO!
+
+- ["organisation", "user", "item"].each do |name|
+  - if (results.found?(name))
+    - results.get(name).each do |search_result|
+      %div
+        = search_result.name

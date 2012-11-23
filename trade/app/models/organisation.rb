@@ -20,6 +20,8 @@ module Models
       super
       self.members = Hash.new
       self.admins = Hash.new
+
+      System.instance.search.register(self, "organisation", [:name, :description])
     end
 
     def add_member(user)
@@ -61,6 +63,10 @@ module Models
       fail "#{member.email} is not a admin of this organisation" unless admins[member.email]
       fail "not enough admins left" unless self.admin_count > 1
       self.admins.delete(member.email)
+    end
+
+    def clear
+      System.search.unregister(self)
     end
 
   end

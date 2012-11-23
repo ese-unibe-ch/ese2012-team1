@@ -51,6 +51,7 @@ module Controllers
     end
 
     post '/item/edit' do
+      id = params[:id]
       item = Models::System.instance.fetch_item(params[:id])
       name = item.name
       description = item.description
@@ -74,9 +75,9 @@ module Controllers
     ###
 
     post '/item/edit/save' do
-      item = Models::System.instance.fetch_item(id)
+      item = Models::System.instance.fetch_item(params[:id])
 
-      redirect "/items/my/all" if Models::System.instance.fetch_item(id).editable?
+      redirect "/items/my/all" if item.editable?
 
       new_description = params[:new_description]
 
@@ -105,6 +106,7 @@ module Controllers
     #  Save the current description which should be displayed
     #
     ##
+
     post '/item/edit/save_description' do
 
       desc_to_use = params[:desc_to_use].to_i
