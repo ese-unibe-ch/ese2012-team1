@@ -1,15 +1,4 @@
-require 'rubygems'
-require "rspec"
-
-require 'require_relative'
-require_relative('../../app/models/item')
-require_relative('../../app/models/system')
-require_relative('../../app/models/account')
-
-require_relative('custom_matchers')
-
-include CustomMatchers
-include Models
+require 'test_require'
 
 ##
 #
@@ -160,12 +149,19 @@ describe Models::Item do
         @system = double('System')
         System.stub(:instance).and_return(@system)
         @system.stub(:remove_item)
+
+        @search = double('search')
+        @search.stub(:register)
+        @search.stub(:unregister)
+
+        @system.stub(:search).and_return(@search)
+
         @item.id = 1
       end
 
       context "when set custom picture" do
         it "should remove picture from file system" do
-          #This mock on the tested items is so that i don't have to create a real item
+          #This mock on the tested items is because I don't want to create a real item
           #because the add_picture() methods checks for that.
           @item.stub(:picture).and_return("../../app/public/images/items/test.png")
 

@@ -1,11 +1,4 @@
-require "rubygems"
-require "rspec"
-require "require_relative"
-
-require "../../app/models/search"
-require_relative "custom_matchers"
-
-include CustomMatchers
+require 'test_require'
 
 describe "Search" do
   def create_search
@@ -31,7 +24,7 @@ describe "Search" do
 
   it "should register items with correct methods" do
     item = double('item')
-    @search.register(item, "item", [:method1, :method2])
+    @search.register(SearchItem.create(item, "item", [:method1, :method2]))
 
     item.should_receive(:method1).and_return("test")
     item.should_receive(:method2).and_return("test2")
@@ -42,7 +35,7 @@ describe "Search" do
   context "with one registered item" do
     before(:each) do
       @item = double('item')
-      @search.register(@item, "item", [:method1, :method2])
+      @search.register(SearchItem.create(@item, "item", [:method1, :method2]))
 
       @item.stub(:method1).and_return("test1")
       @item.stub(:method2).and_return("test2")
@@ -71,11 +64,11 @@ describe "Search" do
 
       @drink1 = double('coke')
 
-      @search.register(@item1, "food", [:ingredients])
-      @search.register(@item2, "food", [:ingredients])
-      @search.register(@furniture1, "furniture", [:color])
-      @search.register(@furniture2, "furniture", [:color])
-      @search.register(@drink1, "drink", [:size])
+      @search.register(SearchItem.create(@item1, "food", [:ingredients]))
+      @search.register(SearchItem.create(@item2, "food", [:ingredients]))
+      @search.register(SearchItem.create(@furniture1, "furniture", [:color]))
+      @search.register(SearchItem.create(@furniture2, "furniture", [:color]))
+      @search.register(SearchItem.create(@drink1, "drink", [:size]))
 
       @furniture1.stub(:color).and_return("blue")
       @furniture2.stub(:color).and_return("chocolate brown")
@@ -87,9 +80,9 @@ describe "Search" do
     it "should return all items with an r when search string is \'r\'" do
       result = @search.find("r")
 
-      result.member?("furniture").should be_true
-      result.member?("food").should be_true
-      result.member?("drink").should be_true
+      result.found?("furniture").should be_true
+      result.found?("food").should be_true
+      result.found?("drink").should be_true
 
       result.get("furniture").size.should == 1
       result.get("furniture").include?(@furniture1).should be_false
@@ -106,9 +99,9 @@ describe "Search" do
     it "should return all items containing \'brown\' when search string is \'brown\'" do
       result = @search.find("chocolate")
 
-      result.member?("furniture").should be_true
-      result.member?("food").should be_true
-      result.member?("drink").should be_false
+      result.found?("furniture").should be_true
+      result.found?("food").should be_true
+      result.found?("drink").should be_false
 
       result.get("furniture").size.should == 1
       result.get("furniture").include?(@furniture1).should be_false

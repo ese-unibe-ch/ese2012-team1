@@ -1,13 +1,6 @@
-require 'rubygems'
 require 'parseconfig'
 require 'tlsmail'
 require 'time'
-require 'require_relative'
-
-require_relative '../helpers/render'
-require_relative '../helpers/string_checkers'
-
-include Helpers
 
 ##
 #

@@ -1,15 +1,3 @@
-require 'rubygems'
-require 'bcrypt'
-require 'require_relative'
-require_relative('item')
-require_relative('account')
-require_relative('system')
-require_relative('organisation')
-require_relative('search_item_user')
-require_relative('../helpers/render')
-require_relative('../helpers/string_checkers')
-
-
 module Models
   class User < Models::Account
     #Users have a name, an unique e-mail, a description and an avatar.

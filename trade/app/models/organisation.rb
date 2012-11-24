@@ -1,10 +1,3 @@
-require 'rubygems'
-require 'require_relative'
-
-require_relative('search_item_organisation')
-require_relative('account')
-require_relative('system')
-
 module Models
  class Organisation < Models::Account
     #An Organisation is an account which is accessed by multiple users (member).

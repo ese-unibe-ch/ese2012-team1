@@ -1,14 +1,3 @@
-require 'rubygems'
-require 'require_relative'
-
-require_relative '../helpers/render'
-require_relative 'system'
-require_relative 'search_item_item'
-require_relative 'comment_container'
-require_relative 'reversable_description'
-
-include Helpers
-
 module Models
   class Item < CommentContainer
     #Items have a name.
@@ -104,7 +93,7 @@ module Models
 
     def clear
       System.instance.remove_item(self.id)
-      System.search.unregister(self)
+      System.instance.search.unregister(self)
 
       unless self.picture =~ /default_item\.png$/
         File.delete(Helpers::absolute_path(self.picture.sub("/images", "../public/images"), __FILE__))

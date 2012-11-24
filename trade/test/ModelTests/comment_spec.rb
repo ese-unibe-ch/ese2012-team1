@@ -1,11 +1,4 @@
-require "rubygems"
-require "rspec"
-require "require_relative"
-
-require "../../app/models/comment"
-require_relative "custom_matchers"
-
-include CustomMatchers
+require 'test_require'
 
 describe Comment do
   def create_comment

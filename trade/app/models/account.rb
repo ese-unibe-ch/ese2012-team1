@@ -1,13 +1,4 @@
-require 'rubygems'
-require 'require_relative'
-
-require_relative 'item'
-require_relative '../helpers/render'
-
-include Helpers
-
 module Models
-
   class Account
     #Account is an abstract class. It's designed to simplify the behaviour of the shop.
     #Accounts have a name, an amount of credits, a description and an avatar.

@@ -1,4 +1,3 @@
-
 module CustomMatchers
   class BeLike
     def initialize(comperer)

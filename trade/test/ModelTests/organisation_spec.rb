@@ -1,12 +1,6 @@
-require "rubygems"
-require "rspec"
-require "require_relative"
-
-require_relative "../../app/models/organisation"
+require 'test_require'
 
 require_relative "account_shared_examples"
-
-include Models
 
 describe "Organisation" do
   before(:each) do
@@ -14,6 +8,11 @@ describe "Organisation" do
     System.stub(:instance).and_return(@system)
     @system.stub(:add_account)
     @system.stub(:user_exists?).and_return(false)
+
+    @search = double('search')
+    @search.stub(:register)
+
+    @system.stub(:search).and_return(@search)
   end
 
   def create_account

@@ -1,11 +1,4 @@
-require "rubygems"
-
-require "rspec"
-require "require_relative"
-
-require_relative("../../app/models/comment_container")
-require_relative("../../app/models/comment")
-
+require 'test_require'
 
 ##
 #

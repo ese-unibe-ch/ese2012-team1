@@ -1,19 +1,4 @@
-require "rspec"
-
-require "rubygems"
-require "require_relative"
-
-require_relative "../../app/models/user"
-require_relative "../../app/models/item"
-require_relative "../../app/models/system"
-require_relative "../../app/models/organisation"
-
-require_relative "account_shared_examples"
-
-require_relative "custom_matchers"
-
-include Models
-include CustomMatchers
+require '../test_require'
 
 describe "Coupling to" do
   context "System" do
@@ -80,6 +65,11 @@ describe "User" do
     System.stub(:instance).and_return(@system)
     @system.stub(:add_account)
     @system.stub(:user_exists?).and_return(false)
+
+    @search = double('search')
+    @search.stub(:register)
+
+    @system.stub(:search).and_return(@search)
   end
 
   def create_account

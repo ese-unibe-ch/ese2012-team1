@@ -1,50 +1,47 @@
-require "rubygems"
-require "require_relative"
+module Models
+  class Comment < CommentContainer
+    attr_accessor :comment, :creator, :header, :nr, :date_stamp
 
-require_relative "comment_container"
+    @@unique_nr = 0
 
-class Comment < CommentContainer
-  attr_accessor :comment, :creator, :header, :nr, :date_stamp
+    ##
+    #
+    # Creates a comment by saving his creator
+    # and the comment itself
+    #
+    ##
 
-  @@unique_nr = 0
+    def self.create(creator, header, comment_text)
+      comment = self.new
 
-  ##
-  #
-  # Creates a comment by saving his creator
-  # and the comment itself
-  #
-  ##
+      comment.header = header
+      comment.comment = comment_text
+      comment.creator = creator
+      comment.date_stamp = Time.now
 
-  def self.create(creator, header, comment_text)
-    comment = self.new
+      comment.nr = @@unique_nr
+      @@unique_nr += 1
 
-    comment.header = header
-    comment.comment = comment_text
-    comment.creator = creator
-    comment.date_stamp = Time.now
+      comment
+    end
 
-    comment.nr = @@unique_nr
-    @@unique_nr += 1
+    ##
+    #
+    # Collects itself and all children comments.
+    #
+    ##
 
-    comment
-  end
+    def collect
+      collected_comments = Array.new
+      collected_comments.push(self)
 
-  ##
-  #
-  # Collects itself and all children comments.
-  #
-  ##
+      @comments.each{ |comment| comment.collect.each { |inner_comment| collected_comments.push(inner_comment) } }
 
-  def collect
-    collected_comments = Array.new
-    collected_comments.push(self)
+      collected_comments
+    end
 
-    @comments.each{ |comment| comment.collect.each { |inner_comment| collected_comments.push(inner_comment) } }
-
-    collected_comments
-  end
-
-  def to_s
-    " " * (depth-1) + "#{self.creator} commented \'#{self.comment}\'"
+    def to_s
+      " " * (depth-1) + "#{self.creator} commented \'#{self.comment}\'"
+    end
   end
 end

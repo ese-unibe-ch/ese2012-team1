@@ -1,30 +1,4 @@
-require 'rubygems'
-require 'require_relative'
-require 'sinatra'
-require 'rack/protection'
-require 'haml'
-require 'haml/template/options'
-
-require_relative('controllers/home')
-require_relative('controllers/authentication')
-require_relative('controllers/organisation_admin')
-require_relative('controllers/registration')
-require_relative('controllers/item_actions')
-require_relative('controllers/item_sites')
-require_relative('controllers/user_sites')
-require_relative('controllers/organisation')
-require_relative('controllers/account_edit')
-require_relative('controllers/item_manipulation')
-require_relative('controllers/error')
-require_relative('controllers/search')
-require_relative('helpers/navigation')
-require_relative('helpers/navigations')
-require_relative('init.rb') unless ENV['RACK_ENV'] == 'test'
-require_relative('helpers/render')
-require_relative('helpers/mailer')
-
-
-include Helpers
+require 'require'
 
 class App < Sinatra::Base
 

@@ -1,8 +1,4 @@
-require "rubygems"
-require "rspec"
-require "custom_matchers"
-
-include CustomMatchers
+require 'test_require'
 
 def loaded?
   true
@@ -14,6 +10,11 @@ shared_examples_for "any Account while creation" do
     System.stub(:instance).and_return(@system)
     @system.stub(:add_account)
     @system.stub(:user_exists?).and_return(false)
+
+    @search = double('search')
+    @search.stub(:register)
+
+    @system.stub(:search).and_return(@search)
   end
 
   it "should add himself to list in system" do

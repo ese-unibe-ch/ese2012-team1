@@ -1,8 +1,4 @@
 require 'singleton'
-require 'rubygems'
-require 'require_relative'
-
-require_relative 'search'
 
 module Models
   # This class serves as some kind of database. It holds all organisations (identified by name),
