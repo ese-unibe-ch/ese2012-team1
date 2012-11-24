@@ -6,28 +6,33 @@ require_relative('../../trade/app/models/comment')
 
 include Models
 
-userA = Models::User.created( "userA", "passwordA", "userA@mail.ch", "I'm User A", "/images/users/default_avatar.png")
+userA = Models::User.created( "userA", "passwordA", "userA@mail.ch", "I'm a food trader!", "/images/users/default_avatar.png")
 userA.activate
-aa = userA.create_item("UserA_ItemA", 10)
-ab = userA.create_item("UserA_ItemB", 50)
+aa = userA.create_item("cheap red apple", 10)
+aa.add_description("a very juicy apple")
+ab = userA.create_item("banana", 50)
+ab.add_description("a very fine one!")
 ab.to_active
-ac = userA.create_item("UserA_ItemC", 120)
+ac = userA.create_item("orange", 120)
+ac.add_description("a cheap but very orange orange")
 ac.to_active
 
-userB = Models::User.created( "userB", "passwordB", "userB@mail.ch", "I'm User B", "/images/users/default_avatar.png")
+userB = Models::User.created( "userB", "passwordB", "userB@mail.ch", "I'm a furniture trader", "/images/users/default_avatar.png")
 userB.activate
-ba = userB.create_item("UserB_ItemA", 10)
+ba = userB.create_item("seat", 10)
+ba.add_description("it's very comfortable and hardly never used")
 ba.to_active
-bb = userB.create_item("UserB_ItemB", 50)
+bb = userB.create_item("sofa", 50)
 bb.to_active
-bc = userB.create_item("UserB_ItemC", 120)
+bc = userB.create_item("table", 120)
+bc.add_description("this table has four legs. buy it! it's very cheap!")
 
-userC = Models::User.created( "userC", "passwordC", "userC@mail.ch", "I'm User C", "/images/users/default_avatar.png")
+userC = Models::User.created( "userC", "passwordC", "userC@mail.ch", "I'm a money trader", "/images/users/default_avatar.png")
 userC.activate
-ca = userC.create_item("UserC_ItemA", 10)
+ca = userC.create_item("us dollar", 10)
 ca.to_active
-cb = userC.create_item("UserC_ItemB", 50)
-cc = userC.create_item("UserC_ItemC", 120)
+cb = userC.create_item("yen", 50)
+cc = userC.create_item("swiss franc", 120)
 cc.to_active
 
 ese = Models::User.created( "ese", "ese" , "ese@mail.ch", "I'm ese", "/images/users/ese.png")
@@ -47,8 +52,8 @@ eseOrg.set_as_admin(ese)
 eseOrg.add_member(userA)
 eseOrg.add_member(userB)
 eseOrg.add_member(userC)
-eseOrg.create_item("ESE_Item1", 20)
-eseOrgitem = eseOrg.create_item("ESE_Item2", 20)
+eseOrg.create_item("ESEOrg_Item1", 20)
+eseOrgitem = eseOrg.create_item("ESEOrg_Item2", 20)
 eseOrgitem.to_active
 
 (68..72).each do |ascii_nr_of_character|
