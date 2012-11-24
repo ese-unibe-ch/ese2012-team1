@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'require_relative'
 
+require_relative('search_item_organisation')
 require_relative('account')
 require_relative('system')
 
@@ -21,7 +22,7 @@ module Models
       self.members = Hash.new
       self.admins = Hash.new
 
-      System.instance.search.register(self, "organisation", [:name, :description])
+      System.instance.search.register(SearchItemOrganisation.create(self, "organisation", [:name, :description]))
     end
 
     def add_member(user)
@@ -39,7 +40,7 @@ module Models
     end
 
     def is_member?(user)
-      members.one? { |email, member| email == user.email }
+      self.members.one? { |email, member| email == user.email }
     end
 
     def members_without_admins

@@ -5,6 +5,7 @@ require_relative('item')
 require_relative('account')
 require_relative('system')
 require_relative('organisation')
+require_relative('search_item_user')
 require_relative('../helpers/render')
 require_relative('../helpers/string_checkers')
 
@@ -37,7 +38,7 @@ module Models
     def initialize
       super
 
-      System.instance.search.register(self, "user", [:name, :description])
+      System.instance.search.register(SearchItemUser.create(self, "user", [:name, :description]))
     end
 
     # factory method (constructor) on the class

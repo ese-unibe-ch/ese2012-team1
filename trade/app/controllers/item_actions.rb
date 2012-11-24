@@ -69,7 +69,7 @@ module Controllers
       session[:navigation].get_selected.select("home")
       session[:navigation].get_selected.subnavigation.select("items")
 
-      session[:alert] = Alert.create("Success!", "You created a new item: #{new_item.name.create_link(new_item.nr)}", false)
+      session[:alert] = Alert.create("Success!", "You created a new item: #{new_item.name.create_link(new_item.id)}", false)
       redirect "/items/my/all"
     end
   end

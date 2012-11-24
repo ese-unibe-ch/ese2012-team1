@@ -3,6 +3,7 @@ require 'require_relative'
 
 require_relative '../helpers/render'
 require_relative 'system'
+require_relative 'search_item_item'
 require_relative 'comment_container'
 require_relative 'reversable_description'
 
@@ -22,7 +23,7 @@ module Models
 
     def initialize
       super
-      System.instance.search.register(self, "item", [:name, :description])
+      System.instance.search.register(SearchItemItem.create(self, "item", [:name, :description]))
     end
 
     # factory method (constructor) on the class
