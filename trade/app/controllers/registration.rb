@@ -49,7 +49,8 @@ module Controllers
     ##
 
     get '/register' do
-      session[:navigation].get[:unregistered].select(3)
+      session[:navigation].select(:unregistered)
+      session[:navigation].get_selected.select_by_name("register")
       haml :'authentication/register', :locals => { :script => 'passwordchecker.js', :onload => 'initialize()' }
     end
 
