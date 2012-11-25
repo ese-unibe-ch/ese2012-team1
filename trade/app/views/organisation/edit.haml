@@ -1,19 +1,26 @@
 %h2 Edit Your Organisation
 %form(action="/account/edit/organisation/profile" enctype="multipart/form-data" method="post")
-  %label Name:
-  %br
-  #{Models::System.instance.fetch_account(session[:account]).name}
-  %br
-  %label Description:
-  %br
-  %textarea(name="description" cols=30 rows=10 )
-    = Models::System.instance.fetch_account(session[:account]).description.to_s
-  %br
-  %label Avatar:
-  %br
-  %input(type="file" name="avatar" size=50 maxlength="=100000" accept="image/*")
-  %br
-  %br
-  %input(type="submit" id="editOrg" value="edit organisation")
+  %table
+    %tr
+      %td
+        %label Name:
+      %td
+        #{Models::System.instance.fetch_account(session[:account]).name}
+    %tr
+      %td
+        %label Description:
+      %td
+        %textarea(name="description" cols=30 rows=10 )
+          = Models::System.instance.fetch_account(session[:account]).description.to_s
+    %tr
+      %td
+        %label Avatar:
+      %td
+        %input(type="file" name="avatar" size=50 maxlength="=100000" accept="image/*")
+    %tr
+      %td(colspan="2")
+        %input(type="submit" id="editOrg" value="edit organisation")
+
+%div(class="padding-top")
   %button(class="warning" type="submit" formmethod="get" formaction="/organisation/delete" name="delete organisation" value="delete organisation" id="deleteOrg")
     delete organisation
