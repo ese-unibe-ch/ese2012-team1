@@ -21,7 +21,8 @@ module Controllers
         before_for_user_authenticated
       end
 
-      get "/search/:pattern" do
+      get "/search.?" do
+
         results = System.instance.search.find(params[:pattern])
 
         haml :search, :locals => { :results => results }
