@@ -30,7 +30,8 @@
       %h3
         #{comment.header}
       %p
-        #{comment.comment}
+        :markdown
+          #{comment.comment}
         %br
         %br
         posted on: #{comment.date_stamp.strftime("%H:%M:%S, %a %d.%m.%Y")}

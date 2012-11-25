@@ -12,7 +12,7 @@ module Models
 
       items.each do |item|
         item.symbol_methods.each_with_index do |symbol_method, index|
-          if item.item.send(symbol_method).include?(search_string)
+          if item.item.send(symbol_method).downcase.include?(search_string.downcase)
             result.add(item, index+1)
             break
           end
