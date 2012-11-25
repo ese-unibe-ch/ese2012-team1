@@ -7,8 +7,9 @@ require "selenium/webdriver"
 class LoginTest < Test::Unit::TestCase
 
   def test_login
+    driver = Selenium::WebDriver.for :firefox
+
     begin
-      driver = Selenium::WebDriver.for :firefox
       driver.get("localhost:4567/login")
 
       element = driver.find_element :name => "username"
@@ -20,6 +21,8 @@ class LoginTest < Test::Unit::TestCase
 
       element = driver.find_element :tag_name => "body"
       assert(element.text.include?("Currently logged in as"), "Should navigate to login")
+    rescue => e
+      fail e
     ensure
       driver.quit
     end

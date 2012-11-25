@@ -116,10 +116,10 @@ module Controllers
 
     post '/item/buy' do
 
-      item = Models::System.instance.fetch_item(id)
-      new_user = Models::System.instance.fetch_account(user_id)
-      if item.can_be_bought_by?(new_user)
-        new_user.buy_item(item)
+      item = Models::System.instance.fetch_item(params[:id])
+      buyer = Models::System.instance.fetch_account(session[:account])
+      if item.can_be_bought_by?(buyer)
+        buyer.buy_item(item)
         redirect "/items/my/inactive"
       else
         redirect "/error/Not_Enough_Credits"

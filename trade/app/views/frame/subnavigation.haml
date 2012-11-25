@@ -1,7 +1,6 @@
 %div(class="subnavigation")
   - if my_arguments[:auth]
     %ul
-      - puts(my_arguments[:navigation].selected)
       - my_arguments[:navigation].subnavigation.travers do |name, route, index, selected|
         %li{:class => selected ? "selected" : ""}
           %a{ :href=>route,  :title=>""}

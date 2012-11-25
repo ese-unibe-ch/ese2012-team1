@@ -257,8 +257,6 @@ describe CommentContainer do
       collected_comments[1].should equal(bart_comment)
       collected_comments[2].should equal(nelson_comment)
       collected_comments[3].should equal(homer_comment2)
-
-      container.travers { |comment| puts comment }
     end
   end
 end

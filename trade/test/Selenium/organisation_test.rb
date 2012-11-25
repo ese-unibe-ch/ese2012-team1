@@ -10,6 +10,7 @@ class OrganisationTest < Test::Unit::TestCase
     driver.get("localhost:4567/login")
 
     element = driver.find_element :name => "username"
+    assert(! element.nil?, "Field to put username does not exist!")
     element.send_keys "ese@mail.ch"
     element = driver.find_element :name => "password"
     element.send_keys "ese"

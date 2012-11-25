@@ -20,9 +20,10 @@ module Controllers
     set :views , "#{absolute_path('../views', __FILE__)}"
 
     get '/login' do
-      redirect "/home" if session[:auth]
+      redirect '/home' if session[:auth]
 
-      session[:navigation].get[:unregistered].select(2)
+      session[:navigation].select(:unregistered)
+      session[:navigation].get_selected.select("login")
       haml :'authentication/login', :locals => { :onload => 'document.loginform.username.focus()' }
     end
 

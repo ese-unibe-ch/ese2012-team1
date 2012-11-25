@@ -19,7 +19,7 @@
       - user = session[:auth] ? session[:user] : "none"
       - account = session[:auth] ? session[:account] : "none"
       - admin_view = Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user])) if auth == "yes" && session[:account] != session[:user]
-    
+
       = render_file_with_argument('frame/header.haml', {  :auth => auth,
                                                           :user => user,
                                                           :account => account,

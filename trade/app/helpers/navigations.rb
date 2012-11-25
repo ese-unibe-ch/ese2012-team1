@@ -12,10 +12,7 @@ class Navigations
   end
   
   def build
-
     xml = Nokogiri::XML(File.open(absolute_path("navigation.xml", __FILE__)))
-
-    puts xml
 
     navigations = Hash.new
 
