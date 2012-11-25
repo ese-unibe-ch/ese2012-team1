@@ -35,12 +35,16 @@ module Controllers
 
       if session[:user] == session[:account]
         session[:navigation].select(:user)
-        session[:navigation].get_selected.select(1)
+        session[:navigation].get_selected.select_by_name("home")
+        session[:navigation].get_selected.subnavigation.select_by_name("profile")
+
         haml :'home/user'
       else
 		    admin_view = Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
         session[:navigation].select(:organisation)
-        session[:navigation].get_selected.select(1)
+        session[:navigation].get_selected.select_by_name("home")
+        session[:navigation].get_selected.subnavigation.select_by_name("profile")
+
         haml :'home/organisation', :locals => { :admin_view => admin_view }
       end
     end

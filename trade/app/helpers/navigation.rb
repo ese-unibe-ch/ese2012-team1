@@ -23,7 +23,7 @@ class Navigation
   end
 
   def direct_to
-    if (self.navigation[self.selected][:subnavigation].empty?)
+    if (self.navigation[self.selected][:direct_to])
       return self.navigation[self.selected][:direct_to]
     else
       return self.navigation[self.selected][:subnavigation].direct_to
@@ -32,8 +32,9 @@ class Navigation
 
   def direct_to_by_index(number)
     "Navigation does not exist" if (self.navigation.size < number.to_i)
+    "Navigation does not exist" if (number.to_i < 1)
 
-    if (self.navigation[number-1][:subnavigation].empty?)
+    if (self.navigation[number-1][:direct_to])
       return self.navigation[number-1][:direct_to]
     else
       return self.navigation[number-1][:subnavigation].direct_to
@@ -46,6 +47,7 @@ class Navigation
 
   def select(index)
     "Navigation does not exist" if (self.navigation.size < index.to_i)
+    "Navigation does not exist" if index.to_i < 1
 
     self.selected = index.to_i-1
   end

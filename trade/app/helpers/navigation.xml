@@ -4,6 +4,7 @@
 
     <navigation>
       <name>home</name>
+      <route>/home</route>
 
       <subnavigation>
         <name>profile</name>
@@ -25,6 +26,7 @@
 
     <navigation>
       <name>community</name>
+      <route>/users/all</route>
 
       <subnavigation>
         <name>users</name>
@@ -61,6 +63,7 @@
 
     <navigation>
       <name>home</name>
+      <route>/home</route>
 
       <subnavigation>
         <name>profile</name>
@@ -86,6 +89,7 @@
 
     <navigation>
       <name>community</name>
+      <route>/users/all</route>
 
       <subnavigation>
         <name>users</name>
