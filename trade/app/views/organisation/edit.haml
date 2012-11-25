@@ -2,9 +2,9 @@
 %form(action="/account/edit/organisation/profile" enctype="multipart/form-data" method="post")
   %table
     %tr
-      %td
+      %td(width="200px")
         %label Name:
-      %td
+      %td(width="400px")
         #{Models::System.instance.fetch_account(session[:account]).name}
     %tr
       %td
