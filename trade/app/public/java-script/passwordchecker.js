@@ -42,7 +42,7 @@ function inputCheck(){
         strong = false
     } else if (eingabe.match(/^([a-zA-Z])+$/) || eingabe.match(/^([a-z]|\d)+$/)
         || eingabe.match(/^([A-Z]|\d)+$/) )  {
-        setTextAndColor(messageField, "Please use capital letters, small letters and numbers", "orange");
+        setTextAndColor(messageField, "Please use capital letters, small letters and numbers", "red");
         strong = false
     } else {
         setTextAndColor(messageField, "Gracious password! You are now allowed to enter", "green");
