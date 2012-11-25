@@ -1,2 +1,7 @@
-= haml :'item/my_active', :locals => {:active_items => active_items}
-= haml :'item/my_inactive', :locals => {:inactive_items => inactive_items}
+%form(action="/item/create" method="get")
+  %button(type="submit" name="create item" value="create item" id="createItm")
+    create item
+%div
+  = haml :'item/my_active', :locals => {:active_items => active_items}
+%div(class="padding-top")
+  = haml :'item/my_inactive', :locals => {:inactive_items => inactive_items}
