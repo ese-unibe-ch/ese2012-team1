@@ -333,3 +333,7 @@ div.comment {
 .comment div.self_info {
     background-image: url('/images/design/item-owner.png');
 }
+
+div.padding-top {
+    padding-top: 30px;
+}
