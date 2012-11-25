@@ -1,27 +1,31 @@
 %form(action="/account/edit/user/profile" enctype="multipart/form-data" method="post")
-- user = Models::System.instance.fetch_account(session[:user])
+  - user = Models::System.instance.fetch_account(session[:user])
 
-%div(class="labeled-input")
+  %div(class="labeled-input")
   = haml :'partials/description-entry-horizontal', :locals => { :label => "Name:", :description => user.name }
   %label Password:
   %input(type="password" name="password" id="password")
   %label(id="message")
+  %br
   %label Retype Password:
   %input(type="password" name="re_password" id="re_password")
   %label(id="re_message")
+  %br
   %label Email:
   %input(type="text" name="email"){:value => user.email}
   - class_to_set = ""
   - class_to_set = "warning" if session[:is_email_error] == "yes"
   %label(class="#{class_to_set}")
     = "#{session[:email_error]}"
+  %br
   %label Description:
   %textarea(name="interests" cols=30 rows=10)
     = user.description.to_s
+  %br
   %label Avatar:
   %input(type="file" name="avatar" size=50 maxlength="=100000" accept="text/*")
   %input(type="submit" id="register" value="Edit Profile")
 
-  %form(action="/unregister" method="get")
-    %button(class="warning" type="submit" name="delete account" value="delete account" id="deleteAcc")
-      delete account
+%form(action="/unregister" method="get")
+  %button(class="warning" type="submit" name="delete account" value="delete account" id="deleteAcc")
+    delete account

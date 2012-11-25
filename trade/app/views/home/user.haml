@@ -15,7 +15,7 @@
   %div(class="description")
     = "You have #{user.list_inactive_items.size} inactive Items"
 
-  = haml :'partials/description-entry-vertical', :locals => {:description => user.description, :label =>   "Your Description:" }
+  = haml :'partials/description-entry-vertical_mkdown', :locals => {:description => user.description, :label =>   "Your Description:" }
 
 %a(href="/account/edit/user/profile" name="edit_user_profile")
   Edit your profile
