@@ -2,8 +2,12 @@
   - user = Models::System.instance.fetch_account(session[:user])
 
   %div(class="labeled-input")
-  = haml :'partials/description-entry-horizontal', :locals => { :label => "Name:", :description => user.name }
   %table
+    %tr
+      %td
+        %label Name:
+      %td(colspan="2")
+        = user.name
     %tr
       %td
         %label Password:
@@ -31,20 +35,19 @@
     %tr
       %td
         %label Description:
-      %td
+      %td(colspan="2")
         %textarea(name="interests" cols=30 rows=10)
           = user.description.to_s
     %tr
       %td
         %label Avatar:
-      %td
+      %td(colspan="2")
         %input(type="file" name="avatar" size=50 maxlength="=100000" accept="text/*")
     %tr
-      %td
+      %td(colspan="3")
         %input(type="submit" id="register" value="Edit Profile")
 
-
-
-%form(action="/unregister" method="get")
-  %button(class="warning" type="submit" name="delete account" value="delete account" id="deleteAcc")
-    delete account
+%div(class="padding-top")
+  %form(action="/unregister" method="get")
+    %button(class="warning" type="submit" name="delete account" value="delete account" id="deleteAcc")
+      delete account

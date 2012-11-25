@@ -281,6 +281,10 @@ th {
     text-align:left;
 }
 
+tr {
+    width: 100%;
+}
+
 tr.colored {
     background-image: url('/images/design/message.png');
 }

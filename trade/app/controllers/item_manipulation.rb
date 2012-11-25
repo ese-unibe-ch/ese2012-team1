@@ -120,7 +120,7 @@ module Controllers
       buyer = Models::System.instance.fetch_account(session[:account])
       if item.can_be_bought_by?(buyer)
         buyer.buy_item(item)
-        redirect "/items/my/inactive"
+        redirect "/items/my/all"
       else
         redirect "/error/Not_Enough_Credits"
       end
