@@ -240,6 +240,13 @@ div#main {
   	background-image: url('/images/design/transparent-background.png');
 }
 
+div#search {
+    position: absolute;
+    top: 20px;
+    right: 380px;
+    overflow: hidden;
+}
+
 a {
   color:black;
 }
