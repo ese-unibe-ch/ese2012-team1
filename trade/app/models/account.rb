@@ -65,7 +65,7 @@ module Models
 
     # Removes credits (price of item) from itself and gives it to the owner
 
-    def buy_item(item_to_buy)
+    def buy_item(item_to_buy, user)
       fail "not enough credits" if item_to_buy.price > self.credits
       fail "Item not in System" unless (System.instance.items.include?(item_to_buy.id))
       # PZ: Don't like that I can't do that:

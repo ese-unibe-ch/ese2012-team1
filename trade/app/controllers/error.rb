@@ -56,6 +56,8 @@ module Controllers
           msg = "You can't leave this Organisation, because you're the only Administrator."
         elsif params[:title] == "Try_Remove_Other"
           msg = "You're trying to remove an other User from the Organisation.<br />You're only permitted to remove yourself."
+        elsif params[:title] == "Over_Your_Organisation_Limit"
+          msg = "You tried to buy something for your organistion that is over your daily organisation limit."
         else
           title = "Not_An_Error"
           msg = "This is a wrong Error Code."

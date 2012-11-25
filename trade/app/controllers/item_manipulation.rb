@@ -118,12 +118,14 @@ module Controllers
 
       item = Models::System.instance.fetch_item(params[:id])
       buyer = Models::System.instance.fetch_account(session[:account])
-      if item.can_be_bought_by?(buyer)
-        buyer.buy_item(item)
-        redirect "/items/my/all"
-      else
-        redirect "/error/Not_Enough_Credits"
+      user=Models::System.instance.fetch_account(session[:user])
+
+      redirect "/error/Not_Enough_Credits" unless item.can_be_bought_by?(buyer)
+      if  buyer!=user #true if it is a user acting as an organisation
+        redirect "/error/Over_Your_Organisation_Limit" unless buyer.within_limit_of?(item, user)
       end
+      buyer.buy_item(item, user)
+      redirect "/items/my/all"
     end
 
     post '/item/add/comment/:id' do
