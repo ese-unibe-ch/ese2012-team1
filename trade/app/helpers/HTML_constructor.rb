@@ -13,7 +13,7 @@ class String
   ##
 
   def boldify(string)
-    self.gsub(string, "<strong>#{string}</strong>")
+    self.gsub(/(#{string})/i, '<strong>\1</strong>')
   end
 
   ##
