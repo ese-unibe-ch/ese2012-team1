@@ -18,8 +18,12 @@ module Models
     #
     # Creates a SearchItem holding an item (normally User
     # Organisation or Item), a name and methods to be called.
+    #
     # The given methods should be provided as symbols and
     # should return an Object that can respond to #include?
+    # The order the methods are provided serve for the
+    # priorities returned in #priority_of_method.
+    #
     # When performing a search the items a group by the
     # given name (see Search and SearchResult).
     #
@@ -47,7 +51,26 @@ module Models
     ##
 
     def priority_of_user(user_id)
+      fail "User does not exist" unless System.account_exists?(user_id)
+
       self.part_of?(user_id) ? 1 : 2
+    end
+
+    ##
+    #
+    # Returns the priority of the method. (see SearchResult#sort!)
+    # The priority is determined through the order of
+    # the Array given in create (see #create)
+    #
+    # This method is not yet used!
+    ##
+
+    def priority_of_method(symbol_method)
+      priority = self.symbol_methods.index(symbol_method)
+
+      fail "No such method in SearchItem" if (priority.nil?)
+
+      return priority+1
     end
 
     ##
