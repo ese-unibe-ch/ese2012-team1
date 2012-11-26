@@ -4,6 +4,9 @@ module Models
   # Stores results and the pattern that leaded to this result.
   # Used by Search to return results to a client.
   #
+  # Responsibility:
+  # Hold, provide and sort (by priorities) results of a Search
+  #
   ##
 
 

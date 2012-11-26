@@ -1,10 +1,32 @@
 module Models
+
+  ##
+  #
+  # Responsibility:
+  # Hold SearchItems and scan them for a specifique string.
+  # Provide a SearchResult holding the results of the
+  # search.
+  #
+  ##
+
   class Search
     attr_accessor :items
 
     def initialize
       self.items = Array.new
     end
+
+    ##
+    #
+    # Search through all registered items (see #register) for a
+    # given string and returns all items including that string
+    # as a SearchResult (see SearchResult). The search is
+    # case insensitive.
+    #
+    # Params:
+    # search_string: String to be searched for
+    #
+    ##
 
     def find(search_string)
       result = SearchResult.new
@@ -22,12 +44,34 @@ module Models
       result
     end
 
+    ##
+    #
+    # Registers a SearchItem (see SearchItem) to
+    # the search in #find.
+    #
+    # Params:
+    # search_item: a SearchItem
+    #
+    ##
+
     def register(search_item)
       items.push(search_item)
     end
 
-    def unregister(to_be_unregistered)
-      self.items = self.items.delete_if { |search_item| search_item.item == to_be_unregistered }
+    ##
+    #
+    # Removes an item from the search. This has
+    # to be the original item that was added.
+    # At the moment those are User, Organisation
+    # or Item.
+    #
+    # Params:
+    # original_item: Item to be unregistered
+    #
+    ##
+
+    def unregister(original_item)
+      self.items = self.items.delete_if { |item| item.item == original_item }
     end
   end
 end
