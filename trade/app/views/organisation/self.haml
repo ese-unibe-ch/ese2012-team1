@@ -1,10 +1,18 @@
 %form(action="/organisation/create" method="get")
   %button(type="submit" name="create organisation" value="create organisation" id="createOrg")
     create organisation
-%ul
+%br
+%table
+  %tr
+    %th Name
+    %th
+    %th Description
+  - i = 0
   - for organisation in all_organisations
-    %li
-      %em= organisation.name
-      %img(height=50 width=50){ :alt => organisation.name, :src => organisation.avatar }
-    %div= "#{organisation.description}"
-
+    - i = (i + 1)%2
+    %tr{ :class => i == 0 ? "colored" : "normal" }
+      %td=organisation.name
+      %td
+        %img(height=50 width=50){ :alt => organisation.name, :src => organisation.avatar }
+      %td
+        %div= "#{organisation.description}"
