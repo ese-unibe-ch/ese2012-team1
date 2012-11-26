@@ -3,7 +3,6 @@
   %ul(id="navigation-registered" class="navigation")
     - my_arguments[:navigation].travers do |name, route, index, selected|
       - navigation_name = "navigation-registered-#{index}"
-      - puts ("#{name} #{route} #{index} #{selected}")
       %li{:id => navigation_name.sub("-registered", "")}
         - if selected
           %span{:id => "#{navigation_name}-active"}
