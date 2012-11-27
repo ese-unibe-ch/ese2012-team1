@@ -1,7 +1,58 @@
-%h1 Show results of search: TODO!
+%h1 result
 
-- ["organisation", "user", "item"].each do |name|
-  - if (results.found?(name))
-    - results.sort!(session[:user]).get(name).each do |search_result|
-      %div
-        = "#{search_result.name.boldify(results.pattern)} : #{search_result.description.boldify(results.pattern)}"
+- if(results.found?("item"))
+  %table
+    %tr
+      %th Name
+      %th Description
+      %th
+      %th
+    - i = 0
+    - results.sort!(session[:user]).get("item").each do |result_item|
+      - i = (i + 1)%2
+      %tr{ :class => i == 0 ? "colored" : "normal" }
+        %td
+          %a{:href => "/item/#{result_item.id}"}
+            = result_item.name.size > 15 ? "#{result_item.name[0..14].boldify(results.pattern)}..." : result_item.name.boldify(results.pattern)
+        %td= result_item.description.boldify(results.pattern)
+        %td
+          %img(height=50 width=50){ :alt => result_item.name, :src => result_item.picture }
+        %td
+
+- if(results.found?("user"))
+  %table
+    %tr
+      %th Name
+      %th Description
+      %th
+      %th
+    - i = 0
+    - results.sort!(session[:user]).get("user").each do |result_user|
+      - i = (i + 1)%2
+      %tr{ :class => i == 0 ? "colored" : "normal" }
+        %td
+          %a{:href => "/users/#{result_user.id}"}
+            = result_user.name.size > 15 ? "#{result_user.name[0..14]}.boldify(results.pattern)..." : result_user.name.boldify(results.pattern)
+        %td= result_user.description.boldify(results.pattern)
+        %td
+          %img(height=50 width=50){ :alt => result_user.name, :src => result_user.avatar }
+        %td
+
+- if(results.found?("user"))
+  %table
+    %tr
+      %th Name
+      %th Description
+      %th
+      %th
+    - i = 0
+    - results.sort!(session[:user]).get("organisation").each do |result_org|
+      - i = (i + 1)%2
+      %tr{ :class => i == 0 ? "colored" : "normal" }
+        %td
+          %a{:href => "/organisations/#{result_org.id}"}
+            = result_org.name.size > 15 ? "#{result_org.name[0..14]}.boldify(results.pattern)..." : result_org.name.boldify(results.pattern)
+        %td= result_org.description.boldify(results.pattern)
+        %td
+          %img(height=50 width=50){ :alt => result_org.name, :src => result_org.avatar }
+        %td
