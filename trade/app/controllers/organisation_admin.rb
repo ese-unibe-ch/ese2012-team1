@@ -19,15 +19,6 @@ module Controllers
       before_for_admin
     end
 
-    get '/organisation/members' do
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("members")
-
-      organisation = Models::System.instance.fetch_account(session[:account])
-      admin_view = Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
-      haml :'organisation/members', :locals => { :all_members => organisation.members_without_admins, :all_admins => organisation.admins.values, :admin_view => admin_view }
-    end
-
     get '/organisation/add/member' do
       session[:navigation].get_selected.select_by_name("home")
       session[:navigation].get_selected.subnavigation.select_by_name("add member")

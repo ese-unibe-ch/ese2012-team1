@@ -1,0 +1,40 @@
+%html
+  %head
+    %meta(content="text/html;charset=UTF-8" http-equiv="Content-type")
+    %style(type="text/css")
+      body {font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 16px; color: black;}
+      div#container {margin: 0 auto; position: relative; min-width: 500px; max-width: 1000px; -moz-border-radius: 20px; -webkit-border-radius: 20px; -khtml-border-radius: 20px; border-radius: 20px; -moz-box-shadow:    3px 3px 6px 0px grey; -webkit-box-shadow: 3px 3px 5px 6px #000; -khtml-box-shadow: 3px 3px 5px 6px #000; box-shadow: 3px 3px 6px 0px darkgrey; background-image: url("http://www.jokr.ch/images/design/wood2.jpg"); overflow: hidden; }
+      div#header { width: 100%; height: 150px; padding-left: 1em; font-size: 11px; overflow: hidden; }
+      div#header img#header-logo { float: left; height: 100px; margin-top: 20px; margin-left: 10px; }
+      div#main { position: relative; overflow: hidden; padding: 1em; background-image: url("http://www.jokr.ch/images/design/transparent-background.png"); }
+      a { color:black; }
+      div#main img { float: right; }
+      div#footer { margin-top: 2px; margin-bottom: 2px; margin-left: 20px; }
+
+  %body
+    %div(id="container")
+      %div(id="header")
+        %img(alt="Logo" id="header-logo" src="http://#{mail_arguments[0]}/images/logo/TradingSystem.png")
+      %div(id="main")
+        %div(id="content")
+          %h1= "Hi #{mail_arguments[1]}"
+          %img(height=200 width=200){ :alt => mail_arguments[1], :src => mail_arguments[2]}
+          
+          %div(class="padding-top")
+            Welcome to the ESE-Tradingsystem!
+          %div(class="padding-top")
+            To finish your registration, you must confirm your E-Mail address following this link:
+            %br
+            %a(href = "#{mail_arguments[3]}") Confirm E-Mail Address
+          %div(class="padding-top")
+            If this link did not work correctly, copy the following URL and open it in your Browser:
+            %br
+            = "#{mail_arguments[3]}"
+          %div(class="padding-top")
+            The ESE Team #1 wishes you good luck.
+          %br
+          %br  
+            
+      %div(id="footer")
+        %div(id="copyright")
+          &copy; brought to you by #1
