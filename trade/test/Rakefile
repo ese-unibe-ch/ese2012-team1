@@ -1,0 +1,23 @@
+require 'rubygems'
+
+require 'require_relative'
+require_relative 'test_require'
+
+require 'rspec/core/rake_task'
+require 'rcov/rcovtask'
+require 'rake/testtask'
+
+Rcov::RcovTask.new :default do |t|
+  t.test_files = FileList['system_test.rb']
+  t.rcov_opts << "--threshold 50"
+  t.rcov_opts << "--text-report --exclude \"gems/*\""
+end
+
+#Rake::TestTask.new :default do |t|
+#  t.verbose = true
+#  t.test_files = FileList['system_test.rb']
+#end
+
+#RSpec::Core::RakeTask.new do |t|
+#  t.pattern = Dir['**/*_spec.rb']
+#end

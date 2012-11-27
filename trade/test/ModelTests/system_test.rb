@@ -1,10 +1,7 @@
 require 'test/unit'
 require 'rubygems'
 require 'require_relative'
-require_relative('../../app/models/system')
-require_relative('../../app/models/user')
-require_relative('../../app/models/item')
-require_relative('../../app/models/organisation')
+require_relative 'test_require'
 
 class MockItem
    attr_accessor :owner, :id
@@ -35,6 +32,10 @@ class MockOrganisation
   def is_member?(user_email)
     true
   end
+
+  def avatar
+    "/images/organisations/default_avatar.png"
+  end
 end
 
 
@@ -58,6 +59,10 @@ class MockUser
 
   def to_s
     "#{self.email}"
+  end
+
+  def avatar
+    "/images/users/default_avatar.png"
   end
 end
 
