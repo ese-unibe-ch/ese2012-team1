@@ -77,6 +77,61 @@
         <name>members</name>
         <route>/organisation/members</route>
       </subnavigation>
+    </navigation>
+
+    <navigation>
+      <name>community</name>
+      <route>/users/all</route>
+
+      <subnavigation>
+        <name>users</name>
+        <route>/users/all</route>
+      </subnavigation>
+      <subnavigation>
+        <name>organisations</name>
+        <route>/organisations/all</route>
+      </subnavigation>
+    </navigation>
+
+    <navigation>
+      <name>market</name>
+      <route>/items/active</route>
+
+      <subnavigation>
+        <name>on sale</name>
+        <route>/items/active</route>
+      </subnavigation>
+      <subnavigation>
+        <name>create item</name>
+        <route>/item/create</route>
+      </subnavigation>
+    </navigation>
+
+    <navigation>
+      <name>logout</name>
+      <route>/logout</route>
+    </navigation>
+  </context>
+
+  <context>
+    <name>organisation_admin</name>
+
+    <navigation>
+      <name>home</name>
+      <route>/home</route>
+
+      <subnavigation>
+        <name>profile</name>
+        <route>/home/organisation</route>
+      </subnavigation>
+      <subnavigation>
+        <name>items</name>
+        <route>/items/my/all</route>
+      </subnavigation>
+      <subnavigation>
+        <name>members</name>
+        <route>/organisation/members</route>
+      </subnavigation>
       <subnavigation>
         <name>add member</name>
         <route>/organisation/add/member</route>
