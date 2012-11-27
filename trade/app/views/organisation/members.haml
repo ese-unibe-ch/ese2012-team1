@@ -1,38 +1,54 @@
 %h2 Members of Organisation
 %br
-%ul
+%table
+  %tr
+    %th Name
+    %th
+    %th
+    %th
+  - i = 0
   - for user in all_members
-    %li
-      %em= user.name
-      %img(height=50 width=50){ :alt => user.name, :src => user.avatar }
-      \:
+    - i = (i+1)%2
+    %tr{ :class => i == 0 ? "colored" : "normal" }
+      %td= user.name
+      %td
+        %img(height=50 width=50){ :alt => user.name, :src => user.avatar }
     - if admin_view
-      %div(class="itembuttons")
+      %td
         %form(name="remove" action="/organisation/member/delete" method="post")
           %input(type="hidden" name="member" value="#{user.email}")
           %input(class="itembuttons" type="submit" value="Remove from Organisation")
+        %br
+      %td
         %form(name="add_admin" action="/organisation/member/to_admin" method="post")
           %input(type="hidden" name="member" value="#{user.email}")
           %input(class="itembuttons" type="submit" value="Provide Admin Privileges")
-    %br
-    %br
+        %br
 %br
 %br
 %h2 Administrators of Organisation
 %br
-%ul
+%table
+  %tr
+    %th Name
+    %th
+    %th
+    %th
+  - i = 0
   - for admin in all_admins
-    %li
-      %em= admin.name
-      %img(height=50 width=50){ :alt => admin.name, :src => admin.avatar }
-      \:
+    - i = (i+1)%2
+    %tr{ :class => i == 0 ? "colored" : "normal" }
+      %td= admin.name
+      %td
+        %img(height=50 width=50){ :alt => admin.name, :src => admin.avatar }
     - if admin_view
-      %div(class="itembuttons")
+      %td
         %form(name="remove" action="/organisation/member/delete" method="post")
           %input(type="hidden" name="member" value="#{admin.email}")
           %input(class="itembuttons" type="submit" value="Remove from Organisation")
+        %br
+      %td
         %form(name="remove_admin" action="/organisation/admin/to_member" method="post")
           %input(type="hidden" name="member" value="#{admin.email}")
           %input(class="itembuttons" type="submit" value="Revoke Admin Privileges")
-    %br
-    %br
+        %br
