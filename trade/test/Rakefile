@@ -10,8 +10,9 @@ require 'rake/testtask'
 task :default => [:models]
 
 Rcov::RcovTask.new :models do |t|
-  t.test_files = FileList["ModelTests/*_spec.rb"]
-  t.rcov_opts << "--threshold 50"
+  t.libs << "ModelTests"
+  t.test_files = FileList["ModelTests/*_spec.rb", "ModelTests/*_test.rb", "require.rb"]
+  #t.rcov_opts << "--threshold 50"
   t.rcov_opts << "--exclude /gems/"
   t.rcov_opts << "--text-report --exclude \"/controllers/,spec,/helpers/,/*Tests/\""
 end

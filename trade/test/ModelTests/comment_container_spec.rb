@@ -1,6 +1,4 @@
-require "rubygems"
-require "require_relative"
-require_relative 'test_require'
+require 'test_require'
 
 ##
 #
