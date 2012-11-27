@@ -22,5 +22,7 @@
 
   = haml :'partials/description-entry-vertical_mkdown', :locals => {:description => organisation.description, :label =>   "Description:" }
 
+  %div(class="padding-top")
+    %a(href="/organisation/leave" name="leave_organisation") Leave Organisation
 - if admin_view
   %a(href="/account/edit/organisation/profile" name="edit_user_profile") Edit organisation profile

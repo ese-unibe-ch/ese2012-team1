@@ -98,6 +98,15 @@ module Controllers
       haml :'organisation/self', :locals => { :all_organisations => Models::System.instance.fetch_organisations_of(user.id) }
     end
 
+    get '/organisation/members' do
+      session[:navigation].get_selected.select_by_name("home")
+      session[:navigation].get_selected.subnavigation.select_by_name("members")
+
+      organisation = Models::System.instance.fetch_account(session[:account])
+      admin_view = organisation.is_admin?(Models::System.instance.fetch_account(session[:user]))
+      haml :'organisation/members', :locals => { :all_members => organisation.members_without_admins, :all_admins => organisation.admins.values, :admin_view => admin_view }
+    end
+
     get '/organisations/all' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
 

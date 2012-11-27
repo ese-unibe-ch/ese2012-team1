@@ -33,6 +33,13 @@ class App < Sinatra::Base
   use Controllers::Error
   use Controllers::Organisation
   use Controllers::OrganisationAdmin
+
+  # Create Timer to reset User Buy Limits at 24:00
+  scheduler = Rufus::Scheduler.start_new
+  scheduler.cron '0 0 * * *' do
+    Models::System.instance.reset_all_member_limits
+  end
+
 end
 
 App.run! unless ENV['RACK_ENV'] == 'test'

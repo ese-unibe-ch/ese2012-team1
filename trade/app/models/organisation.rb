@@ -99,6 +99,7 @@ module Models
     #Not sure if this works
     def reset_member_limits
       member_limits.each do |user, limit|
+        #puts("#{self.name}, #{user}, #{self.limit}")
         member_limits[user]=self.limit
       end
     end

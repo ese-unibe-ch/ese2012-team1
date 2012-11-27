@@ -10,11 +10,13 @@ GEM
     eventmachine (1.0.0)
     eventmachine (1.0.0-x86-mingw32)
     ffi (1.1.5)
+    ffi (1.1.5-x86-mingw32)
     haml (3.1.7)
     libwebsocket (0.1.6)
       websocket
     multi_json (1.3.7)
     nokogiri (1.5.5)
+    nokogiri (1.5.5-x86-mingw32)
     parseconfig (1.0.2)
     rack (1.4.1)
     rack-protection (1.2.0)
@@ -34,6 +36,8 @@ GEM
       diff-lcs (~> 1.1.3)
     rspec-mocks (2.11.3)
     rubyzip (0.9.9)
+    rufus-scheduler (2.0.17)
+      tzinfo (>= 0.3.23)
     selenium-webdriver (2.26.0)
       childprocess (>= 0.2.5)
       libwebsocket (~> 0.1.3)
@@ -52,6 +56,7 @@ GEM
       tilt (~> 1.3)
     tilt (1.3.3)
     tlsmail (0.0.1)
+    tzinfo (0.3.35)
     websocket (1.0.3)
 
 PLATFORMS
@@ -68,6 +73,7 @@ DEPENDENCIES
   rdiscount
   require_relative
   rspec
+  rufus-scheduler
   selenium-webdriver
   sinatra
   sinatra-contrib

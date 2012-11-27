@@ -98,6 +98,7 @@ module Controllers
     ##
 
     get '/account/edit/organisation/profile' do
+      before_for_admin
       session[:navigation].get_selected.select_by_name("home")
       session[:navigation].get_selected.subnavigation.select_by_name("edit organisation")
 
@@ -116,6 +117,7 @@ module Controllers
     ##
 
     post '/account/edit/organisation/profile' do
+      before_for_admin
       organisation = Models::System.instance.fetch_account(session[:account])
 
       if (!params[:description].nil?)
