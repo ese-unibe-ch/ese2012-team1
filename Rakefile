@@ -1,7 +1,7 @@
 require 'rubygems'
 
 require 'require_relative'
-require_relative 'ModelTests/test_require'
+require_relative 'trade/test/ModelTests/test_require'
 
 require 'rspec/core/rake_task'
 require 'rcov/rcovtask'
@@ -10,8 +10,8 @@ require 'rake/testtask'
 task :default => [:models]
 
 Rcov::RcovTask.new :models do |t|
-  t.libs << "ModelTests"
-  t.test_files = FileList["ModelTests/*_spec.rb", "ModelTests/*_test.rb", "require.rb"]
+  t.libs << "trade/test/ModelTests"
+  t.test_files = FileList["trade/test/ModelTests/*_spec.rb", "trade/test/ModelTests/*_test.rb", "require.rb"]
   #t.rcov_opts << "--threshold 50"
   t.rcov_opts << "--exclude /gems/"
   t.rcov_opts << "--text-report --exclude \"/controllers/,spec,/helpers/,/*Tests/\""
