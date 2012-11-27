@@ -15,13 +15,13 @@
   - for item in inactive_items
     - i = (i+1)%2
     %tr{ :class => i == 0 ? "colored" : "normal" }
-      %td
+      %td{:width => "135px;"}
         %a{:href => "/item/#{item.id}"}
           = item.name.size > 15 ? "#{item.name[0..14]}..." : item.name
-      %td= item.price
+      %td{:width => "90px;"}= item.price
       %td
         %img(height=50 width=50){ :alt => item.name, :src => item.picture }
-      %td= item.description.size > 30 ? "#{item.description[0..29]}..." : item.description
+      %td{:width => "250px;"}= item.description.size > 30 ? "#{item.description[0..29]}..." : item.description
       %td
         %form(name="state" action="/item/changestate/setactive" method="post")
           %input(type="hidden" name="id" value="#{item.id}.#{item.name}")

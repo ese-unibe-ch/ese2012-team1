@@ -5,7 +5,7 @@
   - for organisation in all_organisations
     - i = (i + 1)%2
     %tr{ :class => i == 0 ? "colored" : "normal" }
-      %td= organisation.name.size > 15 ? "#{organisation.name[0..14]}..." : organisation.name + " has #{organisation.list_active_items.size} Items to sell. "
+      %td{:width => "250px;"}= organisation.name.size > 15 ? "#{organisation.name[0..14]}..." : organisation.name + " has #{organisation.list_active_items.size} Items to sell. "
       %td
         %img(height=50 width=50){ :alt => organisation.name, :src => organisation.avatar }
       %td
