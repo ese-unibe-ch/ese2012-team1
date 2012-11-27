@@ -21,6 +21,7 @@ module Controllers
 
     get '/' do
       redirect "/home" if session[:auth]
+
       session[:navigation].select(:unregistered)
       session[:navigation].get_selected.select(1)
 
