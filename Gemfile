@@ -12,6 +12,7 @@ gem 'rake'
 gem 'rdiscount'
 gem 'nokogiri'
 gem 'selenium-webdriver'
+gem 'rufus-scheduler'
 
 
 

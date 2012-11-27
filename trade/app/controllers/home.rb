@@ -41,7 +41,11 @@ module Controllers
         haml :'home/user'
       else
 		    admin_view = Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
-        session[:navigation].select(:organisation)
+        if admin_view
+          session[:navigation].select(:organisation_admin)
+        else
+          session[:navigation].select(:organisation)
+        end
         session[:navigation].get_selected.select_by_name("home")
         session[:navigation].get_selected.subnavigation.select_by_name("profile")
 

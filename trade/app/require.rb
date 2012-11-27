@@ -11,6 +11,7 @@ require 'rack/protection'
 require 'haml'
 require 'haml/template/options'
 require 'require_relative'
+require 'rufus-scheduler'
 
 require_relative 'models/search/search'
 require_relative 'models/search/search_item'
