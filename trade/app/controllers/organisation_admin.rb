@@ -136,5 +136,25 @@ module Controllers
         redirect '/organisation/members'
       end
     end
+
+    post '/organisation/admin/to_member/confirm' do
+      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+      redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+
+      self_revoke = (Models::System.instance.fetch_account(session[:user]) == Models::System.instance.fetch_user_by_email(params[:user_email]))
+      organisation = Models::System.instance.fetch_account(session[:account])
+      only_admin = true if organisation.admin_count == 1
+      redirect "/error/No_Self_Right_Revoke" if self_revoke && only_admin
+
+      user = Models::System.instance.fetch_user_by_email(params[:user_email])
+      organisation.revoke_admin_rights(user)
+
+      if user.id == session[:user]
+        redirect '/home'
+      else
+        redirect '/organisation/members'
+      end
+    end
+
   end
 end
