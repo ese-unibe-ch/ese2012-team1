@@ -14,6 +14,11 @@
           = Models::System.instance.fetch_account(session[:account]).description.to_s
     %tr
       %td
+        %label Credit Limit for normal User:
+      %td
+        %input(type="text" name="credit_limit" value="#{Models::System.instance.fetch_account(session[:account]).limit}")
+    %tr
+      %td
         %label Avatar:
       %td
         %input(type="file" name="avatar" size=50 maxlength="=100000" accept="image/*")

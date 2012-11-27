@@ -33,6 +33,12 @@ class App < Sinatra::Base
   use Controllers::Error
   use Controllers::Organisation
   use Controllers::OrganisationAdmin
+
+  #
+  # Create Timer to reset User Buy Limits at 24:00
+  # Models::System.instance.reset_all_member_limits
+  #
+
 end
 
 App.run! unless ENV['RACK_ENV'] == 'test'

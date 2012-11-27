@@ -186,6 +186,13 @@ module Models
       org.one? { |organisation| organisation.is_admin?(user) }
     end
 
+    def reset_all_member_limits
+      orgs = accounts.values.select{|acc| acc.organisation == true}
+      for org in orgs
+        org.reset_member_limits
+      end
+    end
+
     #Removes all users, all items and resets the counter
     def reset
       self.accounts = Hash.new
