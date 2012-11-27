@@ -14,7 +14,7 @@
           = Models::System.instance.fetch_account(session[:account]).description.to_s
     %tr
       %td
-        %label Credit Limit for normal User:
+        %label Credit Limit for normal User (Empty for no Limit):
       %td
         %input(type="text" name="credit_limit" value="#{Models::System.instance.fetch_account(session[:account]).limit}")
     %tr

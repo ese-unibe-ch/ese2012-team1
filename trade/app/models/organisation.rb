@@ -15,7 +15,7 @@ module Models
       self.members = Hash.new
       self.admins = Hash.new
       self.member_limits = Hash.new #the remaining limit of each user
-      self.limit = 30 #with limit=nil everybody can spend as much as they want
+      self.limit = nil #with limit=nil everybody can spend as much as they want
 
       System.instance.search.register(SearchItemOrganisation.create(self, "organisation", [:name, :description]))
     end

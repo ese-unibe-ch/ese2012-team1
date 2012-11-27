@@ -58,6 +58,8 @@ module Controllers
           msg = "You're trying to remove an other User from the Organisation.<br />You're only permitted to remove yourself."
         elsif params[:title] == "Over_Your_Organisation_Limit"
           msg = "You tried to buy something for your organistion that is over your daily organisation limit."
+        elsif params[:title] == "Wrong_Limit"
+          msg = "You should enter an Integer Value bigger than 0 to set a Limit.<br />Leave field Empty to remove the Limit."
         else
           title = "Not_An_Error"
           msg = "This is a wrong Error Code."

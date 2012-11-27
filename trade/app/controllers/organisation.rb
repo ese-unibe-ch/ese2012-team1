@@ -48,6 +48,7 @@ module Controllers
       redirect "/error/No_Name" if params[:name].nil? or params[:name]==''
       redirect "/error/No_Description" if params[:description].nil? or params[:description]==''
       redirect "/error/Choose_Another_Name" if Models::System.instance.organisation_exists?(params[:name])
+      redirect "/error/Wrong_Limit" if params[:credit_limit] != "" && !(/^[\d]+(\.[\d]+){0,1}$/.match(params[:credit_limit]))
 
       fail "Should have description" if params[:description].nil?
       fail "Should have name" if params[:name].nil?
@@ -64,7 +65,15 @@ module Controllers
       end
 
       user = Models::System.instance.fetch_account(session[:user])
-      user.create_organisation(params[:name], params[:description], file_path)
+      organisation = user.create_organisation(params[:name], params[:description], file_path)
+
+      new_limit = params[:credit_limit]
+      if new_limit == ""
+        organisation.limit = nil
+      else
+        organisation.limit = new_limit.to_i
+      end
+      organisation.reset_member_limits
 
       redirect '/home'
     end

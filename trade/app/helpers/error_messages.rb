@@ -26,6 +26,8 @@ class ErrorMessages
       msg = "The activation code in the URL is not correct.<br />Try with copy and paste the complete URL from the e-mail into your Browser."
     elsif name == "Already_Activated"
       msg = "You've already activated your User Account.<br /><a href=\"/login\" >Go To Login Page</a>"
+    elsif name == "Wrong_Limit"
+      msg = "You should enter an Integer Value bigger than 0 to set a Limit.<br />Leave field Empty to remove the Limit."
     else
       title = "Not_An_Error"
       msg = "This is a wrong Error Code."

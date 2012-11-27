@@ -22,6 +22,16 @@
 
   = haml :'partials/description-entry-vertical_mkdown', :locals => {:description => organisation.description, :label =>   "Description:" }
 
+  %div(class="description")
+    -if admin_view
+      - user_limit = Models::System.instance.fetch_account(session[:account]).limit
+      - user_limit = "NOT SET" if user_limit == nil
+      = "User Credit Limit is currently #{user_limit}"
+    -else
+      - limit = Models::System.instance.fetch_account(session[:account]).get_limit(Models::System.instance.fetch_account(session[:user]))
+      - limit = "NOT SET" if limit == nil
+      = "Your personal Credit Limit is currently #{limit}"
+
   %div(class="padding-top")
     %a(href="/organisation/leave" name="leave_organisation") Leave Organisation
 - if admin_view

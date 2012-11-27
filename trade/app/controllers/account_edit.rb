@@ -90,7 +90,7 @@ module Controllers
         user.avatar = file_path
       end
 
-      redirect '/'
+      redirect '/home'
     end
 
     ##
@@ -119,9 +119,21 @@ module Controllers
     post '/account/edit/organisation/profile' do
       before_for_admin
       organisation = Models::System.instance.fetch_account(session[:account])
+      redirect "/error/Wrong_Limit" if params[:credit_limit] != "" && !(/^[\d]+(\.[\d]+){0,1}$/.match(params[:credit_limit]))
 
       if (!params[:description].nil?)
         organisation.description = params[:description].nil? ? "" : params[:description]
+      end
+
+      old_limit = organisation.limit
+      new_limit = params[:credit_limit]
+      if old_limit != new_limit
+        if new_limit == ""
+          organisation.limit = nil
+        else
+          organisation.limit = new_limit.to_i
+        end
+        organisation.reset_member_limits
       end
 
       dir = absolute_path('../public/images/organisations/', __FILE__)
@@ -136,7 +148,7 @@ module Controllers
         organisation.avatar = file_path
       end
 
-      redirect '/'
+      redirect '/home'
     end
 
 
