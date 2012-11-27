@@ -83,6 +83,10 @@ module Models
       item_to_buy.bought_by(self)
     end
 
+    def get_limit(user)
+      self.member_limits.fetch(user.email)
+    end
+
     def within_limit_of?(item, user)
       is_admin?(user) or self.limit.nil? or self.member_limits.fetch(user.email)>=item.price
     end
