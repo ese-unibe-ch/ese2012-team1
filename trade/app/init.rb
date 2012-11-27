@@ -10,35 +10,47 @@ userA = Models::User.created( "userA", "passwordA", "userA@mail.ch", "I'm a food
 userA.activate
 aa = userA.create_item("cheap red apple", 10)
 aa.add_description("a very juicy apple")
+aa.add_picture("/images/items/apple.jpg")
+
 ab = userA.create_item("banana", 50)
 ab.add_description("a very fine one!")
+ab.add_picture("/images/items/banana.png")
 ab.to_active
 ac = userA.create_item("orange", 120)
 ac.add_description("a cheap but very orange orange")
+ac.add_picture("/images/items/orange.jpg")
 ac.to_active
 
 userB = Models::User.created( "userB", "passwordB", "userB@mail.ch", "I'm a furniture trader", "/images/users/default_avatar.png")
 userB.activate
-ba = userB.create_item("seat", 10)
+ba = userB.create_item("chair", 10)
 ba.add_description("it's very comfortable and hardly never used")
+ba.add_picture("/images/items/chair.jpg")
 ba.to_active
 bb = userB.create_item("sofa", 50)
+bb.add_picture("/images/items/sofa.jpg")
 bb.to_active
 bc = userB.create_item("table", 120)
+bc.add_picture("/images/items/table.gif")
 bc.add_description("this table has four legs. buy it! it's very cheap!")
 
 userC = Models::User.created( "userC", "passwordC", "userC@mail.ch", "I'm a money trader", "/images/users/default_avatar.png")
 userC.activate
 ca = userC.create_item("us dollar", 10)
+ca.add_picture("/images/items/dollar.jpg")
 ca.to_active
 cb = userC.create_item("yen", 50)
+cb.add_picture("/images/items/yen.jpg")
 cc = userC.create_item("swiss franc", 120)
+cc.add_picture("/images/items/francs.jpg")
 cc.to_active
 
 ese = Models::User.created( "ese", "ese" , "ese@mail.ch", "I'm ese", "/images/users/ese.png")
 ese.activate
-ese.create_item("ESE_Item1", 20)
-eseitem = ese.create_item("ESE_Item2", 20)
+eseitem1 = ese.create_item("BMW M5", 50)
+eseitem1.add_picture("/images/items/bmw.jpg")
+eseitem = ese.create_item("Fiat 500", 20)
+eseitem.add_picture("/images/items/fiat.jpg")
 eseitem.to_active
 
 comment = Comment.create(userC, "I love it!", "I love that Item! And I love to write a lot. And I still write things nobody cares about. I don't even care. I just have to write a very very very long text so I can check if this works as well. It is still a bit too short because I can still not see what happens if it is bigger than the user_info. Now it should work!")
