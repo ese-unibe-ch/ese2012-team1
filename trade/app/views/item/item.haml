@@ -1,7 +1,8 @@
 %h2  #{item.name}
 %br
 #usr_img
-  %img(height=200 width=200){ :alt => item.name, :src =>item.picture }
+  %a(href="#{item.picture}" rel="lightbox")
+    %img(height=200 width=200){ :alt => item.name, :src =>item.picture }
 
 %br
 = "Price: #{item.price}"

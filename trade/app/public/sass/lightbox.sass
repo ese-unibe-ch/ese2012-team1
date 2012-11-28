@@ -1,0 +1,120 @@
+@import "compass/css3"
+@import "compass/utilities/general/clearfix"
+
+@import "variables"
+
+#lightboxOverlay
+  position: absolute
+  top: 0
+  left: 0
+  z-index: 90
+  background-color: rgba(0,0,0,0.8)
+  display: none
+
+#lightbox
+  position: absolute
+  left: 0
+  width: 100%
+  z-index: 100
+  text-align: center
+  line-height: 0
+  font-family: 'lucida grande', tahoma, verdana, arial, sans-serif
+  font-weight: normal
+  img
+    width: auto
+    height: auto
+  a img
+    border: none
+
+.outerContainer
+  position: relative
+  background-color: #fff
+  +pie-clearfix
+  width: 250px
+  height: 250px
+  margin: 0 auto
+  +border-top-radius($radius)
+
+.outerContainer.animating
+  +border-bottom-radius($radius)
+
+.container
+  padding: 10px
+
+.loader
+  position: absolute
+  top: 40%
+  left: 0%
+  height: 25%
+  width: 100%
+  text-align: center
+  line-height: 0
+
+.nav
+  position: absolute
+  top: 0
+  left: 0
+  height: 100%
+  width: 100%
+  z-index: 10
+
+.container > .nav
+  left: 0
+
+.nav a
+  outline: none
+
+.prev, .next
+  width: 49%
+  height: 100%
+  background-image: url("data:image/gif;base64,AAAA")
+  /* Trick IE into showing hover
+  display: block
+
+.prev
+  left: 0
+  float: left
+
+.next
+  right: 0
+  float: right
+
+.prev
+  &:hover
+    background: url(../images/prev.png) left 48% no-repeat
+
+.next
+  &:hover
+    background: url(../images/next.png) right 48% no-repeat
+
+.dataContainer
+  background-color: #fff
+  margin: 0 auto
+  +pie-clearfix
+  width: 100%
+  +border-bottom-radius($radius)  
+
+.data
+  padding: 0 10px
+  color: #666
+  .details
+    width: 85%
+    float: left
+    text-align: left
+    line-height: 1.1em
+  .caption
+    font-size: 13px
+    font-weight: bold
+    line-height: 1em
+  .number
+    display: block
+    clear: left
+    padding-bottom: 1.0em
+    font-size: 11px    
+  .close
+    width: 35px
+    float: right
+    padding-bottom: 0.7em
+    outline: none
+    &:hover
+      cursor: pointer
