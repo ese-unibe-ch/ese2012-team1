@@ -2,7 +2,8 @@
 - user = Models::System.instance.fetch_account(session[:user].to_i)
 
 #usr_img
-  %img(height=200 width=200){ :alt => organisation.name, :src => organisation.avatar }
+  %a(href="#{organisation.picture}" rel="lightbox")
+    %img(height=200 width=200){ :alt => organisation.name, :src => organisation.avatar }
 
 %div(class="description")
   - labels = ["Logged in as User:", "Organisation:", "Credits:"]

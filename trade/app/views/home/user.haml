@@ -1,5 +1,6 @@
 #usr_img
-  %img(height=200 width=200){ :alt => Models::System.instance.fetch_account(session[:user].to_i).name, :src => Models::System.instance.fetch_account(session[:user].to_i).avatar }
+  %a(href="#{Models::System.instance.fetch_account(session[:user].to_i).avatar}" rel="lightbox")
+    %img(height=200 width=200){ :alt => Models::System.instance.fetch_account(session[:user].to_i).name, :src => Models::System.instance.fetch_account(session[:user].to_i).avatar }
 
 - user = Models::System.instance.fetch_account(session[:user])
 %div(class="description")
