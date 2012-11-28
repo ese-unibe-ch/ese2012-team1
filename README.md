@@ -5,7 +5,11 @@ Ruby 1.8.7
 ##Installation
 ###Gems
 
-run ´bundle install´
+run ï¿½bundle installï¿½
+
+Note: To install nokogiri on linux you need some native c-files. See
+http://nokogiri.org/tutorials/installing_nokogiri.html for more
+information.
 
 ###Mail
 **important:** mails must be sent from a gmail account!    
@@ -17,10 +21,10 @@ enter the following informations
 ##Start the app
 
 change to trade directory  
-´cd trade´   
+ï¿½cd tradeï¿½   
   
 run the app  
-´ruby app/app.rb´ 
+ï¿½ruby app/app.rbï¿½ 
 
 ##Login
 login the system using  
