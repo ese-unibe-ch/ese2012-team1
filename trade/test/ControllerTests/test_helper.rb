@@ -78,6 +78,7 @@ class TestHelper
 
     # Create Homer
     homer = Models::User.created('Homer', 'homer', 'homer@mail.ch', 'Do!', '/images/users/default_avatar.png')
+    homer.activated = true
     @@users.store(:homer, homer)
 
     ## Create items for homer

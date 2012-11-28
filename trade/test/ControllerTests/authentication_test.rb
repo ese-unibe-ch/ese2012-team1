@@ -1,15 +1,4 @@
-require 'rubygems'
-require 'require_relative'
-require 'test/unit'
-require 'helper'
-require 'rack/test'
-
-require 'test_helper'
-
-ENV['RACK_ENV'] = 'test'
-
-require_relative '../../app/controllers/authentication'
-require_relative '../../app/models/user'
+require 'controller_require'
 
 class AuthenticationTest < Test::Unit::TestCase
   include Rack::Test::Methods
@@ -34,16 +23,16 @@ class AuthenticationTest < Test::Unit::TestCase
     end
 
     it 'post /authenticate should redirect to /home' do
-      post "/authenticate", :username => "homer@mail.ch", :password => 'homer', 'rack.session' => { :user => nil, :auth => false  }
+      session =  { :user => nil, :auth => false  }
+      post "/authenticate", :username => "homer@mail.ch", :password => 'homer', 'rack.session' => session
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
-      assert last_response.location.include?('/home')
+      assert last_response.location.include?('/home'), "Should redirect to /home but was #{last_response.location}"
     end
 
     it 'post /authenticate with wrong password should show login.hmtl and error message' do
       post "/authenticate", :username => "homer@mail.ch", :password => 'omer', 'rack.session' => { :user => nil, :auth => false  }
-      assert last_response.ok?
-      assert last_response.body.include?('Login')
-      assert last_response.body.include?('No such user')
+      assert last_response.redirect?
+      assert last_response.location.include?('/login')
     end
 
     it 'post /unauthenticate should reset session[:name] and session[:auth] and redirect to /' do

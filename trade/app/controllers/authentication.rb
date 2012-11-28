@@ -33,8 +33,6 @@ module Controllers
     end
 
     post "/authenticate" do
-      #Nicht sauber!
-
       if (!Models::System.instance.user_exists?(params[:username]))
         session[:alert] = Alert.create("", "No such user or password", true)
         redirect '/login'

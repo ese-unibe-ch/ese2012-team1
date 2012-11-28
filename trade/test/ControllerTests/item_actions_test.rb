@@ -1,20 +1,4 @@
-require 'rubygems'
-require 'require_relative'
-require 'test/unit'
-require 'helper'
-require 'rack/test'
-require 'ftools'
-
-require 'test_helper'
-
-ENV['RACK_ENV'] = 'test'
-
-def error
-end #Just to make everyone happy. this method is defined in ItemsAction to catch raised exception
-
-require_relative '../../app/controllers/item_actions'
-require_relative '../../app/models/item'
-require_relative '../../app/models/system'
+require 'controller_require'
 
 class ItemActionsTest < Test::Unit::TestCase
   include Rack::Test::Methods
