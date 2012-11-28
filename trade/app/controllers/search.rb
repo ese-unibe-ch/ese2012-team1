@@ -25,7 +25,7 @@ module Controllers
 
         results = System.instance.search.find(params[:pattern])
 
-        haml :search, :locals => { :results => results }
+        haml :search, :locals => { :results => results, :pattern => params[:pattern], :script => 'search_result.js' }
       end
   end
 end
