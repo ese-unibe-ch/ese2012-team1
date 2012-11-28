@@ -43,5 +43,5 @@ RSpec::Core::RakeTask.new :models_rspec do |t|
   directory = File.join(File.dirname(__FILE__), '/trade/test/ModelTests')
 
   t.rspec_opts = "-I#{directory}"
-  t.pattern = Dir["trade/test/ModelTests/user_spec.rb"]
+  t.pattern = Dir["trade/test/ModelTests/*_spec.rb"]
 end
