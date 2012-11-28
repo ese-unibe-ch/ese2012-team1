@@ -1,4 +1,6 @@
-require 'test_require'
+require 'rubygems'
+require 'require_relative'
+require_relative 'test_require'
 
 def loaded?
   true

@@ -1,4 +1,4 @@
-require '../test_require'
+require 'test_require'
 
 describe "Coupling to" do
   context "System" do
