@@ -15,39 +15,6 @@ class ItemActionsTest < Test::Unit::TestCase
       end
     end
 
-    it 'post /item/changestate/setinactive should set an item inactive' do
-      items = TestHelper.get_items
-      users = TestHelper.get_users
-      item = items[:skateboard]
-
-      assert(item.is_active?, "Item should be active")
-
-      post '/item/changestate/setinactive', { :id => item.id }, 'rack.session' => {:user => users[:bart].id, :auth => true, :account => users[:bart].id}
-
-      assert(!item.is_active?, "Item should be inactive")
-    end
-
-    it 'post /item/changestate/setactive should set an item active' do
-      user = Models::System.instance.fetch_user_by_email('bart@mail.ch')
-      item = user.create_item('sling', 20)
-
-      assert(!item.is_active?, "Item should be inactive")
-
-      post '/item/changestate/setactive', {:id => item.id}, 'rack.session' => {:user => user.id, :auth => true, :account => user.id}
-
-      assert(item.is_active?, "Item should be active")
-    end
-
-    it 'post /item/changestate/setactive should not set items of somebody else active' do
-       item = Models::System.instance.fetch_user_by_email('bart@mail.ch').create_item('sling', 20)
-
-       assert(!item.is_active?, "Item should be inactive")
-
-       post '/item/changestate/setinactive', {:id => item.id}, 'rack.session' => {:user => 'bart@mail.ch', :auth => true}
-
-       assert(!item.is_active?, "Item should be inactive")
-    end
-
     it 'post /item/create should create a new item' do
       user = Models::System.instance.fetch_user_by_email('homer@mail.ch')
 
@@ -64,25 +31,6 @@ class ItemActionsTest < Test::Unit::TestCase
       assert(item.name == 'Gold', "Should own gold but instead did own: #{homers_items}")
       assert(item.description == 'Very very valuable', "Should have description \'Very very valuable' but was #{item.description}")
       assert(item.price == 100, "Should cost 100 credits but was #{item.price}")
-
-      # Removing File after test
-      File.delete("#{item.picture.sub("/images", "../../app/public/images")}")
-    end
-
-    it 'post /item/edit/save should save changes' do
-      items = TestHelper.get_items
-      users = TestHelper.get_users
-
-      item = items[:skateboard]
-      item.to_inactive
-
-      file = Rack::Test::UploadedFile.new("../../app/public/images/items/default_item.png", "image/png")
-
-      post '/item/edit/save', { :id => item.id, :item_picture => file, :new_description => 'Kind of used...', :new_price => 200 }, 'rack.session' => { :user => 'bart@mail.ch', :auth => true  }
-      assert(users[:bart].has_item?(item.id), "Should own skateboard")
-      assert(item.price.to_i == 200, "Should cost 200 but was #{item.price}")
-      assert(item.description == 'Kind of used...', "Should be \'Kind of used...\' but was #{item.description}")
-      assert(item.picture == "/images/items/#{item.id}.png", "Path to file should be /images/items/#{item.id}.png but was #{item.picture}")
 
       # Removing File after test
       File.delete("#{item.picture.sub("/images", "../../app/public/images")}")

@@ -20,6 +20,9 @@ class Navigations
       symbol_context =  context.xpath("./name").text.to_sym
       navigation = navigations.store(symbol_context, Navigation.new)
 
+      #Select first navigation
+      self.selected = navigation if (self.selected.nil?)
+
       context.css("navigation").each do |navigation_xml|
         navigation_name = navigation_xml.xpath("./name").text
         navigation_route =  navigation_xml.xpath("./route").text

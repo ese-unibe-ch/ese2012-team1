@@ -21,12 +21,20 @@ module Controllers
     set :views, "#{absolute_path('../views', __FILE__)}"
 
     before do
+      puts session
       before_for_user_authenticated
+      puts session
     end
 
     ##
     #
-    # Creates an item
+    # Creates an item an redirects to
+    # /items/my/all and setting an success
+    # alert.
+    #
+    # Returns to /item/create with error alert
+    # if there are some input errors.
+    #
     #
     # Expects:
     # params[:name] : name for the item
@@ -66,8 +74,8 @@ module Controllers
 
       new_item.add_picture("/images/items/#{new_item.id}#{file_extension}")
 
-      session[:navigation].get_selected.select("home")
-      session[:navigation].get_selected.subnavigation.select("items")
+      session[:navigation].get_selected.select_by_name("home")
+      session[:navigation].get_selected.subnavigation.select_by_name("items")
 
       session[:alert] = Alert.create("Success!", "You created a new item: #{new_item.name.create_link(new_item.id)}", false)
       redirect "/items/my/all"

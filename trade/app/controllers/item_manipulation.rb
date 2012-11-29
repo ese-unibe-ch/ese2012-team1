@@ -1,9 +1,12 @@
 require_relative '../helpers/HTML_constructor'
 
 module Controllers
+
   ##
   #
   #  Item has to be passed via params[:id]
+  #  if not then #before_for_item_manipulation
+  #  will fail.
   #
   ##
 
@@ -91,9 +94,9 @@ module Controllers
       if params[:item_picture] != nil
         tempfile = params[:item_picture][:tempfile]
         filename = params[:item_picture][:filename]
-        file_path ="#{dir}#{id}#{File.extname(filename)}"
+        file_path ="#{dir}#{params[:id]}#{File.extname(filename)}"
         File.copy(tempfile.path, file_path)
-        file_path = "/images/items/#{id}#{File.extname(filename)}"
+        file_path = "/images/items/#{params[:id]}#{File.extname(filename)}"
         item.add_picture(file_path)
       end
 
