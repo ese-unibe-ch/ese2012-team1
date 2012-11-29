@@ -17,27 +17,53 @@ module Controllers
       before_for_item_manipulation
     end
 
+    ##
+    #
+    # Sets the state of item to active
+    # and sets a success success message
+    #
+    # Expects:
+    # params[:id]: id of the item
+    #
+    ##
+
     post '/item/changestate/setactive' do
       item = Models::System.instance.fetch_item(params[:id])
 
-      if item.owner.id == session[:account]
-        item.to_active
-      end
+      item.to_active
 
       session[:alert] = Alert.create("Success!", "You have activated #{item.name.create_link(item.id)}", false)
       redirect "/items/my/all"
     end
 
+    ##
+    #
+    # Sets the state of item to inactive
+    # and sets a success message
+    #
+    # Expects:
+    # params[:id]: id of the item
+    #
+    ##
+
     post '/item/changestate/setinactive' do
       item = Models::System.instance.fetch_item(params[:id])
 
-      if item.owner.id == session[:account]
-        item.to_inactive
-      end
+      item.to_inactive
 
       session[:alert] = Alert.create("Success!", "You have deactivated #{item.name.create_link(item.id)}", false)
       redirect "/items/my/all"
     end
+
+    ##
+    #
+    # Deletes an item from the system
+    # and sets a success message
+    #
+    # Expects:
+    # params[:id]: id of the item
+    #
+    ##
 
     post '/item/delete' do
       item = Models::System.instance.fetch_item(params[:id])

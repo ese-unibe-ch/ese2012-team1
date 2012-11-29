@@ -24,6 +24,8 @@ module Controllers
         msg = ""
         if params[:title] == "Not_A_Number"
           msg = "Price should be a number!"
+        elsif params[:title] == "Not_Your_Item"
+          msg = "You can only edit your own item"
         elsif params[:title] == "Not_Enough_Credits"
           msg = "Sorry, but you can't buy this item, because you have not enough credits!"
         elsif params[:title] == "No_Valid_Account_Id"

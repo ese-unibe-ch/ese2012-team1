@@ -21,9 +21,7 @@ module Controllers
     set :views, "#{absolute_path('../views', __FILE__)}"
 
     before do
-      puts session
       before_for_user_authenticated
-      puts session
     end
 
     ##

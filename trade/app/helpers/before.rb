@@ -11,10 +11,22 @@ module Helpers
      common_before
   end
 
+  ##
+  #
+  # Redirects to /error/No_Valid_Item_Id if the id
+  # of the item does not exist.
+  #
+  # Redirects to /error/Not_Your_Item if the item
+  # does not belong to the one who wants to
+  # manipulate it.
+  #
+  ##
+
   def before_for_item_manipulation
     before_for_user_authenticated
 
     redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
+    redirect "/error/Not_Your_Item" unless Models::System.instance.fetch_item(params[:id]).owner.id == session[:account]
   end
 
   def before_for_admin
