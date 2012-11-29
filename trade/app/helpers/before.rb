@@ -23,10 +23,15 @@ module Helpers
   ##
 
   def before_for_item_manipulation
+    before_for_item_interaction
+
+    redirect "/error/Not_Your_Item" unless Models::System.instance.fetch_item(params[:id]).owner.id == session[:account]
+  end
+
+  def before_for_item_interaction
     before_for_user_authenticated
 
     redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
-    redirect "/error/Not_Your_Item" unless Models::System.instance.fetch_item(params[:id]).owner.id == session[:account]
   end
 
   def before_for_admin

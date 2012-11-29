@@ -20,18 +20,27 @@ class App < Sinatra::Base
   #To get userfriendly error messages set this to false
   set :development, true
 
+  #No registration needed
   use Controllers::Home
   use Controllers::Error
   use Controllers::Authentication
   use Controllers::Registration
+
+  #Authentication needed
   use Controllers::Search
-  use Controllers::ItemActions
-  use Controllers::ItemManipulation
+  use Controllers::ItemCreate
   use Controllers::ItemSites
   use Controllers::UserSites
   use Controllers::AccountEdit
-  use Controllers::Error
   use Controllers::Organisation
+
+  #Need Item Id and Item exist
+  use Controllers::ItemInteraction
+
+  #Item belong to user needed
+  use Controllers::ItemManipulation
+
+  #Admin needed
   use Controllers::OrganisationAdmin
 
   # Create Timer to reset User Buy Limits at 24:00
