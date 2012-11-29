@@ -1,15 +1,15 @@
 require 'controller_require'
 
-class ItemActionsTest < Test::Unit::TestCase
+class ItemCreateTest < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def app
-    Controllers::ItemActions
+    Controllers::ItemCreate
   end
 
   describe 'Simple Tests' do
 
-    class TestApp < Controllers::ItemActions
+    class TestApp < Controllers::ItemCreate
       configure do
         TestHelper.load
       end

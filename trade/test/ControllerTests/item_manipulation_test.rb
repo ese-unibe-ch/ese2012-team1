@@ -9,7 +9,7 @@ class ItemActionsTest < Test::Unit::TestCase
 
   describe 'Simple Tests' do
 
-    class TestApp < Controllers::ItemActions
+    class TestApp < Controllers::ItemManipulation
       configure do
         TestHelper.load
       end
