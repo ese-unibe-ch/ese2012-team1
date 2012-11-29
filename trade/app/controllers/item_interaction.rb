@@ -19,6 +19,7 @@ module Controllers
             redirect "/error/Over_Your_Organisation_Limit" unless buyer.within_limit_of?(item, user)
           end
           buyer.buy_item(item, user)
+          session[:alert] = Alert.create("Success!", "You bought #{item.name.create_link(item.id)}", false)
           redirect "/items/my/all"
         end
 

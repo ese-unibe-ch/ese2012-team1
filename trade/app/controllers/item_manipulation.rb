@@ -32,7 +32,7 @@ module Controllers
 
       item.to_active
 
-      session[:alert] = Alert.create("Success!", "You have activated #{item.name.create_link(item.id)}", false)
+      session[:alert] = Alert.create("Success!", "You put #{item.name.create_link(item.id)} on market", false)
       redirect "/items/my/all"
     end
 
@@ -51,7 +51,7 @@ module Controllers
 
       item.to_inactive
 
-      session[:alert] = Alert.create("Success!", "You have deactivated #{item.name.create_link(item.id)}", false)
+      session[:alert] = Alert.create("Success!", "You have #{item.name.create_link(item.id)} removed from market", false)
       redirect "/items/my/all"
     end
 
