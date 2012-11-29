@@ -357,9 +357,8 @@ div.search-switch {
     min-width: 500px;
     min-height: 30px;
     position: absolute;
-    top: -5px;
-    padding: 0px;
-    margin: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 .search-switch * {
@@ -387,7 +386,7 @@ div.search-switch {
     border-radius: 5px;
 
     position: relative;
-    bottom: -5px;
+    padding-top: 5px;
     padding-bottom: 5px;
     padding-left: 10px;
     padding-right: 10px;
@@ -397,14 +396,10 @@ div.search-switch {
     text-decoration: none;
 }
 
-.search-switch ul li:hover a {
+.search-switch ul li:hover a,.search-switch ul li.selected a
+{
     color: black;
-    background: url('/images/design/transparent-background.png');
-}
-
-.search-switch ul li.selected a {
-    color: black;
-    background: url('/images/design/transparent-background.png');
+    background: url('/images/design/normal.png');
 }
 
 h4 {

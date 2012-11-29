@@ -1,75 +1,76 @@
-%h1 Search result
+- if !results.empty?
+  %div(class='search-switch')
+    %ul
+      %li(id='search_all' class='selected')
+        %a(href='#' title='' onclick='javascript: searchViewAll()') All Results
+      %li(id='search_item' class='')
+        %a(href='#' title='' onclick='javascript: searchViewItem()') Items
+      %li(id='search_user' class='')
+        %a(href='#' title='' onclick='javascript: searchViewUser()') Users
+      %li(id='search_org' class='')
+        %a(href='#' title='' onclick='javascript: searchViewOrg()') Organisations
 
-%div(class='search-switch')
-  %ul
-    %li(id='search_all' class='selected')
-      %a(href='#' title='' onclick='javascript: searchViewAll()') All Results
-    %li(id='search_item' class='')
-      %a(href='#' title='' onclick='javascript: searchViewItem()') Items
-    %li(id='search_user' class='')
-      %a(href='#' title='' onclick='javascript: searchViewUser()') Users
-    %li(id='search_org' class='')
-      %a(href='#' title='' onclick='javascript: searchViewOrg()') Organisations
+  %div(id='search-list-item')
+    - if(results.found?("item"))
+      %h4 Matching Items
+      %table
+        %tr
+          %th Name
+          %th Description
+          %th
+          %th
+        - i = 0
+        - results.sort!(session[:user]).get("item").each do |result_item|
+          - i = (i + 1)%2
+          %tr{ :class => i == 0 ? "colored" : "normal" }
+            %td{:width => "300px;"}
+              %a{:href => "/item/#{result_item.id}"}
+                = result_item.name.size > 15 ? "#{result_item.name[0..14].boldify(results.pattern)}..." : result_item.name.boldify(results.pattern)
+            %td{:width => "500px;"}= result_item.description.boldify(results.pattern)
+            %td
+              %img(height=50 width=50){ :alt => result_item.name, :src => result_item.picture }
+            %td
 
-%div(id='search-list-item')
-  - if(results.found?("item"))
-    %h4 Matching Items
-    %table
-      %tr
-        %th Name
-        %th Description
-        %th
-        %th
-      - i = 0
-      - results.sort!(session[:user]).get("item").each do |result_item|
-        - i = (i + 1)%2
-        %tr{ :class => i == 0 ? "colored" : "normal" }
-          %td{:width => "300px;"}
-            %a{:href => "/item/#{result_item.id}"}
-              = result_item.name.size > 15 ? "#{result_item.name[0..14].boldify(results.pattern)}..." : result_item.name.boldify(results.pattern)
-          %td{:width => "500px;"}= result_item.description.boldify(results.pattern)
-          %td
-            %img(height=50 width=50){ :alt => result_item.name, :src => result_item.picture }
-          %td
+  %div(id='search-list-user')
+    - if(results.found?("user"))
+      %h4 Matching Users
+      %table
+        %tr
+          %th Name
+          %th Description
+          %th
+          %th
+        - i = 0
+        - results.sort!(session[:user]).get("user").each do |result_user|
+          - i = (i + 1)%2
+          %tr{ :class => i == 0 ? "colored" : "normal" }
+            %td{:width => "300px;"}
+              %a{:href => "/users/#{result_user.id}"}
+                = result_user.name.size > 15 ? "#{result_user.name[0..14]}.boldify(results.pattern)..." : result_user.name.boldify(results.pattern)
+            %td{:width => "500px;"}= result_user.description.boldify(results.pattern)
+            %td
+              %img(height=50 width=50){ :alt => result_user.name, :src => result_user.avatar }
+            %td
 
-%div(id='search-list-user')
-  - if(results.found?("user"))
-    %h4 Matching Users
-    %table
-      %tr
-        %th Name
-        %th Description
-        %th
-        %th
-      - i = 0
-      - results.sort!(session[:user]).get("user").each do |result_user|
-        - i = (i + 1)%2
-        %tr{ :class => i == 0 ? "colored" : "normal" }
-          %td{:width => "300px;"}
-            %a{:href => "/users/#{result_user.id}"}
-              = result_user.name.size > 15 ? "#{result_user.name[0..14]}.boldify(results.pattern)..." : result_user.name.boldify(results.pattern)
-          %td{:width => "500px;"}= result_user.description.boldify(results.pattern)
-          %td
-            %img(height=50 width=50){ :alt => result_user.name, :src => result_user.avatar }
-          %td
-
-%div(id='search-list-organisation')
-  - if(results.found?("user"))
-    %h4 Matching Organisations
-    %table
-      %tr
-        %th Name
-        %th Description
-        %th
-        %th
-      - i = 0
-      - results.sort!(session[:user]).get("organisation").each do |result_org|
-        - i = (i + 1)%2
-        %tr{ :class => i == 0 ? "colored" : "normal" }
-          %td{:width => "300px;"}
-            %a{:href => "/organisations/#{result_org.id}"}
-              = result_org.name.size > 15 ? "#{result_org.name[0..14]}.boldify(results.pattern)..." : result_org.name.boldify(results.pattern)
-          %td{:width => "500px;"}= result_org.description.boldify(results.pattern)
-          %td
-            %img(height=50 width=50){ :alt => result_org.name, :src => result_org.avatar }
-          %td
+  %div(id='search-list-organisation')
+    - if(results.found?("organisation"))
+      %h4 Matching Organisations
+      %table
+        %tr
+          %th Name
+          %th Description
+          %th
+          %th
+        - i = 0
+        - results.sort!(session[:user]).get("organisation").each do |result_org|
+          - i = (i + 1)%2
+          %tr{ :class => i == 0 ? "colored" : "normal" }
+            %td{:width => "300px;"}
+              %a{:href => "/organisations/#{result_org.id}"}
+                = result_org.name.size > 15 ? "#{result_org.name[0..14]}.boldify(results.pattern)..." : result_org.name.boldify(results.pattern)
+            %td{:width => "500px;"}= result_org.description.boldify(results.pattern)
+            %td
+              %img(height=50 width=50){ :alt => result_org.name, :src => result_org.avatar }
+            %td
+- else
+  %h1 No results found!
