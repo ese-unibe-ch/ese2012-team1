@@ -38,20 +38,23 @@ module Controllers
 #  Expects:
 #  params[:name] : Name of the organisation
 #  params[:description] : Description to organisation
+#  params[:limit] : Limit for normal users to spend
 #
 #  optional params[:avatar] : Picture for organisation
 #
 ##
 
     post '/organisation/create' do
-      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
-      redirect "/error/No_Name" if params[:name].nil? or params[:name]==''
-      redirect "/error/No_Description" if params[:description].nil? or params[:description]==''
-      redirect "/error/Choose_Another_Name" if Models::System.instance.organisation_exists?(params[:name])
-      redirect "/error/Wrong_Limit" if params[:credit_limit] != "" && !(/^[\d]+(\.[\d]+){0,1}$/.match(params[:credit_limit]))
+      @error[:name] = ErrorMessages.get("No_Name") if params[:name].nil? || params[:name].length == 0
+      @error[:name] = ErrorMessages.get("Choose_Another_Name") if Models::System.instance.organisation_exists?(params[:name])
+      @error[:limit] = ErrorMessages.get("Wrong_Limit") if params[:limit] != "" && !(/^[\d]+(\.[\d]+){0,1}$/.match(params[:limit]))
 
-      fail "Should have description" if params[:description].nil?
-      fail "Should have name" if params[:name].nil?
+      unless (@error.empty?)
+        puts @error
+        halt haml :'/organisation/create'
+      end
+
+      params[:description] = "" if params[:description].nil?
 
       dir = absolute_path('../public/images/organisations/', __FILE__)
       file_path = "/images/organisations/default_avatar.png"
@@ -67,7 +70,7 @@ module Controllers
       user = Models::System.instance.fetch_account(session[:user])
       organisation = user.create_organisation(params[:name], params[:description], file_path)
 
-      new_limit = params[:credit_limit]
+      new_limit = params[:limit]
       if new_limit == ""
         organisation.limit = nil
       else
@@ -75,7 +78,8 @@ module Controllers
       end
       organisation.reset_member_limits
 
-      redirect '/home'
+      session[:alert] = Alert.create("Success!", "You created a new organisation.", false)
+      redirect '/organisations/self'
     end
 
 ###

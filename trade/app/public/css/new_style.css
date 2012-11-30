@@ -187,6 +187,10 @@ div#message {
   background-image: url('/images/design/error.png');
 }
 
+.alert-input {
+    padding-bottom: 15px;
+}
+
 .alert-input input {
   margin-top: 1px;
 }
