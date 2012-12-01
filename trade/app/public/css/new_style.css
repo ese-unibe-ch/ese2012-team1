@@ -261,6 +261,8 @@ div#main img {
     float: right;
 }
 
+#countdown { width: 240px; height: 45px; }
+
 div#footer {
   margin-top: 2px;
   margin-bottom: 2px;

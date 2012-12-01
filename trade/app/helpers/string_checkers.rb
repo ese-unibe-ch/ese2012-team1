@@ -6,6 +6,14 @@
 
 class String
 
+  def is_number?
+    /^[\d]+(\.[\d]+){0,1}$/.match(self)
+  end
+
+  def is_positive_integer?
+    /^[0-9]+$/.match(self)
+  end
+
   ##
   #
   # Check if string is an email

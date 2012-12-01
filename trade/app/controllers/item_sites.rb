@@ -73,5 +73,11 @@ module Controllers
 
       haml :'item/comment', :locals => {:item => item, :comment_nr => params[:comment_nr]}
     end
+
+    get '/item/changestate/expiration' do
+      item = Models::System.instance.fetch_item(params[:id])
+
+      haml :'item/expiration', :locals => {:item => item}
+    end
   end
 end

@@ -38,6 +38,7 @@ module Controllers
     # params[:name] : name for the item
     # params[:price] : price for the item
     # params[:description] :  description for the item
+    # TODO: Should be optional?
     # optional params[:item_picture] : picture for the item
     #
     ##
@@ -47,6 +48,7 @@ module Controllers
       @error[:price] =  ErrorMessages.get("Not_A_Number") unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:price])
       @error[:price] = ErrorMessages.get("No_Price") if params[:price] == nil || params[:price].length == 0
       @error[:description] = ErrorMessages.get("No_Description") if params[:description] == nil || params[:description].length == 0
+      @error[:date] = "Time is not in seconds" unless params[:date].is_positive_integer?
 
       unless (@error.empty?)
         halt haml :'/item/create'

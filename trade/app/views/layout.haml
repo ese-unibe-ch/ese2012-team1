@@ -11,11 +11,13 @@
       %link(rel="stylesheet" href="/css/#{css}" type="text/css")
     - else
       %link(rel="stylesheet" href="/css/new_style.css" type="text/css")
-    %link(rel="stylesheet" href="/css/lightbox.css" type="text/css")
+      %link(rel="stylesheet" href="/css/lightbox.css" type="text/css")
+      %link(rel="stylesheet" href="/css/countdown.css" type="text/css")
+    %script(type="text/javascript" src="/js/jquery-1.7.2.min.js")
+    %script(type="text/javascript" src="/js/jquery.countdown.min.js")
+    %script(type="text/javascript" src="/js/lightbox.js")
     - if defined? script
       %script(type="text/javascript" src="/java-script/#{script}")
-    %script(type="text/javascript" src="/js/jquery-1.7.2.min.js")
-    %script(type="text/javascript" src="/js/lightbox.js")
 
   %body{ defined?(onload) ? {:onload => "#{onload}"} : "" }
     %div(id="container")

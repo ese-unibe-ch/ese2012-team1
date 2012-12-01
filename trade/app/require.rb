@@ -27,6 +27,7 @@ require_relative('models/account')
 require_relative('models/system')
 require_relative('models/organisation')
 require_relative 'models/reversable_description'
+require_relative 'models/timed_event'
 
 require_relative('helpers/render')
 require_relative('helpers/string_checkers')

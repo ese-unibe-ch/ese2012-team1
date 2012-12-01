@@ -8,7 +8,7 @@ module Models
     #An item can have a picture.
 
     # generate getter and setter for name and price
-    attr_accessor :name, :price, :active, :owner, :id, :description_list, :description_position, :picture
+    attr_accessor :timed_event, :name, :price, :active, :owner, :id, :description_list, :description_position, :picture
 
     def initialize
       super
@@ -25,6 +25,7 @@ module Models
 
       item = self.new
       item.id = nil
+      item.timed_event = TimedEvent.create(item, :forever)
       item.name = name
       item.price = price
       item.active = false
@@ -45,6 +46,17 @@ module Models
       "#{self.name}, #{self.price}"
     end
 
+    # Sets an expiration_date for item
+    def add_expiration_date(time)
+      fail "Time should not be in past" if time < Time.now
+      self.timed_event.reschedule(time)
+    end
+
+    #called when timed event times out
+    def timed_out
+      self.to_inactive
+    end
+
     # to set active
     def to_active
       self.active = true
@@ -53,6 +65,7 @@ module Models
     # to set inactive
     def to_inactive
       self.active = false
+      self.timed_event.unschedule
     end
 
     # Adds a description to the item.

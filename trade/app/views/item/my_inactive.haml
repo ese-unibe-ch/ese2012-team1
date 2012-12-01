@@ -23,7 +23,7 @@
         %img(height=50 width=50){ :alt => item.name, :src => item.picture }
       %td{:width => "250px;"}= item.description.size > 30 ? "#{item.description[0..29]}..." : item.description
       %td
-        %form(name="state" action="/item/changestate/setactive" method="post")
+        %form(name="state" action="/item/changestate/expiration" method="get")
           %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
           %input(class="itembuttons" type="submit" value="Set Active")
       %td

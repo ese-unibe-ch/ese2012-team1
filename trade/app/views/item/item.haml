@@ -19,6 +19,19 @@
       %input(type = 'submit' value = 'Buy Item')
 %br
 
+-time = item.timed_event.time
+-if (time != :forever)
+  Offer expires in:
+  %script(type="text/javascript")
+    $(function () {
+    = "austDay = new Date(\"#{time.strftime("%B %d, %Y %H:%M:%S")}\");"
+    = "$('#countdown').countdown({until: austDay, expiryUrl: '/item/#{item.id}'});"
+    $('#year').text(austDay.getFullYear());
+    });
+  %div(id = "countdown")
+
+
+
 %h2
   Comments
 - for comment in item.collect

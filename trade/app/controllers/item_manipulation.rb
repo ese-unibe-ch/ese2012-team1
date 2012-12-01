@@ -35,6 +35,11 @@ module Controllers
 
       item.to_active
 
+      if(params[:date])
+        #TODO: Use real date instead!
+        item.add_expiration_date(Time.now + params[:date].to_i)
+      end
+
       session[:alert] = Alert.create("Success!", "You put #{item.name.create_link(item.id)} on market", false)
       redirect "/items/my/all"
     end
