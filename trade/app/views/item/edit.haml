@@ -36,7 +36,7 @@
             %p= description
           %td
             %form(action="/item/edit/save_description" method="post")
-              %input(type = 'hidden' name = 'id'){ :value => id }
+              %input(type = 'hidden' name = 'id'value="#{id}")
               %input(type = 'hidden' name = 'desc_to_use'){ :value => version }
               %input(type = 'submit' value = 'Use')
       -else

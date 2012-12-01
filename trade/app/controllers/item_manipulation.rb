@@ -137,6 +137,7 @@ module Controllers
     post '/item/edit/save_description' do
 
       desc_to_use = params[:desc_to_use].to_i
+      id = params[:id] .to_i
       item = Models::System.instance.fetch_item(id)
       item.description_position = desc_to_use
 
