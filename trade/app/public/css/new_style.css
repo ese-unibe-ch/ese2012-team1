@@ -242,6 +242,7 @@ div#main {
 	position: relative;
 	overflow: hidden;
 	padding: 1em;
+    min-height: 100px;
   	background-image: url('/images/design/transparent-background.png');
 }
 

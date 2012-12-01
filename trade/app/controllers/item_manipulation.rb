@@ -22,6 +22,9 @@ module Controllers
     # Sets the state of item to active
     # and sets a success success message
     #
+    # Redirects to:
+    # /items/my/all
+    #
     # Expects:
     # params[:id]: id of the item
     #
@@ -40,6 +43,9 @@ module Controllers
     #
     # Sets the state of item to inactive
     # and sets a success message
+    #
+    # Redirects to:
+    # /items/my/all
     #
     # Expects:
     # params[:id]: id of the item
@@ -93,18 +99,25 @@ module Controllers
     ###
     #
     #  Does edit an item.
-    #  Needs params:
-    #  :id : id of item to change
-    #  :new_description : description to change
-    #  :new_price : price to change
-    #  :item_picture : picture to change
+    #
+    #  Redirects to:
+    # /items/my/all without change when item is not editable
+    # /error/No_Price when no price is set
+    # /error/Not_A_Number when price is not a number
+    # /items/my/all with all changes when everything is okay
+    #
+    #  Expects:
+    #  params[:id] : id of item to change
+    #  params[:new_description] : description to change
+    #  params[:new_price] : price to change
+    #  params[:item_picture] : picture to change
     #
     ###
 
     post '/item/edit/save' do
       item = Models::System.instance.fetch_item(params[:id])
 
-      redirect "/items/my/all" if item.editable?
+      redirect "/items/my/all" unless item.editable?
 
       new_description = params[:new_description]
 

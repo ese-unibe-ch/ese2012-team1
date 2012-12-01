@@ -39,7 +39,8 @@ module Controllers
       if Models::System.instance.user_exists?(params[:member])
         haml :'organisation/member_confirm', :locals => { :member => params[:member]}
       else
-        haml :'organisation/add_member', :locals => { :error_message => "User does not exist" }
+        session[:alert] = Alert.create("Oh no!", "User does with email #{params[:member]} not exist!", true)
+        haml :'organisation/add_member'
       end
     end
 
@@ -48,9 +49,12 @@ module Controllers
         user =  Models::System.instance.fetch_user_by_email(params[:member])
         org = Models::System.instance.fetch_account(session[:account])
         org.add_member(user)
-        haml :'organisation/add_member', :locals => { :success_message => "User was successfully added"}
+
+        session[:alert] = Alert.create("Success!", "You added user #{params[:member]}", false)
+        haml :'organisation/add_member'
       else
-        haml :'organisation/add_member', :locals => { :error_message => "User does not exist" }
+        session[:alert] = Alert.create("Oh no!", "User does with e-mail #{params[:member]} not exist!", true)
+        haml :'organisation/add_member'
       end
     end
 

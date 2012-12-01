@@ -82,10 +82,10 @@ module Models
     end
 
     # Checks if an item's attributes can be changed depending on its state.
-    # @@return    true if state of the item is active;
+    # @@return    true if state of the item is inactive;
     #             false otherwise.
     def editable?
-      self.is_active?
+      ! self.is_active?
     end
 
     # Removes itself from the list of items and of the system
