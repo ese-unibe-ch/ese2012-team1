@@ -2,7 +2,7 @@
 - user = Models::System.instance.fetch_account(session[:user].to_i)
 
 #usr_img
-  %a(href="#{organisation.picture}" rel="lightbox")
+  %a(href="#{organisation.avatar}" rel="lightbox")
     %img(height=200 width=200){ :alt => organisation.name, :src => organisation.avatar }
 
 %div(class="description")
