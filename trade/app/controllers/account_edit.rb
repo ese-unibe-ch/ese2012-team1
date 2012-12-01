@@ -51,9 +51,9 @@ module Controllers
       user = Models::System.instance.fetch_account(session[:user])
       session[:email_error] = nil
       #Error Messages Sessions
-      if (params[:email] != nil)
+      if params[:email] != nil
         newMailUser = Models::System.instance.fetch_user_by_email(params[:email])
-        if (newMailUser != nil)
+        if newMailUser != nil
           session[:email_error] = "You entered a e-mail which is already in use." if (newMailUser != user)
           session[:is_email_error] = "yes" if (newMailUser != user)
         end
@@ -61,21 +61,22 @@ module Controllers
         session[:is_email_error] = "yes" if params[:email] == "" || !params[:email].is_email?
       end
 
-      if (!session[:email_error].nil?)
+      if !session[:email_error].nil?
         redirect '/account/edit/user/profile'
       end
 
 
       session[:is_email_error] = ""
 
-      if (!params[:password].nil?)
+      if !params[:password].nil?
         user.password(params[:password])
       end
-      if (!params[:email].nil?)
+      if !params[:email].nil?
         user.email = params[:email]
       end
-      if (!params[:interests].nil?)
-        user.description = params[:interests].nil? ? "" : params[:interests]
+
+      if !params[:interests].nil?
+        user.description = params[:interests].nil? ? "" : Sanitize.clean(params[:interests])
       end
 
       dir = absolute_path('../public/images/users/', __FILE__)
@@ -121,8 +122,8 @@ module Controllers
       organisation = Models::System.instance.fetch_account(session[:account])
       redirect "/error/Wrong_Limit" if params[:credit_limit] != "" && !(/^[\d]+(\.[\d]+){0,1}$/.match(params[:credit_limit]))
 
-      if (!params[:description].nil?)
-        organisation.description = params[:description].nil? ? "" : params[:description]
+      if !params[:description].nil?
+        organisation.description = params[:description].nil? ? "" : Sanitize.clean(params[:description])
       end
 
       old_limit = organisation.limit

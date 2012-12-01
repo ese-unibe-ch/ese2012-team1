@@ -49,7 +49,7 @@ module Controllers
       @error[:name] = ErrorMessages.get("Choose_Another_Name") if Models::System.instance.organisation_exists?(params[:name])
       @error[:limit] = ErrorMessages.get("Wrong_Limit") if params[:limit] != "" && !(/^[\d]+(\.[\d]+){0,1}$/.match(params[:limit]))
 
-      unless (@error.empty?)
+      unless @error.empty?
         puts @error
         halt haml :'/organisation/create'
       end
@@ -68,7 +68,7 @@ module Controllers
       end
 
       user = Models::System.instance.fetch_account(session[:user])
-      organisation = user.create_organisation(params[:name], params[:description], file_path)
+      organisation = user.create_organisation(Sanitize.clean(params[:name]), Sanitize.clean(params[:description]), file_path)
 
       new_limit = params[:limit]
       if new_limit == ""
@@ -142,6 +142,7 @@ module Controllers
       redirect "/error/Not_In_Organisation" if session[:user] == session[:account]
       organisation = Models::System.instance.fetch_account(session[:account])
       is_admin = organisation.is_admin?(Models::System.instance.fetch_account(session[:user]))
+      only_admin = false
       only_admin = true if organisation.admin_count == 1
       redirect "/error/No_Self_Remove" if is_admin && only_admin
 
@@ -153,6 +154,7 @@ module Controllers
       redirect "/error/No_Valid_User" unless Models::System.instance.user_exists?(params[:user_email])
       organisation = Models::System.instance.fetch_account(session[:account])
       is_admin = organisation.is_admin?(Models::System.instance.fetch_account(session[:user]))
+      only_admin = false
       only_admin = true if organisation.admin_count == 1
       redirect "/error/No_Self_Remove" if is_admin && only_admin
 

@@ -124,7 +124,7 @@ module Controllers
 
       redirect "/items/my/all" unless item.editable?
 
-      new_description = params[:new_description]
+      new_description = Sanitize.clean(params[:new_description])
 
       redirect "/error/No_Price" if params[:new_price] == nil
       redirect "/error/Not_A_Number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:new_price])

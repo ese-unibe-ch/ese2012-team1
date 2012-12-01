@@ -30,7 +30,7 @@ module Controllers
           user = Models::System.instance.fetch_account(session[:account])
           item = Models::System.instance.fetch_item(params[:id])
 
-          comment = Comment.create(user, params[:header], params[:comment])
+          comment = Comment.create(user, Sanitize.clean(params[:header]), Sanitize.clean(params[:comment]))
           if params[:comment_nr].nil?
             item.add(comment)
           else

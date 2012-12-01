@@ -50,13 +50,13 @@ module Controllers
       @error[:description] = ErrorMessages.get("No_Description") if params[:description] == nil || params[:description].length == 0
       @error[:date] = "Time is not in seconds" unless params[:date].is_positive_integer?
 
-      unless (@error.empty?)
+      unless @error.empty?
         halt haml :'/item/create'
       end
 
       id = session[:account]
-      new_item = Models::System.instance.fetch_account(id).create_item(params[:name], Integer((params[:price]).to_i))
-      new_item.add_description(params[:description])
+      new_item = Models::System.instance.fetch_account(id).create_item(Sanitize.clean(params[:name]), Integer((params[:price]).to_i))
+      new_item.add_description(Sanitize.clean(params[:description]))
 
       dir = absolute_path('../public/images/items/', __FILE__)
 

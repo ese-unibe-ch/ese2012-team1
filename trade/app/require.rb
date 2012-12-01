@@ -12,6 +12,7 @@ require 'haml'
 require 'haml/template/options'
 require 'require_relative'
 require 'rufus-scheduler'
+require 'sanitize'
 
 require_relative 'models/search/search'
 require_relative 'models/search/search_item'
