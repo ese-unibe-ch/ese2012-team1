@@ -91,19 +91,21 @@ module Controllers
 #  are not a member.
 #
 #  Expects:
-#  params[:account] : id of the account the user wants to switch to 
+#  params[:account] : id of the account the user wants to switch to
+#
+#  TODO: Check that the user is aloud to change to this organisation!
 #
 ###
 
     post '/organisation/switch' do
       session[:account] = params[:account].to_i
+      new_account = System.instance.fetch_account(session[:account])
 
+      session[:alert] = Alert.create("Success!", "You changed to " + new_account.name + ". You can now buy and sell items in its name.", false)
       redirect '/home'
     end
 
     get '/organisations/self' do
-      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
-
       session[:navigation].get_selected.select_by_name("home")
       session[:navigation].get_selected.subnavigation.select_by_name("organisations")
 
@@ -121,8 +123,6 @@ module Controllers
     end
 
     get '/organisations/all' do
-      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
-
       session[:navigation].get_selected.select_by_name("community")
       session[:navigation].get_selected.subnavigation.select_by_name("organisations")
 
@@ -131,7 +131,6 @@ module Controllers
     end
 
     get '/organisations/:id' do
-      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(params[:id].to_i)
       organisation_id = params[:id]
       haml :'organisation/id', :locals => {:active_items => Models::System.instance.fetch_account(organisation_id.to_i).list_active_items}
     end
@@ -168,6 +167,7 @@ module Controllers
 
     ##
     # Deleting an Organisation
+    # TODO: This should go to organisation_admin.rb!
     ##
     get '/organisation/delete' do
       redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
@@ -175,7 +175,6 @@ module Controllers
     end
 
     post '/organisation/delete' do
-      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
       redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
       org = Models::System.instance.fetch_account(session[:account])

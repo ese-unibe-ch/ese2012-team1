@@ -11,19 +11,17 @@
     - i = (i+1)%2
     %tr{ :class => i == 0 ? "colored" : "normal" }
       %td= user.name
+      - if admin_view
+        %td
+          %form(name="remove" action="/organisation/member/delete" method="post")
+            %input(type="hidden" name="member" value="#{user.email}")
+            %input(class="itembuttons" type="submit" value="Remove from Organisation")
+        %td
+          %form(name="add_admin" action="/organisation/member/to_admin" method="post")
+            %input(type="hidden" name="member" value="#{user.email}")
+            %input(class="itembuttons" type="submit" value="Provide Admin Privileges")
       %td
         %img(height=50 width=50){ :alt => user.name, :src => user.avatar }
-    - if admin_view
-      %td
-        %form(name="remove" action="/organisation/member/delete" method="post")
-          %input(type="hidden" name="member" value="#{user.email}")
-          %input(class="itembuttons" type="submit" value="Remove from Organisation")
-        %br
-      %td
-        %form(name="add_admin" action="/organisation/member/to_admin" method="post")
-          %input(type="hidden" name="member" value="#{user.email}")
-          %input(class="itembuttons" type="submit" value="Provide Admin Privileges")
-        %br
 %br
 %br
 %h2 Administrators of Organisation
@@ -39,16 +37,14 @@
     - i = (i+1)%2
     %tr{ :class => i == 0 ? "colored" : "normal" }
       %td= admin.name
+      - if admin_view
+        %td
+          %form(name="remove" style="display:inline" action="/organisation/member/delete" method="post")
+            %input(type="hidden" name="member" value="#{admin.email}")
+            %input(class="itembuttons" type="submit" value="Remove from Organisation")
+        %td
+          %form(name="remove_admin" style="display:inline" action="/organisation/admin/to_member" method="post")
+            %input(type="hidden" name="member" value="#{admin.email}")
+            %input(class="itembuttons" type="submit" value="Revoke Admin Privileges")
       %td
         %img(height=50 width=50){ :alt => admin.name, :src => admin.avatar }
-    - if admin_view
-      %td
-        %form(name="remove" action="/organisation/member/delete" method="post")
-          %input(type="hidden" name="member" value="#{admin.email}")
-          %input(class="itembuttons" type="submit" value="Remove from Organisation")
-        %br
-      %td
-        %form(name="remove_admin" action="/organisation/admin/to_member" method="post")
-          %input(type="hidden" name="member" value="#{admin.email}")
-          %input(class="itembuttons" type="submit" value="Revoke Admin Privileges")
-        %br

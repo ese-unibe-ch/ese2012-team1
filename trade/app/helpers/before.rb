@@ -25,7 +25,8 @@ module Helpers
   def before_for_item_manipulation
     before_for_item_interaction
 
-    redirect "/error/Not_Your_Item" unless Models::System.instance.fetch_item(params[:id]).owner.id == session[:account]
+    #redirect "/error/Not_Your_Item" unless Models::System.instance.fetch_item(params[:id]).owner.id == session[:account]
+    #TODO: There is a problem because before is called anyway even if the path is not taken afterwards
   end
 
   def before_for_item_interaction
