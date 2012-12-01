@@ -48,13 +48,13 @@ module Controllers
       @error[:price] = ErrorMessages.get("No_Price") if params[:price] == nil || params[:price].length == 0
       @error[:description] = ErrorMessages.get("No_Description") if params[:description] == nil || params[:description].length == 0
 
-      unless (@error.empty?)
+      unless @error.empty?
         halt haml :'/item/create'
       end
 
       id = session[:account]
-      new_item = Models::System.instance.fetch_account(id).create_item(params[:name], Integer((params[:price]).to_i))
-      new_item.add_description(params[:description])
+      new_item = Models::System.instance.fetch_account(id).create_item(Sanitize.clean(params[:name]), Integer((params[:price]).to_i))
+      new_item.add_description(Sanitize.clean(params[:description]))
 
       dir = absolute_path('../public/images/items/', __FILE__)
 

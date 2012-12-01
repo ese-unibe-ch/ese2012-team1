@@ -111,9 +111,9 @@ module Controllers
       session[:form_description] = ""
 
       password = params[:password]
-      email = params[:email]
-      description = params[:interests].nil? ? "" : params[:interests]
-      name = params[:name]
+      email = Sanitize.clean(params[:email])
+      description = params[:interests].nil? ? "" : Sanitize.clean(params[:interests])
+      name = Sanitize.clean(params[:name])
 
       dir = absolute_path('../public/images/users/', __FILE__)
       file_path = "/images/users/default_avatar.png"
@@ -160,18 +160,18 @@ module Controllers
       user = Models::System.instance.fetch_account(session[:user])
 
       # Do Organisation Check
-      deletable = true;
+      deletable = true
       org_list = Models::System.instance.fetch_organisations_of(session[:user])
       for org in org_list do
          if org.is_admin?(user) && org.admin_count() == 1
-           deletable = false;
+           deletable = false
          end
       end
 
       # Remove User From Organisation
       if deletable
         for org in org_list do
-          org.remove_member_by_email(user.email);
+          org.remove_member_by_email(user.email)
         end
       else
         redirect "/error/Yor_Are_Only_Admin"
