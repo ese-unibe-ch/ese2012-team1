@@ -1,13 +1,11 @@
 /* jQuery Countdown styles 1.6.0. */
-.hasCountdown {
-	border: 1px solid #ccc;
-	background-color: #eee;
-}
+
 .countdown_rtl {
 	direction: rtl;
 }
 .countdown_holding span {
 	color: #888;
+    width: 240px; height: 45px;
 }
 .countdown_row {
 	clear: both;

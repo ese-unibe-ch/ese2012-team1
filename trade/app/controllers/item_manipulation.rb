@@ -23,10 +23,12 @@ module Controllers
     # and sets a success success message
     #
     # Redirects to:
+    # /item/expiration if params[:date] is not a date or not in future
     # /items/my/all
     #
     # Expects:
     # params[:id]: id of the item
+    # optional params[:date]: date when the selling expires
     #
     ##
 
@@ -35,7 +37,11 @@ module Controllers
 
       item.to_active
 
-      if(params[:date])
+      if(params[:date] != ""  && !params[:date].nil?)
+        unless (params[:date].is_positive_integer?)
+          alert[:date] = "Date should be set as seconds."
+          redirect "/item/expiration"
+        end
         #TODO: Use real date instead!
         item.add_expiration_date(Time.now + params[:date].to_i)
       end

@@ -101,7 +101,7 @@ describe Models::Item do
       end
 
       it "should not be editable" do
-        @item.should_not be_editable
+        @item.should be_editable
       end
 
       it "should not be bought by user with to few money" do
@@ -129,8 +129,8 @@ describe Models::Item do
         @item.is_active?.should be_false
       end
 
-      it "should be editable" do
-        @item.should be_editable
+      it "should not be editable" do
+        @item.should_not be_editable
       end
 
       it "should not be bought by user with to few money" do

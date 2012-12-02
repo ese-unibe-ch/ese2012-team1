@@ -15,8 +15,18 @@
       %td{:width => "190px;"}= " costs #{item.price} credits"
       %td
         %img(height=50 width=50){ :alt => item.name, :src => item.picture }
-      %td
+      -time = item.timed_event.time
+      %td{ :colspan => time == :forever ? 2 : 1 }
         %form(action="/item/buy" method="post")
           %input(type = 'hidden' name = 'id'){ :value => "#{item.id}.#{item.name}" }
           %input(type = 'submit' value = 'Buy Item')
+      -if (time != :forever)
+        %script(type="text/javascript")
+          $(function () {
+          = "austDay = new Date(\"#{time.strftime("%B %d, %Y %H:%M:%S")}\");"
+          = "$('#countdown#{item.id}').countdown({until: austDay, format: 'DHM', expiryText: 'Beyond expiration time.</br> Reload your browser'});"
+          $('#year').text(austDay.getFullYear());
+          });
+        %td
+          %span{:id => "countdown#{item.id}"}
 

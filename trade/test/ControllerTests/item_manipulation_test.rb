@@ -1,6 +1,6 @@
 require 'controller_require'
 
-class ItemActionsTest < Test::Unit::TestCase
+class ItemManipulationTest < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def app

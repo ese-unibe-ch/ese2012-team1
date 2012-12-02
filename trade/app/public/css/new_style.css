@@ -261,7 +261,17 @@ div#main img {
     float: right;
 }
 
-#countdown { width: 240px; height: 45px; }
+.countdown {
+  width: 240px; height: 45px;
+}
+
+#countdown {
+  width: 240px;
+  height: 45px;
+  background-image: url('/images/design/normal.png');
+  padding: 2px;
+  border: 1px solid white;
+}
 
 div#footer {
   margin-top: 2px;
@@ -298,6 +308,11 @@ th {
 
 tr {
     width: 100%;
+}
+
+td form {
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 tr.colored {

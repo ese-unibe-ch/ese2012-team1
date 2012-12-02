@@ -63,7 +63,7 @@ class RegistrationTest < Test::Unit::TestCase
                          :email => 'larry@mail.ch'},
            'rack.session' => { :user => nil, :auth => false  }
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
-      assert last_response.location =~ /\/$/, "Should redirect to / but was #{last_response.location}"
+      assert last_response.location =~ /\/register\/successful$/, "Should redirect to /register/successful but was #{last_response.location}"
     end
 
     it 'post /register should add user to system' do
@@ -118,7 +118,7 @@ class RegistrationTest < Test::Unit::TestCase
 
       post '/unregister', {}, 'rack.session' => { :user => users[:homer].id, :auth => true, :account => users[:homer].id  }
       assert last_response.redirect?
-      assert last_response.location.include?('/unauthenticate'), "Should redirect to /unauthenticate"
+      assert last_response.location.include?('/unauthenticate'), "Should redirect to /unauthenticate but was #{last_response.location}"
     end
   end
 end
