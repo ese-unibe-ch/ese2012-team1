@@ -66,6 +66,7 @@ module Controllers
       end
 
       item.to_active
+      item.alter_version
 
       session[:alert] = Alert.create("Success!", "You put #{item.name.create_link(item.id)} on market", false)
       redirect "/items/my/all"
@@ -88,6 +89,7 @@ module Controllers
       item = Models::System.instance.fetch_item(params[:id])
 
       item.to_inactive
+      item.alter_version
 
       session[:alert] = Alert.create("Success!", "You have #{item.name.create_link(item.id)} removed from market", false)
       redirect "/items/my/all"
@@ -171,6 +173,8 @@ module Controllers
         item.add_picture(file_path)
       end
 
+      item.alter_version
+
       redirect "/items/my/all"
     end
 
@@ -185,6 +189,8 @@ module Controllers
       id = params[:id] .to_i
       item = Models::System.instance.fetch_item(id)
       item.description_position = desc_to_use
+
+      item.alter_version
 
       haml :'item/save_description_success', :locals => {:id => id}
     end

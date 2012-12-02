@@ -13,12 +13,21 @@ module Controllers
           item = Models::System.instance.fetch_item(params[:id])
           buyer = Models::System.instance.fetch_account(session[:account])
           user=Models::System.instance.fetch_account(session[:user])
+          version = params[:version]
 
           redirect "/error/Not_Enough_Credits" unless item.can_be_bought_by?(buyer)
           if  buyer!=user #true if it is a user acting as an organisation
             redirect "/error/Over_Your_Organisation_Limit" unless buyer.within_limit_of?(item, user)
           end
+
+          unless item.current_version?(version)
+            session[:alert] = Alert.create("Item has Changed!", "While you were watching this site, the Item was modified.", true)
+            redirect "/item/#{item.id}"
+          end
           buyer.buy_item(item, user)
+
+          item.alter_version
+
           session[:alert] = Alert.create("Success!", "You bought #{item.name.create_link(item.id)}", false)
           redirect "/items/my/all"
         end

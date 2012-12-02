@@ -8,7 +8,7 @@ module Models
     #An item can have a picture.
 
     # generate getter and setter for name and price
-    attr_accessor :timed_event, :name, :price, :active, :owner, :id, :description_list, :description_position, :picture
+    attr_accessor :timed_event, :name, :price, :active, :owner, :id, :description_list, :description_position, :picture, :version
 
     def initialize
       super
@@ -33,6 +33,7 @@ module Models
       item.description_list = ReversableDescription.new
       item.description_position = 0
       item.picture = "/images/items/default_item.png"
+      item.version = 1;
       item
     end
 
@@ -126,6 +127,16 @@ module Models
       fail "Missing new owner" if (new_owner == nil)
       self.owner = new_owner
       self.to_inactive
+    end
+
+    def current_version?(seen_version)
+      # Precondition
+      fail "Missing Version number" if (seen_version == nil)
+      self.version == seen_version.to_i
+    end
+
+    def alter_version()
+      self.version += 1
     end
   end
 

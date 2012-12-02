@@ -62,8 +62,13 @@ module Controllers
 
     get '/item/:id' do
       redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
+      item = Models::System.instance.fetch_item(params[:id])
+      if !item.is_active? && item.owner.id != session[:account]
+        session[:alert] = Alert.create("Inactive Item", "The Item you try to watch isn't active.", true)
+        redirect "/items/active"
+      end
 
-      haml :'item/item', :locals => {:item => Models::System.instance.fetch_item(params[:id])}
+      haml :'item/item', :locals => {:item => item}
     end
 
     get '/item/add/comment/:item_id/:comment_nr' do
