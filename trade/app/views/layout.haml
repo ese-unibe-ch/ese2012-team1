@@ -26,7 +26,9 @@
     - if defined? script
       %script(type="text/javascript" src="/java-script/#{script}")
     %script(type="text/javascript")
-      $(function() {$( "#end_time" ).datetimepicker({dateFormat: 'dd.mm.yy',  minDate: new Date(), changeMonth: true, changeYear: true, firstDay: 1});});
+      currentTime = new Date();
+      minimumDate = new Date(currentTime.getTime() + 1*60000);
+      $(function() {$( "#end_time" ).datetimepicker({dateFormat: 'dd.mm.yy', minDate: minimumDate, changeMonth: true, changeYear: true, firstDay: 1});});
   %body{ defined?(onload) ? {:onload => "#{onload}"} : "" }
     %div(id="container")
       - auth = session[:auth] ? "yes" : "no"
