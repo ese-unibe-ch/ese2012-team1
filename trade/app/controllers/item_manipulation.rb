@@ -35,16 +35,37 @@ module Controllers
     post '/item/changestate/setactive' do
       item = Models::System.instance.fetch_item(params[:id])
 
-      item.to_active
-
       if(params[:date] != ""  && !params[:date].nil?)
-        unless (params[:date].is_positive_integer?)
-          alert[:date] = "Date should be set as seconds."
+
+        unless (params[:date] =~ /^\d\d\.\d\d\.\d\d\d\d\s\d\d:\d\d$/)
+          @error[:date] = "Date has not correct format. Should be \'dd.mm.yyyy hh:mm\'"
           redirect "/item/expiration"
         end
-        #TODO: Use real date instead!
-        item.add_expiration_date(Time.now + params[:date].to_i)
+
+        date_and_time = params[:date].split(/\s/)
+        time = date_and_time[1]
+        date = date_and_time[0]
+        day_month_year = date.split(/\./)
+        hours_minutes = time.split(":")
+
+        unless(Date.valid_date?(day_month_year[2].to_i, day_month_year[1].to_i, day_month_year[0].to_i))
+          @error[:date] = "You entered a invalid date"
+          redirect "/item/expiration"
+        end
+
+        unless(time =~ /^([01]?[0-9]|2[0-3])\:[0-5][0-9]$/)
+          puts "Here with #{params[:date]} and #{time}"
+          @error[:date] = "You entered an invalid time"
+          redirect "/item/expiration"
+        end
+
+        time = Time.local(day_month_year[2].to_i, day_month_year[1].to_i, day_month_year[0].to_i, hours_minutes[0], hours_minutes[1])
+        puts time
+
+        item.add_expiration_date(time)
       end
+
+      item.to_active
 
       session[:alert] = Alert.create("Success!", "You put #{item.name.create_link(item.id)} on market", false)
       redirect "/items/my/all"

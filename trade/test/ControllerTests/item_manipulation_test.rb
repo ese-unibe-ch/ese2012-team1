@@ -41,6 +41,44 @@ class ItemManipulationTest < Test::Unit::TestCase
       assert(item.is_active?, "Item should be active")
     end
 
+    def postWithDifferentDateFormats(date)
+      user = @users[:bart]
+      item = user.create_item('stone', 20)
+
+      assert(! item.active)
+
+      post '/item/changestate/setactive', {:id => item.id, :date => date}, 'rack.session' => {:user => user.id, :auth => true, :account => user.id}
+
+      assert(! item.active)
+      assert(last_response.redirect?)
+    end
+
+    it 'post /item/changestate/setactive with date dd.mm.yyyy should set an item not active' do
+      postWithDifferentDateFormats((Time.now + 1).strftime("%d.%m.%Y"))
+    end
+
+    it 'post /item/changestate/setactive with date 75.mm.yyyy hh:mm should set an item not active' do
+      postWithDifferentDateFormats((Time.now+1).strftime("75.%m.%Y %H:%M"))
+    end
+
+    it 'post /item/changestate/setactive with date dd.mm.yyyy 35:mm should set an item not active' do
+      postWithDifferentDateFormats((Time.now+1).strftime("%d.%m.%Y 35:%M"))
+    end
+
+    it 'post /item/changestate/setactive with date dd.mm.yyyy hh:mm should set an item active' do
+      date= (Time.now+1).strftime("%d.%m.%Y %H:%M")
+
+      user = @users[:bart]
+      item = user.create_item('stone', 20)
+
+      assert(! item.active)
+
+      post '/item/changestate/setactive', {:id => item.id, :date => date}, 'rack.session' => {:user => user.id, :auth => true, :account => user.id}
+
+      assert(item.active)
+      assert(last_response.redirect?)
+    end
+
     it 'post /item/changestate/setactive should not set items of somebody else active' do
       item = Models::System.instance.fetch_user_by_email('bart@mail.ch').create_item('sling', 20)
 

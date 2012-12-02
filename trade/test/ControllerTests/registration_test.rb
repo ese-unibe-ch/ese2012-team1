@@ -115,6 +115,8 @@ class RegistrationTest < Test::Unit::TestCase
 
     it 'post /unregister should redirect to /unauthenticate' do
       users = TestHelper.get_users
+       System.instance.fetch_organisations_of(users[:homer].id)
+
 
       post '/unregister', {}, 'rack.session' => { :user => users[:homer].id, :auth => true, :account => users[:homer].id  }
       assert last_response.redirect?
