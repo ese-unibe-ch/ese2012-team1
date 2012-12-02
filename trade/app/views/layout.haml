@@ -7,18 +7,26 @@
     %link(rel="icon" href="/images/logo/TradingSystemIcon.png" type="image/png")
 
     %title Trading System - JOKR by #1
+
     - if defined? css
       %link(rel="stylesheet" href="/css/#{css}" type="text/css")
     - else
       %link(rel="stylesheet" href="/css/new_style.css" type="text/css")
-      %link(rel="stylesheet" href="/css/lightbox.css" type="text/css")
-      %link(rel="stylesheet" href="/css/countdown.css" type="text/css")
-    %script(type="text/javascript" src="/js/jquery-1.7.2.min.js")
+
+    %link(rel="stylesheet" href="/css/lightbox.css" type="text/css")
+    %link(rel="stylesheet" href="/css/countdown.css" type="text/css")
+    %link(rel="stylesheet" href="/css/jquery-ui-1.9.2.custom.min.css" type="text/css")
+    %link(rel="stylesheet" href="/css/jquery-ui-timepicker-addon.css" type="text/css")
+
+    %script(type="text/javascript" src="/js/jquery-1.8.3.min.js")
+    %script(type="text/javascript" src="/js/jquery-ui-1.9.2.custom.min.js")
+    %script(type="text/javascript" src="/js/jquery-ui-timepicker-addon.js")
     %script(type="text/javascript" src="/js/jquery.countdown.min.js")
     %script(type="text/javascript" src="/js/lightbox.js")
     - if defined? script
       %script(type="text/javascript" src="/java-script/#{script}")
-
+    %script(type="text/javascript")
+      $(function() {$( "#end_time" ).datetimepicker({dateFormat: 'dd.mm.yy',  minDate: new Date()});});
   %body{ defined?(onload) ? {:onload => "#{onload}"} : "" }
     %div(id="container")
       - auth = session[:auth] ? "yes" : "no"

@@ -2,6 +2,6 @@
   = "Sell #{item.name}"
 
 %form(action="/item/changestate/setactive" enctype="multipart/form-data" method="post")
-  = haml :'partials/alert-input', :locals => { :name => :date, :label => "Expiration date (Leave it empty if you want to set none)"}
+  = haml :'partials/alert-input-time', :locals => { :name => :date, :label => "Expiration date (Leave it empty if you want to set none)"}
   %input(type="hidden" name="id"){:value=>item.id}
   %input(type="submit" value="Sell on market")
