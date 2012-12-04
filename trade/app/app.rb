@@ -17,8 +17,7 @@ class App < Sinatra::Base
   #To set Port on Server
   ##replace_for_port##
 
-  #To get userfriendly error messages set this to false
-  set :development, true
+  #To have userfriendly errors set :development true in helpers/error.rb
 
   #No registration needed
   use Controllers::Home
@@ -48,7 +47,6 @@ class App < Sinatra::Base
   scheduler.cron '0 0 * * *' do
     Models::System.instance.reset_all_member_limits
   end
-
 end
 
 App.run! unless ENV['RACK_ENV'] == 'test'
