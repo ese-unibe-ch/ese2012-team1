@@ -297,6 +297,12 @@ button:hover, input:hover, textarea:hover {
   background-image: url('/images/design/message.png');
 }
 
+button:disabled, input:disabled, textarea:disabled {
+  border: 1px solid grey;
+  color: grey;
+  background-image: url('/images/design/transparent-background-inactive.png')
+}
+
 table {
     border-collapse: collapse;
     width: 100%;
