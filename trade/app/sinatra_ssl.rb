@@ -1,5 +1,5 @@
 require 'webrick'
-require 'webrick/ssl'
+#require 'webrick/ssl'
 require 'webrick/https'
 
 module Sinatra
