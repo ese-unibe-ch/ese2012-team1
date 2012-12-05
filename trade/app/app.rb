@@ -62,6 +62,8 @@ class App < Sinatra::Base
     Models::System.instance.reset_all_member_limits
   end
 
+
+  Rack::Server.start webrick_options
 end
 
 #App.run! unless ENV['RACK_ENV'] == 'test'
