@@ -1,5 +1,4 @@
 require 'require'
-require 'sinatra_ssl'
 
 class App < Sinatra::Base
 
@@ -17,9 +16,20 @@ class App < Sinatra::Base
 
   #To set Port on Server
   ##replace_for_port##
-  set :port, 443
-  set :ssl_certificate, "/home/ese2012/certs/www.jokr.ch.cer"
-  set :ssl_key, "/home/ese2012/certs/www.jokr.ch.key"
+
+  CERT_PATH = '/home/ese2012/certs/'
+
+  webrick_options = {
+      :Port               => 443,
+      :Logger             => WEBrick::Log::new($stderr, WEBrick::Log::DEBUG),
+      :DocumentRoot       => "/ruby/htdocs",
+      :SSLEnable          => true,
+      :SSLVerifyClient    => OpenSSL::SSL::VERIFY_NONE,
+      :SSLCertificate     => OpenSSL::X509::Certificate.new( File.open(File.join(CERT_PATH, "www.jokr.ch.cer")).read),
+      :SSLPrivateKey      => OpenSSL::PKey::RSA.new( File.open(File.join(CERT_PATH, "www.jokr.ch.key")).read),
+      :SSLCertName        => [ [ "CN",WEBrick::Utils::getservername ] ],
+      :app                => App
+  }
 
   #To have userfriendly errors set :development true in helpers/error.rb
 
@@ -51,7 +61,9 @@ class App < Sinatra::Base
   scheduler.cron '0 0 * * *' do
     Models::System.instance.reset_all_member_limits
   end
+
 end
 
-App.run! unless ENV['RACK_ENV'] == 'test'
+#App.run! unless ENV['RACK_ENV'] == 'test'
+Rack::Server.start webrick_options
 
