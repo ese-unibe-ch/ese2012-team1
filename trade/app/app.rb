@@ -21,6 +21,7 @@ class App < Sinatra::Base
   CERT_PATH = '/home/ese2012/certs/'
 
   webrick_options = {
+      :Host               => "www.jokr.ch",
       :Port               => 443,
       :Logger             => WEBrick::Log::new($stderr, WEBrick::Log::DEBUG),
       :SSLEnable          => true,
