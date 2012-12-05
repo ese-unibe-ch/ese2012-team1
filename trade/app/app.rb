@@ -15,22 +15,22 @@ class App < Sinatra::Base
   set :static, true
 
   #To set Port on Server
+  useSecureServer = false
   ##replace_for_port##
-  ##replace_for_ssl##
 
-  CERT_PATH = '/home/ese2012/certs/'
-
-  webrick_options = {
-      :Host               => "www.jokr.ch",
-      :Port               => 443,
-      :Logger             => WEBrick::Log::new($stderr, WEBrick::Log::DEBUG),
-      :SSLEnable          => true,
-      :SSLVerifyClient    => OpenSSL::SSL::VERIFY_NONE,
-      :SSLCertificate     => OpenSSL::X509::Certificate.new( File.open(File.join(CERT_PATH, "www.jokr.ch.cer")).read),
-      :SSLPrivateKey      => OpenSSL::PKey::RSA.new( File.open(File.join(CERT_PATH, "www.jokr.ch.key")).read),
-      :SSLCertName        => [ [ "CN",WEBrick::Utils::getservername ] ],
-      :app                => App
-  }
+  if useSecureServer
+    CERT_PATH = '/home/ese2012/certs/'
+    webrick_options = {
+        :Port               => 443,
+        :Logger             => WEBrick::Log::new($stderr, WEBrick::Log::DEBUG),
+        :SSLEnable          => true,
+        :SSLVerifyClient    => OpenSSL::SSL::VERIFY_NONE,
+        :SSLCertificate     => OpenSSL::X509::Certificate.new( File.open(File.join(CERT_PATH, "www.jokr.ch.cer")).read),
+        :SSLPrivateKey      => OpenSSL::PKey::RSA.new( File.open(File.join(CERT_PATH, "www.jokr.ch.key")).read),
+        :SSLCertName        => [ [ "CN",WEBrick::Utils::getservername ] ],
+        :app                => App
+    }
+  end
 
   #To have userfriendly errors set :development true in helpers/error.rb
 
@@ -63,6 +63,9 @@ class App < Sinatra::Base
     Models::System.instance.reset_all_member_limits
   end
 
-  Rack::Server.start webrick_options
+  if useSecureServer
+    Rack::Server.start webrick_options
+  end
 end
 
+App.run! unless ENV['RACK_ENV'] == 'test'
