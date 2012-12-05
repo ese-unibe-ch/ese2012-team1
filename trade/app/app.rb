@@ -16,6 +16,7 @@ class App < Sinatra::Base
 
   #To set Port on Server
   ##replace_for_port##
+  ##replace_for_ssl##
 
   CERT_PATH = '/home/ese2012/certs/'
 
@@ -67,5 +68,5 @@ class App < Sinatra::Base
 end
 
 #App.run! unless ENV['RACK_ENV'] == 'test'
-Rack::Server.start webrick_options
+#Rack::Server.start webrick_options
 
