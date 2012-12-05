@@ -1,11 +1,13 @@
+require 'webrick'
 require 'webrick/ssl'
+require 'webrick/https'
 
 module Sinatra
   class Application
     def self.run!
       certificate_content = File.open(ssl_certificate).read
       key_content = File.open(ssl_key).read
-      ca_certificate_content = File.open(ca_certificate).read
+      #ca_certificate_content = File.open(ca_certificate).read
 
       server_options = {
           :Host => bind,
