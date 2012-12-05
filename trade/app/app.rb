@@ -23,7 +23,6 @@ class App < Sinatra::Base
   webrick_options = {
       :Port               => 443,
       :Logger             => WEBrick::Log::new($stderr, WEBrick::Log::DEBUG),
-      :DocumentRoot       => "/ruby/htdocs",
       :SSLEnable          => true,
       :SSLVerifyClient    => OpenSSL::SSL::VERIFY_NONE,
       :SSLCertificate     => OpenSSL::X509::Certificate.new( File.open(File.join(CERT_PATH, "www.jokr.ch.cer")).read),
@@ -63,10 +62,6 @@ class App < Sinatra::Base
     Models::System.instance.reset_all_member_limits
   end
 
-
   Rack::Server.start webrick_options
 end
-
-#App.run! unless ENV['RACK_ENV'] == 'test'
-#Rack::Server.start webrick_options
 
