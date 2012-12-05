@@ -23,6 +23,25 @@ module Controllers
           redirect "/items/my/all"
         end
 
+        post '/item/towishlist' do
+          item = Models::System.instance.fetch_item(params[:id])
+          account = Models::System.instance.fetch_account(session[:account])
+
+          #TODO check conditions!
+          account.wish_list.add(item)
+          session[:alert] = Alert.create("", "#{item.name.create_link(item.id)} has been added to your Wish List", false)
+          redirect "/items/active"
+        end
+
+        post '/item/fromwishlist' do
+          item = Models::System.instance.fetch_item(params[:id])
+          account = Models::System.instance.fetch_account(session[:account])
+
+          #TODO check conditions!
+          account.wish_list.remove(item)
+          redirect "/items/my/all"
+
+        end
         post '/item/add/comment/:id' do
 
           redirect "/error/No_Valid_Input" if params[:comment].nil? || params[:comment] == ""

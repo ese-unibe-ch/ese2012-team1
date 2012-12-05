@@ -8,7 +8,7 @@ module Models
     #An item can have a picture.
 
     # generate getter and setter for name and price
-    attr_accessor :timed_event, :name, :price, :active, :owner, :id, :description_list, :description_position, :picture
+    attr_accessor :timed_event, :name, :price, :active, :owner, :id, :description_list, :description_position, :picture, :observers
 
     def initialize
       super
@@ -33,6 +33,8 @@ module Models
       item.description_list = ReversableDescription.new
       item.description_position = 0
       item.picture = "/images/items/default_item.png"
+      item.observers = []
+
       item
     end
 
@@ -66,8 +68,26 @@ module Models
     def to_inactive
       self.active = false
       self.timed_event.unschedule
+      self.notify_observers
     end
 
+    #TODO doc
+    #TODO test
+    def notify_observers
+      self.observers.each {|observer| observer.update(self)}
+    end
+
+    #TODO doc
+    #TODO test
+    def add_observer(wish_list)
+      self.observers << wish_list
+    end
+
+    #TODO doc
+    #TODO test
+    def remove_observer(wish_list)
+      self.observers.delete(wish_list)
+    end
     # Adds a description to the item.
     # @param  description   the string containing the description for the item
     def add_description (description)

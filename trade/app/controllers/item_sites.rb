@@ -30,6 +30,11 @@ module Controllers
         haml :'item/my_inactive', :locals => {:inactive_items => Models::System.instance.fetch_account(user_id).list_inactive_items}
     end
 
+    get '/item/wish/list' do
+        user_id = session[:account]
+        haml :'item/wish_list', :locals => {:wish_list => Models::System.instance.fetch_account(user_id).wish_list}
+    end
+
     get '/items/my/all' do
       session[:navigation].get_selected.select_by_name("home")
       session[:navigation].get_selected.subnavigation.select_by_name("items")
@@ -37,7 +42,8 @@ module Controllers
       account = Models::System.instance.fetch_account(session[:account])
 
       haml :'item/my_all', :locals => {:inactive_items => account.list_inactive_items,
-                                       :active_items => account.list_active_items }
+                                       :active_items => account.list_active_items,
+                                        :wish_list_items => account.wish_list.items}
     end
 
     get '/item/create' do

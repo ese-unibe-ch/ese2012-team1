@@ -1,0 +1,34 @@
+- text = "Our"
+- text = "My" if session[:account] == session[:user]
+%h2= "#{text} Wish List"
+%br
+%table
+  %tr
+    %th Name
+    %th Price
+    %th
+    %th Description
+    %th
+    %th
+    %th
+  - i = 0
+  - for item in wish_list_items
+    - i = (i+1)%2
+    %tr{ :class => i == 0 ? "colored" : "normal" }
+      %td{:width => "135px;"}
+        %a{:href => "/item/#{item.id}"}
+          = item.name.size > 15 ? "#{item.name[0..14]}..." : item.name
+      %td{:width => "90px;"}= item.price
+      %td
+        %img(height=50 width=50){ :alt => item.name, :src => item.picture }
+      %td{:width => "250px;"}= item.description.size > 30 ? "#{item.description[0..29]}..." : item.description
+      %td
+        %form(action="/item/buy" method="post")
+          %input(type = 'hidden' name = 'id'){ :value => "#{item.id}.#{item.name}" }
+          %input(type = 'submit' value = 'Buy Item')
+      %td
+        %form(action="/item/fromwishlist" method="post")
+          %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
+          %input(class="itembuttons" type="submit" value="Remove from Wish List")
+
+
