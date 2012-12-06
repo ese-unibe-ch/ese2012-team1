@@ -139,27 +139,42 @@ module Controllers
     # Leaving an Organisation
     ##
     get '/organisation/leave' do
-      redirect "/error/Not_In_Organisation" if session[:user] == session[:account]
+      if session[:user] == session[:account]
+        session[:alert] = Alert.create("Oh no!", "You can't leave an organisation when you're not in your Organisations Profile.", true)
+        redirect "/home"
+      end
       organisation = Models::System.instance.fetch_account(session[:account])
       is_admin = organisation.is_admin?(Models::System.instance.fetch_account(session[:user]))
       only_admin = false
       only_admin = true if organisation.admin_count == 1
-      redirect "/error/No_Self_Remove" if is_admin && only_admin
+      if is_admin && only_admin
+        session[:alert] = Alert.create("Oh no!", "You can't leave this Organisation, because you're the only Administrator.", true)
+        redirect "/home"
+      end
 
       haml :'organisation/leave'
     end
 
     post '/organisation/leave' do
-      redirect "/error/Not_In_Organisation" if session[:user] == session[:account]
       redirect "/error/No_Valid_User" unless Models::System.instance.user_exists?(params[:user_email])
+      if session[:user] == session[:account]
+        session[:alert] = Alert.create("Oh no!", "You can't leave an organisation when you're not in your Organisations Profile.", true)
+        redirect "/home"
+      end
       organisation = Models::System.instance.fetch_account(session[:account])
       is_admin = organisation.is_admin?(Models::System.instance.fetch_account(session[:user]))
       only_admin = false
       only_admin = true if organisation.admin_count == 1
-      redirect "/error/No_Self_Remove" if is_admin && only_admin
+      if is_admin && only_admin
+        session[:alert] = Alert.create("Oh no!", "You can't leave this Organisation, because you're the only Administrator.", true)
+        redirect "/home"
+      end
 
       user = Models::System.instance.fetch_user_by_email(params[:user_email])
-      redirect "/error/Try_Remove_Other" if params[:user_email] != user.email
+      if params[:user_email] != user.email
+        session[:alert] = Alert.create("Oh no!", "You're trying to remove an other User from the Organisation.", true)
+        redirect "/home"
+      end
 
       organisation.remove_member_by_email(user.email)
 
@@ -172,13 +187,19 @@ module Controllers
     # TODO: This should go to organisation_admin.rb!
     ##
     get '/organisation/delete' do
-      redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+      unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+        session[:alert] = Alert.create("Oh no!", "You can't delete this Organisation, because you're not an Administrator.", true)
+        redirect "/home"
+      end
       haml :'organisation/delete'
     end
 
     post '/organisation/delete' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
-      redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+      unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+        session[:alert] = Alert.create("Oh no!", "You can't delete this Organisation, because you're not an Administrator.", true)
+        redirect "/home"
+      end
       org = Models::System.instance.fetch_account(session[:account])
       Models::System.instance.remove_account(org.id)
 
