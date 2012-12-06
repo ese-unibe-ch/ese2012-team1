@@ -12,7 +12,6 @@ module Models
 
     def initialize
       super
-      System.instance.search.register(SearchItemItem.create(self, "item", [:name, :description]))
     end
 
     # factory method (constructor) on the class
@@ -34,7 +33,7 @@ module Models
       item.description_position = 0
       item.picture = "/images/items/default_item.png"
       item.version = 1;
-	  item.observers = []
+	    item.observers = []
       item
     end
 
@@ -62,12 +61,14 @@ module Models
     # to set active
     def to_active
       self.active = true
+      System.instance.search.register(SearchItemItem.create(self, "item", [:name, :description]))
     end
 
     # to set inactive
     def to_inactive
       self.active = false
       self.timed_event.unschedule
+      System.instance.search.unregister(self)
       self.notify_observers
     end
 
@@ -158,5 +159,4 @@ module Models
       self.version += 1
     end
   end
-
 end
