@@ -90,5 +90,20 @@ module Controllers
 
       haml :'item/expiration', :locals => {:item => item}
     end
+
+    get '/item/:id/edit' do
+      before_for_item_manipulation
+
+      id = params[:id]
+      item = Models::System.instance.fetch_item(params[:id])
+      name = item.name
+      description = item.description
+      description_list = item.description_list
+      description_position = item.description_position
+      price = item.price
+      picture = item.picture
+
+      haml :'item/edit', :locals => {:id => id, :name => name, :description => description, :description_list => description_list, :description_position => description_position, :price => price, :picture => picture}
+    end
   end
 end

@@ -13,10 +13,6 @@ module Controllers
   class ItemManipulation < Sinatra::Application
     set :views, "#{absolute_path('../views', __FILE__)}"
 
-    before do
-      before_for_item_manipulation
-    end
-
     ##
     #
     # Sets the state of item to active
@@ -33,6 +29,8 @@ module Controllers
     ##
 
     post '/item/changestate/setactive' do
+      before_for_item_manipulation
+
       item = Models::System.instance.fetch_item(params[:id])
 
       if(params[:date] != ""  && !params[:date].nil?)
@@ -60,7 +58,11 @@ module Controllers
         end
 
         time = Time.local(day_month_year[2].to_i, day_month_year[1].to_i, day_month_year[0].to_i, hours_minutes[0], hours_minutes[1])
-        puts time
+
+        if (time <= Time.now)
+          session[:alert] = Alert.create("", "You can't set time in past.", true)
+          redirect "/item/changestate/expiration?id=" + item.id.to_s
+        end
 
         item.add_expiration_date(time)
       end
@@ -86,6 +88,8 @@ module Controllers
     ##
 
     post '/item/changestate/setinactive' do
+      before_for_item_manipulation
+
       item = Models::System.instance.fetch_item(params[:id])
 
       item.to_inactive
@@ -106,28 +110,13 @@ module Controllers
     ##
 
     post '/item/delete' do
+      before_for_item_manipulation
+
       item = Models::System.instance.fetch_item(params[:id])
       item.clear
 
       session[:alert] = Alert.create("Success!", "You have deleted item: #{item.name}", false)
       redirect "/items/my/all"
-    end
-
-    get '/item/edit' do
-      redirect '/'
-    end
-
-    post '/item/edit' do
-      id = params[:id]
-      item = Models::System.instance.fetch_item(params[:id])
-      name = item.name
-      description = item.description
-      description_list = item.description_list
-      description_position = item.description_position
-      price = item.price
-      picture = item.picture
-
-      haml :'item/edit', :locals => {:id => id, :name => name, :description => description, :description_list => description_list, :description_position => description_position, :price => price, :picture => picture}
     end
 
     ###
@@ -149,6 +138,8 @@ module Controllers
     ###
 
     post '/item/edit/save' do
+      before_for_item_manipulation
+
       item = Models::System.instance.fetch_item(params[:id])
 
       redirect "/items/my/all" unless item.editable?
@@ -184,6 +175,7 @@ module Controllers
     ##
 
     post '/item/edit/save_description' do
+      before_for_item_manipulation
 
       desc_to_use = params[:desc_to_use].to_i
       id = params[:id] .to_i
@@ -192,7 +184,8 @@ module Controllers
 
       item.alter_version
 
-      haml :'item/save_description_success', :locals => {:id => id}
+      session[:alert] = Alert.create("Success!", "You have reset description of #{item.name}", false)
+      redirect "/items/my/all"
     end
   end
 end

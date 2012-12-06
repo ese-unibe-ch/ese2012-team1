@@ -1,7 +1,6 @@
 %h2 Edit Item
-%br
-  #item_img
-    %img(height=200 width=200){ :alt => "#{name}", :src => "#{picture}" }
+#item_img
+  %img(height=200 width=200){ :alt => "#{name}", :src => "#{picture}" }
 
 %form(action="/item/edit/save" enctype="multipart/form-data" method="post")
   %label= ("Name of Item: #{name}")
