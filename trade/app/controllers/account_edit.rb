@@ -1,25 +1,8 @@
-require 'rubygems'
-require 'require_relative'
-require 'sinatra/base'
-require 'haml'
-require 'ftools'
-
-require_relative '../models/user'
-
-require_relative '../helpers/render'
-require_relative '../helpers/before'
-require_relative '../helpers/string_checkers'
-require_relative '../models/simple_email_client' unless ENV['RACK_ENV'] == 'test'
-
 include Models
 include Helpers
 
 module Controllers
   class AccountEdit < Sinatra::Application
-    before do
-      before_for_user_authenticated
-    end
-
     set :views, "#{absolute_path('../views', __FILE__)}"
 
     ##
@@ -28,6 +11,7 @@ module Controllers
     ##
 
     get '/account/edit/user/profile' do
+      before_for_user_authenticated
       session[:navigation].get_selected.select_by_name("home")
       session[:navigation].get_selected.subnavigation.select_by_name("edit profile")
 
@@ -48,6 +32,8 @@ module Controllers
     ##
 
     post '/account/edit/user/profile' do
+      before_for_user_authenticated
+
       user = Models::System.instance.fetch_account(session[:user])
       session[:email_error] = nil
       #Error Messages Sessions
@@ -100,6 +86,7 @@ module Controllers
 
     get '/account/edit/organisation/profile' do
       before_for_admin
+
       session[:navigation].get_selected.select_by_name("home")
       session[:navigation].get_selected.subnavigation.select_by_name("edit organisation")
 
@@ -119,6 +106,7 @@ module Controllers
 
     post '/account/edit/organisation/profile' do
       before_for_admin
+
       organisation = Models::System.instance.fetch_account(session[:account])
       redirect "/error/Wrong_Limit" if params[:credit_limit] != "" && !(/^[\d]+(\.[\d]+){0,1}$/.match(params[:credit_limit]))
 
@@ -151,7 +139,5 @@ module Controllers
 
       redirect '/home'
     end
-
-
   end
 end
