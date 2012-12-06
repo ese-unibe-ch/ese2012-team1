@@ -44,7 +44,7 @@ module Controllers
 
           #TODO check conditions!
           account.wish_list.add(item)
-          session[:alert] = Alert.create("", "#{item.name.create_link(item.id)} has been added to your <a href=\"/items/my/all\">Wish List</a>.", false)
+          session[:alert] = Alert.create("", "#{item.name.create_link(item.id)} has been added to your <a href=\"/items/my/wishlist\">Wish List</a>.", false)
           redirect back.nil? ? "/items/active" : back
         end
 
