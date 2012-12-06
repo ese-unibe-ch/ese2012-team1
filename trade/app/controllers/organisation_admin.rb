@@ -39,7 +39,7 @@ module Controllers
       if Models::System.instance.user_exists?(params[:member])
         haml :'organisation/member_confirm', :locals => { :member => params[:member]}
       else
-        session[:alert] = Alert.create("Oh no!", "User does with email #{params[:member]} not exist!", true)
+        session[:alert] = Alert.create("Oh no!", "User with email #{params[:member]} does not exist!", true)
         haml :'organisation/add_member'
       end
     end
@@ -53,7 +53,7 @@ module Controllers
         session[:alert] = Alert.create("Success!", "You added user #{params[:member]}", false)
         haml :'organisation/add_member'
       else
-        session[:alert] = Alert.create("Oh no!", "User does with e-mail #{params[:member]} not exist!", true)
+        session[:alert] = Alert.create("Oh no!", "User with e-mail #{params[:member]} does not exist!", true)
         haml :'organisation/add_member'
       end
     end
@@ -70,7 +70,10 @@ module Controllers
       self_remove = (Models::System.instance.fetch_account(session[:user]) == Models::System.instance.fetch_user_by_email(params[:member]))
       organisation = Models::System.instance.fetch_account(session[:account])
       only_admin = true if organisation.admin_count == 1
-      redirect "/error/No_Self_Remove" if self_remove && only_admin
+      if self_remove && only_admin
+        session[:alert] = Alert.create("Oh no!", "You can't leave this Organisation, because you're the only Administrator.", true)
+        redirect "/organisation/members"
+      end
       if Models::System.instance.user_exists?(params[:member])
         haml :'organisation/member_delete_confirm', :locals => { :member => params[:member]}
       else
@@ -83,8 +86,14 @@ module Controllers
       self_remove = (Models::System.instance.fetch_account(session[:user]) == Models::System.instance.fetch_user_by_email(params[:user_email]))
       organisation = Models::System.instance.fetch_account(session[:account])
       only_admin = true if organisation.admin_count == 1
-      redirect "/error/No_Self_Remove" if self_remove && only_admin
-      redirect "/error/No_Valid_User" unless Models::System.instance.user_exists?(params[:user_email])
+      if self_remove && only_admin
+        session[:alert] = Alert.create("Oh no!", "You can't leave this Organisation, because you're the only Administrator.", true)
+        redirect "/organisation/members"
+      end
+      unless Models::System.instance.user_exists?(params[:user_email])
+        session[:alert] = Alert.create("Oh no!", "This is not a valid User.", true)
+        redirect "/organisation/members"
+      end
       user = Models::System.instance.fetch_user_by_email(params[:user_email])
       organisation.remove_member_by_email(user.email)
 
@@ -102,7 +111,10 @@ module Controllers
     #
     ##
     post '/organisation/member/to_admin' do
-      redirect "/error/Is_already_Admin" unless !Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_user_by_email(params[:member]))
+      if Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_user_by_email(params[:member]))
+        session[:alert] = Alert.create("Oh no!", "This user is already an Administrator of this Organisation.", true)
+        redirect "/organisation/members"
+      end
 
       if Models::System.instance.user_exists?(params[:member])
         haml :'organisation/member_to_admin_confirm', :locals => { :member => params[:member]}
@@ -112,7 +124,10 @@ module Controllers
     end
 
     post '/organisation/member/to_admin/confirm' do
-      redirect "/error/Is_already_Admin" unless !Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_user_by_email(params[:user_email]))
+      if Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_user_by_email(params[:user_email]))
+        session[:alert] = Alert.create("Oh no!", "This user is already an Administrator of this Organisation.", true)
+        redirect "/organisation/members"
+      end
 
       organisation = Models::System.instance.fetch_account(session[:account])
       user = Models::System.instance.fetch_user_by_email(params[:user_email])
@@ -133,7 +148,10 @@ module Controllers
       self_revoke = (Models::System.instance.fetch_account(session[:user]) == Models::System.instance.fetch_user_by_email(params[:member]))
       organisation = Models::System.instance.fetch_account(session[:account])
       only_admin = true if organisation.admin_count == 1
-      redirect "/error/No_Self_Right_Revoke" if self_revoke && only_admin
+      if self_revoke && only_admin
+        session[:alert] = Alert.create("Oh no!", "You can not revoke administrator privileges from yourself if you are the only Administrator of an Organisation.", true)
+        redirect "/organisation/members"
+      end
       if Models::System.instance.user_exists?(params[:member])
         haml :'organisation/admin_to_member_confirm', :locals => { :member => params[:member]}
       else
@@ -142,13 +160,18 @@ module Controllers
     end
 
     post '/organisation/admin/to_member/confirm' do
-      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
-      redirect "/error/Not_an_Admin" unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+      unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+        session[:alert] = Alert.create("Oh no!", "You're not an administrator of this Organisation.", true)
+        redirect "/organisation/members"
+      end
 
       self_revoke = (Models::System.instance.fetch_account(session[:user]) == Models::System.instance.fetch_user_by_email(params[:user_email]))
       organisation = Models::System.instance.fetch_account(session[:account])
       only_admin = true if organisation.admin_count == 1
-      redirect "/error/No_Self_Right_Revoke" if self_revoke && only_admin
+      if self_revoke && only_admin
+        session[:alert] = Alert.create("Oh no!", "You can not revoke administrator privileges from yourself if you are the only Administrator of an Organisation.", true)
+        redirect "/organisation/members"
+      end
 
       user = Models::System.instance.fetch_user_by_email(params[:user_email])
       organisation.revoke_admin_rights(user)
