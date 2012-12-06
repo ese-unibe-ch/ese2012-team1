@@ -1,28 +1,9 @@
-require 'rubygems'
-require 'require_relative'
-require 'sinatra/base'
-require 'haml'
-require 'sinatra/content_for'
-
-require_relative('../models/user')
-require_relative('../models/item')
-require_relative('../models/comment')
-
-require_relative('../helpers/render')
-require_relative '../helpers/before'
-require_relative('../helpers/string_checkers')
-require_relative '../helpers/error_messages'
-
 include Models
 include Helpers
 
 module Controllers
   class ItemCreate < Sinatra::Application
     set :views, "#{absolute_path('../views', __FILE__)}"
-
-    before do
-      before_for_user_authenticated
-    end
 
     ##
     #
@@ -44,6 +25,8 @@ module Controllers
     ##
 
     post '/item/create' do
+      before_for_user_authenticated
+
       @error[:name] = ErrorMessages.get("No_Name") if params[:name] == nil || params[:name].length == 0
       @error[:price] =  ErrorMessages.get("Not_A_Number") unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:price])
       @error[:price] = ErrorMessages.get("No_Price") if params[:price] == nil || params[:price].length == 0
