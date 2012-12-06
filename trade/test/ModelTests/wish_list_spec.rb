@@ -24,11 +24,9 @@ describe WishList do
     end
 
     it "should add item" do
-      Item.should_receive(:to_inactive)
-      Item.should_receive(:add_observer).with(@item)
+      @item.should_receive(:add_observer).with(@wish_list)
       @wish_list.add(@item)
       @wish_list.items[0].should == @item
     end
-
   end
 end
