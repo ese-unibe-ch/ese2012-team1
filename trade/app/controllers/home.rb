@@ -6,11 +6,9 @@ module Controllers
 
     set :views , "#{absolute_path('../views', __FILE__)}"
 
-    before do
-      before_for_user_not_authenticated
-    end
-
     get '/' do
+      before_for_user_not_authenticated
+
       redirect "/home" if session[:auth]
 
       session[:navigation].select(:unregistered)
@@ -23,6 +21,8 @@ module Controllers
     end
 
     get '/home' do
+      before_for_user_not_authenticated
+
       redirect "/" unless session[:auth]
 
       if session[:user] == session[:account]
@@ -43,24 +43,6 @@ module Controllers
 
         haml :'home/organisation', :locals => { :admin_view => admin_view }
       end
-    end
-
-    get '/home/user' do
-      session[:navigation].select(:user)
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("profile")
-
-      haml :'home/user'
-    end
-
-    get '/home/organisation' do
-      session[:navigation].select(:organisation)
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("profile")
-
-      admin_view = Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
-
-      haml :'home/organisation', :locals => { :admin_view => admin_view }
     end
   end
 end

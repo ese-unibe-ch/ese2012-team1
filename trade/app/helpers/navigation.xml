@@ -8,7 +8,7 @@
 
       <subnavigation>
         <name>profile</name>
-        <route>/home/user</route>
+        <route>/home</route>
       </subnavigation>
       <subnavigation>
         <name>organisations</name>
@@ -67,7 +67,7 @@
 
       <subnavigation>
         <name>profile</name>
-        <route>/home/organisation</route>
+        <route>/home</route>
       </subnavigation>
       <subnavigation>
         <name>items</name>
@@ -122,7 +122,7 @@
 
       <subnavigation>
         <name>profile</name>
-        <route>/home/organisation</route>
+        <route>/home</route>
       </subnavigation>
       <subnavigation>
         <name>items</name>
