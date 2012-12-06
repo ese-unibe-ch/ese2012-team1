@@ -20,9 +20,7 @@
       %input(type = 'submit' value = 'Buy Item')
     %br
     -if !(Models::System.instance.fetch_account(session[:account]).wish_list.items.include?(item))
-      %form(action="/item/towishlist" method="post")
-        %input(type = 'hidden' name = 'id'){ :value => "#{item.id}.#{item.name}" }
-        %input(type = 'submit' value = 'Add to Wish List')
+      = haml :'partials/form/add_to_wishlist', :locals => { :item => item }
 %br
 
 -time = item.timed_event.time
@@ -31,7 +29,7 @@
   %script(type="text/javascript")
     $(function () {
     = "austDay = new Date(\"#{time.strftime("%B %d, %Y %H:%M:%S")}\");"
-    = "$('#countdown').countdown({until: austDay, expiryUrl: '/item/#{item.id}'});"
+    = "$('#countdown').countdown({until: austDay, format: 'dHMS', expiryUrl: '/item/#{item.id}'});"
     $('#year').text(austDay.getFullYear());
     });
   %div(id = "countdown")

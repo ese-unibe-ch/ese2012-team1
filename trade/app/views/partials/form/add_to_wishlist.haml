@@ -1,0 +1,3 @@
+%form(action="/item/towishlist" method="post")
+  %input(type = 'hidden' name = 'id'){ :value => "#{item.id}.#{item.name}" }
+  %input(type = 'submit' value = 'Add to Wish List')

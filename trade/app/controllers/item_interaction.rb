@@ -39,7 +39,7 @@ module Controllers
           #TODO check conditions!
           account.wish_list.add(item)
           session[:alert] = Alert.create("", "#{item.name.create_link(item.id)} has been added to your Wish List", false)
-          redirect "/items/active"
+          redirect back.nil? ? "/items/active" : back
         end
 
         post '/item/fromwishlist' do
@@ -48,9 +48,9 @@ module Controllers
 
           #TODO check conditions!
           account.wish_list.remove(item)
-          redirect "/items/my/all"
-
+          redirect back.nil? "/items/my/all" : back
         end
+
         post '/item/add/comment/:id' do
 
           redirect "/error/No_Valid_Input" if params[:comment].nil? || params[:comment] == ""
