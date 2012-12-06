@@ -13,23 +13,7 @@
   %div(id='search-list-item')
     - if(results.found?("item"))
       %h4 Matching Items
-      %table
-        %tr
-          %th Name
-          %th Description
-          %th
-          %th
-        - i = 0
-        - results.sort!(session[:user]).get("item").each do |result_item|
-          - i = (i + 1)%2
-          %tr{ :class => i == 0 ? "colored" : "normal" }
-            %td{:width => "300px;"}
-              %a{:href => "/item/#{result_item.id}"}
-                = result_item.name.size > 15 ? "#{result_item.name[0..14].boldify(results.pattern)}..." : result_item.name.boldify(results.pattern)
-            %td{:width => "500px;"}= result_item.description.boldify(results.pattern)
-            %td
-              %img(height=50 width=50){ :alt => result_item.name, :src => result_item.picture }
-            %td
+      = haml :'item/list', :locals => { :description => true, :all_items => results.sort!(session[:user]).get("item"), :boldify => results.pattern }
 
   %div(id='search-list-user')
     - if(results.found?("user"))
