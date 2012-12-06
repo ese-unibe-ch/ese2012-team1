@@ -18,6 +18,11 @@
       %input(type = 'hidden' name = 'id'){ :value => "#{item.id}.#{item.name}" }
       %input(type = 'hidden' name = 'version'){ :value => item.version }
       %input(type = 'submit' value = 'Buy Item')
+    %br
+    -if !(Models::System.instance.fetch_account(session[:account]).wish_list.items.include?(item))
+      %form(action="/item/towishlist" method="post")
+        %input(type = 'hidden' name = 'id'){ :value => "#{item.id}.#{item.name}" }
+        %input(type = 'submit' value = 'Add to Wish List')
 %br
 
 -time = item.timed_event.time

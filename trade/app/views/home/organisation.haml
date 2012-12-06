@@ -19,7 +19,7 @@
     = "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).list_inactive_items.size} inactive Items"
 
   %div(class="description")
-    = "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).members.size} Members (with you)"
+    = "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).members.size} Members (including you)"
 
   = haml :'partials/description-entry-vertical_mkdown', :locals => {:description => organisation.description, :label =>   "Description:" }
 
