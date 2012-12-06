@@ -19,7 +19,9 @@
       %input(type = 'hidden' name = 'version'){ :value => item.version }
       %input(type = 'submit' value = 'Buy Item')
     %br
-    -if !(Models::System.instance.fetch_account(session[:account]).wish_list.items.include?(item))
+    -if (Models::System.instance.fetch_account(session[:account]).wish_list.items.include?(item))
+      = haml :'partials/form/remove_from_wishlist', :locals => { :item => item }
+    -else
       = haml :'partials/form/add_to_wishlist', :locals => { :item => item }
 %br
 

@@ -48,7 +48,8 @@ module Controllers
 
           #TODO check conditions!
           account.wish_list.remove(item)
-          redirect back.nil? "/items/my/all" : back
+          session[:alert] = Alter.create("", "#{item.name.create_link(item.id)} has been removed from your wishlist", false)
+          redirect back.nil? ? "/items/my/all" : back
         end
 
         post '/item/add/comment/:id' do
