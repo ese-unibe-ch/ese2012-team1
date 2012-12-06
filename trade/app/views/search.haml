@@ -18,23 +18,7 @@
   %div(id='search-list-user')
     - if(results.found?("user"))
       %h4 Matching Users
-      %table
-        %tr
-          %th Name
-          %th Description
-          %th
-          %th
-        - i = 0
-        - results.sort!(session[:user]).get("user").each do |result_user|
-          - i = (i + 1)%2
-          %tr{ :class => i == 0 ? "colored" : "normal" }
-            %td{:width => "300px;"}
-              %a{:href => "/users/#{result_user.id}"}
-                = result_user.name.size > 15 ? "#{result_user.name[0..14]}.boldify(results.pattern)..." : result_user.name.boldify(results.pattern)
-            %td{:width => "500px;"}= result_user.description.boldify(results.pattern)
-            %td
-              %img(height=50 width=50){ :alt => result_user.name, :src => result_user.avatar }
-            %td
+      = haml :'user/list', :locals => { :all_users => results.sort!(session[:user]).get("user"), :boldify => results.pattern }
 
   %div(id='search-list-organisation')
     - if(results.found?("organisation"))
