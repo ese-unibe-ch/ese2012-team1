@@ -174,7 +174,8 @@ module Controllers
           org.remove_member_by_email(user.email)
         end
       else
-        redirect "/error/Yor_Are_Only_Admin"
+        session[:alert] = Alert.create("Oh no!", "You can't delete your Account, because you're the only Admin of one of your Organisations.", true)
+        redirect "/home"
       end
 
       user.clear

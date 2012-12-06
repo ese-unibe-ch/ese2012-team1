@@ -15,9 +15,15 @@ module Controllers
           user=Models::System.instance.fetch_account(session[:user])
           version = params[:version]
 
-          redirect "/error/Not_Enough_Credits" unless item.can_be_bought_by?(buyer)
+          unless item.can_be_bought_by?(buyer)
+            session[:alert] = Alert.create("Oh no!", "You have not enough Credits to buy this Item.", true)
+            redirect "/item/#{params[:id]}"
+          end
           if  buyer!=user #true if it is a user acting as an organisation
-            redirect "/error/Over_Your_Organisation_Limit" unless buyer.within_limit_of?(item, user)
+            unless buyer.within_limit_of?(item, user)
+              session[:alert] = Alert.create("Oh no!", "You tried to buy something for your organistion that is over your daily organisation limit.", true)
+              redirect "/item/#{params[:id]}"
+            end
           end
 
           unless item.current_version?(version)
