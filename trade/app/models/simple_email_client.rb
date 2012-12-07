@@ -38,8 +38,10 @@ class SimpleEmailClient
   # and sender. Data is loaded from '../private
   # /email.conf'. Its content should be
   #
-  # from_address = 'yourEmail@address'
-  # p = 'yourPassword'
+  # from_address = 'your from address'
+  # smtp_server = 'your smtp server'
+  # username = 'your user name'
+  # password = 'your password'
   #
   ##
 
