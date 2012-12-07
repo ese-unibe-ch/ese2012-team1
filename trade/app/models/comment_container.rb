@@ -64,7 +64,7 @@ module Models
     ##
     #
     # Collects all children comments and returns them ordered in
-    # the way the were added. Simply skips all CommentContainers.
+    # the way they were added. Simply skips all CommentContainers.
     #
     ##
 

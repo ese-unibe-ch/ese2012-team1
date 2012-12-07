@@ -32,6 +32,7 @@ module Models
       fail "There's no avatar at #{avatar}" unless (File.exists?(absolute_path(avatar.sub("/images", "../public/images"), __FILE__)))
 
       account = self.new
+      account.id = nil
       account.name = name
       account.description = description
       account.avatar = avatar
@@ -69,8 +70,6 @@ module Models
     def buy_item(item_to_buy, user)
       fail "not enough credits" if item_to_buy.price > self.credits
       fail "Item not in System" unless (System.instance.items.include?(item_to_buy.id))
-      # PZ: Don't like that I can't do that:
-      # fail "Item already belongs to you" if (System.instance.fetch_items_of(self.id))
 
       old_owner = item_to_buy.owner
 
