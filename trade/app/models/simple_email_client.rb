@@ -21,14 +21,16 @@ require 'time'
 # client.send_email("youremail@mail.ch", "Send E-Mails with Ruby", content)</tt>
 #
 # This class is base on code from: http://rolandtanglao.com/archives/2010/07/29
-# /ruby-code-send-email-using-gmail
+# /ruby-code-send-email-using-configured-SMTP-Server
 #
 #
 ##
 
 class SimpleEmailClient
-  @password
   @from
+  @smtp_server
+  @username
+  @password
 
   ##
   #
@@ -36,8 +38,10 @@ class SimpleEmailClient
   # and sender. Data is loaded from '../private
   # /email.conf'. Its content should be
   #
-  # from_address = 'yourEmail@address'
-  # p = 'yourPassword'
+  # from_address = 'your from address'
+  # smtp_server = 'your smtp server'
+  # username = 'your user name'
+  # password = 'your password'
   #
   ##
 
@@ -50,7 +54,9 @@ class SimpleEmailClient
     email_config = ParseConfig.new(path).params
 
     @from = email_config['from_address']
-    @password = email_config['p']
+    @smtp_server = email_config['smtp_server']
+    @username = email_config['username']
+    @password = email_config['password']
   end
 
   ##
@@ -84,8 +90,8 @@ EOF
 
     Net::SMTP.enable_tls(OpenSSL::SSL::VERIFY_NONE)
 
-    #Sending message via smtp server of gmail
-    Net::SMTP.start('smtp.gmail.com', 587, 'gmail.com', @from, @password, :login) do |smtp|
+    #Sending message via smtp server
+    Net::SMTP.start(@smtp_server, 587, 'jokr.ch', @username, @password, :login) do |smtp|
       smtp.send_message(content_file, @from, to)
     end
   end

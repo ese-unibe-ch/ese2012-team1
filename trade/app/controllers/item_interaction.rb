@@ -44,7 +44,7 @@ module Controllers
 
           #TODO check conditions!
           account.wish_list.add(item)
-          session[:alert] = Alert.create("", "#{item.name.create_link(item.id)} has been added to your Wish List", false)
+          session[:alert] = Alert.create("", "#{item.name.create_link(item.id)} has been added to your <a href=\"/items/my/wishlist\">wishlist</a>.", false)
           redirect back.nil? ? "/items/active" : back
         end
 
@@ -54,7 +54,7 @@ module Controllers
 
           #TODO check conditions!
           account.wish_list.remove(item)
-          session[:alert] = Alert.create("", "#{item.name.create_link(item.id)} has been removed from your wishlist", false)
+          session[:alert] = Alert.create("", "#{item.name.create_link(item.id)} has been removed from your <a href=\"/items/my/wishlist\">wishlist</a>", false)
           redirect back.nil? ? "/items/my/all" : back
         end
 

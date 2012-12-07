@@ -127,8 +127,13 @@ module Controllers
       end
 
       user = User.created(name, password, email, description, file_path)
-      
-      Mailer.setup.sendRegMail(user.id, "#{request.host}:#{request.port}")
+
+      if request.port == 443
+        address = "https://#{request.host}"
+      else
+        address = "http://#{request.host}:#{request.port}"
+      end
+      Mailer.setup.sendRegMail(user.id, address)
 
       redirect '/register/successful'
     end

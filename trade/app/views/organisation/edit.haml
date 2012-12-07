@@ -27,5 +27,6 @@
         %input(type="submit" id="editOrg" value="edit organisation")
 
 %div(class="padding-top")
-  %button(class="warning" type="submit" formmethod="get" formaction="/organisation/delete" name="delete organisation" value="delete organisation" id="deleteOrg")
-    delete organisation
+  %form(action="/organisation/delete" method="get")
+    %button(class="warning" type="submit" name="delete organisation" value="delete organisation" id="deleteOrg")
+      delete organisation

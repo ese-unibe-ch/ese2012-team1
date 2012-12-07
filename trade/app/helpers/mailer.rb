@@ -42,8 +42,8 @@ module Helpers
     ##
     def generateMailContent(name, avatar, reg_hash, current_host)
       host = current_host
-      img_url = "http://#{host}#{avatar}"
-      conf_url = "http://#{host}/registration/confirm/#{reg_hash}"
+      img_url = "#{host}#{avatar}"
+      conf_url = "#{host}/registration/confirm/#{reg_hash}"
 
       content = render_file_for_mail('mail.haml', Array[host, name, img_url, conf_url])
       return content

@@ -96,7 +96,7 @@ module Controllers
       item.alter_version
 
       session[:alert] = Alert.create("Success!", "You have #{item.name.create_link(item.id)} removed from market", false)
-      redirect "/items/my/all"
+      redirect back.nil? ? "/items/my/all" : back
     end
 
     ##
