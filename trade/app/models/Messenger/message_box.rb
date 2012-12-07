@@ -1,3 +1,4 @@
+require 'observer'
 require 'conversation'
 require 'message'
 
@@ -10,6 +11,7 @@ module Models
   # Observes all Conversations that are in the MessageBox
 
   class MessageBox
+
     attr_accessor :conversations, :owner, :message_tree
 
     ##
@@ -19,9 +21,11 @@ module Models
     #
     ##
     def create(user_id)
-      self.conversations = Hash.new
-      self.owner = user_id
-      self.message_tree = Hash.new
+      message_box = MessageBox.new
+      message_box.conversations = Hash.new
+      message_box.owner = user_id
+      message_box.message_tree = Hash.new
+      message_box
     end
 
     ##
@@ -31,7 +35,14 @@ module Models
     #
     ##
     def add_conversation(conversation)
+      self.conversations.store(conversation.conversation_id, conversation)
+      self.add_to_tree(conversation)
+    end
 
+    def add_to_tree(conversation)
+      conv_id = conversation.conversation_id
+      self.message_tree.store(conv_id.to_s, Hash.new)
+      conversation.messages.each{ |m| self.message_tree[conv_id.to_s].store(m.message_id.to_s, false) if m.include?(owner.to_s) }
     end
 
     ##
@@ -41,8 +52,19 @@ module Models
     #         mess_id : Integer (Message ID)
     #
     ##
-    def read?(conf_id, mess_id)
+    def read?(conv_id, mess_id)
+      self.message_tree[conv_id.to_s][mess_id.to_s]
+    end
 
+    ##
+    #
+    # Set Message as Read.
+    # Params: conv_id : Integer (Conversation ID)
+    #         mess_id : Integer (Message ID)
+    #
+    ##
+    def set_as_read(conv_id, mess_id)
+      self.message_tree[conv_id.to_s][mess_id.to_s] = true
     end
 
     ##
@@ -51,7 +73,11 @@ module Models
     #
     ##
     def new_messages_count
-
+      count = 0
+      for m_hash in self.message_tree.values
+        m_hash.value.each{ |v| count += 1 if !v }
+      end
+      return count
     end
 
     ##
@@ -69,7 +95,22 @@ module Models
     #
     ##
     def messages_count
+      count = 0
+      for m_hash in self.message_tree.values
+        m_hash.value.each{ |v| count += 1 }
+      end
+      return count
+    end
 
+
+    ##
+    #
+    # Observing conversations.
+    #
+    ##
+    def update(conversation, mess_id)
+      conv_id = conversation.conversation_id
+      self.message_tree[conv_id.to_s].store(mess_id.to_s, false)
     end
 
   end
