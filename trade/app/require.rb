@@ -24,6 +24,8 @@ require_relative('models/search/search_item_organisation')
 require_relative 'models/search/search_item_item'
 require_relative('models/search/search_item_user')
 
+require_relative 'models/Messenger/conversation'
+
 require_relative 'models/comment_container'
 require_relative 'models/comment'
 require_relative('models/item')

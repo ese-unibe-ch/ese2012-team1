@@ -27,7 +27,5 @@
       %td
         %img(height=50 width=50){ :alt => item.name, :src => item.picture }
       %td
-        %form(action="/item/buy" method="post")
-          %input(type = 'hidden' name = 'id'){ :value => "#{item.id}.#{item.name}" }
-          %input(type = 'submit' value = 'Buy Item')
+        = haml :'item/form/buy', :locals => { :item => item }
 
