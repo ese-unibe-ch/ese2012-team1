@@ -1,5 +1,7 @@
 require 'singleton'
 require 'message_box'
+require 'conversation'
+require 'message'
 
 module Models
   # This class is the global messenger.
@@ -30,7 +32,13 @@ module Models
     #
     ##
     def new_message(from, to, subject, message)
+      subs = to.concat([from])
+      conv = Conversation.create(subs)
+      time = Date
+      message = Message.create(from, to, subject, message, time)
+      conv.add_message(message)
 
+      subs.each{ |s| self.message_boxes[s.to_s].add_conversation(conv)}
     end
 
     ##
@@ -56,7 +64,7 @@ module Models
     #
     ##
     def get_message_box(user_id)
-
+      self.message_boxes.fetch(user_id.to_s)
     end
 
 
@@ -67,7 +75,8 @@ module Models
     #
     ##
     def register(user_id)
-
+      new_mb = MessageBox.create(user_id)
+      self.message_boxes.store(user_id.to_s, new_mb)
     end
 
 
@@ -78,7 +87,7 @@ module Models
     #
     ##
     def unregister(user_id)
-
+      self.message_boxes.delete(user_id.to_s)
     end
 
   end
