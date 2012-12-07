@@ -66,7 +66,12 @@ class Conversation
     fail "Message needs id" unless message.respond_to?(:id)
     fail "Message should respond to reply_to" unless message.respond_to?(:reply_to)
 
-    index = message.reply_to.nil? ? messages.size-1 : @messages.find_index { |message_replied| message_replied.id == message.reply_to }
+    index = messages.size-1
+    unless (message.reply_to.nil?)
+      index = @messages.find_index { |message_replied| message_replied.id == message.reply_to }
+      message.depth = @messages.fetch(index).depth+1
+    end
+
     @messages.insert(index+1, message)
     changed
     notify_observers self, message.id

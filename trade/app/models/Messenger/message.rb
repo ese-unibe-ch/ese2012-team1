@@ -3,11 +3,12 @@ class Message
 
   attr_reader :message_id
 
-  attr_accessor :message, :date, :subject, :reply_to
+  attr_accessor :message, :date, :subject, :reply_to, :depth
 
   def initialize
     @message_id = @@message_count
     @@message_count += 1
+    self.depth = 0
   end
 
   def self.create(subject, date, message, reply_to)

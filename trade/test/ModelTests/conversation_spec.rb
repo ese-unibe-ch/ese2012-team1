@@ -32,26 +32,40 @@ describe Conversation do
         @message1 = double("Message 1")
         @message1.stub(:id).and_return(1)
         @message1.stub(:reply_to).and_return(nil)
+        @message1.stub(:depth).and_return(0)
 
         @message2 = double("Message 2")
         @message2.stub(:id).and_return(2)
         @message2.stub(:reply_to).and_return(nil)
+        @message2.stub(:depth).and_return(0)
 
         @reply_to_message1 = double("Reply to message 1")
         @reply_to_message1.stub(:id).and_return(3)
         @reply_to_message1.stub(:reply_to).and_return(1)
+        @reply_to_message1.stub(:depth).and_return(0)
+        @reply_to_message1.stub(:depth=)
       end
 
-      it "should add reply right behind the message it was replying to" do
+      def add_messages
         @conversation.add_message(@message1)
         @conversation.add_message(@message2)
         @conversation.add_message(@reply_to_message1)
+      end
+
+      it "should add reply right behind the message it was replying to" do
+        add_messages
 
         @conversation.messages.size.should == 3
 
         @conversation.messages.fetch(0).should == @message1
         @conversation.messages.fetch(1).should == @reply_to_message1
         @conversation.messages.fetch(2).should == @message2
+      end
+
+      it "should set message depth to one deeper than message it replies to" do
+        @reply_to_message1.should_receive(:depth=).with(1)
+
+        add_messages
       end
     end
   end
