@@ -37,6 +37,7 @@ class Conversation
 
   def add_message(message)
     fail "Message needs id" unless message.respond_to?(:id)
+    fail "Message should respond to reply_to" unless message.respond_to?(:reply_to)
 
     index = message.reply_to.nil? ? messages.size-1 : @messages.find_index { |message_replied| message_replied.id == message.reply_to }
     @messages.insert(index+1, message)

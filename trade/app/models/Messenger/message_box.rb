@@ -1,7 +1,3 @@
-require 'observer'
-require 'conversation'
-require 'message'
-
 module Models
   # This class implements the MessageBox for Users.
   # It holds all conversations (identified by id).

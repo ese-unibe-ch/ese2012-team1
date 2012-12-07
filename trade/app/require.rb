@@ -25,6 +25,9 @@ require_relative 'models/search/search_item_item'
 require_relative('models/search/search_item_user')
 
 require_relative 'models/Messenger/conversation'
+require_relative 'models/Messenger/message'
+require_relative 'models/Messenger/message_box'
+require_relative 'models/Messenger/messenger'
 
 require_relative 'models/comment_container'
 require_relative 'models/comment'
