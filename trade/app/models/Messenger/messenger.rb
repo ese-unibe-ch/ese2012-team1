@@ -1,7 +1,4 @@
 require 'singleton'
-require 'message_box'
-require 'conversation'
-require 'message'
 
 module Models
   # This class is the global messenger.

@@ -24,12 +24,4 @@ class Message
 
     mes
   end
-
-  def to_s
-    puts("Date: #{self.date}")
-    puts("Subject: #{self.subject}")
-    puts("Replies to messagenr: #{self.reply_to}") unless self.reply_to.nil?
-    puts("--------------------------------")
-    puts(self.message.to_s)
-  end
 end
