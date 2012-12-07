@@ -15,7 +15,7 @@ module Models
   class Messenger
     include Singleton
 
-    attr_accessor :message_boxes
+    attr_accessor :message_boxes, :conversations
 
     def initialize
       self.message_boxes = Hash.new
@@ -34,11 +34,13 @@ module Models
     def new_message(from, to, subject, message)
       subs = to.concat([from])
       conv = Conversation.create(subs)
-      time = Date
-      message = Message.create(from, to, subject, message, time)
+      time = Date.new
+      message = Message.create(from, to, message, subject, time, nil)
       conv.add_message(message)
 
       subs.each{ |s| self.message_boxes[s.to_s].add_conversation(conv)}
+
+      self.conversations.store(conv.conversation_id.to_s, conv)
     end
 
     ##
@@ -54,7 +56,10 @@ module Models
     #
     ##
     def answer_message(from, to, subject, message, conv_id, mess_id)
-
+      conv = self.conversations.fetch(conv_id.to_s)
+      time = Date.new
+      message = Message.create(from, to, message, subject, time, mess_id)
+      conv.add_message(message)
     end
 
     ##
