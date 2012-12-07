@@ -23,10 +23,7 @@
         %img(height=50 width=50){ :alt => item.name, :src => item.picture }
       %td{:width => "250px;"}= item.description.size > 30 ? "#{item.description[0..29]}..." : item.description
       %td
-        %form(action="/item/buy" method="post")
-          %input(type = 'hidden' name = 'id'){ :value => "#{item.id}.#{item.name}" }
-          %input(type = 'hidden' name = 'version'){ :value => item.version }
-          %input(type = 'submit' value = 'Buy Item')
+        = haml :'item/form/buy', :locals => { :item => item }
       %td
         = haml :'partials/form/remove_from_wishlist', :locals => { :item => item }
 

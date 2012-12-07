@@ -19,9 +19,7 @@
     %br
     %div(class="padding-top")
       %form(action="/item/buy" method="post")
-        %input(type = 'hidden' name = 'id'){ :value => "#{item.id}.#{item.name}" }
-        %input(type = 'hidden' name = 'version'){ :value => item.version }
-        %input(type = 'submit' value = 'Buy Item')
+        = haml :'item/form/buy', :locals => { :item => item }
       %br
       -if (Models::System.instance.fetch_account(session[:account]).wish_list.items.include?(item))
         = haml :'partials/form/remove_from_wishlist', :locals => { :item => item }
