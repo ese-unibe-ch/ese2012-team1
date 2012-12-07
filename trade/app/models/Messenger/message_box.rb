@@ -16,7 +16,7 @@ module Models
     # Params: user_id : Integer (User ID)
     #
     ##
-    def create(user_id)
+    def self.create(user_id)
       message_box = MessageBox.new
       message_box.conversations = Hash.new
       message_box.owner = user_id
@@ -71,7 +71,7 @@ module Models
     def new_messages_count
       count = 0
       for m_hash in self.message_tree.values
-        m_hash.value.each{ |v| count += 1 if !v }
+        m_hash.values.each{ |v| count += 1 if !v }
       end
       return count
     end
@@ -93,7 +93,7 @@ module Models
     def messages_count
       count = 0
       for m_hash in self.message_tree.values
-        m_hash.value.each{ |v| count += 1 }
+        m_hash.values.each{ |v| count += 1 }
       end
       return count
     end
