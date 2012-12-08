@@ -1,3 +1,4 @@
+
 body {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   	font-size: 16px;
@@ -433,4 +434,33 @@ div.search-switch {
 h4 {
     padding-top: 30px;
     padding-bottom: 0px;
+}
+
+.autocomplete-w1 { position:absolute; top:0px; left:0px; margin:6px 0 0 6px; /* IE6 fix: */ _background:none; _margin:1px 0 0 0; }
+.autocomplete { border:1px solid #999; background:#FFF; cursor:default; text-align:left; max-height:350px; overflow:auto; margin:-6px 6px 6px -6px; /* IE6 specific: */ _height:350px;  _margin:0; _overflow-x:hidden; }
+.autocomplete .selected { background:#F0F0F0; }
+.autocomplete div { padding:2px 5px; white-space:nowrap; overflow:hidden; }
+.autocomplete strong { font-weight:normal; color:#3399FF; }
+
+.remove {
+    margin: 0px;
+    padding: 0px;
+    position: relative;
+    top: -1px;
+    font-size: x-small;
+    border: 1px solid #d0472f;
+    background-image: url('/images/design/error.png');
+}
+
+#receivers {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.receiver {
+  background-image: url('/images/design/normal.png');
+  border: 1px solid white;
+  margin-left: 1px;
+  margin-right: 1px;
+  padding: 1px;
 }

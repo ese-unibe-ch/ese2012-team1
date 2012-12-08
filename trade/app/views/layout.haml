@@ -23,7 +23,8 @@
     %script(type="text/javascript" src="/js/jquery-ui-timepicker-addon.js")
     %script(type="text/javascript" src="/js/jquery.countdown.min.js")
     %script(type="text/javascript" src="/js/lightbox.js")
-    - if defined? script
+    %script(type="text/javascript" src="/js/jquery.autocomplete.js")
+    - if defined?(script)
       %script(type="text/javascript" src="/java-script/#{script}")
     %script(type="text/javascript")
       currentTime = new Date();

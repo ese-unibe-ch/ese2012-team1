@@ -8,6 +8,8 @@ require_relative('../models/item')
 require_relative('../helpers/render')
 require_relative '../helpers/before'
 
+require 'json'
+
 include Models
 include Helpers
 
@@ -19,9 +21,46 @@ module Controllers
 
     set :views , "#{absolute_path('../views', __FILE__)}"
 
-    get '/users/all' do
-        redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:account])
+    get '/messagebox/send' do
+      haml :'/user/mailbox/send', :locals => { :script => "search_users.js" }
+    end
 
+    post '/messagebox/send' do
+      message = "<h1>You have send:</h1> <br><br>"
+
+      message += "To: "
+      params.each do |key, user_id|
+        message += user_id + ", " if (key.include?("hidden"))
+      end
+
+      message += "<br>"
+      message += "Subject: " + params[:subject] + "<br>"
+      message += "Message: " + params[:message] + "<br>"
+
+      message
+    end
+
+    get '/users' do
+      content_type :json
+
+      users = Models::System.instance.fetch_all_users_but(session[:account])
+      users.delete_if do |user|
+        !user.name.include?(params[:query])
+      end
+
+      data = users.map { |user| user.id }
+      suggestion = users.map { |user| user.name }
+
+      users = {
+          "query" => params[:query],
+          "suggestions" => suggestion,
+          "data" => data
+      }
+
+      users.to_json
+    end
+
+    get '/users/all' do
         session[:navigation].get_selected.select_by_name("community")
         session[:navigation].get_selected.subnavigation.select_by_name("users")
 

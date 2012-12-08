@@ -1,0 +1,15 @@
+%div(class="labeled-input")
+  %form(action="/messagebox/send" id="send_form" method="post")
+    %label
+      Choose User:
+    %input(type="text" name="query" id="query")
+    %div(id="receivers")
+    %label
+      Subject:
+    %input(type = 'text' name = 'subject')
+    %label
+      Message
+    %textarea(name = 'message')
+    %input(type = 'submit' value = 'send message')
+
+%script(type="text/javascript" src="/java-script/add_remove_users.js")

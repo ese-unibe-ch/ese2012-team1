@@ -14,6 +14,7 @@ gem 'nokogiri'
 gem 'selenium-webdriver'
 gem 'rufus-scheduler'
 gem 'sanitize'
+gem 'json'
 
 
 
