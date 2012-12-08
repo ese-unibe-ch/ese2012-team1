@@ -2,15 +2,20 @@ require "test_require"
 
 describe Message do
   def create_message(args = {})
+    sender = args.member?(:sender) ? args[:sender] : "1"
     subject = args.member?(:subject) ? args[:subject] : "Subject"
     @date = args.member?(:date) ? args[:date] : Time.now
     message = args.member?(:message) ? args[:message] : "My Message"
     reply_to = args.member?(:reply_to) ? args[:reply_to] : nil
 
-    Message.create(subject, @date, message, reply_to)
+    Message.create(sender, subject, @date, message, reply_to)
   end
 
   context "when creating" do
+    it "should fail if no sender ist set" do
+      lambda{ create_message(:sender => nil)}.should raise_error(RuntimeError)
+    end
+
     it "should fail if no date is set" do
       lambda{ create_message(:date => nil)}.should raise_error(RuntimeError)
     end

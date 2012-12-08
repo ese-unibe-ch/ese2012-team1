@@ -32,7 +32,7 @@ module Models
       subs = to.concat([from])
       conv = Conversation.create(subs)
       time = Date.new
-      message = Message.create(from, to, message, subject, time, nil)
+      message = Message.create(from, subject, time, message, nil)
       conv.add_message(message)
 
       subs.each{ |s| self.message_boxes[s.to_s].add_conversation(conv)}
@@ -52,10 +52,10 @@ module Models
     #  Add message to conversation
     #
     ##
-    def answer_message(from, to, subject, message, conv_id, mess_id)
+    def answer_message(from, subject, message, conv_id, mess_id)
       conv = self.conversations.fetch(conv_id.to_s)
       time = Date.new
-      message = Message.create(from, to, message, subject, time, mess_id)
+      message = Message.create(from, subject, time, message, mess_id)
       conv.add_message(message)
     end
 
