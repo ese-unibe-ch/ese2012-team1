@@ -34,6 +34,14 @@ describe MessageBox do
       @message_box.new_messages_count.should == 0
     end
 
+    it "should not travers any message" do
+      @message_box.travers_new_messages do |message|
+        true.should be_false
+      end
+
+      true.should be_true
+    end
+
     context "when a conversation is added" do
       before(:each) do
         @conversation = double("Conversation")
@@ -49,6 +57,8 @@ describe MessageBox do
       context "when updated is called because a new message is added" do
         before(:each) do
           @message_box.update(@conversation, 1)
+          @message = double("Message")
+          @conversation.stub(:get).with("1").and_return(@message)
         end
 
         it "should have one message" do
@@ -65,6 +75,12 @@ describe MessageBox do
 
         it "message should not be read" do
           @message_box.read?(5,1).should be_false
+        end
+
+        it "should travers over one message" do
+          @message_box.travers_new_messages do |message, conversation_id|
+            message.should == @message
+          end
         end
 
         context "when new message is set as read" do

@@ -51,7 +51,7 @@ class Conversation
   end
 
   def self.users_exist?(users_id)
-    users_id.all? { |user_id| System.instance.account_exist?(user_id) }
+    users_id.all? { |user_id| System.instance.account_exists?(user_id) }
   end
 
   ##
@@ -85,5 +85,16 @@ class Conversation
 
   def count_messages
     @messages.size
+  end
+
+  ##
+  #
+  # Gets message with message id
+  # Return nil if message does not exist
+  #
+  ##
+
+  def get(message_id)
+    messages.detect { |message| message.message_id == message_id }
   end
 end

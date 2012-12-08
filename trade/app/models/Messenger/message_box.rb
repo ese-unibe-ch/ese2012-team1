@@ -31,14 +31,14 @@ module Models
     #
     ##
     def add_conversation(conversation)
-      self.conversations.store(conversation.conversation_id, conversation)
+      self.conversations.store(conversation.conversation_id.to_s, conversation)
       self.add_to_tree(conversation)
     end
 
     def add_to_tree(conversation)
       conv_id = conversation.conversation_id
       self.message_tree.store(conv_id.to_s, Hash.new)
-      conversation.messages.each{ |m| self.message_tree[conv_id.to_s].store(m.message_id.to_s, false) if m.include?(owner.to_s) }
+      conversation.messages.each{ |m| self.message_tree[conv_id.to_s].store(m.message_id.to_s, false) }
     end
 
     ##
@@ -74,6 +74,22 @@ module Models
         m_hash.values.each{ |v| count += 1 if !v }
       end
       return count
+    end
+
+    ##
+    #
+    # Returns all conversation that have new messages
+    # in it
+    #
+    ##
+
+    def travers_new_messages
+      self.message_tree.each do |conversation_id, message_read|
+        message_read.each do |message_id, read|
+          message = self.conversations.fetch(conversation_id.to_s).get(message_id)
+          yield message, conversation_id unless read
+        end
+      end
     end
 
     ##

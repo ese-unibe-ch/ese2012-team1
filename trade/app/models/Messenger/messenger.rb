@@ -16,6 +16,7 @@ module Models
 
     def initialize
       self.message_boxes = Hash.new
+      self.conversations = Hash.new
     end
 
     ##
@@ -31,8 +32,8 @@ module Models
     def new_message(from, to, subject, message)
       subs = to.concat([from])
       conv = Conversation.create(subs)
-      time = Date.new
-      message = Message.create(from, to, message, subject, time, nil)
+      time = Time.new
+      message = Message.create(subject, time, message, nil)
       conv.add_message(message)
 
       subs.each{ |s| self.message_boxes[s.to_s].add_conversation(conv)}
