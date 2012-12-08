@@ -47,6 +47,7 @@ describe MessageBox do
         @conversation = double("Conversation")
         @conversation.stub(:conversation_id).and_return(5)
         @conversation.stub(:messages).and_return(Array.new)
+        @conversation.stub(:add_observer)
         @message_box.add_conversation(@conversation)
       end
 

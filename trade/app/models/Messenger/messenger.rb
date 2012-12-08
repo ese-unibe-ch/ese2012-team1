@@ -33,10 +33,10 @@ module Models
       subs = to.concat([from])
       conv = Conversation.create(subs)
       time = Time.new
-      message = Message.create(subject, time, message, nil)
-      conv.add_message(message)
+      message = Message.create(from, subject, time, message, nil)
 
       subs.each{ |s| self.message_boxes[s.to_s].add_conversation(conv)}
+      conv.add_message(message)
 
       self.conversations.store(conv.conversation_id.to_s, conv)
     end
@@ -55,8 +55,8 @@ module Models
     ##
     def answer_message(from, to, subject, message, conv_id, mess_id)
       conv = self.conversations.fetch(conv_id.to_s)
-      time = Date.new
-      message = Message.create(from, to, message, subject, time, mess_id)
+      time = Time.new
+      message = Message.create(from, subject, time, message, mess_id)
       conv.add_message(message)
     end
 
@@ -93,6 +93,9 @@ module Models
       self.message_boxes.delete(user_id.to_s)
     end
 
+    def reset
+      self.message_boxes = Hash.new
+      self.conversations = Hash.new
+    end
   end
-
 end

@@ -68,13 +68,13 @@ class Conversation
 
     index = messages.size-1
     unless (message.reply_to.nil?)
-      index = @messages.find_index { |message_replied| message_replied.id == message.reply_to }
+      index = @messages.find_index { |message_replied| message_replied.message_id == message.reply_to }
       message.depth = @messages.fetch(index).depth+1
     end
 
     @messages.insert(index+1, message)
     changed
-    notify_observers self, message.id
+    notify_observers self, message.message_id
   end
 
   ##
@@ -95,6 +95,6 @@ class Conversation
   ##
 
   def get(message_id)
-    messages.detect { |message| message.message_id == message_id }
+    messages.detect { |message| message.message_id.to_s == message_id.to_s }
   end
 end

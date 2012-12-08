@@ -26,11 +26,15 @@ module Models
 
     ##
     #
-    # Add Conversation to Users MessageBox.
+    # Add Conversation to Users MessageBox and add
+    # himself as observer.
+    #
     # Params: conversation : Conversation
     #
     ##
+
     def add_conversation(conversation)
+      conversation.add_observer(self)
       self.conversations.store(conversation.conversation_id.to_s, conversation)
       self.add_to_tree(conversation)
     end
@@ -84,9 +88,11 @@ module Models
     ##
 
     def travers_new_messages
+      puts message_tree
+
       self.message_tree.each do |conversation_id, message_read|
         message_read.each do |message_id, read|
-          message = self.conversations.fetch(conversation_id.to_s).get(message_id)
+          message = self.conversations.fetch(conversation_id.to_s).get(message_id.to_s)
           yield message, conversation_id unless read
         end
       end
@@ -121,6 +127,8 @@ module Models
     #
     ##
     def update(conversation, mess_id)
+      puts "called with #{conversation.conversation_id} #{mess_id} for user#{self.owner}"
+
       conv_id = conversation.conversation_id
       self.message_tree[conv_id.to_s].store(mess_id.to_s, false)
     end

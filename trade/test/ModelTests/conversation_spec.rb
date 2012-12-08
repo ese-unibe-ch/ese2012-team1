@@ -17,7 +17,7 @@ describe Conversation do
     before(:each) do
       @system = double("System")
       System.stub(:instance).and_return(@system)
-      @system.stub(:account_exist?).and_return(true)
+      @system.stub(:account_exists?).and_return(true)
 
       @subscribers = [double("Subscriber 1"), double("Subscriber 2")]
       @conversation = Conversation.create(@subscribers)
@@ -27,20 +27,39 @@ describe Conversation do
       @conversation.subscribers.should == @subscribers
     end
 
+    context "when adding a message" do
+      before(:each) do
+        @message1 = double("Message 1")
+        @message1.stub(:message_id).and_return(1)
+        @message1.stub(:reply_to).and_return(nil)
+        @message1.stub(:depth).and_return(0)
+
+        @conversation.add_message(@message1)
+      end
+
+      it "should add message" do
+        @conversation.messages.size.should == 1
+      end
+
+      it "should get message" do
+        @conversation.get(1).should == @message1
+      end
+    end
+
     context "when adding a reply to a message" do
       before(:each) do
         @message1 = double("Message 1")
-        @message1.stub(:id).and_return(1)
+        @message1.stub(:message_id).and_return(1)
         @message1.stub(:reply_to).and_return(nil)
         @message1.stub(:depth).and_return(0)
 
         @message2 = double("Message 2")
-        @message2.stub(:id).and_return(2)
+        @message2.stub(:message_id).and_return(2)
         @message2.stub(:reply_to).and_return(nil)
         @message2.stub(:depth).and_return(0)
 
         @reply_to_message1 = double("Reply to message 1")
-        @reply_to_message1.stub(:id).and_return(3)
+        @reply_to_message1.stub(:message_id).and_return(3)
         @reply_to_message1.stub(:reply_to).and_return(1)
         @reply_to_message1.stub(:depth).and_return(0)
         @reply_to_message1.stub(:depth=)
@@ -82,7 +101,7 @@ describe Conversation do
   context "when observed" do
     before(:each) do
       @message = double("Message")
-      @message.stub(:id).and_return(1)
+      @message.stub(:message_id).and_return(1)
       @message.stub(:reply_to).and_return(nil)
     end
 
