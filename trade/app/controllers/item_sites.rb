@@ -12,6 +12,10 @@ require_relative '../helpers/before'
 include Models
 include Helpers
 
+##
+# In this controller are most pages that only display information
+# of an item or multiple items.
+##
 module Controllers
   class ItemSites < Sinatra::Application
     before do
@@ -20,11 +24,25 @@ module Controllers
 
     set :views , "#{absolute_path('../views', __FILE__)}"
 
+    ##
+    #  Shows all of your active items
+    #
+    #  Expects:
+    #  session[:account] : your id as a user or organisation
+    #
+    ##
     get '/items/my/active' do
         user_id = session[:account]
         haml :'item/my_active', :locals => {:active_items => Models::System.instance.fetch_account(user_id).list_active_items}
     end
 
+    ##
+    #  Shows all of your inactive items
+    #
+    #  Expects:
+    #  session[:account] : your id as a user or organisation
+    #
+    ##
     get '/items/my/inactive' do
         user_id = session[:account]
         haml :'item/my_inactive', :locals => {:inactive_items => Models::System.instance.fetch_account(user_id).list_inactive_items}
@@ -35,6 +53,14 @@ module Controllers
         haml :'item/wish_list', :locals => {:wish_list => Models::System.instance.fetch_account(user_id).wish_list}
     end
 
+    ##
+    #  Shows both your active and your inactive items
+    #
+    #  Expects:
+    #  session[:navigation] : has to be initialized
+    #  session[:account] : your id as a user or organisation
+    #
+    ##
     get '/items/my/all' do
       session[:navigation].get_selected.select_by_name("home")
       session[:navigation].get_selected.subnavigation.select_by_name("items")
@@ -45,6 +71,14 @@ module Controllers
                                        :active_items => account.list_active_items}
     end
 
+    ##
+    #  Shows your wishlist
+    #
+    #  Expects:
+    #  session[:navigation] : has to be initialized
+    #  session[:account] : your id as a user or organisation
+    #
+    ##
     get '/items/my/wishlist' do
       session[:navigation].get_selected.select_by_name("home")
       session[:navigation].get_selected.subnavigation.select_by_name("wishlist")
@@ -54,6 +88,13 @@ module Controllers
       haml :'item/wish_list', :locals => {:wish_list_items => account.wish_list.items}
     end
 
+    ##
+    #  Shows the form for the item creation
+    #
+    #  Expects:
+    #  session[:navigation] : has to be initialized
+    #
+    ##
     get '/item/create' do
        session[:navigation].get_selected.select_by_name("market")
        session[:navigation].get_selected.subnavigation.select_by_name("create item")
@@ -61,11 +102,23 @@ module Controllers
        haml :'item/create'
     end
 
+    ##
+    # TODO: I am not sure what this does
+    ##
     get '/item/comment/:id' do
       item = System.instance.fetch_item(params[:id].to_i)
       haml :'item/comments', :locals => {:item => item }
     end
 
+    ##
+    #
+    #  Shows all active items in the market
+    #
+    #  Expects:
+    #  session[:navigation] : has to be initialized
+    #  session[:account] : your id as a user or organisation
+    #
+    ##
     get '/items/active' do
         session[:navigation].get_selected.select_by_name("market")
         session[:navigation].get_selected.subnavigation.select_by_name("on sale")
@@ -74,6 +127,18 @@ module Controllers
         haml :'item/active', :locals => {:all_items => Models::System.instance.fetch_all_active_items_but_of(viewer_id)}
     end
 
+    ##
+    #
+    #  Shows additional information on a specific item
+    #
+    #  Redirects:
+    #  /item/active when you try to view an inactive item that's not yours
+    #
+    #  Expects:
+    #  session[:account] : the owners id as a user or organisation
+    #  params[:id] : id of the item
+    #
+    ##
     get '/item/:id' do
       redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
       item = Models::System.instance.fetch_item(params[:id])
@@ -85,6 +150,20 @@ module Controllers
       haml :'item/item', :locals => {:item => item}
     end
 
+    ##
+    #
+    #  Is used to add a comment to another comment
+    #
+    #  Redirects:
+    #  /error/No_Valid_Item_Id when the system doesn't know this item id
+    #
+    #  Expects:
+    #  session[:navigation] : has to be initialized
+    #  session[:account] : your id as a user or organisation
+    #  params[:item_id] : the id of the item where you want to comment
+    #  params[:comment_nr] : on which comment of this item you want to comment
+    #
+    ##
     get '/item/add/comment/:item_id/:comment_nr' do
       redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:item_id])
 
@@ -93,12 +172,29 @@ module Controllers
       haml :'item/comment', :locals => {:item => item, :comment_nr => params[:comment_nr]}
     end
 
+    ##
+    #
+    #  Shows a page where a user/org. can set the expiration date on an item
+    #
+    #  Expects:
+    #  params[:id] : the id of the item
+    #
+    ##
     get '/item/changestate/expiration' do
       item = Models::System.instance.fetch_item(params[:id])
 
       haml :'item/expiration', :locals => {:item => item}
     end
 
+    ##
+    #
+    #  Shows the form where a user/org. can edit the information
+    #  on an item
+    #
+    #  Expects:
+    #  params[:id] : the id of the item
+    #
+    ##
     get '/item/:id/edit' do
       before_for_item_manipulation
 

@@ -1,9 +1,27 @@
 include Models
 include Helpers
 
+##
+# In this controller the login and logout process
+# is handled.
+##
+
 module Controllers
   class Authentication < Sinatra::Application
     set :views , "#{absolute_path('../views', __FILE__)}"
+
+    ###
+    #
+    #  Used to get on the login screen.
+    #
+    #  Redirects to:
+    #  /home when the user is already logged in
+    #
+    #  Expects:
+    #  session[:auth] : true or false
+    #  session[:navigation] : has to be initialized
+    #
+    ###
 
     get '/login' do
       before_for_user_not_authenticated
@@ -15,6 +33,15 @@ module Controllers
       haml :'authentication/login', :locals => { :onload => 'document.loginform.username.focus()' }
     end
 
+    ###
+    #
+    #  Used to request a logout
+    #
+    #  Redirects to:
+    #  / when the user is not logged in
+    #
+    ###
+
     get '/logout' do
       before_for_user_not_authenticated
 
@@ -22,6 +49,15 @@ module Controllers
       haml :'authentication/logout'
     end
 
+    ###
+    #
+    #  After this a user is logged in and will see his home screen
+    #
+    #  Redirects to:
+    #  /login when the user does not exist, his password is wrong or he is not activated
+    #  /home when everything is okay
+    #
+    ###
     post "/authenticate" do
       before_for_user_not_authenticated
 
@@ -47,6 +83,15 @@ module Controllers
       end
     end
 
+    ###
+    #
+    #  After this a user is logged out and will see the start page.
+    #  It also resets all session params.
+    #
+    #  Redirects to:
+    #  / always
+    #
+    ###
     post "/unauthenticate" do
       before_for_user_not_authenticated
 

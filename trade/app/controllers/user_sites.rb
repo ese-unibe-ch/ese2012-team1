@@ -8,11 +8,15 @@ require_relative('../models/item')
 require_relative('../helpers/render')
 require_relative '../helpers/before'
 
-require 'json'
-
 include Models
 include Helpers
 
+##
+#
+# Here all sites that display one or multiple users(independent
+# from their organisations) are handled
+#
+##
 module Controllers
   class UserSites < Sinatra::Application
     before do
@@ -21,10 +25,61 @@ module Controllers
 
     set :views , "#{absolute_path('../views', __FILE__)}"
 
+    ##
+    #
+    # Shows a list of all users in the system
+    #
+    # Redirects:
+    # /error/No_Valid_Account_Id when the user id couldn't be found
+    #
+    # Expected:
+    # session[:account] id of the user who wants to see all users
+    # session[:navigation] has to be initialized
+    #
+    ##
+    get '/users/all' do
+        session[:navigation].get_selected.select_by_name("community")
+        session[:navigation].get_selected.subnavigation.select_by_name("users")
+
+        haml :'user/all', :locals => {:all_users => Models::System.instance.fetch_all_users_but(session[:account])}
+    end
+
+    ##
+    #
+    # Shows the profile of a specific user
+    #
+    # Redirects:
+    # /error/No_Valid_Account_Id when the user you want to see doesn't exist
+    #
+    # Expected:
+    # session[:account] : id of the user who wants to see a users
+    # params[:id] : the user you want to see
+    #
+    ##
+    get '/users/:id' do
+        redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(params[:id].to_i)
+        user_id = params[:id]
+        haml :'user/id', :locals => {:active_items => Models::System.instance.fetch_account(user_id.to_i).list_active_items}
+    end
+
+    ##
+    #
+    # Shows the form to send a message to another user
+    #
+    ##
     get '/messagebox/send' do
       haml :'/user/mailbox/send', :locals => { :script => "search_users.js" }
     end
 
+    ##
+    #
+    # Sends the message
+    #
+    # Expects:
+    # params[:subject] : the subject of the message
+    # param[:message] : the actual text message
+    #
+    ##
     post '/messagebox/send' do
       message = "<h1>You have send:</h1> <br><br>"
 
@@ -40,6 +95,11 @@ module Controllers
       message
     end
 
+    ##
+    #
+    # TODO: add description
+    #
+    ##
     get '/users' do
       content_type :json
 
@@ -58,19 +118,6 @@ module Controllers
       }
 
       users.to_json
-    end
-
-    get '/users/all' do
-        session[:navigation].get_selected.select_by_name("community")
-        session[:navigation].get_selected.subnavigation.select_by_name("users")
-
-        haml :'user/all', :locals => {:all_users => Models::System.instance.fetch_all_users_but(session[:account])}
-    end
-
-    get '/users/:id' do
-        redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(params[:id].to_i)
-        user_id = params[:id]
-        haml :'user/id', :locals => {:active_items => Models::System.instance.fetch_account(user_id.to_i).list_active_items}
     end
 
   end

@@ -1,5 +1,10 @@
 module Models
   class Comment < CommentContainer
+    ##
+    #
+    #  A Comment is a CommentContainer
+    #
+    ##
     attr_accessor :comment, :creator, :header, :nr, :date_stamp
 
     @@unique_nr = 0

@@ -12,6 +12,13 @@ require_relative('../helpers/string_checkers')
 include Models
 include Helpers
 
+
+##
+#
+# In this controller all actions and view-requests concerning
+# an organisation are handled
+#
+##
 module Controllers
   class Organisation < Sinatra::Application
   set :views, "#{absolute_path('../views', __FILE__)}"
@@ -20,29 +27,29 @@ module Controllers
       before_for_user_authenticated
     end
 
-###
-#
-# Shows form to create an organisation by user
-#
-##
+    ###
+    #
+    # Shows form to create an organisation by user
+    #
+    ##
 
     get '/organisation/create' do
       haml :'organisation/create'
     end
 
-##
-#
-#  Creates an organisation. 
-#  Called from organisation/create.haml
-#  
-#  Expects:
-#  params[:name] : Name of the organisation
-#  params[:description] : Description to organisation
-#  params[:limit] : Limit for normal users to spend
-#
-#  optional params[:avatar] : Picture for organisation
-#
-##
+    ##
+    #
+    #  Creates an organisation.
+    #  Called from organisation/create.haml
+    #
+    #  Expects:
+    #  params[:name] : Name of the organisation
+    #  params[:description] : Description to organisation
+    #  params[:limit] : Limit for normal users to spend
+    #
+    #  optional params[:avatar] : Picture for organisation
+    #
+    ##
 
     post '/organisation/create' do
       @error[:name] = ErrorMessages.get("No_Name") if params[:name].nil? || params[:name].length == 0
@@ -82,20 +89,20 @@ module Controllers
       redirect '/organisations/self'
     end
 
-###
-#
-#  Switches from a user to an organisation or vice-versa.
-#  Called by organisation_switch.haml.
-#  At the moment there is a problem. If you are using this
-#  post you can add yourself to an organisation although you
-#  are not a member.
-#
-#  Expects:
-#  params[:account] : id of the account the user wants to switch to
-#
-#  TODO: Check that the user is aloud to change to this organisation!
-#
-###
+    ###
+    #
+    #  Switches from a user to an organisation or vice-versa.
+    #  Called by organisation_switch.haml.
+    #  At the moment there is a problem. If you are using this
+    #  post you can add yourself to an organisation although you
+    #  are not a member.
+    #
+    #  Expects:
+    #  params[:account] : id of the account(user/org.) the user wants to switch to
+    #
+    #  TODO: Check that the user is aloud to change to this organisation!
+    #
+    ###
 
     post '/organisation/switch' do
       session[:account] = params[:account].to_i
@@ -105,6 +112,15 @@ module Controllers
       redirect '/home'
     end
 
+    ##
+    #
+    #  Shows all organisations a user is part off
+    #
+    #  Expects:
+    #  session[:navigation] : has to be initilized
+    #  session[:user] : id of the user
+    #
+    ##
     get '/organisations/self' do
       session[:navigation].get_selected.select_by_name("home")
       session[:navigation].get_selected.subnavigation.select_by_name("organisations")
@@ -113,6 +129,16 @@ module Controllers
       haml :'organisation/self', :locals => { :all_organisations => Models::System.instance.fetch_organisations_of(user.id) }
     end
 
+    ##
+    #
+    #  Shows all members of an organisation
+    #
+    #  Expects:
+    #  sessions[:navigation] : has to be initialized
+    #  session[:account] : id of the org. the user currently acts upon
+    #  session[:user] : id of the user
+    #
+    ##
     get '/organisation/members' do
       session[:navigation].get_selected.select_by_name("home")
       session[:navigation].get_selected.subnavigation.select_by_name("members")
@@ -122,6 +148,16 @@ module Controllers
       haml :'organisation/members', :locals => { :all_members => organisation.members_without_admins, :all_admins => organisation.admins.values, :admin_view => admin_view }
     end
 
+    ##
+    #
+    #  Shows all organisations in the system, except the organisation
+    #  that the user is currently acting as
+    #
+    #  Expects:
+    #  session[:account] : id of the org. the user currently acts upon
+    #  sessions[:navigation] : has to be initialized
+    #
+    ##
     get '/organisations/all' do
       session[:navigation].get_selected.select_by_name("community")
       session[:navigation].get_selected.subnavigation.select_by_name("organisations")
@@ -130,13 +166,30 @@ module Controllers
       haml :'organisation/all', :locals => { :all_organisations => Models::System.instance.fetch_organisations_but(organisation) }
     end
 
+    ##
+    #
+    #  Shows the profile information of specific organisation
+    #
+    #  Expects:
+    #  params[:id] : the organisation id
+    #
+    ##
     get '/organisations/:id' do
       organisation_id = params[:id]
       haml :'organisation/id', :locals => {:active_items => Models::System.instance.fetch_account(organisation_id.to_i).list_active_items}
     end
 
     ##
-    # Leaving an Organisation
+    #
+    #  Shows a confirmation page if the user really wants to leave the organisation
+    #
+    #  Redirects:
+    #  /home when the user isn't acting as an organisation or when he is the last admin
+    #
+    #  Expects:
+    #  session[:user] : the id of the user who wants to leave
+    #  session[:account] : the user's current id (his own or an organisation's)
+    #
     ##
     get '/organisation/leave' do
       if session[:user] == session[:account]
@@ -155,6 +208,16 @@ module Controllers
       haml :'organisation/leave'
     end
 
+    ##
+    #  Leaving an Organisation permanently. At least one admin has to remain
+    #
+    #  Redirects:
+    #  /home always
+    #
+    #  Expects:
+    #  session[:user] : the id of the user who wants to leave
+    #  session[:account] : the user's current id (his own or an organisation's)
+    ##
     post '/organisation/leave' do
       redirect "/error/No_Valid_User" unless Models::System.instance.user_exists?(params[:user_email])
       if session[:user] == session[:account]
@@ -183,7 +246,14 @@ module Controllers
     end
 
     ##
-    # Deleting an Organisation
+    # Shows the confirmation page if the user really wants to delete the organisation
+    #
+    # Redirect:
+    # /home when the user is no admin
+    #
+    # Expects:
+    # session[:user] : the id of the user who wants to delete the org.
+    # session[:account] : the org. on which behalf the user acts upon
     # TODO: This should go to organisation_admin.rb!
     ##
     get '/organisation/delete' do
@@ -194,6 +264,17 @@ module Controllers
       haml :'organisation/delete'
     end
 
+  ##
+  # Deletes the organisation
+  #
+  # Redirect:
+  # /home when the user is no admin
+  #
+  # Expects:
+  # session[:user] : the id of the user who wants to delete the org.
+  # session[:account] : the org. on which behalf the user acts upon
+  # TODO: This should go to organisation_admin.rb!
+  ##
     post '/organisation/delete' do
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
       unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))

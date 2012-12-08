@@ -14,6 +14,11 @@ require_relative '../models/simple_email_client' unless ENV['RACK_ENV'] == 'test
 include Models
 include Helpers
 
+##
+#
+# In this controller are all puts and gets needed for the creation of a new user handled
+#
+##
 module Controllers
   class Registration < Sinatra::Application
     before do
@@ -24,6 +29,16 @@ module Controllers
 
     ##
     # activates a user
+    #
+    # Redirects:
+    # /error/Already_Activated when this user is already activated
+    # /error/Wrong_Activation_Code when the sent hash doesn't exist
+    #
+    # Expects:
+    # session[:user] : user who request a deletion of someone
+    # session[:account] : id of the organisation
+    # params[:reg_hash] : hash used to activate the user
+    #
     ##
     get '/registration/confirm/:reg_hash' do
       hash = params[:reg_hash]
@@ -43,8 +58,11 @@ module Controllers
 
     ##
     #
-    # Loads register.haml and includes passwordchecker.js to do
+    # Shows register form and includes passwordchecker.js to do
     # realtime checking of the password typed in.
+    #
+    # Expects:
+    # session[:navigation] : has to be initialized
     #
     ##
 
@@ -54,20 +72,6 @@ module Controllers
       haml :'authentication/register', :locals => { :script => 'passwordchecker.js', :onload => 'initialize()' }
     end
 
-    ##
-    #
-    # Gets registration data from user. Redirected from register.haml with
-    # Form. Checks if incoming data is correct and redirects to login. If
-    # data is correct redirect to '/register'.
-    #
-    # Should get parameter
-    # :name - User name
-    # :password - User password
-    # :email - User e-mail
-    # optional :description - A description of the user
-    # optional :avatar - A file for the avatar
-    #
-    ##
 
     ##
     #
@@ -75,7 +79,6 @@ module Controllers
     # of the Nil class.
     #
     ##
-
     def are_nil?(*args)
       result = false
       args.each do |arg|
@@ -84,6 +87,25 @@ module Controllers
       result
     end
 
+
+    ##
+    #
+    # Gets registration data from user. Redirected from register.haml with
+    # Form. Checks if incoming data is correct and redirects to login. If
+    # data is correct redirect to '/register'.
+    #
+    # Redirects:
+    # /register when the entered data is incorrect(e.g. a not optional field is nil)
+    # /register/successful when everything is correct
+    #
+    # Expected:
+    # params[:name] : User name
+    # params[:password] : User password
+    # params[:email] : User e-mail
+    # optional params[:description] : A description of the user
+    # optional params[:avatar] : A file for the avatar
+    #
+    ##
     post '/register' do
       if are_nil?(params[:password], params[:re_password], params[:email], params[:name]) ||
          ! params[:password].is_strong_password? || params[:password] != params[:re_password] ||
@@ -149,8 +171,10 @@ module Controllers
 
     ##
     #
-    # Removes an user from the system and redirects
-    # to '/unauthenticate'
+    # Shows a confirmation page if the user really wants to delete his account
+    #
+    # Redirects:
+    # / when the user is not logged in
     #
     ##
     get '/unregister' do
@@ -158,7 +182,21 @@ module Controllers
       haml :'authentication/unregister'
     end
 
-
+    ##
+    #
+    # Deletes user from the system and logs him out, if he isn't
+    # the only admin of an organisation.
+    #
+    # Redirects:
+    # /error/No_Valid_Account_Id when the user id couldn't be found
+    # /home when this user is the only admin of an org.
+    # /unauthenticate when everything is correct
+    #
+    #
+    # Expected:
+    # session[:user] id of the user who wants to delete his account
+    #
+    ##
     post '/unregister' do
       redirect "/" unless session[:auth]
       redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
