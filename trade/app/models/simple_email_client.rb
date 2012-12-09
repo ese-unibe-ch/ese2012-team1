@@ -25,7 +25,6 @@ require 'time'
 #
 #
 ##
-
 class SimpleEmailClient
   @from
   @smtp_server
@@ -44,11 +43,15 @@ class SimpleEmailClient
   # password = 'your password'
   #
   ##
-
   def self.setup
     return self.new()
   end
 
+  ##
+  #
+  # Read the information from email.conf
+  #
+  ##
   def initialize()
     path = absolute_path('../private/email.conf', __FILE__)
     email_config = ParseConfig.new(path).params
@@ -68,7 +71,6 @@ class SimpleEmailClient
   # @param content : text to be send
   #
   ##
-
   def send_email(to, subject, content)
     fail "Missing receiver" if to.nil?
     fail "Missing content" if content.nil?
@@ -96,6 +98,3 @@ EOF
     end
   end
 end
-
-
-
