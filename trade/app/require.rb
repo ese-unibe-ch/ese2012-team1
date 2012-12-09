@@ -16,6 +16,7 @@ require 'sanitize'
 require 'webrick'
 require 'webrick/https'
 require 'openssl'
+require 'json'
 
 require_relative 'models/search/search'
 require_relative 'models/search/search_item'

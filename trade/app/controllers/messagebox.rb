@@ -1,5 +1,4 @@
-
-module Controllers 
+module Controllers
     class Messagebox < Sinatra::Application
         set :views, "#{absolute_path('../views', __FILE__)}"
 
