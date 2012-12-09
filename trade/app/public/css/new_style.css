@@ -117,6 +117,14 @@ div.profile-information {
     display: inline;
 }
 
+#message-info {
+    width: 20%;
+    margin-left: auto;
+    margin-right: 10px;
+  /*  background: #b8860b;
+    border: 1px solid red;   */
+}
+
 div.subnavigation {
   overflow: hidden;
   display: block;
