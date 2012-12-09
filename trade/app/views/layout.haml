@@ -44,7 +44,10 @@
 
       = render_file_with_argument('frame/profile_information.haml', {:user => session[:user], :account => session[:account]}) if session[:auth]
 
+      = haml :'frame/message_info'
+
       = render_file_with_argument('frame/subnavigation.haml', {:auth => session[:auth], :navigation => session[:navigation].get_selected })
+
       %div(id="main")
         -unless session[:alert].nil?
           %div{ :id => "message", :class => session[:alert].error? ? "error" : "success" }
