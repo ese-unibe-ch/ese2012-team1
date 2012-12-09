@@ -92,7 +92,7 @@ module Controllers
 
           receivers = Array.new
           params.each do |key, user_id|
-            receivers.push(user_id) if (key.include?("hidden"))
+            receivers.push(user_id.to_i) if (key.include?("hidden"))
           end
 
           if (receivers.size == 0)
@@ -101,10 +101,13 @@ module Controllers
           end
 
           message +=  receivers.join(",")
+          puts receivers.join(",")
 
           message += "<br>"
           message += "Subject: " + params[:subject] + "<br>"
           message += "Message: " + params[:message] + "<br>"
+
+          Messenger.instance.new_message(session[:user], receivers, params[:subject], params[:message])
 
           message
         end
