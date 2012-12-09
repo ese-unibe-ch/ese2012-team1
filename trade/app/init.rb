@@ -65,9 +65,11 @@ eseOrg.set_as_admin(ese)
 eseOrg.add_member(userA)
 eseOrg.add_member(userB)
 eseOrg.add_member(userC)
-eseOrg.create_item("ESEOrg_Item1", 20)
-eseOrgitem = eseOrg.create_item("ESEOrg_Item2", 20)
-eseOrgitem.to_active
+eseOrgItem1 = eseOrg.create_item("Concorde", 20)
+eseOrgItem1.add_picture("/images/items/concorde.jpg")
+eseOrgItem2 = eseOrg.create_item("Airbus A380", 20)
+eseOrgItem2.add_picture("/images/items/a380.jpg")
+eseOrgItem2.to_active
 
 (68..72).each do |ascii_nr_of_character|
   Models::User.created("user#{ascii_nr_of_character.chr}", "password#{ascii_nr_of_character.chr}" , "user#{ascii_nr_of_character.chr}@mail.ch", "I'm #{ascii_nr_of_character.chr}", "/images/users/default_avatar.png")
