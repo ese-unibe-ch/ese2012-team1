@@ -44,7 +44,7 @@
 
       = render_file_with_argument('frame/profile_information.haml', {:user => session[:user], :account => session[:account]}) if session[:auth]
 
-      = haml :'frame/message_info'
+      = haml :'frame/message_info' if  session[:auth]
 
       = render_file_with_argument('frame/subnavigation.haml', {:auth => session[:auth], :navigation => session[:navigation].get_selected })
 
