@@ -60,6 +60,7 @@ require_relative('controllers/account_edit')
 require_relative('controllers/item_manipulation')
 require_relative('controllers/error')
 require_relative('controllers/search')
+require_relative('controllers/messagebox')
 
 require_relative('init.rb') unless ENV['RACK_ENV'] == 'test'
 

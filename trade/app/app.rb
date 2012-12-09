@@ -48,6 +48,7 @@ class App < Sinatra::Base
   use Controllers::UserSites
   use Controllers::AccountEdit
   use Controllers::Organisation
+  use Controllers::Messagebox
 
   #Need Item Id and Item exist
   use Controllers::ItemInteraction
