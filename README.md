@@ -14,6 +14,10 @@ information.
 On Linux Nokogiri seems only to work if you install
     sudo apt-get install ruby-nokogiri
 
+Same thing for rspec and json
+    sudo apt-get install ruby-json
+    sudo apt-get install ruby-rspec
+
 ###Mail
 **important:** mails must be sent from a gmail account!    
 create an file named 'email.conf' in the directory trade/app/private    

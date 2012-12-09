@@ -22,16 +22,35 @@ module Controllers
     set :views , "#{absolute_path('../views', __FILE__)}"
 
     get '/messagebox/send' do
-      haml :'/user/mailbox/send', :locals => { :script => "search_users.js" }
+      haml :'/user/mailbox/send', :locals => { :script => "search_users.js",
+                                               :receiver_id => params[:receiver_id],
+                                               :receiver_name => params[:receiver_name], }
     end
 
     post '/messagebox/send' do
+      @error[:message] = "You have to enter a message" if params[:message].nil? || params[:message].empty?
+
+      unless @error.empty?
+        halt       haml :'/user/mailbox/send', :locals => { :script => "search_users.js",
+                                                            :receiver_id => params[:receiver_id],
+                                                            :receiver_name => params[:receiver_name], }
+      end
+
       message = "<h1>You have send:</h1> <br><br>"
 
       message += "To: "
+
+      receivers = Array.new
       params.each do |key, user_id|
-        message += user_id + ", " if (key.include?("hidden"))
+        receivers.push(user_id) if (key.include?("hidden"))
       end
+
+      if (receivers.size == 0)
+        session[:alert] = Alert.create("", "You have not entered any receivers", true)
+        redirect '/messagebox/send'
+      end
+
+      message +=  receivers.join(",")
 
       message += "<br>"
       message += "Subject: " + params[:subject] + "<br>"

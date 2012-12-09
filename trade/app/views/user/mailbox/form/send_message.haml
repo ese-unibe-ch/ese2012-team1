@@ -1,0 +1,4 @@
+%form(action="/messagebox/send" method="get")
+  %input(type = 'hidden' name = 'receiver_id' value="#{user.id}")
+  %input(type = 'hidden' name = 'receiver_name' value="#{user.name}")
+  %input(type = 'submit' value = 'Send Message')

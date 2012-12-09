@@ -202,12 +202,17 @@ div#message {
 }
 
 .labeled-input input, .labeled-input label, .labeled-input textarea {
+    width: 350px;
     display: block;
 }
 
 .labeled-input input, .labeled-input textarea {
     margin-top: 1px;
     margin-bottom: 10px;
+}
+
+.labeled-input textarea {
+    height: 100px;
 }
 
 .description {
