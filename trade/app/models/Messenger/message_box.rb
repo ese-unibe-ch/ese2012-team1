@@ -77,7 +77,21 @@ module Models
       for m_hash in self.message_tree.values
         m_hash.values.each{ |v| count += 1 if !v }
       end
-      return count
+      count
+    end
+
+    ##
+    #
+    # Counting new messages for a specifique conversation
+    #
+    ##
+
+    def new_messages_count_for(conversation_id)
+      count = 0
+      self.message_tree[conversation_id.to_s].values.each do |read|
+        count +=1 if !read
+      end
+      count
     end
 
     ##

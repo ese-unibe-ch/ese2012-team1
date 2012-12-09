@@ -1,3 +1,10 @@
 A possiblity to select a conversation of the user comes here!
 
-= Messenger.instance.get_message_box(session[:user]).new_messages_count
+- messagebox = Messenger.instance.get_message_box(session[:user])
+
+- messagebox.conversations.each do |conversation_id, conversation|
+  %h2
+    = conversation.title + "(" + messagebox.new_messages_count_for(conversation_id).to_s + "/" + conversation.count_messages.to_s + ")"
+  Subscribers:
+  - conversation.subscribers.each do |subscriber|
+    = System.instance.fetch_account(subscriber).name

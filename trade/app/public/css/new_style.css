@@ -108,9 +108,7 @@ div#header {
 
 div.profile-information {
   padding-left: 10px;
-  position: relative;
-  top: 20px;
-  padding-bottom: 20px;
+  float: left;
 }
 
 .profile-information form {
@@ -118,7 +116,7 @@ div.profile-information {
 }
 
 #message-info {
-    width: 20%;
+    width: 150px;
     margin-left: auto;
     margin-right: 10px;
   /*  background: #b8860b;

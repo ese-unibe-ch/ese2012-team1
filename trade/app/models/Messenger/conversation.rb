@@ -32,6 +32,19 @@ class Conversation
 
   ##
   #
+  # The title of the conversation. This is always the
+  # subject of the first message.
+  #
+  ##
+
+  def title
+    fail "There are no messages yet" if self.messages.size == 0
+
+    @messages[0].subject.size == 0 ? "No title" : @messages[0].subject
+  end
+
+  ##
+  #
   # Creates a Conversation and storing its subscribers.
   #
   # Params:

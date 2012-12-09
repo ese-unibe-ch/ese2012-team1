@@ -74,6 +74,10 @@ describe MessageBox do
           @message_box.new_messages_count.should == 1
         end
 
+        it "should have one new message for this conversation" do
+          @message_box.new_messages_count_for(@conversation.conversation_id).should == 1
+        end
+
         it "message should not be read" do
           @message_box.read?(5,1).should be_false
         end
