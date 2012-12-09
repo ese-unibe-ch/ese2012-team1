@@ -82,7 +82,7 @@ module Controllers
             !user.name.include?(params[:query])
           end
 
-          data = users.map { |user| user.id }
+          data = users.map { |user| [user.id, user.description, user.avatar] }
           suggestion = users.map { |user| user.name }
 
           users = {
