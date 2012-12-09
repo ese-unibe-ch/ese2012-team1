@@ -43,6 +43,8 @@ module Models
       self.accounts.store(account.id, account)
       self.account_id_count += 1
 
+      Messenger.instance.register(account.id)
+
       fail "User should have correct id" unless (account.id == account_id_count-1)
       fail "User should be stored in users-hash" unless (self.accounts.member?(account_id_count-1))
     end
@@ -88,6 +90,8 @@ module Models
       unless (account.avatar == "/images/users/default_avatar.png" || account.avatar == "/images/organisations/default_avatar.png")
         File.delete("#{account.avatar.sub("/images", "./public/images")}")
       end
+
+      Messenger.instance.unregister(account_id)
 
       self.accounts.delete(account_id)
     end
