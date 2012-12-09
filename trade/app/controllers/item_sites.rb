@@ -103,14 +103,6 @@ module Controllers
     end
 
     ##
-    # TODO: I am not sure what this does
-    ##
-    get '/item/comment/:id' do
-      item = System.instance.fetch_item(params[:id].to_i)
-      haml :'item/comments', :locals => {:item => item }
-    end
-
-    ##
     #
     #  Shows all active items in the market
     #
@@ -152,7 +144,20 @@ module Controllers
 
     ##
     #
-    #  Is used to add a comment to another comment
+    # Shows the form to write a comment on a specific item
+    #
+    # Expects:
+    # params[:id] : the id of the item someone wants to comment on
+    # TODO: I am not sure what this does, or if it is used
+    ##
+    get '/item/comment/:id' do
+      item = System.instance.fetch_item(params[:id].to_i)
+      haml :'item/comments', :locals => {:item => item }
+    end
+
+    ##
+    #
+    #  Shows the  make comment page, for a comment on a comment
     #
     #  Redirects:
     #  /error/No_Valid_Item_Id when the system doesn't know this item id

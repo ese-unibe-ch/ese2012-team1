@@ -1,7 +1,25 @@
 module Models
+  ##
+  #
+  # Creates a TimedEvent that lets an item expire
+  # if the specified time is up. If this happens an
+  # item should be set to inactive.
+  #
+  # time: when the TimedEvent triggers
+  # subscribers : all objects that are affected by the TimedEvent
+  # scheduler :
+  # timed_out :
+  # job :
+  # TODO: Complete variables explanation
+  ##
   class TimedEvent
     attr_accessor :time, :subscribers, :scheduler, :timed_out, :job
 
+    ##
+    #
+    # The constructor for this class
+    #
+    ##
     def self.create(object_to_time, time)
       fail "Object to be called should not be nil" if object_to_time.nil?
       fail "Time should not be nil" if time.nil?
@@ -31,12 +49,23 @@ module Models
       event
     end
 
+    ##
+    #
+    # Adds an object to this timed event. If the timed event reaches the
+    # specified time this object perfroms his timed_out method
+    #
+    ##
     def subscribe(object_to_time)
       fail "Should have method #timed_out implemented" unless object_to_time.respond_to?(:timed_out)
 
       self.subscribers.push(object_to_time)
     end
 
+    ##
+    #
+    # TODO: add doc
+    #
+    ##
     def reschedule(time)
       time_rufus = Rufus.to_datetime time
 
@@ -50,6 +79,14 @@ module Models
       self.time = time
     end
 
+    ##
+    #
+    # Removes the specified time,
+    # so that the TimedEvent never
+    # triggers(unless a new time is
+    # entered)
+    #
+    ##
     def unschedule
       if (self.time != :forever)
         self.job.unschedule
@@ -58,6 +95,11 @@ module Models
       end
     end
 
+    ##
+    #
+    # TODO: add doc
+    #
+    ##
     def scheduled?
       self.time != :forever
     end

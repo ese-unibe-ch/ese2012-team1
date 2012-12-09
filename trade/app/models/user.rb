@@ -9,8 +9,15 @@ module Models
     #An user can buy active items of another user (inactive items can't be bought). If an user buys an item, it becomes
     #  the owner; credits are transferred accordingly; immediately after the trade, the item is inactive. The transaction
     #  fails if the buyer has not enough credits.
+    #
+    # email : email of the user
+    # pw : TODO: is this even used?
+    # password_hash : the encrypted password
+    # password_salt : the salt used for the encryption
+    # activated : true of false, not activated users can't log in, they need to confirm their
+    #             email first
+    # reg_hash : used in the email confirmation process
 
-    # generate getter and setter for name and price
     attr_accessor :email, :pw, :password_hash, :password_salt, :activated, :reg_hash
 
     ##
@@ -18,20 +25,29 @@ module Models
     # E-Mailaddress should be unique
     #
     ##
-
     def invariant
       Models::System.instance.fetch_user_by_email(self.email) == self
     end
 
+    ##
+    #
+    # Calls the same method from account.rb
+    # Adds the new search item to the system
+    #
+    ##
     def initialize
       super
 
       System.instance.search.register(SearchItemUser.create(self, "user", [:name, :description]))
     end
 
+    ##
+    #
     # factory method (constructor) on the class
     # You have to save the avatar at public/images/users/ before
     # you call this method. If not, it will fail.
+    #
+    ##
     def self.created(name,  password, email, description, avatar)
       # Preconditions
       fail "Missing name" if (name == nil)
@@ -57,17 +73,31 @@ module Models
       user
     end
 
+    ##
+    #
+    # Checks if the entered password equals the user password
+    #
+    ##
     def login password
       self.password_hash == BCrypt::Engine.hash_secret(password, self.password_salt)
     end
 
+    ##
+    #
+    # Activates a user, after this he is able log in.
+    #
+    ##
     def activate
       self.activated=true
     end
 
+    ##
+    #
     #Removes himself from the list of users of the Models::System
     #Removes his avatar (not yet implemented)
     #Removes user's items beforehand
+    #
+    ##
     #TODO test if admin by init works
     def clear
       Models::System.instance.fetch_items_of(self.id).each { |e| e.clear }
@@ -78,24 +108,32 @@ module Models
       end
     end
 
+    ##
+    #
     # Allows the user to create an organisation of which he automatically becomes the admin.
     # @param name   the name of the organisation
     # @param description    the description of the organisation
-    # @return new_organization    the organisation which was created
     # @param avatar : avatar of the organisation
+    # @return new_organization    the organisation which was created
+    #
+    ##
     def create_organisation(name, description, avatar)
       # Preconditions
       fail "Missing name" if (name == nil)
       fail "Missing description" if (description == nil)
       fail "Missing avatar path" if (avatar == nil)
       org = Models::Organisation.created(name, description, avatar)
-      org.organisation = true
       org.add_member(self)
       org.set_as_admin(self)
       org
     end
 
     #TODO tests
+    ##
+    #
+    # Checks if this user is the last admin of a specific organisation
+    #
+    ##
     def is_last_admin_of?(organisation)
       #Precondition
       fail "Missing organisation to check" if (organisation == nil)
@@ -103,11 +141,21 @@ module Models
     end
 
     #TODO tests
+    ##
+    #
+    # Checks if this user is the last admin of any organisation
+    #
+    ##
     def is_last_admin?
       organisations = Models::System.fetch_organisations_of(self.id)
       organisations.one? { |organisation| self.is_last_admin_of?(organisation)}
     end
 
+    ##
+    #
+    # Used to change the password to a new one
+    #
+    ##
     def password(password)
       # Precondition
       fail "Missing password" if (password == nil)
