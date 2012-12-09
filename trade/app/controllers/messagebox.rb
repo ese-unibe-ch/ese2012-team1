@@ -2,6 +2,12 @@ module Controllers
     class Messagebox < Sinatra::Application
         set :views, "#{absolute_path('../views', __FILE__)}"
 
+        get '/messagebox' do
+          before_for_user_authenticated
+
+          redirect '/messagebox/news'
+        end
+
         ##
         #
         # Shows the form to send a message to another user.
@@ -14,11 +20,47 @@ module Controllers
         # optional: params[:receiver_name] : name of the receiver
         #
         ##
+
         get '/messagebox/send' do
           before_for_user_authenticated
 
+          session[:navigation].get_selected.select_by_name("messagebox")
+          session[:navigation].get_selected.subnavigation.select_by_name("send message")
+
           haml :'mailbox/send', :locals => { :receiver_id => params[:receiver_id],
                                                    :receiver_name => params[:receiver_name], }
+        end
+
+        ##
+        #
+        # Displays all new messages
+        #
+        ##
+
+        get '/messagebox/news' do
+          before_for_user_authenticated
+
+          session[:navigation].get_selected.select_by_name("messagebox")
+          session[:navigation].get_selected.subnavigation.select_by_name("news")
+
+          #TODO!
+          haml :'mailbox/news'
+        end
+
+        ##
+        #
+        # Displays all conversations of the user
+        #
+        ##
+
+        get '/messagebox/conversations' do
+          before_for_user_authenticated
+
+          session[:navigation].get_selected.select_by_name("messagebox")
+          session[:navigation].get_selected.subnavigation.select_by_name("conversations")
+
+          #TODO!
+          haml :'mailbox/conversations'
         end
 
         ##
