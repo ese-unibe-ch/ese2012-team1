@@ -11,6 +11,11 @@ require_relative '../helpers/before'
 include Models
 include Helpers
 
+##
+# In this controller a message and a title is assigned to
+# each error title
+##
+
 module Controllers
   class Error < Sinatra::Application
     before do
@@ -19,6 +24,15 @@ module Controllers
 
     set :views , "#{absolute_path('../views', __FILE__)}"
 
+    ###
+    #
+    #  adds an error message to each covered error title, else adds a
+    #  default title and message to the error
+    #
+    #  Expects:
+    #  params[:title] : the title of the error
+    #
+    ###
     get '/error/:title' do
         title = params[:title]
         msg = ""

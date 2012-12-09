@@ -12,6 +12,11 @@ require_relative('../helpers/string_checkers')
 include Models
 include Helpers
 
+##
+#
+# This controller handles search requests
+#
+##
 module Controllers
   class Search < Sinatra::Application
 
@@ -21,6 +26,14 @@ module Controllers
         before_for_user_authenticated
       end
 
+      ##
+      #
+      # Searches for a specific pattern in the item-, user- and organisationnames
+      #
+      # Exprected:
+      # params[:pattern] : the part that will be searched in the names
+      #
+      ##
       get "/search.?" do
 
         results = System.instance.search.find(params[:pattern])

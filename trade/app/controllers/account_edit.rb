@@ -1,13 +1,25 @@
 include Models
 include Helpers
 
+##
+# In this controller all profile edit request are handled.
+# There are two get- and postmethods, two to edit a user profile and
+# two to edit an organisation profile.
+##
+
+
 module Controllers
   class AccountEdit < Sinatra::Application
     set :views, "#{absolute_path('../views', __FILE__)}"
 
     ##
-    # Loads edit_profile.haml and includes passwordchecker.js to do
+    # This is used to change the profile of  a user.
+    # Loads the form in edit_profile.haml and includes passwordchecker.js to do
     # realtime checking of the password typed in.
+    #
+    # Expected:
+    # session[:navigation] has to be initialized
+    #
     ##
 
     get '/account/edit/user/profile' do
@@ -23,11 +35,15 @@ module Controllers
     # Gets edited profile data from user. Redirected from edit_profile.haml with
     # Form. Checks if incoming data is correct and redirects to home.
     #
-    # Should get parameter
-    # :password - User password
-    # :email - User e-mail
-    # optional :description - A description of the user
-    # optional :avatar - A file for the avatar
+    # Redirects:
+    # /account/edit/user/profile when a wrong email address was entered
+    # /home when everything is correct
+    #
+    # Expected:
+    # param[:password] : User password
+    # param[:email] : User e-mail
+    # optional param[:description] : A description of the user
+    # optional param[:avatar] : A file for the avatar
     #
     ##
 
@@ -81,9 +97,14 @@ module Controllers
     end
 
     ##
-    # Loads edit.haml where user can enter the new information
+    #
+    # Loads edit.haml where user can enter the new organisation profile.
+    # Only for admins.
+    #
+    # Expected:
+    # session[:navigation] : has to be initialized
+    #
     ##
-
     get '/account/edit/organisation/profile' do
       before_for_admin
 
@@ -95,15 +116,22 @@ module Controllers
 
     ##
     #
-    # Gets edited profile data from user. Redirected from edit.haml with
-    # Form. Checks if incoming data is correct and redirects to home.
+    # Gets edited profile data from an organisation. Redirected from edit.haml with
+    # Form. Checks if incoming data is correct and redirects to home. Resets remaining
+    # limits of members if limit was changed. Only for admins.
     #
-    # Should get parameter
-    # optional :description - A description of the user
-    # optional :avatar - A file for the avatar
+    # Redirects:
+    # /error/Wrong_Limit when the limit isn't a number or is nil
+    # /account/edit/user/profile when a wrong email address was entered
+    # /home when everything is correct
+    #
+    # Expected:
+    # session[:account] : the organisation id
+    # param[:credit_limit] : maximum credits a non admin can spend per day
+    # optional param[:description] : A description of the org.
+    # optional param[:avatar] : A file for the avatar
     #
     ##
-
     post '/account/edit/organisation/profile' do
       before_for_admin
 

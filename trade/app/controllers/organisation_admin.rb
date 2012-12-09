@@ -12,6 +12,12 @@ require_relative('../helpers/string_checkers')
 include Models
 include Helpers
 
+##
+#
+#  In this class all requests and actions that only an org. admin
+#  can do are handled.
+#
+##
 module Controllers
   class OrganisationAdmin < Sinatra::Application
 
@@ -19,6 +25,15 @@ module Controllers
       before_for_admin
     end
 
+    ##
+    #
+    # After this the user sees a form where he can specify who he wants
+    # to add to the organisation.
+    #
+    # Expects:
+    # session[:navigation] : has to be initialized
+    #
+    ##
     get '/organisation/add/member' do
       session[:navigation].get_selected.select_by_name("home")
       session[:navigation].get_selected.subnavigation.select_by_name("add member")
@@ -28,13 +43,14 @@ module Controllers
 
     ##
     #
-    # Called by user_add_member.haml via form
+    # Called by user_add_member.haml via form.
+    # Shows a confirmation page after successful identification.
+    # Stay on the same page if specified Email couldn't be found.
     #
     # Expects:
     # params[:member] : email of user to be added
     #
     ##
-
     post '/organisation/add/member' do
       if Models::System.instance.user_exists?(params[:member])
         haml :'organisation/member_confirm', :locals => { :member => params[:member]}
@@ -44,6 +60,18 @@ module Controllers
       end
     end
 
+    ##
+    #
+    # Adds the user to the organisation
+    #
+    # Redirect:
+    # /home when the user is no admin
+    #
+    # Expects:
+    # params[:member] : user who should be added to the org.
+    # session[:account] : the organisation
+    #
+    ##
     post '/organisation/member/confirm' do
       if Models::System.instance.user_exists?(params[:member])
         user =  Models::System.instance.fetch_user_by_email(params[:member])
@@ -60,12 +88,20 @@ module Controllers
 
 
     ##
-    # Called by members.haml via form
+    #
+    # If everything is alright displays a confirmation page
+    # else goes back to the member list. Called by members.haml via form.
+    #
+    # Redirects:
+    # /organisation/members when last admin wants to delete himself
+    #                       or when the member who should be deleted does not exists
     #
     # Expects:
+    # session[:user] : user who request a deletion of someone
+    # session[:account] : id of the organisation
     # params[:member] : email of user to be deleted
+    #
     ##
-
     post '/organisation/member/delete' do
       self_remove = (Models::System.instance.fetch_account(session[:user]) == Models::System.instance.fetch_user_by_email(params[:member]))
       organisation = Models::System.instance.fetch_account(session[:account])
@@ -81,7 +117,22 @@ module Controllers
       end
     end
 
-
+    ##
+    #
+    # If this is confirmed a member is deleted from an organisation.
+    #
+    # Redirects:
+    # /organisation/members when last admin wants to delete himself
+    #                       or when the member who should be deleted could not be found
+    # /home when an admin removed himself
+    # /organisations/members when an admin removed someone else
+    #
+    # Expects:
+    # session[:user] : user who request a deletion of someone
+    # session[:account] : id of the organisation
+    # params[:user_email] : email of user to be deleted
+    #
+    ##
     post '/organisation/member/delete/confirm' do
       self_remove = (Models::System.instance.fetch_account(session[:user]) == Models::System.instance.fetch_user_by_email(params[:user_email]))
       organisation = Models::System.instance.fetch_account(session[:account])
@@ -107,7 +158,16 @@ module Controllers
 
     ##
     #
-    # Confirmation form for providing admin privileges to normal user.
+    # Shows confirmation form for providing admin privileges to normal member.
+    #
+    # Redirects:
+    # /organisation/members when the user is already an admin
+    #                       or when the user does not exists
+    #
+    # Expects:
+    # session[:account] : organisation id
+    # session[:user] : user who requests a promotion of someone
+    # params[:member] : email of user to be promoted
     #
     ##
     post '/organisation/member/to_admin' do
@@ -123,6 +183,19 @@ module Controllers
       end
     end
 
+    ##
+    #
+    # Provides admin privileges to normal member.
+    #
+    # Redirects:
+    # /organisation/members
+    #
+    # Expects:
+    # session[:account] : organisation id
+    # session[:user] : user who requests a promotion of someone
+    # params[:user_email] : email of user to be promoted
+    #
+    ##
     post '/organisation/member/to_admin/confirm' do
       if Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_user_by_email(params[:user_email]))
         session[:alert] = Alert.create("Oh no!", "This user is already an Administrator of this Organisation.", true)
@@ -140,7 +213,16 @@ module Controllers
 
     ##
     #
-    # Confirmation form for revoking admin privileges from admin user
+    # Shows confirmation form for revoking admin privileges from admin user
+    #
+    # Redirects:
+    # /organisation/members when the last admin would be degraded
+    #                       or when the member to be degraded does not exists
+    #
+    # Expects:
+    # session[:account] : organisation id
+    # session[:user] : user who request a downgrade of someone
+    # params[:member] : email of the user to be downgraded
     #
     ##
 
@@ -159,6 +241,22 @@ module Controllers
       end
     end
 
+    ##
+    #
+    # Revokes admin privileges from an organisation admin
+    #
+    # Redirects:
+    # /organisation/members when there would be no admin left
+    #                       or when the admin who should be degraded could not be found
+    # /home when an admin degraded himself
+    # /organisations/members when an admin degraded someone else
+    #
+    # Expects:
+    # session[:user] : user who request a degrade of someone
+    # session[:account] : id of the organisation
+    # params[:user_email] : email of user to be degraded
+    #
+    ##
     post '/organisation/admin/to_member/confirm' do
       unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
         session[:alert] = Alert.create("Oh no!", "You're not an administrator of this Organisation.", true)

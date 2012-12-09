@@ -1,4 +1,10 @@
-
+##
+#
+# Here is everything concerning the interaction between items
+# and users that are not necessary their owners. This means
+# buy-requests, wishlist altering and comments on items.
+#
+##
 module Controllers 
     class ItemInteraction < Sinatra::Application
         set :views, "#{absolute_path('../views', __FILE__)}"
@@ -7,7 +13,25 @@ module Controllers
           before_for_item_interaction
         end
 
-
+        ###
+        #
+        #  This is called if a user or organisation tries to buy an item.
+        #  After a successful buy the buyer will see all his items with the
+        #  the new item added.
+        #
+        #  Redirects to:
+        #  /item/:itemId when the price is greater than this accounts
+        #                     credits, your org. limit, the item has been
+        #                     modified or it is inactive
+        #  /items/my/all when everthing is correct
+        #
+        #  Expects:
+        #  params[:id] : id of the item
+        #  params[:account] : the id of the buyer
+        #  params[:user] :  the id of the seller
+        #  params[:version] :  the version of the item that the buyer sees
+        #
+        ###
         post '/item/buy' do
 
           item = Models::System.instance.fetch_item(params[:id])
@@ -38,6 +62,19 @@ module Controllers
           redirect "/items/my/all"
         end
 
+        ###
+        #
+        #  This adds an item to the wishlist of a user or organisation
+        #
+        #  Redirects to:
+        #  back when it is know from where the user or org. came
+        #  /items/active else
+        #
+        #  Expects:
+        #  params[:id] : id of the item
+        #  params[:account] : the id of the user or org.
+        #
+        ###
         post '/item/towishlist' do
           item = Models::System.instance.fetch_item(params[:id])
           account = Models::System.instance.fetch_account(session[:account])
@@ -48,6 +85,19 @@ module Controllers
           redirect back.nil? ? "/items/active" : back
         end
 
+        ###
+        #
+        #  This removes an item from the wishlist of a user or organisation
+        #
+        #  Redirects to:
+        #  back when it is know from where the user or org. came
+        #  /items/my/all else
+        #
+        #  Expects:
+        #  params[:id] : id of the item
+        #  params[:account] : the id of the user or org.
+        #
+        ###
         post '/item/fromwishlist' do
           item = Models::System.instance.fetch_item(params[:id])
           account = Models::System.instance.fetch_account(session[:account])
@@ -58,6 +108,22 @@ module Controllers
           redirect back.nil? ? "/items/my/all" : back
         end
 
+        ###
+        #
+        #  With this a user or organisation can add a comment to an item
+        #
+        #  Redirects to:
+        #  /error/No_Valid_Input when the comment is not empty and not nil
+        #  /item/#{item.id} when everything is correct
+        #
+        #  Expects:
+        #  params[:header] : the title of the comment
+        #  params[:comment_nr] : important for the order of the comments
+        #  params[:comment] : should not be nil and not empty
+        #  params[:id] : id of the item
+        #  params[:account] : the id of the user or org.
+        #
+        ###
         post '/item/add/comment/:id' do
 
           redirect "/error/No_Valid_Input" if params[:comment].nil? || params[:comment] == ""

@@ -4,6 +4,9 @@ module Controllers
 
   ##
   #
+  #  In this controller all changes a user can make on his own
+  #  items are handled.
+  #
   #  Item has to be passed via params[:id]
   #  if not then #before_for_item_manipulation
   #  will fail.
@@ -104,6 +107,9 @@ module Controllers
     # Deletes an item from the system
     # and sets a success message
     #
+    # Redirects:
+    # /items/my/all
+    #
     # Expects:
     # params[:id]: id of the item
     #
@@ -171,6 +177,13 @@ module Controllers
 
     ##
     #  Save the current description which should be displayed
+    #
+    #  Redirects:
+    #  /items/my/all
+    #
+    #  Expects:
+    #  params[:desc_to_use] : the new description
+    #  params[:id] : id of the item
     #
     ##
 

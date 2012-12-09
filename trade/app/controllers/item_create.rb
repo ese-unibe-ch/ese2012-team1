@@ -1,6 +1,9 @@
 include Models
 include Helpers
 
+##
+# In this controller is handled how an item is created
+##
 module Controllers
   class ItemCreate < Sinatra::Application
     set :views, "#{absolute_path('../views', __FILE__)}"
@@ -16,6 +19,7 @@ module Controllers
     #
     #
     # Expects:
+    # session[:account] : the account id on which behalf this user is acting now
     # params[:name] : name for the item
     # params[:price] : price for the item
     # params[:description] :  description for the item

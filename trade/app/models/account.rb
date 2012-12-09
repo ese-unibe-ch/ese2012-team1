@@ -1,5 +1,7 @@
 module Models
   class Account
+    ##
+    #
     #Account is an abstract class. It's designed to simplify the behaviour of the shop.
     #Accounts have a name, an amount of credits, a description and an avatar.
     #Implementations of accounts may add a new item to the system with a name and a price;
@@ -10,8 +12,10 @@ module Models
     #  it becomes the owner; credits are transferred accordingly; immediately after
     #  the trade, the item is inactive. The transaction
     #  fails if the buyer has not enough credits.
-
+    #
     # generate getter and setter
+    #
+    ##
     attr_accessor :description, :avatar, :name, :credits, :id, :organisation, :wish_list
 
 
@@ -25,6 +29,16 @@ module Models
       self.credits = 100
     end
 
+    ##
+    #
+    # Creates a new account
+    #
+    # Expected:
+    # name : name of the account(can't be nil)
+    # description : description of the account (can't be nil)
+    # avatar : Avatar of the account (can't be nil)
+    #
+    ##
     def self.created(name, description, avatar)
       fail "Missing name" if (name == nil)
       fail "Missing description" if (description == nil)
@@ -44,16 +58,33 @@ module Models
       account
     end
 
+    ##
+    #
+    # Adds the account to the system database
+    #
+    ##
     def save
       Models::System.instance.add_account(self)
     end
 
-    #get string representation
+    ##
+    #
+    # get string representation
+    #
+    ##
     def to_s
       "#{self.name}:#{self.id}"
     end
 
-    #let the account create a new item and returns it
+    ##
+    #
+    # lets the account create a new item with this account as owner and returns it
+    #
+    # Expected:
+    # name : the name of the new item(can't be nil)
+    # price : the price of the new item(can't be nil or < 0)
+    #
+    ##
     def create_item(name, price)
       fail "No name set" if (name == nil)
       fail "No price set" if (price == nil)
@@ -65,8 +96,16 @@ module Models
       new_item
     end
 
-    # Removes credits (price of item) from itself and gives it to the owner
-
+    ##
+    #
+    # Removes credits (price of item) from itself and gives it to the owner.
+    # The item will switch owners. The buyer needs to have enough credits
+    #
+    # Expected:
+    # item_to_buy : the item that user wants to buy
+    # user : the account who pays credits and will be the new owner
+    #
+    ##
     def buy_item(item_to_buy, user)
       fail "not enough credits" if item_to_buy.price > self.credits
       fail "Item not in System" unless (System.instance.items.include?(item_to_buy.id))
@@ -81,23 +120,39 @@ module Models
       item_to_buy.bought_by(self)
     end
 
+    ##
+    #
+    # Needs to be overridden in classes that inherit from account.rb
+    #
+    ##
     def is_member?(user)
       false
     end
 
-    #return user's item list active
-    # @param user_mail
+    ##
+    #
+    # returns account's item list
+    #
+    ##
     def list_items
       Models::System.instance.fetch_items_of(self.id)
     end
 
-    #return user's item list inactive
+    ##
+    #
+    # returns account's list of inactive items
+    #
+    ##
     def list_inactive_items
       Models::System.instance.fetch_items_of(self.id).select {|s| !s.is_active?}
     end
 
 
-    #return user's item list active
+    ##
+    #
+    # returns account's list of active items
+    #
+    ##
     def list_active_items
       Models::System.instance.fetch_items_of(self.id).select {|s| s.is_active?}
     end
@@ -106,8 +161,10 @@ module Models
     #
     # Returns true if an user owns a specific item
     #
+    # Expects:
+    # itemId : the id of the item you want to check
+    #
     ##
-
     def has_item?(itemId)
       Models::System.instance.item_exists?(self.id) &&
       Models::System.instance.fetch_item(self.id).owner == self
@@ -115,11 +172,13 @@ module Models
 
     ##
     #
-    # Returns item with the given name. Throws error if
+    # Returns item with the given id. Throws error if
     # user doesn't own the item.
     #
+    # Expects:
+    # item_Id : the id of the item
+    #
     ##
-
     def get_item(item_Id)
       fail "#{self.name} doesn't own object: \'#{item_Id}\'" unless (self.has_item?(item_Id.to_i))
 
