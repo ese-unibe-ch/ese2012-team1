@@ -125,6 +125,8 @@ div.profile-information {
 }
 
 #message-info img {
+    position: relative;
+    bottom: -2px;
     height: 20px;
     width: 20px;
 }
@@ -312,7 +314,7 @@ button {
 }
 
 button:hover, input:hover, textarea:hover {
-  background-image: url('/images/design/message.png');
+  background-image: url('/images/design/button-hover.png');
 }
 
 button:disabled, input:disabled, textarea:disabled {
