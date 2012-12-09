@@ -22,8 +22,7 @@ module Controllers
     set :views , "#{absolute_path('../views', __FILE__)}"
 
     get '/messagebox/send' do
-      haml :'/user/mailbox/send', :locals => { :script => "search_users.js",
-                                               :receiver_id => params[:receiver_id],
+      haml :'/user/mailbox/send', :locals => { :receiver_id => params[:receiver_id],
                                                :receiver_name => params[:receiver_name], }
     end
 
@@ -31,8 +30,7 @@ module Controllers
       @error[:message] = "You have to enter a message" if params[:message].nil? || params[:message].empty?
 
       unless @error.empty?
-        halt       haml :'/user/mailbox/send', :locals => { :script => "search_users.js",
-                                                            :receiver_id => params[:receiver_id],
+        halt       haml :'/user/mailbox/send', :locals => { :receiver_id => params[:receiver_id],
                                                             :receiver_name => params[:receiver_name], }
       end
 
