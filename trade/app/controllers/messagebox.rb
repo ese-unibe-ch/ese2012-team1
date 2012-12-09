@@ -17,7 +17,7 @@ module Controllers
         get '/messagebox/send' do
           before_for_user_authenticated
 
-          haml :'/user/mailbox/send', :locals => { :receiver_id => params[:receiver_id],
+          haml :'mailbox/send', :locals => { :receiver_id => params[:receiver_id],
                                                    :receiver_name => params[:receiver_name], }
         end
 
@@ -40,7 +40,7 @@ module Controllers
           @error[:message] = "You have to enter a message" if params[:message].nil? || params[:message].empty?
 
           unless @error.empty?
-            halt       haml :'/user/mailbox/send', :locals => { :receiver_id => params[:receiver_id],
+            halt       haml :'mailbox/send', :locals => { :receiver_id => params[:receiver_id],
                                                                 :receiver_name => params[:receiver_name], }
           end
 

@@ -6,7 +6,7 @@ require_relative('../../trade/app/models/comment')
 
 include Models
 
-userA = Models::User.created( "userA", "passwordA", "userA@mail.ch", "I'm a food trader!", "/images/users/default_avatar.png")
+userA = Models::User.created( "userA", "passwordA", "userA@mail.ch", "I'm a food trader!", "/images/users/food.jpg")
 userA.activate
 aa = userA.create_item("cheap red apple", 10)
 aa.add_description("a very juicy apple")
@@ -21,7 +21,7 @@ ac.add_description("a cheap but very orange orange")
 ac.add_picture("/images/items/orange.jpg")
 ac.to_active
 
-userB = Models::User.created( "userB", "passwordB", "userB@mail.ch", "I'm a furniture trader", "/images/users/default_avatar.png")
+userB = Models::User.created( "userB", "passwordB", "userB@mail.ch", "I'm a furniture trader", "/images/users/furniture.jpg")
 userB.activate
 ba = userB.create_item("chair", 10)
 ba.add_description("it's very comfortable and hardly never used")
@@ -34,7 +34,7 @@ bc = userB.create_item("table", 120)
 bc.add_picture("/images/items/table.gif")
 bc.add_description("this table has four legs. buy it! it's very cheap!")
 
-userC = Models::User.created( "userC", "passwordC", "userC@mail.ch", "I'm a money trader", "/images/users/default_avatar.png")
+userC = Models::User.created( "userC", "passwordC", "userC@mail.ch", "I'm a money trader", "/images/users/money.jpg")
 userC.activate
 ca = userC.create_item("us dollar", 10)
 ca.add_picture("/images/items/dollar.jpg")
