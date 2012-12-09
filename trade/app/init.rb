@@ -53,6 +53,7 @@ eseitem = ese.create_item("Fiat 500", 20)
 eseitem.add_picture("/images/items/fiat.jpg")
 eseitem.to_active
 
+#Add some comments
 comment = Comment.create(userC, "I love it!", "I love that Item! And I love to write a lot. And I still write things nobody cares about. I don't even care. I just have to write a very very very long text so I can check if this works as well. It is still a bit too short because I can still not see what happens if it is bigger than the user_info. Now it should work!")
 eseitem.add(comment)
 comment.add(Comment.create(userB, "Yap!", "That's true. Best I've ever had!"))
@@ -71,3 +72,7 @@ eseOrgitem.to_active
 (68..72).each do |ascii_nr_of_character|
   Models::User.created("user#{ascii_nr_of_character.chr}", "password#{ascii_nr_of_character.chr}" , "user#{ascii_nr_of_character.chr}@mail.ch", "I'm #{ascii_nr_of_character.chr}", "/images/users/default_avatar.png")
 end
+
+#Send some messages
+Messenger.instance.new_message(ese.id, [userA.id], "Hey there!", "I'm really glad your on the trading system!")
+Messenger.instance.new_message(userB.id, [ese.id], "Whats up!", "Didn't now you were interested in the trading system. Wanna trade something?")

@@ -82,14 +82,15 @@ module Models
 
     ##
     #
-    # Returns all conversation that have new messages
-    # in it
+    # Travers over all new messages of the user
+    #
+    # Messenger.instance.travers_new_messages do |message, conversation_id|
+    #   puts message.message
+    # end
     #
     ##
 
     def travers_new_messages
-      puts message_tree
-
       self.message_tree.each do |conversation_id, message_read|
         message_read.each do |message_id, read|
           message = self.conversations.fetch(conversation_id.to_s).get(message_id.to_s)
