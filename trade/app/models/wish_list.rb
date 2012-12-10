@@ -1,4 +1,3 @@
-#TODO all tests! (incl. doc)
 module Models
   ##
   #
