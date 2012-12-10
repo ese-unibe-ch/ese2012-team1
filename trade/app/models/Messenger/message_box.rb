@@ -108,7 +108,9 @@ module Models
       self.message_tree.each do |conversation_id, message_read|
         message_read.each do |message_id, read|
           message = self.conversations.fetch(conversation_id.to_s).get(message_id.to_s)
-          yield message, conversation_id unless read
+          if message.is_receiver?(self.owner)
+              yield message, conversation_id unless read
+          end
         end
       end
     end
@@ -135,6 +137,22 @@ module Models
       return count
     end
 
+    ##
+    #
+    # Counting number of all message in
+    # a specifique conversation
+    #
+    # Params: conversation_id : Id of the conversation to count messages for
+    ##
+
+    def message_count_for(conversation_id)
+      count = 0
+      self.message_tree[conversation_id.to_s].values.each do |read|
+        count +=1
+      end
+      count
+    end
+
 
     ##
     #
@@ -147,7 +165,10 @@ module Models
       #Messages from owner of the MessageBox are set as read
       read = message.sender == owner ? true : false;
 
-      self.message_tree[conv_id.to_s].store(message.message_id.to_s, read)
+      #Stores message only if the user is a receiver
+      if (message.is_receiver?(owner))
+        self.message_tree[conv_id.to_s].store(message.message_id.to_s, read)
+      end
     end
 
   end

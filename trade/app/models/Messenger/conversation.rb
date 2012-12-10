@@ -18,7 +18,7 @@ class Conversation
   @@conversations_count = 1
 
   attr_reader :conversation_id, #Unique id to address the Conversation
-              :messages         #Messages belonging to this subject
+              :messages         #Messages belonging to this conversation
 
   attr_accessor :subscribers    #Participants
 

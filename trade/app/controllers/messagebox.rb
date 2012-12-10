@@ -69,6 +69,26 @@ module Controllers
 
         ##
         #
+        # Displays one specifique conversation
+        #
+        # Expects:
+        # params[:conversation_id] : The id of the conversation to be displayed
+        #
+        ##
+
+        get '/messagebox/conversation' do
+          before_for_user_authenticated
+
+          session[:navigation].get_selected.select_by_name("messagebox")
+          session[:navigation].get_selected.subnavigation.select_by_name("conversations")
+
+          conversation = Messenger.instance.conversations.fetch(params[:conversation_id].to_s)
+
+          haml :'mailbox/conversation', :locals => { :conversation => conversation }
+        end
+
+        ##
+        #
         # Sends the message
         #
         # Redirects:

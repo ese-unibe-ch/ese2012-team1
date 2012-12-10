@@ -1,0 +1,12 @@
+%h2
+  = conversation.title
+
+- conversation.messages.each do |message|
+  -if message.is_receiver?(session[:user])
+    %h3
+      = message.subject
+    = "Date: " + message.date.to_s
+    <br>
+    = "From: " + System.instance.fetch_account(message.sender).name
+    <br>
+    = message.message
