@@ -1,6 +1,7 @@
 %div(id = "message-info")
-  Messages
-  - new_messages = Messenger.instance.get_message_box(session[:user]).new_messages_count
-  - if new_messages > 0
-    = "( #{new_messages} )"
-  %img(alt = "Message" id="header-logo" src = "/images/message.png")
+  %a(href="/account/edit/user/profile" name="edit_user_profile")
+    Messages
+    - new_messages = Messenger.instance.get_message_box(session[:user]).new_messages_count
+    - if new_messages > 0
+      = "( #{new_messages} )"
+    %img(alt = "Message" id="header-logo" src = "/images/message.png")

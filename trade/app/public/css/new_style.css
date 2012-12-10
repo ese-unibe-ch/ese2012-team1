@@ -120,8 +120,6 @@ div.profile-information {
     margin-left: auto;
     margin-right: 0px;
     margin-top: 20px;
-  /*  background: #b8860b;
-    border: 1px solid red;   */
 }
 
 #message-info img {
@@ -130,6 +128,8 @@ div.profile-information {
     height: 20px;
     width: 20px;
 }
+#message-info a { font-weight: bold;}
+#message-info a:link { color: #660066; text-decoration: none;}
 
 div.subnavigation {
   overflow: hidden;
