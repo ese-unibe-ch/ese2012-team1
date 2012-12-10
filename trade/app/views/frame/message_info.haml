@@ -1,5 +1,5 @@
 %div(id = "message-info")
-  %a(href="/account/edit/user/message_box" name="message_box")
+  %a(href="/messagebox" name="messagebox")
     Messages
     - new_messages = Messenger.instance.get_message_box(session[:user]).new_messages_count
     - if new_messages > 0
