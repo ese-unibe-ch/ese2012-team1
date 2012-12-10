@@ -4,7 +4,8 @@ A possiblity to select a conversation of the user comes here!
 
 - messagebox.conversations.each do |conversation_id, conversation|
   %h2
-    = conversation.title + "(" + messagebox.new_messages_count_for(conversation_id).to_s + "/" + conversation.count_messages.to_s + ")"
+    %a(href="/messagebox/conversation?conversation_id=#{conversation_id}")
+      = conversation.title + "(" + messagebox.new_messages_count_for(conversation_id).to_s + "/" + messagebox.message_count_for(conversation_id).to_s + ")"
   Subscribers:
   - conversation.subscribers.each do |subscriber|
     = System.instance.fetch_account(subscriber).name
