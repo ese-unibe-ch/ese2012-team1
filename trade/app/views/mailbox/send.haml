@@ -1,15 +1,15 @@
 %div(class="labeled-input")
   %form(action="/messagebox/send" id="send_form" method="post")
-    -unless receiver_id.nil? || receiver_name.nil?
-      %input(type="hidden" name="hidden#{receiver_id}" value="#{receiver_id}")
+    - receivers.each do |receiver|
+      %input(type="hidden" name="hidden#{receiver.id}" value="#{receiver.id}")
     %label
       Choose User:
     %input(type="text" name="query" id="query")
     %div(id="receivers")
-      -unless receiver_id.nil? || receiver_name.nil?
-        %span(id="div#{receiver_id}" class="receiver")
-          = receiver_name
-          %button(class="remove" onclick="removeReceiver(#{receiver_id})")
+      - receivers.each do |receiver|
+        %span(id="div#{receiver.id}" class="receiver")
+          = receiver.name
+          %button(class="remove" onclick="removeReceiver(#{receiver.id})")
             x
     %label
       Subject:

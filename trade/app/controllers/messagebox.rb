@@ -27,8 +27,12 @@ module Controllers
           session[:navigation].get_selected.select_by_name("messagebox")
           session[:navigation].get_selected.subnavigation.select_by_name("send message")
 
-          haml :'mailbox/send', :locals => { :receiver_id => params[:receiver_id],
-                                                   :receiver_name => params[:receiver_name], }
+          receivers = []
+          unless (params[:receivers].nil?)
+            receivers = params[:receivers].map { |user_id| System.instance.fetch_account(user_id.to_i) }
+          end
+
+          haml :'mailbox/send', :locals => { :receivers => receivers }
         end
 
         ##
