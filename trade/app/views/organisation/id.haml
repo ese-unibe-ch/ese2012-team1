@@ -9,22 +9,4 @@
 %br
 %br
 %h3 Check out our Items:
-
-%table
-  %tr
-    %th Name
-    %th Price
-    %th
-    %th
-  - i = 0
-  - for item in active_items
-    - i = (i + 1)%2
-    %tr{ :class => i == 0 ? "colored" : "normal" }
-      %td{:width => "135px;"}
-        %a{:href => "/item/#{item.id}"}
-          = item.name.size > 15 ? "#{item.name[0..14]}..." : item.name
-      %td{:width => "90px;"}= item.price
-      %td
-        %img(height=50 width=50){ :alt => item.name, :src => item.picture }
-      %td
-        = haml :'item/form/buy', :locals => { :item => item }
+= haml :'item/list', :locals => { :all_items => active_items, :description => true }
