@@ -1,0 +1,9 @@
+%h3 Write a Comment
+%div(class="labeled-input")
+  %form(enctype="text/form-data" method="post" class="bigmargin"){:action => "/item/add/comment/#{item.id}"}
+    %label Title:
+    %input(type="text" name="header" id="header")
+    %label Comment:
+    %textarea(name="comment" cols=30 rows=10)
+      = session[:form_comment].to_s
+    %input(type="submit" id="comment" value="Comment")

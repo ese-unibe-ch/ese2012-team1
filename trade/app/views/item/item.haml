@@ -1,5 +1,8 @@
-%h2  #{item.name}
-%br
+%h2
+  #{item.name}
+  - if item.owner.id == session[:account]
+    %span
+      (You own it)
 #usr_img
   %a(href="#{item.picture}" rel="lightbox")
     %img(height=200 width=200){ :alt => item.name, :src =>item.picture }
@@ -7,47 +10,41 @@
 = haml :'partials/description-entry-horizontal', :locals => { :label => "Price:",
                                                               :description => item.price }
 
+- description = item.description.size == 0 ? "*No description*" : item.description
 = haml :'partials/description-entry-vertical_mkdown', :locals => { :label => "Item Description:",
-                                                                   :description => item.description }
+                                                                   :description => description }
 
 - if item.owner.id != session[:account]
   = "Owner: "
   %a(href="/users/#{item.owner.id}") #{item.owner.name}
-  %br
-  %div(class="padding-top")
+  %div(class="align-forms-vertical")
     %form(action="/item/buy" method="post")
       = haml :'item/form/buy', :locals => { :item => item }
-    %br
     -if (Models::System.instance.fetch_account(session[:account]).wish_list.items.include?(item))
       = haml :'partials/form/remove_from_wishlist', :locals => { :item => item }
     -else
       = haml :'partials/form/add_to_wishlist', :locals => { :item => item }
 - else
-  = "<strong> You own this item"
-  %br
   - if item.active
-    %div(class="padding-top")
+    %div(class="align-forms-vertical")
       = haml :'item/form/set_inactive', :locals => { :item => item }
   - else
-    %div(class="padding-top")
+    %div(class="align-forms-vertical")
       = haml :'item/form/set_active', :locals => { :item => item }
-      %br
       = haml :'item/form/edit', :locals => { :item => item }
-      %br
       = haml :'item/form/delete', :locals => { :item => item }
-
-%br
 
 -time = item.timed_event.time
 -if (time != :forever)
-  Offer expires in:
-  %script(type="text/javascript")
-    $(function () {
-    = "austDay = new Date(\"#{time.strftime("%B %d, %Y %H:%M:%S")}\");"
-    = "$('#countdown').countdown({until: austDay, format: 'dHMS', expiryUrl: '/item/#{item.id}'});"
-    $('#year').text(austDay.getFullYear());
-    });
-  %div(id = "countdown")
+  %div(class="padding-top")
+    Offer expires in:
+    :javascript
+      $(function () {
+        austDay = new Date("#{time.strftime("%B %d, %Y %H:%M:%S")}");
+        $('#countdown').countdown({until: austDay, format: 'dHMS', expiryUrl: "/item/#{item.id}"});
+        $('#year').text(austDay.getFullYear());
+      });
+    %div(id = "countdown")
 
 
 
@@ -65,21 +62,10 @@
       %p
         :markdown
           #{comment.comment}
-        %br
-        %br
+      %p(class="padding-top")
         posted on: #{comment.date_stamp.strftime("%H:%M:%S, %a %d.%m.%Y")}
       %p
         %a{ :href => "/item/add/comment/#{item.id}/#{comment.nr}" }
-          Comment
+          Reply
 
-%h2 Write a Comment
-%form(enctype="text/form-data" method="post" class="bigmargin"){:action => "/item/add/comment/#{item.id}"}
-  %label Title:
-  %br
-  %input(type="text" name="header" id="header")
-  %br
-  %label Comment:
-  %br
-  %textarea(name="comment" cols=30 rows=10)
-    = session[:form_comment].to_s
-  %input(type="submit" id="comment" value="Comment")
+= haml :'item/write_comment', :locals => { :item => item }

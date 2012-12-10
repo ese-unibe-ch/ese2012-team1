@@ -238,24 +238,28 @@ div#message {
     display: block;
 }
 
+.entry-horizontal, .entry-vertical {
+    padding-top: 10px;
+}
+
 .entry-horizontal .label {
     display: inline-block;
     width: 250px;
+    font-weight: bold;
 }
 
 .entry-horizontal .description {
     display: inline-block;
-    font-weight: bold;
 }
 
 .entry-vertical .label {
     display: block;
     width: 250px;
+    font-weight: bold;
 }
 
 .entry-vertical .description {
     display: block;
-    font-weight: bold;
 }
 
 div#main {
@@ -394,8 +398,8 @@ div.comment {
     background-image: url('/images/design/item-owner.png');
 }
 
-div.padding-top {
-    padding-top: 30px;
+.padding-top {
+    padding-top: 20px;
 }
 
 div.search-switch {
@@ -487,4 +491,16 @@ h4 {
 .x-small-picture {
   width: 15px;
   height: 15px;
+}
+
+.align-forms-vertical {
+    padding-top: 20px;
+}
+
+.align-forms-vertical form {
+  display: inline;
+}
+
+h2 span {
+  font-size: 75%;
 }
