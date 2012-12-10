@@ -141,11 +141,13 @@ module Models
     # Observing conversations.
     #
     ##
-    def update(conversation, mess_id)
-      puts "called with #{conversation.conversation_id} #{mess_id} for user#{self.owner}"
-
+    def update(conversation, message)
       conv_id = conversation.conversation_id
-      self.message_tree[conv_id.to_s].store(mess_id.to_s, false)
+
+      #Messages from owner of the MessageBox are set as read
+      read = message.sender == owner ? true : false;
+
+      self.message_tree[conv_id.to_s].store(message.message_id.to_s, read)
     end
 
   end

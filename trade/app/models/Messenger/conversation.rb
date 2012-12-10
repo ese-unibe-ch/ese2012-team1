@@ -87,7 +87,7 @@ class Conversation
 
     @messages.insert(index+1, message)
     changed
-    notify_observers self, message.message_id
+    notify_observers self, message
   end
 
   ##
