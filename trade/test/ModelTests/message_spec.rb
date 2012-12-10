@@ -6,13 +6,18 @@ describe Message do
     subject = args.member?(:subject) ? args[:subject] : "Subject"
     @date = args.member?(:date) ? args[:date] : Time.now
     message = args.member?(:message) ? args[:message] : "My Message"
+    receiver = args.member?(:receiver) ? args[:receiver] : "2"
     reply_to = args.member?(:reply_to) ? args[:reply_to] : nil
 
-    Message.create(sender, subject, @date, message, reply_to)
+    Message.create(sender, receiver, subject, @date, message, reply_to)
   end
 
   context "when creating" do
-    it "should fail if no sender ist set" do
+    it "should fail if no receiver is set" do
+      lambda{ create_message(:receiver => nil)}.should raise_error(RuntimeError)
+    end
+
+    it "should fail if no sender is set" do
       lambda{ create_message(:sender => nil)}.should raise_error(RuntimeError)
     end
 

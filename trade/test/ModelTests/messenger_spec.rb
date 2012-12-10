@@ -44,12 +44,12 @@ describe Messenger do
           @message_box2 = @messenger.get_message_box(2)
         end
 
-        it "then user1 and user2 should have new messages"  do
+        it "then user2 should have new messages"  do
           #It's odd that the sender as well has a new message even though he did send it
-          @message_box1.new_messages_count.should == 1
+          @message_box1.new_messages_count.should == 0
           @message_box2.new_messages_count.should == 1
 
-          @message_box1.travers_new_messages do |message, conversation_id|
+          @message_box2.travers_new_messages do |message, conversation_id|
             puts "Conversation id: #{conversation_id}"
             message.subject.should be_like "Subject"
             message.message.should be_like "My Message"
@@ -93,7 +93,7 @@ describe Messenger do
         @messenger.new_message(2, [1, 3], "Subject", "My Message")
 
         @messenger.get_message_box(1).new_messages_count.should == 1
-        @messenger.get_message_box(2).new_messages_count.should == 1
+        @messenger.get_message_box(2).new_messages_count.should == 0
         @messenger.get_message_box(3).new_messages_count.should == 1
       end
     end

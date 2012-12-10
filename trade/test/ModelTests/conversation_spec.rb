@@ -5,12 +5,12 @@ describe Conversation do
     @conversation = Conversation.new
   end
 
-  it "should have same conversation id as conversation exist" do
-    @conversation.conversation_id.should == 1
+  it "should have a conversation id" do
+    @conversation.conversation_id.should_not be_nil
 
     conversation2 = Conversation.new
 
-    conversation2.conversation_id.should == 2
+    conversation2.conversation_id.should == @conversation.conversation_id + 1
   end
 
   context "when created" do
@@ -111,7 +111,7 @@ describe Conversation do
 
       @conversation.add_observer(observer)
 
-      observer.should_receive(:update).with(@conversation, 1)
+      observer.should_receive(:update).with(@conversation, @message)
 
       @conversation.add_message(@message)
     end

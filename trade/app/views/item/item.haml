@@ -4,47 +4,37 @@
   %a(href="#{item.picture}" rel="lightbox")
     %img(height=200 width=200){ :alt => item.name, :src =>item.picture }
 
-%br
-= "Price: #{item.price}"
-%br
-%br
-= "Item Description:"
-%br
-:markdown
-  #{item.description}
-%br
-  - if item.owner.id != session[:account]
-    = "Owner: "
-    %a(href="/users/#{item.owner.id}") #{item.owner.name}
+= haml :'partials/description-entry-horizontal', :locals => { :label => "Price:",
+                                                              :description => item.price }
+
+= haml :'partials/description-entry-vertical_mkdown', :locals => { :label => "Item Description:",
+                                                                   :description => item.description }
+
+- if item.owner.id != session[:account]
+  = "Owner: "
+  %a(href="/users/#{item.owner.id}") #{item.owner.name}
+  %br
+  %div(class="padding-top")
+    %form(action="/item/buy" method="post")
+      = haml :'item/form/buy', :locals => { :item => item }
     %br
+    -if (Models::System.instance.fetch_account(session[:account]).wish_list.items.include?(item))
+      = haml :'partials/form/remove_from_wishlist', :locals => { :item => item }
+    -else
+      = haml :'partials/form/add_to_wishlist', :locals => { :item => item }
+- else
+  = "<strong> You own this item"
+  %br
+  - if item.active
     %div(class="padding-top")
-      %form(action="/item/buy" method="post")
-        = haml :'item/form/buy', :locals => { :item => item }
-      %br
-      -if (Models::System.instance.fetch_account(session[:account]).wish_list.items.include?(item))
-        = haml :'partials/form/remove_from_wishlist', :locals => { :item => item }
-      -else
-        = haml :'partials/form/add_to_wishlist', :locals => { :item => item }
+      = haml :'item/form/set_inactive', :locals => { :item => item }
   - else
-    = "Owned by my self."
-    %br
-    - if item.active
-      %div(class="padding-top")
-        %form(name="state" action="/item/changestate/setinactive" method="post")
-          %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
-          %input(class="itembuttons" type="submit" value="Set Inactive")
-    - else
-      %div(class="padding-top")
-        %form(name="state" action="/item/changestate/expiration" method="get")
-          %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
-          %input(class="itembuttons" type="submit" value="Set Active")
-        %br
-        %form(name="edit" method="get"){ :action => "/item/#{item.id}/edit" }
-          %input(class="itembuttons" type="submit" value="Edit Item")
-        %br
-        %form(name="delete" action="/item/delete" method="post")
-          %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
-          %input(class="itembuttons" type="submit" value="Delete Item")
+    %div(class="padding-top")
+      = haml :'item/form/set_active', :locals => { :item => item }
+      %br
+      = haml :'item/form/edit', :locals => { :item => item }
+      %br
+      = haml :'item/form/delete', :locals => { :item => item }
 
 %br
 

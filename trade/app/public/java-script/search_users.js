@@ -19,7 +19,7 @@ $(function () {
             var reEscape = new RegExp('(\\' + ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'].join('|\\') + ')', 'g');
             var pattern = '(' + currentValue.replace(reEscape, '\\$1') + ')';
             var picture = "<img src=" + data[2] + " class=\"x-small-picture\" alt=" + value + ">"
-            return picture + " " + value.replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>') + " " + data[1]
+            return picture + " " + value.replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>') + " " + data[2]
         }
     });
 });

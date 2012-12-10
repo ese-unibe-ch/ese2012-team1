@@ -1,10 +1,6 @@
 require "test_require"
 
 describe MessageBox do
-  before(:each) do
-    #Before
-  end
-
   context "when created" do
     before(:each) do
       @message_box = MessageBox.create(1)
@@ -55,14 +51,17 @@ describe MessageBox do
         @message_box.conversations.size.should == 1
       end
 
-      context "when updated is called because a new message is added" do
+      context "when updated is called because a new message of user2 is added" do
         before(:each) do
-          @message_box.update(@conversation, 1)
           @message = double("Message")
+          @message.should_receive(:is_receiver?).with(1).and_return(true)
+          @message.should_receive(:sender).and_return(2)
+          @message.should_receive(:message_id).and_return(1)
+          @message_box.update(@conversation, @message)
           @conversation.stub(:get).with("1").and_return(@message)
         end
 
-        it "should have one message" do
+        it "should have one messages" do
           @message_box.messages_count.should == 1
         end
 
@@ -83,6 +82,8 @@ describe MessageBox do
         end
 
         it "should travers over one message" do
+          @message.should_receive(:is_receiver?).with(1).and_return(true)
+
           @message_box.travers_new_messages do |message, conversation_id|
             message.should == @message
           end

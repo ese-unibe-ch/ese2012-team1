@@ -1,0 +1,3 @@
+%form(name="state" action="/item/changestate/setinactive" method="post")
+  %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
+  %input(class="itembuttons" type="submit" value="Set Inactive")
