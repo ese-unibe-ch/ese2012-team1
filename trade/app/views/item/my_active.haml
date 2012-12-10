@@ -22,15 +22,13 @@
         %img(height=50 width=50){ :alt => item.name, :src => item.picture }
       -time = item.timed_event.time
       %td{ :colspan => time == :forever ? 2 : 1 }
-        %form(name="state" action="/item/changestate/setinactive" method="post")
-          %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
-          %input(class="itembuttons" type="submit" value="Set Inactive")
+        = haml :'item/form/set_inactive', :locals => { :item => item }
       -if (time != :forever)
-        %script(type="text/javascript")
+        :javascript
           $(function () {
-          = "austDay = new Date(\"#{time.strftime("%B %d, %Y %H:%M:%S")}\");"
-          = "$('#countdown#{item.id}').countdown({until: austDay, format: 'DHM', expiryText: 'Beyond expiration time. Reload your browser'});"
-          $('#year').text(austDay.getFullYear());
+            austDay = new Date("#{time.strftime("%B %d, %Y %H:%M:%S")}");
+            $("#countdown#{item.id}").countdown({until: austDay, format: 'DHM', expiryText: 'Beyond expiration time. Reload your browser'});
+            $('#year').text(austDay.getFullYear());
           });
         %td
           %span{:id => "countdown#{item.id}"}
