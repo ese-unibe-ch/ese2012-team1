@@ -23,13 +23,8 @@
         %img(height=50 width=50){ :alt => item.name, :src => item.picture }
       %td{:width => "250px;"}= item.description.size > 30 ? "#{item.description[0..29]}..." : item.description
       %td
-        %form(name="state" action="/item/changestate/expiration" method="get")
-          %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
-          %input(class="itembuttons" type="submit" value="Set Active")
+        = haml :'item/form/set_active', :locals => { :item => item }
       %td
-        %form(name="edit" method="get"){ :action => "/item/#{item.id}/edit" }
-          %input(class="itembuttons" type="submit" value="Edit Item")
+        = haml :'item/form/edit', :locals => { :item => item }
       %td
-        %form(name="delete" action="/item/delete" method="post")
-          %input(type="hidden" name="id" value="#{item.id}.#{item.name}")
-          %input(class="itembuttons" type="submit" value="Delete Item")
+        = haml :'item/form/delete', :locals => { :item => item }
