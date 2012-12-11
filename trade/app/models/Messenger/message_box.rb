@@ -69,6 +69,17 @@ module Models
 
     ##
     #
+    # Set all Messages in Conversation as Read.
+    # Params: conv_id : Integer (Conversation ID)
+    #
+    ##
+    def set_conversation_as_read(conv_id)
+      puts conv_id
+      self.message_tree[conv_id.to_s].each {|k, v| self.set_as_read(conv_id, k) if !v}
+    end
+
+    ##
+    #
     # Counting number of new Messages.
     #
     ##

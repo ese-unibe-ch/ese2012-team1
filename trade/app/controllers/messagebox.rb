@@ -83,6 +83,7 @@ module Controllers
           session[:navigation].get_selected.subnavigation.select_by_name("conversations")
 
           conversation = Messenger.instance.conversations.fetch(params[:conversation_id].to_s)
+          Messenger.instance.get_message_box(session[:user]).set_conversation_as_read(conversation.conversation_id)
 
           haml :'mailbox/conversation', :locals => { :conversation => conversation }
         end
