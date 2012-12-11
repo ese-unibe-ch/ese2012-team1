@@ -44,10 +44,12 @@ module Controllers
       hash = params[:reg_hash]
       if Models::System.instance.reg_hash_exists?(hash)
         user = Models::System.instance.fetch_user_by_reg_hash(hash)
-        redirect '/error/Already_Activated' if user.activated
+        session[:alert] = Alert.create("Error!", "Your account has already been activated.", true)
+        haml :'authentication/login' if user.activated
         user.activate
       else
-        redirect '/error/Wrong_Activation_Code'
+        session[:alert] = Alert.create("Error!", "The activation code is not correct. Try with copy and paste the complete URL from the e-mail into your Browser.", false)
+        haml :'authentication/login'
       end
 
       session[:alert] = Alert.create("Activation successful!", "Your account is now activated. Please login.", false)
@@ -156,18 +158,12 @@ module Controllers
         address = "http://#{request.host}:#{request.port}"
       end
       Mailer.setup.sendRegMail(user.id, address)
+      session[:alert] = Alert.create("Your registration was successful!", "Now you have to activate your account by clicking on the link in the mail we sent you.", false)
 
-      redirect '/register/successful'
+      haml :'authentication/login'
     end
 
-    ##
-    #
-    # Displays Message that Registration was successful
-    #
-    ##
-    get '/register/successful' do
-      haml :'authentication/successful_registered'
-    end
+
 
     ##
     #

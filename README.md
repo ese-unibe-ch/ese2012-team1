@@ -18,15 +18,14 @@ Same thing for rspec and json
     sudo apt-get install ruby-json
     sudo apt-get install ruby-rspec
 
-###Mail
-**important:** mails must be sent from a gmail account!    
+###Mail   
 create an file named 'email.conf' in the directory trade/app/private    
-enter the following informations
- from_address = 'yourEmail@yourHost.tld'
- smtp_server = 'mailServer.yourHost.tld'
- username = 'yourUserName'
- password = 'yourPassword'
-  
+enter the following informations  
+ from_address = 'yourEmail@yourHost.tld'   
+ smtp_server = 'mailServer.yourHost.tld'   
+ username = 'yourUserName'  
+ password = 'yourPassword'  
+    
 ##Start the app
 
 change to trade directory  
