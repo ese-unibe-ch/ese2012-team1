@@ -59,6 +59,7 @@ module Controllers
     get '/users/:id' do
         redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(params[:id].to_i)
         user_id = params[:id]
+        redirect "/home" if user_id.to_s == session[:account].to_s
         haml :'user/id', :locals => {:active_items => Models::System.instance.fetch_account(user_id.to_i).list_active_items}
     end
   end
