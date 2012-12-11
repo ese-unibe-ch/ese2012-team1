@@ -525,6 +525,32 @@ h4 {
   display: inline;
 }
 
+.messagebox-message, .messagebox-message-user {
+    background-image: url('/images/design/message.png');
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.messagebox-message-user {
+    background-image: url('/images/design/item-owner.png');
+}
+
+.message-content {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+hr {
+    background: white;
+    clear: both;
+    float: none;
+    width: 100%;
+    height: 1px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: none;
+}
+
 h2 span {
   font-size: 75%;
 }

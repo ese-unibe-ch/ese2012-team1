@@ -1,0 +1,27 @@
+- indention = defined? indention ? indention : false
+
+- style = indention ? { :style => "margin-left:#{20*message.depth}px"} : {}
+- style = { :class => message.sender == session[:user] ? "messagebox-message-user" : "messagebox-message" }.merge!(style)
+
+%div{style}
+  %strong
+    From
+  = System.instance.fetch_account(message.sender).name
+  %hr
+  %strong
+    To
+  - message.receivers.each do |receiver|
+    = "#{System.instance.fetch_account(receiver).name}, "
+  %hr
+  %strong
+    Subject
+  = message.subject
+  %hr
+  %strong
+    Date
+  = message.date.strftime("%a %d.%m.%Y, %H:%M:%S")
+  %hr
+  %div(class="message-content")
+    = message.message
+  %hr
+  = haml :'mailbox/form/reply_message', :locals => { :conv_id => conversation_id, :mess_id => message.message_id}
