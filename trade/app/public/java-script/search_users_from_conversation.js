@@ -2,7 +2,7 @@ $(function () {
     'use strict';
 
     $('#query').autocomplete({
-        serviceUrl:'/messagebox/users/all',
+        serviceUrl:'/messagebox/users/conv?c_id=' + our_js_cid_var,
         onSelect: function (user_name, data) {
             var user_id = data[0]
             var $hiddenInput = $('<input/>',{type:'hidden', name:"hidden"+user_id, value:user_id});

@@ -10,3 +10,5 @@
     = "From: " + System.instance.fetch_account(message.sender).name
     <br>
     = message.message
+
+= haml :'mailbox/form/reply_message', :locals => { :conv_id => conversation.conversation_id, :mess_id => nil}

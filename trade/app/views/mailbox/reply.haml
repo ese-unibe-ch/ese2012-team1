@@ -1,0 +1,26 @@
+- subs = conversation.subscribers
+- receivers = Array.new
+- subs.each { |s| receivers.push(System.instance.fetch_account(s.to_i)) if s.to_i != session[:user].to_i }
+%script(type="text/javascript")
+  = "our_js_cid_var = \"#{conversation.conversation_id}\""
+%div(class="labeled-input")
+  %form(action="/messagebox/reply/send" id="send_form" method="post")
+    - receivers.each do |receiver|
+      %input(type="hidden" name="hidden#{receiver.id}" value="#{receiver.id}")
+    %label
+      Remove Receivers (this message only:
+    %input(type="text" name="query" id="query")
+    %div(id="receivers")
+      - receivers.each do |receiver|
+        %span(id="div#{receiver.id}" class="receiver")
+          = receiver.name
+          %button(class="remove" onclick="removeReceiver(#{receiver.id})")
+            x
+    %label
+      Subject:
+    %input(type = 'text' name = 'subject')
+    = haml :'partials/alert-textarea', :locals => { :name => :message, :label => "Message: " }
+    %input(type = 'submit' value = 'send message')
+
+%script(type="text/javascript" src="/java-script/add_remove_users.js")
+%script(type="text/javascript" src="/java-script/search_users_from_conversation.js")

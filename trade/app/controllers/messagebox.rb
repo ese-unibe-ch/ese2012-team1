@@ -171,10 +171,40 @@ module Controllers
         # TODO: add description
         #
         ##
-        get '/users' do
+        get '/messagebox/users/all' do
           content_type :json
 
           before_for_user_authenticated
+
+          users = Models::System.instance.fetch_all_users_but(session[:account])
+          users.delete_if do |user|
+            !user.name.include?(params[:query])
+          end
+
+          data = users.map { |user| [user.id, user.description, user.avatar] }
+          suggestion = users.map { |user| user.name }
+
+          users = {
+              "query" => params[:query],
+              "suggestions" => suggestion,
+              "data" => data
+          }
+
+          users.to_json
+        end
+
+        ##
+        #
+        # TODO: add description
+        #
+        ##
+        get '/messagebox/users/conv' do
+          content_type :json
+
+          before_for_user_authenticated
+          conv_id = params[:c_id]
+          puts "convid"
+          puts conv_id
 
           users = Models::System.instance.fetch_all_users_but(session[:account])
           users.delete_if do |user|
