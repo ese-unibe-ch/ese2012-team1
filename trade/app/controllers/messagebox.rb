@@ -163,7 +163,9 @@ module Controllers
             #TODO ERROR
           end
 
-          haml :'mailbox/reply', :locals => { :conversation => conversation, :message_id => params[:message_id] }
+          params[:message_id].nil? ? mid = nil : mid = params[:message_id]
+
+          haml :'mailbox/reply', :locals => { :conversation => conversation, :message_id => mid }
         end
 
         ##
@@ -206,7 +208,6 @@ module Controllers
 
           conv = Messenger.instance.conversations.fetch(conv_id.to_s)
           subs = conv.subscribers
-          subs.each {|s| puts s}
 
           users = Models::System.instance.fetch_all_users_but(session[:account])
           users.delete_if do |user|
