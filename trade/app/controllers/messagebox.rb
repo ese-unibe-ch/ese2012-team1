@@ -139,6 +139,35 @@ module Controllers
 
         ##
         #
+        # Shows the form to reply to a conversation.
+        #
+        # Expects:
+        # params[conversation_id] : id of conversation
+        # params[message_id] : id of message or nil
+        #
+        ##
+
+        post '/messagebox/reply' do
+          before_for_user_authenticated
+
+          session[:navigation].get_selected.select_by_name("messagebox")
+          session[:navigation].get_selected.subnavigation.select_by_name("send message")
+
+          if params[:conversation_id] == nil
+            #TODO ERROR
+          end
+
+          conversation = Messenger.instance.conversations.fetch(params[:conversation_id].to_s)
+
+          if conversation == nil
+            #TODO ERROR
+          end
+
+          haml :'mailbox/reply', :locals => { :conversation => conversation, :message_id => params[:message_id] }
+        end
+
+        ##
+        #
         # TODO: add description
         #
         ##

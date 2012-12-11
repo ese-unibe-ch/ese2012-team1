@@ -1,0 +1,5 @@
+- mess_id == nil ? button = "Reply to Conversation" : button = "Reply to Message"
+%form(action="/messagebox/reply" method="get")
+  %input(type = 'hidden' name = 'conversation_id' value="#{conv_id}")
+  %input(type = 'hidden' name = 'message_id' value="#{mess_id}")
+  %input(type = 'submit' value="#{button}")
