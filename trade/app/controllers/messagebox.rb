@@ -203,12 +203,14 @@ module Controllers
 
           before_for_user_authenticated
           conv_id = params[:c_id]
-          puts "convid"
-          puts conv_id
+
+          conv = Messenger.instance.conversations.fetch(conv_id.to_s)
+          subs = conv.subscribers
+          subs.each {|s| puts s}
 
           users = Models::System.instance.fetch_all_users_but(session[:account])
           users.delete_if do |user|
-            !user.name.include?(params[:query])
+            !user.name.include?(params[:query]) || !subs.include?(user.id) || user.id.to_s == session[:user].to_s
           end
 
           data = users.map { |user| [user.id, user.description, user.avatar] }
