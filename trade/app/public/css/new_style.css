@@ -258,12 +258,18 @@ div#message {
 
 .entry-vertical .label {
     display: block;
-    width: 250px;
     font-weight: bold;
 }
 
 .entry-vertical .description {
     display: block;
+}
+
+.description p {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top: 2px;
+    padding-bottom: 0px;
 }
 
 div#main {

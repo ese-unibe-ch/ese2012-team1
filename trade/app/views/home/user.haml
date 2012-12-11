@@ -3,20 +3,21 @@
     %img(height=200 width=200){ :alt => Models::System.instance.fetch_account(session[:user].to_i).name, :src => Models::System.instance.fetch_account(session[:user].to_i).avatar }
 
 - user = Models::System.instance.fetch_account(session[:user])
+
+= haml :'partials/description-entry-horizontal', :locals => {:description => user.name, :label => "Currently logged in as User:" }
+
+= haml :'partials/description-entry-horizontal', :locals => {:description => user.email, :label => "Your E-mail:" }
+
+= haml :'partials/description-entry-horizontal', :locals => {:description => user.credits, :label => "Your Credits:" }
+
+%div(class="description padding-top")
+  = "You have #{user.list_active_items.size} active Items"
+
 %div(class="description")
-  = haml :'partials/description-entry-horizontal', :locals => {:description => user.name, :label => "Currently logged in as User:" }
+  = "You have #{user.list_inactive_items.size} inactive Items"
 
-  = haml :'partials/description-entry-horizontal', :locals => {:description => user.email, :label => "Your E-mail:" }
+= haml :'partials/description-entry-vertical_mkdown', :locals => {:description => user.description, :label =>   "Your Description:" }
 
-  = haml :'partials/description-entry-horizontal', :locals => {:description => user.credits, :label => "Your Credits:" }
-
-  %div(class="description")
-    = "You have #{user.list_active_items.size} active Items"
-
-  %div(class="description")
-    = "You have #{user.list_inactive_items.size} inactive Items"
-
-  = haml :'partials/description-entry-vertical_mkdown', :locals => {:description => user.description, :label =>   "Your Description:" }
-
-%a(href="/account/edit/user/profile" name="edit_user_profile")
-  Edit your profile
+%p
+  %a(href="/account/edit/user/profile" name="edit_user_profile")
+    Edit your profile
