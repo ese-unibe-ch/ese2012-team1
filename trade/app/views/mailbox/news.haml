@@ -3,8 +3,8 @@ All new messages come here!
 - Messenger.instance.get_message_box(session[:user]).travers_new_messages do |message, conversation_id|
   %h4
     = message.subject
-  = "Date: " + message.date.to_s
-  <br>
+  = "Date: " + message.date.strftime("%a %d.%m.%Y, %H:%M:%S")
+  %div
   = "From: " + System.instance.fetch_account(message.sender).name
-  <br>
+  %div(class="small-line-spacing")
   = message.message

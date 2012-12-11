@@ -1,9 +1,9 @@
 module Models
   ##
   #
-  # A WishList consists of an array of active items. A
+  # A WishList consists of an array of active items. An
   # account can add items to this whishlist to rememeber
-  # that he is interrested in this item and to find
+  # that he is interested in this item and to find
   # it faster.
   #
   # items : array of active items

@@ -52,7 +52,7 @@ module Models
     ##
     #
     # Adds an object to this timed event. If the timed event reaches the
-    # specified time this object perfroms his timed_out method
+    # specified time this object performs his timed_out method
     #
     ##
     def subscribe(object_to_time)

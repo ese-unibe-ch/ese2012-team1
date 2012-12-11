@@ -1,11 +1,12 @@
 %h1 Delete Organisation
-%br
+%div
 = "Do you really want to delete this organisation?"
-
+%div(class="small-line-spacing")
 %form(action="/organisation/delete" method="post")
   %input(type="submit" value="Delete")
+%div(class="small-line-spacing")
 = "Else hit 'cancel' to return to your organisation's home."
-
+%div(class="small-line-spacing")
 %form(action="/home" method="get")
   %input(type="submit" value="cancel")
 

@@ -4,24 +4,24 @@
 
 %form(action="/item/edit/save" enctype="multipart/form-data" method="post")
   %label= ("Name of Item: #{name}")
-  %br
+  %div(class="line-spacing")
   %label Description of Item:
-  %br
+  %div
   %textarea(name="new_description" cols=30 rows=10)
     = "#{description}"
-  %br
+  %div(class="small-line-spacing")
   %label Price:
-  %br
+  %div
   %input(type="text" name="new_price" value="#{price}")
-  %br
+  %div(class="small-line-spacing")
   %label Item Picture:
-  %br
+  %div
   %input(type="file" name="item_picture" size=50 maxlength="=100000" accept="text/*")
   %input(type="hidden" name="id" value="#{id}")
   %br
   %input(type="submit" value="Save")
 
-%br
+%div(class="line-spacing")
 - if description_list.descriptions.size > 1
   %h3 Use old description
   %table

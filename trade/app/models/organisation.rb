@@ -23,7 +23,7 @@ module Models
     #
     # Creates all hashmaps and sets no limit.
     # Creates a searchitem for the organisation
-    # and add it to the systems
+    # and adds it to the system
     #
     ##
     def initialize
@@ -155,11 +155,11 @@ module Models
     #
     # Lets a member of the org. buy an item on behalf of this
     # organisation. Transfers credits to the owner of this item
-    # and subtratcts the same amount from the organisation.
+    # and subtracts the same amount from the organisation.
     # Sets the new owner of the item to his organisation.
     #
     # Fails if the price of the item would exceed
-    # the limit of user, if the org. does't have enough money, or
+    # the limit of user, if the org. doesn't have enough money, or
     # if the item couldn't be found.
     #
     # Expects :
@@ -201,7 +201,7 @@ module Models
 
     ##
     #
-    # Checks if item can by bought by user with his
+    # Checks if item can be bought by user with his
     # current limit. Returns always true if user is
     # an admin or the limit is nil.
     #
@@ -231,7 +231,7 @@ module Models
     ##
     #
     # Sets the limit of a specific user to
-    # the disired amount.
+    # the desired amount.
     #
     # Expects :
     # user : the user whose limit is changed
@@ -245,7 +245,7 @@ module Models
 
     ##
     #
-    # Resets the limit of each user to th the organisation
+    # Resets the limit of each user to the organisation
     # limit
     #
     ##

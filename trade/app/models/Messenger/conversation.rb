@@ -45,7 +45,7 @@ class Conversation
 
   ##
   #
-  # Creates a Conversation and storing its subscribers.
+  # Creates a Conversation and stores its subscribers.
   #
   # Params:
   # subscribers : all ids of users that are subscribed to this conversation

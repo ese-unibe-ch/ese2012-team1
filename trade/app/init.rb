@@ -76,6 +76,6 @@ eseOrgItem2.to_active
 end
 
 #Send some messages
-Messenger.instance.new_message(ese.id, [userA.id, userB.id], "Hey there!", "I'm really glad your on the trading system!")
+Messenger.instance.new_message(ese.id, [userA.id, userB.id], "Hey there!", "I'm really glad you're on the trading system!")
 Messenger.instance.answer_message(userA.id, [ese.id], "Don't like userB", "What do you think about userB? I think he's selling trash...", 1, 1)
-Messenger.instance.new_message(userB.id, [ese.id], "Whats up!", "Didn't now you were interested in the trading system. Wanna trade something?")
+Messenger.instance.new_message(userB.id, [ese.id], "Whats up!", "Didn't know you were interested in the trading system. Wanna trade something?")
