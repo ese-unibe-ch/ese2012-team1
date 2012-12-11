@@ -81,8 +81,8 @@ class Conversation
 
     index = messages.size-1
     unless (message.reply_to.nil?)
-      index = @messages.find_index { |message_replied| message_replied.message_id == message.reply_to }
-      message.depth = @messages.fetch(index).depth+1
+      index_reply = @messages.find_index { |message_replied| message_replied.message_id.to_i == message.reply_to.to_i }
+      message.depth = @messages.fetch(index_reply).depth+1
     end
 
     @messages.insert(index+1, message)

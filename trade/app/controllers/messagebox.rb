@@ -156,16 +156,57 @@ module Controllers
           if params[:conversation_id] == nil
             #TODO ERROR
           end
-
           conversation = Messenger.instance.conversations.fetch(params[:conversation_id].to_s)
-
           if conversation == nil
             #TODO ERROR
           end
-
           params[:message_id].nil? ? mid = nil : mid = params[:message_id]
-
           haml :'mailbox/reply', :locals => { :conversation => conversation, :message_id => mid }
+        end
+
+        ##
+        #
+        # Shows the form to reply to a conversation.
+        #
+        # Expects:
+        # params[conversation_id] : id of conversation
+        # params[message_id] : id of message or nil
+        #
+        ##
+
+        post '/messagebox/reply/send' do
+          before_for_user_authenticated
+
+          @error[:message] = "You have to enter a message" if params[:message].nil? || params[:message].empty?
+
+          unless @error.empty?
+            halt       haml :'mailbox/send', :locals => { :receiver_id => params[:receiver_id],
+                                                          :receiver_name => params[:receiver_name], }
+          end
+
+          message = "<h1>You have send:</h1> <br><br>"
+          message += "To: "
+
+          receivers = Array.new
+          params.each do |key, user_id|
+            receivers.push(user_id.to_i) if (key.include?("hidden"))
+          end
+
+          if (receivers.size == 0)
+            session[:alert] = Alert.create("", "You have removed every receivers", true)
+            redirect back
+          end
+
+          message +=  receivers.join(",")
+          puts receivers.join(",")
+
+          message += "<br>"
+          message += "Subject: " + params[:subject] + "<br>"
+          message += "Message: " + params[:message] + "<br>"
+
+          params[:mess_id] == "" ? mess_id = nil : mess_id = params[:mess_id]
+          Messenger.instance.answer_message(session[:user], receivers, params[:subject], params[:message], params[:conv_id], mess_id)
+          message
         end
 
         ##

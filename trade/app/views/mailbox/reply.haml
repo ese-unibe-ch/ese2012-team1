@@ -11,6 +11,8 @@
 %div(class="padding-top")
 %div(class="labeled-input")
   %form(action="/messagebox/reply/send" id="send_form" method="post")
+    %input(type="hidden" name="conv_id" value="#{conversation.conversation_id}")
+    %input(type="hidden" name="mess_id" value="#{message_id}")
     - receivers.each do |receiver|
       %input(type="hidden" name="hidden#{receiver.id}" value="#{receiver.id}")
     %label
