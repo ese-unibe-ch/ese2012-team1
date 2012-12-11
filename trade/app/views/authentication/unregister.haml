@@ -1,10 +1,8 @@
 %h1 Delete Account
-%br
 %div
   You will not be able to Delete Your Account if you are an Administrator of an Organisation without other Admins.
-  %br
-  In this case, you should provide Admin Privileges to one of your Members or Delete the Organisation.
-%br
+  %p
+    In this case, you should provide Admin Privileges to one of your Members or Delete the Organisation.
 %form(action="/unregister" method="post")
   %input(type="submit" value="Delete")
 
