@@ -5,6 +5,10 @@ body {
 	color: black;
 }
 
+.items {
+    clear: both;
+}
+
 #container {
   margin: 0 auto;
   position: relative;
@@ -281,8 +285,15 @@ a {
   color:black;
 }
 
-div#main img {
+div#main #usr_img {
+    padding-top: 20px;
+    padding-right: 10px;
     float: right;
+}
+
+#usr_img img {
+    height: 200px;
+    width: 200px;
 }
 
 .countdown {
