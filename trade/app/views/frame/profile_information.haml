@@ -9,7 +9,7 @@
     - limit = current_organisation.get_limit(current_user)
     = "Logged in as: #{current_organisation.name} - Credits of Organisation: #{current_organisation.credits} " if current_organisation != nil
     = "<br />Credits you can use: #{limit} " if !is_admin && limit != nil
-  %br
+  %div
   %form(name="organisation_switch" action="/organisation/switch" method="post")
     %input(type="submit" value="Watch as")
     %select(name="account" size="1")

@@ -1,7 +1,7 @@
 %h2="Would you really leave this organisation?"
-%br
+%div
   %form(action="/organisation/leave" method="post")
     - user = user = Models::System.instance.fetch_account(session[:user])
     %input(type = 'hidden' name = 'user_email'){ :value => user.email }
     %input(type = 'submit' value = 'Confirm')
-%br
+%div

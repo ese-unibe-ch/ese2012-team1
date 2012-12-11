@@ -419,6 +419,13 @@ div.comment {
     padding-top: 20px;
 }
 
+.line-spacing {
+    padding-top: 15px;
+}
+
+.small-line-spacing{
+    padding-top: 10px;
+}
 div.search-switch {
     overflow: hidden;
     display: block;

@@ -2,7 +2,7 @@ include Models
 include Helpers
 
 ##
-# In this controller all profile edit request are handled.
+# In this controller all profile edit requests are handled.
 # There are two get- and postmethods, two to edit a user profile and
 # two to edit an organisation profile.
 ##
