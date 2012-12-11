@@ -1,15 +1,3 @@
-#usr_img
-  %a(href="#{Models::System.instance.fetch_account(params[:id].to_i).avatar}" rel="lightbox")
-    %img{ :alt => Models::System.instance.fetch_account(params[:id].to_i).name, :src => Models::System.instance.fetch_account(params[:id].to_i).avatar }
-
-%h2= "#{Models::System.instance.fetch_account(params[:id].to_i).name}'s Organisation Profile"
-
-- description = Models::System.instance.fetch_account(params[:id].to_i).description
-- description = "#{description}".size == 0 ? "*No description*" : description
-
-= haml :'partials/description-entry-vertical_mkdown', :locals => { :label => "Description:",
-                                                                  :description => description }
-
-%div(class="items")
-  %h3 Check out our Items:
-  = haml :'item/list', :locals => { :all_items => active_items, :description => true }
+= haml :'partials/profile', :locals => { :account => Models::System.instance.fetch_account(params[:id].to_i),
+                                         :user => false,
+                                         :active_items => active_items }

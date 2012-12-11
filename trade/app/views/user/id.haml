@@ -1,14 +1,4 @@
-%h2= "#{Models::System.instance.fetch_account(params[:id].to_i).name}'s Profile"
-#usr_img
-  %a(href="#{Models::System.instance.fetch_account(params[:id].to_i).avatar}" rel="lightbox")
-    %img(height=200 width=200){ :alt => Models::System.instance.fetch_account(params[:id].to_i).name, :src => Models::System.instance.fetch_account(params[:id].to_i).avatar }
-%br
-  = "Description:"
-  %br
-  = "#{Models::System.instance.fetch_account(params[:id].to_i).description}"
-%br
-%br
-%h3 Check out my Items:
-
-= haml :'item/list', :locals => { :all_items => active_items, :description => true }
+= haml :'partials/profile', :locals => { :account => Models::System.instance.fetch_account(params[:id].to_i),
+                                         :user => true,
+                                         :active_items => active_items }
 

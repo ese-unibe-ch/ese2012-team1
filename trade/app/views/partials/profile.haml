@@ -1,0 +1,18 @@
+#usr_img
+  %a(href="#{account.avatar}" rel="lightbox")
+    %img{ :alt => account.name,
+          :src => account.avatar }
+
+%h2= "#{account.name}'s #{user ? "" : "Organisation"} Profile"
+
+- description = account.description
+- description = "#{description}".size == 0 ? "*No description*" : description
+
+= haml :'partials/description-entry-vertical_mkdown', :locals => { :label => "Description:",
+                                                                  :description => description }
+
+%div(class="items")
+  %h3
+    = "Check out #{user ? "my" : "our"} Items:"
+  = haml :'item/list', :locals => { :all_items => active_items, :description => true }
+
