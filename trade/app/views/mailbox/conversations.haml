@@ -7,3 +7,8 @@
   Subscribers:
   - conversation.subscribers.each do |subscriber|
     = System.instance.fetch_account(subscriber).name
+  %br
+  Last Message:
+  - msg = conversation.get_last_message
+  = "#{msg}"
+  = haml :'mailbox/form/reply_message', :locals => { :conv_id => conversation.conversation_id, :mess_id => nil}

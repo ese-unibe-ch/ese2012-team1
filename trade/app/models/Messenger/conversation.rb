@@ -110,4 +110,35 @@ class Conversation
   def get(message_id)
     messages.detect { |message| message.message_id.to_s == message_id.to_s }
   end
+
+  ##
+  #
+  # Get content of last message
+  #
+  ##
+  def get_last_message
+    @messages.fetch(self.count_messages - 1).message
+  end
+
+  ##
+  #
+  # Check if user is subscriber of this conversation.
+  # Params: user_id_id : Integer (User ID)
+  #
+  ##
+  def has_subscriber?(user_id)
+    self.subscribers.include?(user_id.to_i)
+  end
+
+  ##
+  #
+  # Check if user is subscriber of this conversation.
+  # Params: user_id_id : Integer (Message ID)
+  #
+  ##
+  def has_message?(mess_id)
+    found = false
+    @messages.each {|m| found = true if m.message_id.to_s == mess_id.to_s}
+    return found
+  end
 end

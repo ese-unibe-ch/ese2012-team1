@@ -56,4 +56,19 @@ class Message
   def is_receiver?(user_id)
     receivers.one? { |receiver| receiver.to_s == user_id.to_s }
   end
+
+  ##
+  #
+  # Checks if a given user is the sender
+  # of this message.
+  #
+  # Params: user_id : the id of the user that shall be checked
+  #
+  ##
+
+  def is_sender?(user_id)
+    user_id.to_s == self.sender.to_s ? out = true : out = false
+    return out
+  end
+
 end
