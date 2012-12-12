@@ -147,7 +147,7 @@ module Controllers
         #
         ##
 
-        post '/messagebox/reply' do
+        get '/messagebox/reply' do
           before_for_user_authenticated
 
           session[:navigation].get_selected.select_by_name("messagebox")
