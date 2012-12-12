@@ -1,6 +1,6 @@
 #content
   %h1 Welcome to the Trading System!
-  %br
+  %div
   %h3 Preview:
   %div(id='preview')
     - for item in items_to_show
@@ -8,11 +8,11 @@
         %a(href="#{item.picture}" rel="lightbox")
           %img(class='preview_img' height=200 width=200){ :alt => "#{item.name}", :src => "#{item.picture}" }
         %div= item.name
-        %div(class='bigmargin')
+        %div(class='line-spacing')
           Description:
-          %br
+          %div
           = item.description
-        %div(class='bigmargin')
+        %div(class='line-spacing')
           Price:
-          %br
+          %div
           = item.price

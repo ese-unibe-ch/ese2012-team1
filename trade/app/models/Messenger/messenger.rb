@@ -30,10 +30,11 @@ module Models
     #
     ##
     def new_message(from, to, subject, message)
+      rec = to.clone
       subs = to.concat([from])
       conv = Conversation.create(subs)
       time = Time.new
-      message = Message.create(from, to, subject, time, message, nil)
+      message = Message.create(from, rec, subject, time, message, nil)
 
       subs.each{ |s| self.message_boxes[s.to_s].add_conversation(conv)}
       conv.add_message(message)
@@ -91,6 +92,16 @@ module Models
     ##
     def unregister(user_id)
       self.message_boxes.delete(user_id.to_s)
+    end
+
+    ##
+    #
+    # Check if conversation exists.
+    # Params: conversation_id : Integer (User ID)
+    #
+    ##
+    def has_conversation?(conv_id)
+      self.conversations.has_key?(conv_id.to_s)
     end
 
     def reset

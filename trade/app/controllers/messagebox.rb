@@ -82,7 +82,14 @@ module Controllers
           session[:navigation].get_selected.select_by_name("messagebox")
           session[:navigation].get_selected.subnavigation.select_by_name("conversations")
 
+          session[:alert] = Alert.create("No Conversation ID", "There is no Conversation ID set.", true) if params[:conversation_id] == nil || params[:conversation_id] == ""
+          redirect "/messagebox/conversations" if !session[:alert].nil?
+          session[:alert] = Alert.create("Wrong Conversation ID", "There is no Conversation with this ID.", true) if !Messenger.instance.has_conversation?(params[:conversation_id])
+          redirect "/messagebox/conversations" if !session[:alert].nil?
+
           conversation = Messenger.instance.conversations.fetch(params[:conversation_id].to_s)
+          session[:alert] = Alert.create("Not your Conversation", "You can't view a conversation if you're not a Subscriber.", true) if !conversation.has_subscriber?(session[:user])
+          redirect "/messagebox/conversations" if !session[:alert].nil?
           Messenger.instance.get_message_box(session[:user]).set_conversation_as_read(conversation.conversation_id)
 
           haml :'mailbox/conversation', :locals => { :conversation => conversation }
@@ -147,31 +154,88 @@ module Controllers
         #
         ##
 
-        post '/messagebox/reply' do
+        get '/messagebox/reply' do
           before_for_user_authenticated
 
           session[:navigation].get_selected.select_by_name("messagebox")
           session[:navigation].get_selected.subnavigation.select_by_name("send message")
 
-          if params[:conversation_id] == nil
-            #TODO ERROR
-          end
+          session[:alert] = Alert.create("No Conversation ID", "There is no Conversation ID set.", true) if params[:conversation_id] == nil || params[:conversation_id] == ""
+          redirect "/messagebox/conversations" if !session[:alert].nil?
+          session[:alert] = Alert.create("Wrong Conversation ID", "There is no Conversation with this ID.", true) if !Messenger.instance.has_conversation?(params[:conversation_id])
+          redirect "/messagebox/conversations" if !session[:alert].nil?
 
           conversation = Messenger.instance.conversations.fetch(params[:conversation_id].to_s)
+          session[:alert] = Alert.create("Not your Conversation", "You can't reply to a conversation if you're not a Subscriber.", true) if !conversation.has_subscriber?(session[:user])
+          redirect "/messagebox/conversations" if !session[:alert].nil?
 
-          if conversation == nil
-            #TODO ERROR
+          params[:message_id].nil? || params[:message_id] == "" ? mid = nil : mid = params[:message_id]
+          puts "mid = #{mid}" if !mid.nil?
+          puts "mid (nil?) = #{mid}" if mid.nil?
+
+          if !mid.nil?
+            session[:alert] = Alert.create("Wrong Message ID", "The Message you try to reply did not exist.", true) if !conversation.has_message?(mid)
+            redirect "/messagebox/conversations" if !session[:alert].nil?
+            message = conversation.get(mid)
+            session[:alert] = Alert.create("Reply yourself", "You can't reply to a message sent by yourself.", true) if message.sender.to_s == session[:user].to_s
+            redirect "/messagebox/conversations" if !session[:alert].nil?
           end
 
-          haml :'mailbox/reply', :locals => { :conversation => conversation, :message_id => params[:message_id] }
+          haml :'mailbox/reply', :locals => { :conversation => conversation, :message_id => mid }
         end
 
         ##
         #
-        # TODO: add description
+        # Shows the form to reply to a conversation.
+        #
+        # Expects:
+        # params[conversation_id] : id of conversation
+        # params[message_id] : id of message or nil
         #
         ##
-        get '/users' do
+
+        post '/messagebox/reply/send' do
+          before_for_user_authenticated
+
+          @error[:message] = "You have to enter a message" if params[:message].nil? || params[:message].empty?
+
+          unless @error.empty?
+            halt       haml :'mailbox/send', :locals => { :receiver_id => params[:receiver_id],
+                                                          :receiver_name => params[:receiver_name], }
+          end
+
+          message = "<h1>You have send:</h1> <br><br>"
+          message += "To: "
+
+          receivers = Array.new
+          params.each do |key, user_id|
+            receivers.push(user_id.to_i) if (key.include?("hidden"))
+          end
+
+          if (receivers.size == 0)
+            session[:alert] = Alert.create("", "You have removed every receivers", true)
+            redirect back
+          end
+
+          message +=  receivers.join(",")
+          puts receivers.join(",")
+
+          message += "<br>"
+          message += "Subject: " + params[:subject] + "<br>"
+          message += "Message: " + params[:message] + "<br>"
+
+          params[:mess_id] == "" ? mess_id = nil : mess_id = params[:mess_id]
+          Messenger.instance.answer_message(session[:user], receivers, params[:subject], params[:message], params[:conv_id], mess_id)
+          message
+        end
+
+        ##
+        #
+        # JSON Interface Address to get Users for new Message
+        # params[:query] : string to search in User List
+        #
+        ##
+        get '/messagebox/users/all' do
           content_type :json
 
           before_for_user_authenticated
@@ -179,6 +243,49 @@ module Controllers
           users = Models::System.instance.fetch_all_users_but(session[:account])
           users.delete_if do |user|
             !user.name.include?(params[:query])
+          end
+
+          data = users.map { |user| [user.id, user.description, user.avatar] }
+          suggestion = users.map { |user| user.name }
+
+          users = {
+              "query" => params[:query],
+              "suggestions" => suggestion,
+              "data" => data
+          }
+
+          users.to_json
+        end
+
+
+        ##
+        #
+        # JSON Interface Address to get Users for reply Message
+        # params[:c_id] : id of conversation where user is replying
+        # params[:query] : string to search in User List
+        #
+        # returns only users which are subscribers of the conversation but not the sender
+        # hit ? to see all subscribers but the sender
+        #
+        ##
+        get '/messagebox/users/conv' do
+          content_type :json
+
+          before_for_user_authenticated
+          conv_id = params[:c_id]
+
+          conv = Messenger.instance.conversations.fetch(conv_id.to_s)
+          subs = conv.subscribers
+
+          users = Models::System.instance.fetch_all_users_but(session[:account])
+          if params[:query] == "?"
+            users.delete_if do |user|
+              !subs.include?(user.id) || user.id.to_s == session[:user].to_s
+            end
+          else
+            users.delete_if do |user|
+              !user.name.include?(params[:query]) || !subs.include?(user.id) || user.id.to_s == session[:user].to_s
+            end
           end
 
           data = users.map { |user| [user.id, user.description, user.avatar] }

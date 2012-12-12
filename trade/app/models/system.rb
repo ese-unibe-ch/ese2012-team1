@@ -11,7 +11,7 @@ module Models
   # items : a hash that contains all item ids and associated item
   # item_id_count : counts how many items there are in the system
   # account_id_count : counts how many accounts there are in the system
-  # search : a search.rb object, that contains all registed accounts and items
+  # search : a search.rb object, that contains all registered accounts and items
   #
   ##
   class System

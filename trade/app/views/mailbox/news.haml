@@ -1,10 +1,10 @@
-All new messages come here!
+- messagebox = Messenger.instance.get_message_box(session[:user])
+
+- unless (messagebox.new_messages?)
+  %h2
+    No new messages
 
 - Messenger.instance.get_message_box(session[:user]).travers_new_messages do |message, conversation_id|
-  %h4
-    = message.subject
-  = "Date: " + message.date.to_s
-  <br>
-  = "From: " + System.instance.fetch_account(message.sender).name
-  <br>
-  = message.message
+  = haml :'mailbox/message', :locals => { :message => message,
+                                          :conversation_id => conversation_id,
+                                          :indention => false }

@@ -84,7 +84,7 @@ module Models
 
     ##
     #
-    # Activates a user, after this he is able log in.
+    # Activates a user, after this he is able to log in.
     #
     ##
     def activate

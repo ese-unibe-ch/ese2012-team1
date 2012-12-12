@@ -132,9 +132,9 @@ module Models
     #TODO test
     ##
     #
-    # adds a wishlist to the obeservers of this item.
+    # adds a wishlist to the observers of this item.
     #
-    # Ecxpects:
+    # Expects:
     # wish_list : has to be initialised
     #
     ##
@@ -146,7 +146,7 @@ module Models
     #TODO test
     ##
     #
-    # removes a wishlist from the obeservers of this item.
+    # removes a wishlist from the observers of this item.
     #
     # Ecxpects:
     # wish_list : has to be initialised and in
@@ -253,7 +253,7 @@ module Models
 
     ##
     #
-    # Returns is the last seen version is still up to date
+    # Returns if the last seen version is still up to date
     #
     ##
     def current_version?(seen_version)
@@ -264,7 +264,7 @@ module Models
 
     ##
     #
-    # Increases teh version counter by one
+    # Increases the version counter by one
     #
     ##
     def alter_version()

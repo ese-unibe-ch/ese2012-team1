@@ -45,7 +45,7 @@ class Conversation
 
   ##
   #
-  # Creates a Conversation and storing its subscribers.
+  # Creates a Conversation and stores its subscribers.
   #
   # Params:
   # subscribers : all ids of users that are subscribed to this conversation
@@ -81,8 +81,8 @@ class Conversation
 
     index = messages.size-1
     unless (message.reply_to.nil?)
-      index = @messages.find_index { |message_replied| message_replied.message_id == message.reply_to }
-      message.depth = @messages.fetch(index).depth+1
+      index_reply = @messages.find_index { |message_replied| message_replied.message_id.to_i == message.reply_to.to_i }
+      message.depth = @messages.fetch(index_reply).depth+1
     end
 
     @messages.insert(index+1, message)
@@ -109,5 +109,36 @@ class Conversation
 
   def get(message_id)
     messages.detect { |message| message.message_id.to_s == message_id.to_s }
+  end
+
+  ##
+  #
+  # Get content of last message
+  #
+  ##
+  def get_last_message
+    @messages.fetch(self.count_messages - 1).message
+  end
+
+  ##
+  #
+  # Check if user is subscriber of this conversation.
+  # Params: user_id_id : Integer (User ID)
+  #
+  ##
+  def has_subscriber?(user_id)
+    self.subscribers.include?(user_id.to_i)
+  end
+
+  ##
+  #
+  # Check if user is subscriber of this conversation.
+  # Params: user_id_id : Integer (Message ID)
+  #
+  ##
+  def has_message?(mess_id)
+    found = false
+    @messages.each {|m| found = true if m.message_id.to_s == mess_id.to_s}
+    return found
   end
 end

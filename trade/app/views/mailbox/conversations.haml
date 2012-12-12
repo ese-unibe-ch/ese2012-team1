@@ -1,5 +1,3 @@
-A possiblity to select a conversation of the user comes here!
-
 - messagebox = Messenger.instance.get_message_box(session[:user])
 
 - messagebox.conversations.each do |conversation_id, conversation|
@@ -9,3 +7,8 @@ A possiblity to select a conversation of the user comes here!
   Subscribers:
   - conversation.subscribers.each do |subscriber|
     = System.instance.fetch_account(subscriber).name
+  %br
+  Last Message:
+  - msg = conversation.get_last_message
+  = "#{msg}"
+  = haml :'mailbox/form/reply_message', :locals => { :conv_id => conversation.conversation_id, :mess_id => nil}

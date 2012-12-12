@@ -3,11 +3,11 @@
 
 %form(enctype="text/form-data" method="post"){:action => "/item/add/comment/#{item.id}"}
   %label Title:
-  %br
+  %div
   %input(type="text" name="header" id="header"){:value => "Re: #{item.get(comment_nr).header}"}
-  %br
+  %div
   %label Comment:
-  %br
+  %div
   %textarea(name="comment" cols=30 rows=10)
     = session[:form_comment].to_s
   %input(type="hidden" name="comment_nr"){:value => comment_nr}

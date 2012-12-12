@@ -2,13 +2,12 @@
 %h3= "#{Models::System.instance.fetch_user_by_email(member).name}'s Profile"
 #usr_img
   %img(height=200 width=200){ :alt => Models::System.instance.fetch_user_by_email(member).name, :src => Models::System.instance.fetch_user_by_email(member).avatar }
-%br
+%div
   = "Description:"
-  %br
+  %div
   = "#{Models::System.instance.fetch_user_by_email(member).description}"
-%br
-%br
+%div(class="padding-top")
   %form(action="/organisation/member/confirm" method="post")
     %input(type = 'hidden' name = 'member'){ :value => member }
     %input(type = 'submit' value = 'Confirm')
-%br
+%div
