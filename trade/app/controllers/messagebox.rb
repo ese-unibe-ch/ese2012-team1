@@ -82,7 +82,14 @@ module Controllers
           session[:navigation].get_selected.select_by_name("messagebox")
           session[:navigation].get_selected.subnavigation.select_by_name("conversations")
 
+          session[:alert] = Alert.create("No Conversation ID", "There is no Conversation ID set.", true) if params[:conversation_id] == nil || params[:conversation_id] == ""
+          redirect "/messagebox/conversations" if !session[:alert].nil?
+          session[:alert] = Alert.create("Wrong Conversation ID", "There is no Conversation with this ID.", true) if !Messenger.instance.has_conversation?(params[:conversation_id])
+          redirect "/messagebox/conversations" if !session[:alert].nil?
+
           conversation = Messenger.instance.conversations.fetch(params[:conversation_id].to_s)
+          session[:alert] = Alert.create("Not your Conversation", "You can't view a conversation if you're not a Subscriber.", true) if !conversation.has_subscriber?(session[:user])
+          redirect "/messagebox/conversations" if !session[:alert].nil?
           Messenger.instance.get_message_box(session[:user]).set_conversation_as_read(conversation.conversation_id)
 
           haml :'mailbox/conversation', :locals => { :conversation => conversation }
@@ -153,14 +160,24 @@ module Controllers
           session[:navigation].get_selected.select_by_name("messagebox")
           session[:navigation].get_selected.subnavigation.select_by_name("send message")
 
-          if params[:conversation_id] == nil
-            #TODO ERROR
-          end
+          session[:alert] = Alert.create("No Conversation ID", "There is no Conversation ID set.", true) if params[:conversation_id] == nil || params[:conversation_id] == ""
+          redirect "/messagebox/conversations" if !session[:alert].nil?
+          session[:alert] = Alert.create("Wrong Conversation ID", "There is no Conversation with this ID.", true) if !Messenger.instance.has_conversation?(params[:conversation_id])
+          redirect "/messagebox/conversations" if !session[:alert].nil?
+
           conversation = Messenger.instance.conversations.fetch(params[:conversation_id].to_s)
-          if conversation == nil
-            #TODO ERROR
+          session[:alert] = Alert.create("Not your Conversation", "You can't reply to a conversation if you're not a Subscriber.", true) if !conversation.has_subscriber?(session[:user])
+          redirect "/messagebox/conversations" if !session[:alert].nil?
+
+          params[:message_id].nil? || params[:message_id] == "" ? mid = nil : mid = params[:message_id]
+          puts "mid = #{mid}" if !mid.nil?
+          puts "mid (nil?) = #{mid}" if mid.nil?
+
+          if !mid.nil?
+            session[:alert] = Alert.create("Wrong Message ID", "The Message you try to reply did not exist.", true) if !conversation.has_message?(mid)
+            redirect "/messagebox/conversations" if !session[:alert].nil?
           end
-          params[:message_id].nil? ? mid = nil : mid = params[:message_id]
+
           haml :'mailbox/reply', :locals => { :conversation => conversation, :message_id => mid }
         end
 

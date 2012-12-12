@@ -119,4 +119,25 @@ class Conversation
   def get_last_message
     @messages.fetch(self.count_messages - 1).message
   end
+
+  ##
+  #
+  # Check if user is subscriber of this conversation.
+  # Params: user_id_id : Integer (User ID)
+  #
+  ##
+  def has_subscriber?(user_id)
+    self.subscribers.include?(user_id.to_i)
+  end
+
+  ##
+  #
+  # Check if user is subscriber of this conversation.
+  # Params: user_id_id : Integer (Message ID)
+  #
+  ##
+  def has_message?(mess_id)
+    index = @messages.find_index { |m| m.message_id.to_i == mess_id.to_i }
+    self.messages[index].message_id.to_s == mess_id.to_s
+  end
 end

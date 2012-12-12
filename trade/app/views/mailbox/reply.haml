@@ -1,7 +1,7 @@
 - subs = conversation.subscribers
 - receivers = Array.new
 - subs.each { |s| receivers.push(System.instance.fetch_account(s.to_i)) if s.to_i != session[:user].to_i }
-- message_id == "" ? title = "Conversation: #{conversation.title}" : title = "Message: #{conversation.get(message_id).subject}"
+- message_id == "" || message_id.nil? ? title = "Conversation: #{conversation.title}" : title = "Message: #{conversation.get(message_id).subject}"
 
 %h2 Reply to:
 = title

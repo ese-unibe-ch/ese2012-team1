@@ -94,6 +94,16 @@ module Models
       self.message_boxes.delete(user_id.to_s)
     end
 
+    ##
+    #
+    # Check if conversation exists.
+    # Params: conversation_id : Integer (User ID)
+    #
+    ##
+    def has_conversation?(conv_id)
+      self.conversations.has_key?(conv_id.to_s)
+    end
+
     def reset
       self.message_boxes = Hash.new
       self.conversations = Hash.new
