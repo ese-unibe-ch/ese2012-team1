@@ -211,7 +211,8 @@ module Controllers
 
         ##
         #
-        # TODO: add description
+        # JSON Interface Address to get Users for new Message
+        # params[:query] : string to search in User List
         #
         ##
         get '/messagebox/users/all' do
@@ -236,9 +237,15 @@ module Controllers
           users.to_json
         end
 
+
         ##
         #
-        # TODO: add description
+        # JSON Interface Address to get Users for reply Message
+        # params[:c_id] : id of conversation where user is replying
+        # params[:query] : string to search in User List
+        #
+        # returns only users which are subscribers of the conversation but not the sender
+        # hit ? to see all subscribers but the sender
         #
         ##
         get '/messagebox/users/conv' do
