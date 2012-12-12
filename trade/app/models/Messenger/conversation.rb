@@ -110,4 +110,13 @@ class Conversation
   def get(message_id)
     messages.detect { |message| message.message_id.to_s == message_id.to_s }
   end
+
+  ##
+  #
+  # Get content of last message
+  #
+  ##
+  def get_last_message
+    @messages.fetch(self.count_messages - 1).message
+  end
 end
