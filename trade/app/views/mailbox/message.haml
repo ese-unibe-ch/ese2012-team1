@@ -1,4 +1,4 @@
-- indention = defined? indention ? indention : false
+- indention = !indention.nil? ? indention : false
 
 - style = indention ? { :style => "margin-left:#{20*message.depth}px"} : {}
 - style = { :class => message.sender == session[:user] ? "messagebox-message-user" : "messagebox-message" }.merge!(style)
