@@ -137,7 +137,8 @@ class Conversation
   #
   ##
   def has_message?(mess_id)
-    index = @messages.find_index { |m| m.message_id.to_i == mess_id.to_i }
-    self.messages[index].message_id.to_s == mess_id.to_s
+    found = false
+    @messages.each {|m| found = true if m.message_id.to_s == mess_id.to_s}
+    return found
   end
 end
