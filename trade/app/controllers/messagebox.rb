@@ -251,8 +251,14 @@ module Controllers
           subs = conv.subscribers
 
           users = Models::System.instance.fetch_all_users_but(session[:account])
-          users.delete_if do |user|
-            !user.name.include?(params[:query]) || !subs.include?(user.id) || user.id.to_s == session[:user].to_s
+          if params[:query] == "?"
+            users.delete_if do |user|
+              !subs.include?(user.id) || user.id.to_s == session[:user].to_s
+            end
+          else
+            users.delete_if do |user|
+              !user.name.include?(params[:query]) || !subs.include?(user.id) || user.id.to_s == session[:user].to_s
+            end
           end
 
           data = users.map { |user| [user.id, user.description, user.avatar] }
