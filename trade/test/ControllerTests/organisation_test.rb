@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'require_relative'
+require '../../app/require'
 require 'test/unit'
 require 'helper'
 require 'rack/test'

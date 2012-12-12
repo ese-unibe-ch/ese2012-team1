@@ -160,7 +160,7 @@ module Controllers
       Mailer.setup.sendRegMail(user.id, address)
       session[:alert] = Alert.create("Your registration was successful!", "Now you have to activate your account by clicking on the link in the mail we sent you.", false)
 
-      haml :'authentication/login'
+      redirect "/login"
     end
 
 
@@ -220,7 +220,7 @@ module Controllers
       user.clear
       session.clear
 
-      redirect '/unauthenticate'
+      redirect '/'
     end
   end
 end

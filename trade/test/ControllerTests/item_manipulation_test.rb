@@ -66,7 +66,7 @@ class ItemManipulationTest < Test::Unit::TestCase
     end
 
     it 'post /item/changestate/setactive with date dd.mm.yyyy hh:mm should set an item active' do
-      date= (Time.now+1).strftime("%d.%m.%Y %H:%M")
+      date= (Time.now + 2*60000).strftime("%d.%m.%Y %H:%M")
 
       user = @users[:bart]
       item = user.create_item('stone', 20)
