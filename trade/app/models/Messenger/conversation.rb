@@ -113,11 +113,11 @@ class Conversation
 
   ##
   #
-  # Get content of last message
+  # Get the last message
   #
   ##
   def get_last_message
-    @messages.fetch(self.count_messages - 1).message
+    @messages.fetch(self.count_messages - 1)
   end
 
   ##
