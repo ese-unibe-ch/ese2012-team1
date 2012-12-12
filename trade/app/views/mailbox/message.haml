@@ -24,4 +24,5 @@
   %div(class="message-content")
     = message.message
   %hr
-  = haml :'mailbox/form/reply_message', :locals => { :conv_id => conversation_id, :mess_id => message.message_id}
+  - if message.sender.to_s != session[:user].to_s
+    = haml :'mailbox/form/reply_message', :locals => { :conv_id => conversation_id, :mess_id => message.message_id}

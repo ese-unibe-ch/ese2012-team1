@@ -176,6 +176,9 @@ module Controllers
           if !mid.nil?
             session[:alert] = Alert.create("Wrong Message ID", "The Message you try to reply did not exist.", true) if !conversation.has_message?(mid)
             redirect "/messagebox/conversations" if !session[:alert].nil?
+            message = conversation.get(mid)
+            session[:alert] = Alert.create("Reply yourself", "You can't reply to a message sent by yourself.", true) if message.sender.to_s == session[:user].to_s
+            redirect "/messagebox/conversations" if !session[:alert].nil?
           end
 
           haml :'mailbox/reply', :locals => { :conversation => conversation, :message_id => mid }
