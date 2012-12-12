@@ -544,7 +544,7 @@ hr {
 }
 
 .messagebox-message-user hr {
-    background: yellow;
+    background: #ffff00;
 }
 
 .messagebox-message-user {
