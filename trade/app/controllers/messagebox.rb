@@ -82,14 +82,12 @@ module Controllers
           session[:navigation][:selected]  = "messagebox"
           session[:navigation][:subnavigation] = "conversations"
 
-          session[:alert] = Alert.create("No Conversation ID", "There is no Conversation ID set.", true) if params[:conversation_id] == nil || params[:conversation_id] == ""
-          redirect "/messagebox/conversations" if !session[:alert].nil?
-          session[:alert] = Alert.create("Wrong Conversation ID", "There is no Conversation with this ID.", true) if !Messenger.instance.has_conversation?(params[:conversation_id])
-          redirect "/messagebox/conversations" if !session[:alert].nil?
+          error_redirect("No Conversation ID", "There is no Conversation ID set.", params[:conversation_id] == nil || params[:conversation_id] == "", "/messagebox/conversations")
+          error_redirect("Wrong Conversation ID", "There is no Conversation with this ID.", !Messenger.instance.has_conversation?(params[:conversation_id]), "/messagebox/conversations")
 
           conversation = Messenger.instance.conversations.fetch(params[:conversation_id].to_s)
-          session[:alert] = Alert.create("Not your Conversation", "You can't view a conversation if you're not a Subscriber.", true) if !conversation.has_subscriber?(session[:user])
-          redirect "/messagebox/conversations" if !session[:alert].nil?
+          error_redirect("Not your Conversation", "You can't view a conversation if you're not a Subscriber.", !conversation.has_subscriber?(session[:user]), "/messagebox/conversations")
+
           Messenger.instance.get_message_box(session[:user]).set_conversation_as_read(conversation.conversation_id)
 
           haml :'mailbox/conversation', :locals => { :conversation => conversation }
@@ -118,10 +116,6 @@ module Controllers
                                                                 :receiver_name => params[:receiver_name], }
           end
 
-          message = "<h1>You have send:</h1> <br><br>"
-
-          message += "To: "
-
           receivers = Array.new
           params.each do |key, user_id|
             receivers.push(user_id.to_i) if (key.include?("hidden"))
@@ -132,16 +126,10 @@ module Controllers
             redirect '/messagebox/send'
           end
 
-          message +=  receivers.join(",")
-          puts receivers.join(",")
-
-          message += "<br>"
-          message += "Subject: " + params[:subject] + "<br>"
-          message += "Message: " + params[:message] + "<br>"
-
           Messenger.instance.new_message(session[:user], receivers, params[:subject], params[:message])
-          #TODO: Why is the message returned?
-          message
+
+          session[:alert] = Alert.create("", "Your message has been sent", false)
+          redirect '/messagebox/conversations'
         end
 
         ##
@@ -160,26 +148,18 @@ module Controllers
           session[:navigation][:selected]  = "messagebox"
           session[:navigation][:subnavigation] = "send message"
 
-          session[:alert] = Alert.create("No Conversation ID", "There is no Conversation ID set.", true) if params[:conversation_id] == nil || params[:conversation_id] == ""
-          redirect "/messagebox/conversations" if !session[:alert].nil?
-          #session[:alert] = Alert.create("Wrong Conversation ID", "There is no Conversation with this ID.", true) if !Messenger.instance.has_conversation?(params[:conversation_id])
-          #redirect "/messagebox/conversations" if !session[:alert].nil?
+          error_redirect("No Conversation ID", "There is no Conversation ID set.", params[:conversation_id] == nil || params[:conversation_id] == "", "/messagebox/conversations")
           error_redirect("Wrong Conversation ID", "There is no Conversation with this ID.", !Messenger.instance.has_conversation?(params[:conversation_id]), "/messagebox/conversations")
 
           conversation = Messenger.instance.conversations.fetch(params[:conversation_id].to_s)
-          session[:alert] = Alert.create("Not your Conversation", "You can't reply to a conversation if you're not a Subscriber.", true) if !conversation.has_subscriber?(session[:user])
-          redirect "/messagebox/conversations" if !session[:alert].nil?
+          error_redirect("Not your Conversation", "You can't reply to a conversation if you're not a Subscriber.", !conversation.has_subscriber?(session[:user]), "/messagebox/conversations")
 
           params[:message_id].nil? || params[:message_id] == "" ? mid = nil : mid = params[:message_id]
-          puts "mid = #{mid}" if !mid.nil?
-          puts "mid (nil?) = #{mid}" if mid.nil?
 
           if !mid.nil?
-            session[:alert] = Alert.create("Wrong Message ID", "The Message you try to reply did not exist.", true) if !conversation.has_message?(mid)
-            redirect "/messagebox/conversations" if !session[:alert].nil?
+            error_redirect("Wrong Message ID", "The Message you try to reply did not exist.", !conversation.has_message?(mid), "/messagebox/conversations")
             message = conversation.get(mid)
-            session[:alert] = Alert.create("Reply yourself", "You can't reply to a message sent by yourself.", true) if message.sender.to_s == session[:user].to_s
-            redirect "/messagebox/conversations" if !session[:alert].nil?
+            error_redirect("Reply yourself", "You can't reply to a message sent by yourself.", message.sender.to_s == session[:user].to_s, "/messagebox/conversations")
           end
 
           haml :'mailbox/reply', :locals => { :conversation => conversation, :message_id => mid }
@@ -195,18 +175,15 @@ module Controllers
         #
         ##
 
-        post '/messagebox/reply/send' do
+        post '/messagebox/reply' do
           before_for_user_authenticated
 
           @error[:message] = "You have to enter a message" if params[:message].nil? || params[:message].empty?
 
           unless @error.empty?
-            halt       haml :'mailbox/send', :locals => { :receiver_id => params[:receiver_id],
+            halt       haml :'mailbox/reply', :locals => { :receiver_id => params[:receiver_id],
                                                           :receiver_name => params[:receiver_name], }
           end
-
-          message = "<h1>You have send:</h1> <br><br>"
-          message += "To: "
 
           receivers = Array.new
           params.each do |key, user_id|
@@ -218,19 +195,11 @@ module Controllers
             redirect back
           end
 
-          message +=  receivers.join(",")
-          puts receivers.join(",")
-
-          message += "<br>"
-          message += "Subject: " + params[:subject] + "<br>"
-          message += "Message: " + params[:message] + "<br>"
-
           params[:mess_id] == "" ? mess_id = nil : mess_id = params[:mess_id]
           Messenger.instance.answer_message(session[:user], receivers, params[:subject], params[:message], params[:conv_id], mess_id)
+
           session[:alert] = Alert.create("", "Your message has been sent", false)
           redirect '/messagebox/conversations'
-          #TODO: Why is message returned?
-          message
         end
 
         ##

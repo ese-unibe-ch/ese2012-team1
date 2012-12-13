@@ -14,12 +14,12 @@
 %script(type="text/javascript")
   = "our_js_cid_var = \"#{conversation.conversation_id}\""
 %div(class="labeled-input padding-top")
-  %form(action="/messagebox/reply/send" id="send_form" method="post")
+  %form(action="/messagebox/reply" id="send_form" method="post")
     %input(type="hidden" name="conv_id" value="#{conversation.conversation_id}")
     %input(type="hidden" name="mess_id" value="#{message_id}")
     - receivers.each do |receiver|
       %input(type="hidden" id="hidden#{receiver.id}" name="hidden#{receiver.id}" value="#{receiver.id}")
-    %label(title="Use \"?\" to show all possible recipients.")
+    %label(title="Use &quot;?&quot; to show all possible recipients.")
       Remove Receivers (this message only):
     %input(type="text" name="query" id="query")
     %div(id="receivers")
