@@ -1,15 +1,19 @@
 - subs = conversation.subscribers
 - receivers = Array.new
 - subs.each { |s| receivers.push(System.instance.fetch_account(s.to_i)) if s.to_i != session[:user].to_i }
-- message_id == "" || message_id.nil? ? title = "Conversation: #{conversation.title}" : title = "Message: #{conversation.get(message_id).subject}"
 
 %h2 Reply to:
-= title
-%div
+
+- if message_id.nil? || message_id == ""
+  = "Conversation: #{conversation.title}"
+- else
+  = haml :'mailbox/message', :locals => { :message => conversation.get(message_id),
+                                          :conversation_id => conversation.conversation_id,
+                                          :short => true }
+
 %script(type="text/javascript")
   = "our_js_cid_var = \"#{conversation.conversation_id}\""
-%div(class="padding-top")
-%div(class="labeled-input")
+%div(class="labeled-input padding-top")
   %form(action="/messagebox/reply/send" id="send_form" method="post")
     %input(type="hidden" name="conv_id" value="#{conversation.conversation_id}")
     %input(type="hidden" name="mess_id" value="#{message_id}")
