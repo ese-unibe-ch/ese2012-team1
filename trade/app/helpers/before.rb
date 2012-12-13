@@ -50,7 +50,8 @@ module Helpers
     response.headers['Cache-Control'] = 'public, max-age=0'
 
     if (session[:navigation].nil?)
-      session[:navigation] = Navigations.new.build
+      Navigations.instance.build
+      session[:navigation] = Hash.new
     end
   end
 end

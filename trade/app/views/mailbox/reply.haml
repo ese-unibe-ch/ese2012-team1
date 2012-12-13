@@ -14,7 +14,7 @@
     %input(type="hidden" name="conv_id" value="#{conversation.conversation_id}")
     %input(type="hidden" name="mess_id" value="#{message_id}")
     - receivers.each do |receiver|
-      %input(type="hidden" name="hidden#{receiver.id}" value="#{receiver.id}")
+      %input(type="hidden" id="hidden#{receiver.id}" name="hidden#{receiver.id}" value="#{receiver.id}")
     %label
       Remove Receivers (this message only):
     %input(type="text" name="query" id="query")

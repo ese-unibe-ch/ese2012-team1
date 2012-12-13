@@ -38,8 +38,8 @@ module Controllers
     #
     ##
     get '/users/all' do
-        session[:navigation].get_selected.select_by_name("community")
-        session[:navigation].get_selected.subnavigation.select_by_name("users")
+        session[:navigation][:selected]  = "community"
+        session[:navigation][:subnavigation] = "users"
 
         haml :'user/all', :locals => {:all_users => Models::System.instance.fetch_all_users_but(session[:account])}
     end

@@ -62,8 +62,8 @@ module Controllers
     #
     ##
     get '/items/my/all' do
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("items")
+      session[:navigation][:selected]  = "home"
+      session[:navigation][:subnavigation]  = "items"
 
       account = Models::System.instance.fetch_account(session[:account])
 
@@ -80,8 +80,8 @@ module Controllers
     #
     ##
     get '/items/my/wishlist' do
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("wishlist")
+      session[:navigation][:selected]  = "home"
+      session[:navigation][:subnavigation] = "wishlist"
 
       account = Models::System.instance.fetch_account(session[:account])
 
@@ -96,8 +96,8 @@ module Controllers
     #
     ##
     get '/item/create' do
-       session[:navigation].get_selected.select_by_name("market")
-       session[:navigation].get_selected.subnavigation.select_by_name("create item")
+       session[:navigation][:selected]  = "market"
+       session[:navigation][:subnavigation] = "create item"
 
        haml :'item/create'
     end
@@ -112,8 +112,8 @@ module Controllers
     #
     ##
     get '/items/active' do
-        session[:navigation].get_selected.select_by_name("market")
-        session[:navigation].get_selected.subnavigation.select_by_name("on sale")
+        session[:navigation][:selected] = "market"
+        session[:navigation][:subnavigation] = "on sale"
 
         viewer_id = session[:account]
         haml :'item/active', :locals => {:all_items => Models::System.instance.fetch_all_active_items_but_of(viewer_id)}

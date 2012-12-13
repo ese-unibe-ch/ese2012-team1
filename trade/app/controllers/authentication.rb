@@ -28,8 +28,8 @@ module Controllers
 
       redirect '/home' if session[:auth]
 
-      session[:navigation].select(:unregistered)
-      session[:navigation].get_selected.select_by_name("login")
+      session[:navigation][:context] = :unregistered
+      session[:navigation][:selected] = "login"
       haml :'authentication/login', :locals => { :onload => 'document.loginform.username.focus()' }
     end
 

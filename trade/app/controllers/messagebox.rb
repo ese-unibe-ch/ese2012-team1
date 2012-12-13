@@ -24,8 +24,8 @@ module Controllers
         get '/messagebox/send' do
           before_for_user_authenticated
 
-          session[:navigation].get_selected.select_by_name("messagebox")
-          session[:navigation].get_selected.subnavigation.select_by_name("send message")
+          session[:navigation][:selected]  = "messagebox"
+          session[:navigation][:subnavigation]  =  "send message"
 
           receivers = []
           unless (params[:receivers].nil?)
@@ -44,8 +44,8 @@ module Controllers
         get '/messagebox/news' do
           before_for_user_authenticated
 
-          session[:navigation].get_selected.select_by_name("messagebox")
-          session[:navigation].get_selected.subnavigation.select_by_name("news")
+          session[:navigation][:selected]  = "messagebox"
+          session[:navigation][:subnavigation]  = "news"
 
           #TODO!
           haml :'mailbox/news'
@@ -60,8 +60,8 @@ module Controllers
         get '/messagebox/conversations' do
           before_for_user_authenticated
 
-          session[:navigation].get_selected.select_by_name("messagebox")
-          session[:navigation].get_selected.subnavigation.select_by_name("conversations")
+          session[:navigation][:selected]  = "messagebox"
+          session[:navigation][:subnavigation]  = "conversations"
 
           #TODO!
           haml :'mailbox/conversations'
@@ -79,8 +79,8 @@ module Controllers
         get '/messagebox/conversation' do
           before_for_user_authenticated
 
-          session[:navigation].get_selected.select_by_name("messagebox")
-          session[:navigation].get_selected.subnavigation.select_by_name("conversations")
+          session[:navigation][:selected]  = "messagebox"
+          session[:navigation][:subnavigation] = "conversations"
 
           session[:alert] = Alert.create("No Conversation ID", "There is no Conversation ID set.", true) if params[:conversation_id] == nil || params[:conversation_id] == ""
           redirect "/messagebox/conversations" if !session[:alert].nil?
@@ -157,8 +157,8 @@ module Controllers
         get '/messagebox/reply' do
           before_for_user_authenticated
 
-          session[:navigation].get_selected.select_by_name("messagebox")
-          session[:navigation].get_selected.subnavigation.select_by_name("send message")
+          session[:navigation][:selected]  = "messagebox"
+          session[:navigation][:subnavigation] = "send message"
 
           session[:alert] = Alert.create("No Conversation ID", "There is no Conversation ID set.", true) if params[:conversation_id] == nil || params[:conversation_id] == ""
           redirect "/messagebox/conversations" if !session[:alert].nil?

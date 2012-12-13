@@ -122,8 +122,8 @@ module Controllers
     #
     ##
     get '/organisations/self' do
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("organisations")
+      session[:navigation][:selected]  = "home"
+      session[:navigation][:subnavigation] = "organisations"
 
       user = Models::System.instance.fetch_account(session[:user])
       haml :'organisation/self', :locals => { :all_organisations => Models::System.instance.fetch_organisations_of(user.id) }
@@ -140,8 +140,8 @@ module Controllers
     #
     ##
     get '/organisation/members' do
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("members")
+      session[:navigation][:selected]  = "home"
+      session[:navigation][:subnavigation] = "members"
 
       organisation = Models::System.instance.fetch_account(session[:account])
       admin_view = organisation.is_admin?(Models::System.instance.fetch_account(session[:user]))
@@ -159,8 +159,8 @@ module Controllers
     #
     ##
     get '/organisations/all' do
-      session[:navigation].get_selected.select_by_name("community")
-      session[:navigation].get_selected.subnavigation.select_by_name("organisations")
+      session[:navigation][:selected]  = "community"
+      session[:navigation][:subnavigation] = "organisations"
 
       organisation = session[:account]
       haml :'organisation/all', :locals => { :all_organisations => Models::System.instance.fetch_organisations_but(organisation) }

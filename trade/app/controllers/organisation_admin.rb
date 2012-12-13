@@ -35,8 +35,8 @@ module Controllers
     #
     ##
     get '/organisation/add/member' do
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("add member")
+      session[:navigation][:selected]  = "home"
+      session[:navigation][:subnavigation] = "add member"
 
       haml :'organisation/add_member'
     end

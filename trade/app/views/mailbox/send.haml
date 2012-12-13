@@ -1,7 +1,7 @@
 %div(class="labeled-input")
   %form(action="/messagebox/send" id="send_form" method="post")
     - receivers.each do |receiver|
-      %input(type="hidden" name="hidden#{receiver.id}" value="#{receiver.id}")
+      %input(type="hidden" id="hidden#{receiver.id}" name="hidden#{receiver.id}" value="#{receiver.id}")
     %label
       Choose User:
     %input(type="text" name="query" id="query")

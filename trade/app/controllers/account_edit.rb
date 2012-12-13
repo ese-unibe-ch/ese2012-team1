@@ -24,8 +24,8 @@ module Controllers
 
     get '/account/edit/user/profile' do
       before_for_user_authenticated
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("edit profile")
+      session[:navigation][:selected]  = "home"
+      session[:navigation][:subnavigation]  = "edit profile"
 
       haml :'user/edit_profile', :locals => {:script => 'passwordchecker.js', :onload => 'initialize()'}
     end
@@ -108,8 +108,8 @@ module Controllers
     get '/account/edit/organisation/profile' do
       before_for_admin
 
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("edit organisation")
+      session[:navigation][:selected]  = "home"
+      session[:navigation][:subnavigation]  = "edit organisation"
 
       haml :'organisation/edit'
     end

@@ -60,8 +60,8 @@ module Controllers
 
       new_item.add_picture("/images/items/#{new_item.id}#{file_extension}")
 
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("items")
+      session[:navigation][:selected]  = "home"
+      session[:navigation][:subnavigation]  = "items"
 
       session[:alert] = Alert.create("Success!", "You created a new item: #{new_item.name.create_link(new_item.id)}", false)
       redirect "/items/my/all"

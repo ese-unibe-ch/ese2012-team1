@@ -6,12 +6,6 @@ class Navigation
     self.selected = 1
   end
 
-  def self.create(name, direct_to)
-    fail "Can't have same name twice" if navigation.member?(name)
-
-    self.navigation.push({:name => name, :direct_to => direct_to, :subnavigation => Navigation.new})
-  end
-
   def add_navigation(name, direct_to)
     fail "Can't have same name twice" if navigation.member?(name)
 
@@ -70,14 +64,29 @@ class Navigation
 
   # travers do |name, direct_to, index, selected
 
-  def travers
+  def travers(selected)
+    selected = convert_to_number(selected) unless selected.to_s.is_positive_integer?
+
     self.navigation.each_with_index do |navigations, index|
-      yield navigations[:name], self.direct_to_by_index(index+1), index+1, (self.selected == index)
+      yield navigations[:name], self.direct_to_by_index(index+1), index+1, (selected == index)
     end
   end
 
-  def travers_subnavigation
-    self.navigation[self.selected][:subnavigation].travers do |name, direct_to, index, selected|
+  def convert_to_number(selected)
+    index = self.navigation.index {|navi| navi[:name] == selected }
+
+    fail "#{selected} is no navigation point" if (index.nil?)
+
+    puts index;
+    index
+  end
+
+  def travers_subnavigation(selected)
+    selected = convert_to_number(selected) unless selected.to_s.is_positive_integer?
+
+    puts selected
+
+    self.navigation[selected][:subnavigation].travers(selected) do |name, direct_to, index, selected|
       yield name, direct_to, index, selected
     end
   end

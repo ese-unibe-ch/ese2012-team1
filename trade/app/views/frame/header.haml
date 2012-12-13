@@ -1,8 +1,6 @@
 %div(id='header')
   %img(alt = "Logo" id="header-logo" src = "/images/logo/TradingSystem.png")
-  - id = "none"
-  - id = "switch" if my_arguments[:auth] == "yes"
-  - if my_arguments[:auth] == "yes"
-    = render_file_with_argument('frame/navigation_registered.haml', { :navigation => my_arguments[:navigation] })
+  - if session[:auth]
+    = haml :'frame/navigation_registered', :locals => { :navigation => navigation }
   - else
-    = render_file_with_argument('frame/navigation_unregistered.haml', { :navigation => my_arguments[:navigation] })
+    = haml :'frame/navigation_unregistered', :locals => { :navigation => navigation }

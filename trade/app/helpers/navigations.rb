@@ -3,7 +3,11 @@ require 'nokogiri'
 
 require_relative "../helpers/render"
 
+require 'singleton'
+
 class Navigations
+  include Singleton
+
   attr_accessor :navigations, :selected
 
   def initialize
@@ -55,23 +59,11 @@ class Navigations
     self
   end
 
-  def select(name_of_navigation)
-    self.selected = self.navigations[name_of_navigation]
-  end
-
   def get
     self.navigations
   end
 
-  def get_selected
-    self.selected
-  end
-
-  def user
-    self.navigations[:user]
-  end
-
-  def unregistered
-    self.navigations[:unregistered]
+  def get(context)
+    self.navigations[context]
   end
 end
