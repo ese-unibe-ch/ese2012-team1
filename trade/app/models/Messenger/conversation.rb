@@ -79,10 +79,21 @@ class Conversation
     fail "Message needs id" unless message.respond_to?(:id)
     fail "Message should respond to reply_to" unless message.respond_to?(:reply_to)
 
-    index = messages.size-1
+    index = @messages.size-1
     unless (message.reply_to.nil?)
-      index_reply = @messages.find_index { |message_replied| message_replied.message_id.to_i == message.reply_to.to_i }
-      message.depth = @messages.fetch(index_reply).depth+1
+      index = @messages.find_index { |message_replied| message_replied.message_id.to_i == message.reply_to.to_i }
+      message.depth = @messages.fetch(index).depth+1
+
+      count = 0
+
+      found = @messages[index+1..@messages.size-1].find do |last_message|
+        puts last_message.message
+        result = last_message.depth < message.depth
+        count += 1
+        result
+      end
+
+      index += count - (found.nil? ? 0 : 1)
     end
 
     @messages.insert(index+1, message)
