@@ -111,13 +111,14 @@ module Controllers
 
           @error[:message] = "You have to enter a message" if params[:message].nil? || params[:message].empty?
 
-          unless @error.empty?
-            halt       haml :'mailbox/send', :locals => { :receivers => [] }
-          end
-
           receivers = Array.new
           params.each do |key, user_id|
             receivers.push(user_id.to_i) if (key.include?("hidden"))
+          end
+
+          unless @error.empty?
+            receivers.map! { |receiver| System.instance.fetch_account(receiver) }
+            halt haml :'mailbox/send', :locals => { :receivers => receivers }
           end
 
           if (receivers.size == 0)
