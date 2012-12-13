@@ -140,7 +140,7 @@ module Controllers
           message += "Message: " + params[:message] + "<br>"
 
           Messenger.instance.new_message(session[:user], receivers, params[:subject], params[:message])
-          #TODO: Why is message returned?
+          #TODO: Why is the message returned?
           message
         end
 
