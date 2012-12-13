@@ -16,7 +16,7 @@ include Helpers
 
 ##
 #
-# In this controller are all puts and gets needed for the creation of a new user handled
+# In this controller are all posts and gets needed for the creation of a new user handled
 #
 ##
 module Controllers

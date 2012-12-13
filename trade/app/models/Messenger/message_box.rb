@@ -74,7 +74,6 @@ module Models
     #
     ##
     def set_conversation_as_read(conv_id)
-      puts conv_id
       self.message_tree[conv_id.to_s].each {|k, v| self.set_as_read(conv_id, k) if !v}
     end
 

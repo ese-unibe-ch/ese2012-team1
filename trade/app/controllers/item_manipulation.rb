@@ -55,7 +55,6 @@ module Controllers
         end
 
         unless(time =~ /^([01]?[0-9]|2[0-3])\:[0-5][0-9]$/)
-          puts "Here with #{params[:date]} and #{time}"
           @error[:date] = "You entered an invalid time"
           redirect "/item/expiration"
         end

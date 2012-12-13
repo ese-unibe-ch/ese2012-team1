@@ -57,7 +57,6 @@ module Controllers
       @error[:limit] = ErrorMessages.get("Wrong_Limit") if params[:limit] != "" && !(/^[\d]+(\.[\d]+){0,1}$/.match(params[:limit]))
 
       unless @error.empty?
-        puts @error
         halt haml :'/organisation/create'
       end
 

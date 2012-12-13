@@ -37,8 +37,6 @@
       - account = session[:auth] ? session[:account] : "none"
       - admin_view = Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user])) if auth == "yes" && session[:account] != session[:user]
       - navigation = Navigations.instance.get(session[:navigation][:context])
-      - puts navigation.name
-      - puts session[:navigation][:context]
 
       = haml :'frame/header', :locals =>  {  :auth => auth,
                                       :user => user,

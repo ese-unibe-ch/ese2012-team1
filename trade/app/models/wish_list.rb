@@ -29,7 +29,6 @@ module Models
     def update(item)
       self.items.delete(item) unless item.is_active?
       item.remove_observer(self)
-      #puts "item #{item.name} has been deleted from your wish list, because it's inactive."
     end
 
     ##

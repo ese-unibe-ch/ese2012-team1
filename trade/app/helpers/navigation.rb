@@ -77,27 +77,15 @@ class Navigation
 
     fail "#{selected} is no navigation point" if (index.nil?)
 
-    puts index;
     index
   end
 
   def travers_subnavigation(selected)
     selected = convert_to_number(selected) unless selected.to_s.is_positive_integer?
 
-    puts selected
-
     self.navigation[selected][:subnavigation].travers(selected) do |name, direct_to, index, selected|
       yield name, direct_to, index, selected
     end
   end
 
-  def show
-    self.travers do |name, direct_to, index, selected|
-      puts "#{name} => #{direct_to}"
-
-      self.navigation[index-1][:subnavigation].travers do |name, direct_to, index, selected|
-        puts "  #{name} => #{direct_to}"
-      end
-    end
-  end
 end
