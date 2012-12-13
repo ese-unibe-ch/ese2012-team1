@@ -40,6 +40,7 @@ module Models
       conv.add_message(message)
 
       self.conversations.store(conv.conversation_id.to_s, conv)
+      conv
     end
 
     ##
