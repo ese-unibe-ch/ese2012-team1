@@ -19,7 +19,7 @@
     %input(type="hidden" name="mess_id" value="#{message_id}")
     - receivers.each do |receiver|
       %input(type="hidden" id="hidden#{receiver.id}" name="hidden#{receiver.id}" value="#{receiver.id}")
-    %label
+    %label(title="Use \"?\" to show all possible recipients.")
       Remove Receivers (this message only):
     %input(type="text" name="query" id="query")
     %div(id="receivers")

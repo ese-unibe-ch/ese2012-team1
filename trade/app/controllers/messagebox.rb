@@ -162,8 +162,9 @@ module Controllers
 
           session[:alert] = Alert.create("No Conversation ID", "There is no Conversation ID set.", true) if params[:conversation_id] == nil || params[:conversation_id] == ""
           redirect "/messagebox/conversations" if !session[:alert].nil?
-          session[:alert] = Alert.create("Wrong Conversation ID", "There is no Conversation with this ID.", true) if !Messenger.instance.has_conversation?(params[:conversation_id])
-          redirect "/messagebox/conversations" if !session[:alert].nil?
+          #session[:alert] = Alert.create("Wrong Conversation ID", "There is no Conversation with this ID.", true) if !Messenger.instance.has_conversation?(params[:conversation_id])
+          #redirect "/messagebox/conversations" if !session[:alert].nil?
+          error_redirect("Wrong Conversation ID", "There is no Conversation with this ID.", !Messenger.instance.has_conversation?(params[:conversation_id]), "/messagebox/conversations")
 
           conversation = Messenger.instance.conversations.fetch(params[:conversation_id].to_s)
           session[:alert] = Alert.create("Not your Conversation", "You can't reply to a conversation if you're not a Subscriber.", true) if !conversation.has_subscriber?(session[:user])

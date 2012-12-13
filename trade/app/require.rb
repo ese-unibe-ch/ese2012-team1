@@ -47,6 +47,7 @@ require_relative('helpers/navigations')
 require_relative('helpers/mailer')
 require_relative('helpers/HTML_constructor')
 require_relative('helpers/error')
+require_relative('helpers/error_redirect')
 
 require_relative('controllers/home')
 require_relative('controllers/authentication')
