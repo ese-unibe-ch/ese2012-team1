@@ -126,10 +126,10 @@ module Controllers
             redirect '/messagebox/send'
           end
 
-          Messenger.instance.new_message(session[:user], receivers, params[:subject], params[:message])
+          conversation = Messenger.instance.new_message(session[:user], receivers, params[:subject], params[:message])
 
           session[:alert] = Alert.create("", "Your message has been sent", false)
-          redirect '/messagebox/conversations'
+          redirect "/messagebox/conversation?conversation_id=#{conversation.conversation_id.to_s}"
         end
 
         ##
@@ -199,7 +199,7 @@ module Controllers
           Messenger.instance.answer_message(session[:user], receivers, params[:subject], params[:message], params[:conv_id], mess_id)
 
           session[:alert] = Alert.create("", "Your message has been sent", false)
-          redirect '/messagebox/conversations'
+          redirect "/messagebox/conversation?conversation_id=#{params[:conv_id].to_s}"
         end
 
         ##

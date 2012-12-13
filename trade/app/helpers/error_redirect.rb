@@ -12,7 +12,7 @@ module Helpers
   ##
   def error_redirect(title, message, error, redirect_to)
     session[:alert] = Alert.create(title, message, true) if error
-    redirect redirect_to if !session[:alert].nil?
+    redirect redirect_to if !session[:alert].nil? && session[:alert].error
   end
 
 end
