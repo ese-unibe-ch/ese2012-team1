@@ -170,8 +170,8 @@ module Controllers
         # Shows the form to reply to a conversation.
         #
         # Expects:
-        # params[conversation_id] : id of conversation
-        # params[message_id] : id of message or nil
+        # params[conv_id] : id of conversation
+        # params[mess_id] : id of message or nil
         #
         ##
 
@@ -181,8 +181,11 @@ module Controllers
           @error[:message] = "You have to enter a message" if params[:message].nil? || params[:message].empty?
 
           unless @error.empty?
+            conversation = Messenger.instance.get_message_box(session[:user]).conversations.find { |key, value| key.to_s == params[:conv_id].to_s }
             halt       haml :'mailbox/reply', :locals => { :receiver_id => params[:receiver_id],
-                                                          :receiver_name => params[:receiver_name], }
+                                                          :receiver_name => params[:receiver_name],
+                                                          :conversation => conversation[1],
+                                                          :message_id => params[:mess_id] }
           end
 
           receivers = Array.new
