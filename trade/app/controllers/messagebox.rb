@@ -112,8 +112,7 @@ module Controllers
           @error[:message] = "You have to enter a message" if params[:message].nil? || params[:message].empty?
 
           unless @error.empty?
-            halt       haml :'mailbox/send', :locals => { :receiver_id => params[:receiver_id],
-                                                                :receiver_name => params[:receiver_name], }
+            halt       haml :'mailbox/send', :locals => { :receivers => [] }
           end
 
           receivers = Array.new
