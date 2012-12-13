@@ -140,7 +140,7 @@ module Controllers
           message += "Message: " + params[:message] + "<br>"
 
           Messenger.instance.new_message(session[:user], receivers, params[:subject], params[:message])
-
+          #TODO: Why is message returned?
           message
         end
 
@@ -226,6 +226,9 @@ module Controllers
 
           params[:mess_id] == "" ? mess_id = nil : mess_id = params[:mess_id]
           Messenger.instance.answer_message(session[:user], receivers, params[:subject], params[:message], params[:conv_id], mess_id)
+          session[:alert] = Alert.create("", "Your message has been sent", false)
+          redirect '/messagebox/conversations'
+          #TODO: Why is message returned?
           message
         end
 
