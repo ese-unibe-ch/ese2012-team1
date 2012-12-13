@@ -1,5 +1,6 @@
 - indention = !indention.nil? ? indention : false
 - short = !short.nil? ? short : false
+- news = !news.nil? ? news : false
 
 - style = indention ? { :style => "margin-left:#{20*message.depth}px"} : {}
 - style = { :class => message.sender == session[:user] ? "messagebox-message-user" : "messagebox-message" }.merge!(style)
@@ -27,5 +28,12 @@
   %div(class="message-content")
     = message.message
   %hr
-  - if message.sender.to_s != session[:user].to_s &&  !short
-    = haml :'mailbox/form/reply_message', :locals => { :conv_id => conversation_id, :mess_id => message.message_id}
+  %div(class="align-forms-vertical")
+    - if news
+      - button = "View Conversation"
+      %form(action="/messagebox/conversation?conversation_id=#{conversation_id}" method="get")
+        %input(type = 'hidden' name = 'conversation_id' value="#{conversation_id}")
+        %input(type = 'hidden' name = 'message_id' value="#{message.id}")
+        %input(type = 'submit' value="#{button}")
+    - if message.sender.to_s != session[:user].to_s &&  !short
+      = haml :'mailbox/form/reply_message', :locals => { :conv_id => conversation_id, :mess_id => message.message_id}
