@@ -26,6 +26,17 @@ module Models
 
     ##
     #
+    # Find conversation by id
+    #
+    # Params: conversation_id
+    #
+    ##
+    def fetch_conversation(conversation_id)
+      self.conversations.fetch(conversation_id.to_s)
+    end
+
+    ##
+    #
     # Add Conversation to Users MessageBox and add
     # himself as observer.
     #

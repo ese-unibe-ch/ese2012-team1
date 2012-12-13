@@ -181,11 +181,8 @@ module Controllers
           @error[:message] = "You have to enter a message" if params[:message].nil? || params[:message].empty?
 
           unless @error.empty?
-            conversation = Messenger.instance.get_message_box(session[:user]).conversations.find { |key, value| key.to_s == params[:conv_id].to_s }
             halt       haml :'mailbox/reply', :locals => { :receiver_id => params[:receiver_id],
-                                                          :receiver_name => params[:receiver_name],
-                                                          :conversation => conversation[1],
-                                                          :message_id => params[:mess_id] }
+                                                          :receiver_name => params[:receiver_name], }
           end
 
           receivers = Array.new
