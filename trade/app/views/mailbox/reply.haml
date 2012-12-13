@@ -21,13 +21,14 @@
       %input(type="hidden" id="hidden#{receiver.id}" name="hidden#{receiver.id}" value="#{receiver.id}")
     %label(title="Use &quot;?&quot; to show all possible recipients.")
       Remove Receivers (this message only):
-    %input(type="text" name="query" id="query")
+
     %div(id="receivers")
       - receivers.each do |receiver|
         %span(id="div#{receiver.id}" class="receiver")
           = receiver.name
           %button(class="remove" onclick="removeReceiver(#{receiver.id})")
             x
+    %input(type="text" name="query" id="query")
     %label
       Subject:
     %input(type = 'text' name = 'subject')
