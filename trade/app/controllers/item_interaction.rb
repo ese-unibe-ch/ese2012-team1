@@ -34,7 +34,7 @@ module Controllers
         ###
         post '/item/buy' do
 
-          item = Models::System.instance.fetch_item(params[:id])
+          item = DAOItem.instance.fetch_item(params[:id])
           buyer = Models::System.instance.fetch_account(session[:account])
           user=Models::System.instance.fetch_account(session[:user])
           version = params[:version]
@@ -76,7 +76,7 @@ module Controllers
         #
         ###
         post '/item/towishlist' do
-          item = Models::System.instance.fetch_item(params[:id])
+          item = DAOItem.instance.fetch_item(params[:id])
           account = Models::System.instance.fetch_account(session[:account])
 
           #TODO check conditions!
@@ -99,7 +99,7 @@ module Controllers
         #
         ###
         post '/item/fromwishlist' do
-          item = Models::System.instance.fetch_item(params[:id])
+          item = DAOItem.instance.fetch_item(params[:id])
           account = Models::System.instance.fetch_account(session[:account])
 
           #TODO check conditions!
@@ -129,7 +129,7 @@ module Controllers
           redirect "/error/No_Valid_Input" if params[:comment].nil? || params[:comment] == ""
 
           user = Models::System.instance.fetch_account(session[:account])
-          item = Models::System.instance.fetch_item(params[:id])
+          item = DAOItem.instance.fetch_item(params[:id])
 
           comment = Comment.create(user, Sanitize.clean(params[:header]), Sanitize.clean(params[:comment]))
           if params[:comment_nr].nil?

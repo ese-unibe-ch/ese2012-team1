@@ -33,7 +33,7 @@ module Controllers
       session[:navigation][:selected] = "home"
 
       #get four random items
-      item_list = Models::System.instance.fetch_all_active_items
+      item_list = DAOItem.instance.fetch_all_active_items
       return_list = item_list.shuffle[0..3]
       haml :index, :locals => { :items_to_show => return_list }
     end

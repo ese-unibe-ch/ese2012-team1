@@ -216,7 +216,7 @@ module Models
     #
     ##
     def clear
-      System.instance.remove_item(self.id)
+      DAOItem.instance.remove_item(self.id)
       System.instance.search.unregister(self)
 
       unless self.picture =~ /default_item\.png$/

@@ -18,6 +18,8 @@ require 'webrick/https'
 require 'openssl'
 require 'json'
 
+require_relative 'models/data access object/dao_item'
+
 require_relative 'models/search/search'
 require_relative 'models/search/search_item'
 require_relative 'models/search/search_result'

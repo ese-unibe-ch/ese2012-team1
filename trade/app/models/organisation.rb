@@ -171,9 +171,9 @@ module Models
     def buy_item(item_to_buy, user)
       fail "would exceed #{user.email}'s organisation limit for today" unless within_limit_of?(item_to_buy, user)
       fail "not enough credits" if item_to_buy.price > self.credits
-      fail "Item not in System" unless (System.instance.items.include?(item_to_buy.id))
+      fail "Item not in System" unless (DAOItem.instance.item_exists?(item_to_buy.id))
       # PZ: Don't like that I can't do that:
-      # fail "Item already belongs to you" if (System.instance.fetch_items_of(self.id))
+      # fail "Item already belongs to you" if (DAOItemSystem(self.id))
 
       old_owner = item_to_buy.owner
 

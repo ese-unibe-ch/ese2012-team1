@@ -34,7 +34,7 @@ module Controllers
     post '/item/changestate/setactive' do
       before_for_item_manipulation
 
-      item = Models::System.instance.fetch_item(params[:id])
+      item = DAOItem.instance.fetch_item(params[:id])
 
       if(params[:date] != ""  && !params[:date].nil?)
 
@@ -92,7 +92,7 @@ module Controllers
     post '/item/changestate/setinactive' do
       before_for_item_manipulation
 
-      item = Models::System.instance.fetch_item(params[:id])
+      item = DAOItem.instance.fetch_item(params[:id])
 
       item.to_inactive
       item.alter_version
@@ -117,7 +117,7 @@ module Controllers
     post '/item/delete' do
       before_for_item_manipulation
 
-      item = Models::System.instance.fetch_item(params[:id])
+      item = DAOItem.instance.fetch_item(params[:id])
       item.clear
 
       session[:alert] = Alert.create("Success!", "You have deleted item: #{item.name}", false)
@@ -145,7 +145,7 @@ module Controllers
     post '/item/edit/save' do
       before_for_item_manipulation
 
-      item = Models::System.instance.fetch_item(params[:id])
+      item = DAOItem.instance.fetch_item(params[:id])
 
       redirect "/items/my/all" unless item.editable?
 
@@ -191,7 +191,7 @@ module Controllers
 
       desc_to_use = params[:desc_to_use].to_i
       id = params[:id] .to_i
-      item = Models::System.instance.fetch_item(id)
+      item = DAOItem.instance.fetch_item(id)
       item.description_position = desc_to_use
 
       item.alter_version

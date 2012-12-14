@@ -116,7 +116,7 @@ module Controllers
         session[:navigation][:subnavigation] = "on sale"
 
         viewer_id = session[:account]
-        haml :'item/active', :locals => {:all_items => Models::System.instance.fetch_all_active_items_but_of(viewer_id)}
+        haml :'item/active', :locals => {:all_items => DAOItem.instance.fetch_all_active_items_but_of(viewer_id)}
     end
 
     ##
@@ -132,8 +132,8 @@ module Controllers
     #
     ##
     get '/item/:id' do
-      redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
-      item = Models::System.instance.fetch_item(params[:id])
+      redirect "/error/No_Valid_Item_Id" unless DAOItem.instance.item_exists?(params[:id])
+      item = DAOItem.instance.fetch_item(params[:id])
       if !item.is_active? && item.owner.id != session[:account]
         session[:alert] = Alert.create("Inactive Item", "The Item you try to watch isn't active.", true)
         redirect "/items/active"
@@ -151,7 +151,7 @@ module Controllers
     # TODO: I am not sure what this does, or if it is used
     ##
     get '/item/comment/:id' do
-      item = System.instance.fetch_item(params[:id].to_i)
+      item = DAOItem.instance.fetch_item(params[:id].to_i)
       haml :'item/comments', :locals => {:item => item }
     end
 
@@ -170,9 +170,9 @@ module Controllers
     #
     ##
     get '/item/add/comment/:item_id/:comment_nr' do
-      redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:item_id])
+      redirect "/error/No_Valid_Item_Id" unless DAOItem.instance.item_exists?(params[:item_id])
 
-      item = Models::System.instance.fetch_item(params[:item_id])
+      item = DAOItem.instance.fetch_item(params[:item_id])
 
       haml :'item/comment', :locals => {:item => item, :comment_nr => params[:comment_nr]}
     end
@@ -186,7 +186,7 @@ module Controllers
     #
     ##
     get '/item/changestate/expiration' do
-      item = Models::System.instance.fetch_item(params[:id])
+      item = DAOItem.instance.fetch_item(params[:id])
 
       haml :'item/expiration', :locals => {:item => item}
     end
@@ -204,7 +204,7 @@ module Controllers
       before_for_item_manipulation
 
       id = params[:id]
-      item = Models::System.instance.fetch_item(params[:id])
+      item = DAOItem.instance.fetch_item(params[:id])
       name = item.name
       description = item.description
       description_list = item.description_list

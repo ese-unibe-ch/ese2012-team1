@@ -91,7 +91,7 @@ module Models
       fail "Price has to be positive" if (price < 0)
 
       new_item = Models::Item.created(name, price, self)
-      Models::System.instance.add_item(new_item)
+      DAOItem.instance.add_item(new_item)
 
       new_item
     end
@@ -108,7 +108,7 @@ module Models
     ##
     def buy_item(item_to_buy, user)
       fail "not enough credits" if item_to_buy.price > self.credits
-      fail "Item not in System" unless (System.instance.items.include?(item_to_buy.id))
+      fail "Item not in System" unless (DAOItem.instance.item_exists?(item_to_buy.id))
 
       old_owner = item_to_buy.owner
 
@@ -135,7 +135,7 @@ module Models
     #
     ##
     def list_items
-      Models::System.instance.fetch_items_of(self.id)
+      DAOItem.instance.fetch_items_of(self.id)
     end
 
     ##
@@ -144,7 +144,7 @@ module Models
     #
     ##
     def list_inactive_items
-      Models::System.instance.fetch_items_of(self.id).select {|s| !s.is_active?}
+      DAOItem.instance.fetch_items_of(self.id).select {|s| !s.is_active?}
     end
 
 
@@ -154,7 +154,7 @@ module Models
     #
     ##
     def list_active_items
-      Models::System.instance.fetch_items_of(self.id).select {|s| s.is_active?}
+      DAOItem.instance.fetch_items_of(self.id).select {|s| s.is_active?}
     end
 
     ##
@@ -166,8 +166,8 @@ module Models
     #
     ##
     def has_item?(itemId)
-      Models::System.instance.item_exists?(self.id) &&
-      Models::System.instance.fetch_item(self.id).owner == self
+      DAOItem.instance.item_exists?(self.id) &&
+      DAOItem.instance.fetch_item(self.id).owner == self
     end
 
     ##
@@ -182,7 +182,7 @@ module Models
     def get_item(item_Id)
       fail "#{self.name} doesn't own object: \'#{item_Id}\'" unless (self.has_item?(item_Id.to_i))
 
-      Models::System.instance.fetch_item(item_Id)
+      DAOItem.instance.fetch_item(item_Id)
     end
   end
 end

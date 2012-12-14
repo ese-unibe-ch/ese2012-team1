@@ -100,7 +100,7 @@ module Models
     ##
     #TODO test if admin by init works
     def clear
-      Models::System.instance.fetch_items_of(self.id).each { |e| e.clear }
+      DAOItem.instance.fetch_items_of(self.id).each { |e| e.clear }
       Models::System.instance.remove_account(self.id)
 
       unless (self.avatar == "/images/users/default_avatar.png")

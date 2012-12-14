@@ -18,14 +18,14 @@ class ItemCreateTest < Test::Unit::TestCase
     it 'post /item/create should create a new item' do
       user = Models::System.instance.fetch_user_by_email('homer@mail.ch')
 
-      homers_items = Models::System.instance.fetch_items_of(user.id)
+      homers_items = DAOItem.instance.fetch_items_of(user.id)
       assert(!homers_items.include?('Gold'), "Should not own gold before post /create")
 
       file = Rack::Test::UploadedFile.new("../../app/public/images/items/default_item.png", "image/png")
 
       post '/item/create', { :item_picture => file, :name => 'Gold', :price => 100, :description => 'Very very valuable'}, 'rack.session' => { :user => user.id, :auth => true, :account => user.id }
 
-      homers_items = Models::System.instance.fetch_items_of(user.id)
+      homers_items = DAOItem.instance.fetch_items_of(user.id)
       item = homers_items.detect{|item| item.name == 'Gold'}
 
       assert(item.name == 'Gold', "Should own gold but instead did own: #{homers_items}")
