@@ -36,7 +36,7 @@ describe TimedEvent do
       #Make sure that there is no job running anymore
       #So that tests don't interfere with each other
       after(:each) do
-        @event.job.unschedule
+        @event.unschedule
       end
 
       it "should not be running forever" do
@@ -61,6 +61,21 @@ describe TimedEvent do
         create_timed_event
 
         @event.time.should be_like @time
+      end
+
+      it "should add object to subscribers" do
+        create_timed_event
+
+        @event.subscribers.include?(@timed).should be_true
+      end
+
+      it "should not be possible to add subscribers only via #subscribe" do
+        create_timed_event
+
+        @not_timed = double("not timed event")
+        @event.subscribers.push(@not_timed)
+
+        @event.subscribers.include?(@not_timed).should be_false
       end
 
       it "should call #timed_out of set object" do
@@ -160,7 +175,7 @@ describe TimedEvent do
         end
 
         after(:each) do
-          @event.job.unschedule
+          @event.unschedule
         end
 
         it "should not be running forever" do

@@ -1,19 +1,32 @@
 module Models
   ##
   #
-  # Creates a TimedEvent that lets an item expire
-  # if the specified time is up. If this happens an
-  # item should be set to inactive.
+  # Creates a timed event that calls timed_out of the
+  # given object to time after after a specified time.
   #
-  # time: when the TimedEvent triggers
+  # Usage in our model:
+  # Lets an item expire if the specified time is up. If
+  # this happens the item is set to inactive.
+  #
+  # time: when the TimedEvent triggers. :forever if the timed_event is not triggered at all
   # subscribers : all objects that are affected by the TimedEvent
-  # scheduler :
-  # timed_out :
-  # job :
-  # TODO: Complete variables explanation
+  # timed_out : true if the current job has timed out
+  #
   ##
+
   class TimedEvent
-    attr_accessor :time, :subscribers, :scheduler, :timed_out, :job
+    attr_reader :time, :timed_out
+
+    @subscribers #subscribers of this event
+    @scheduler #schedules and reschedules jobs (see Rufus::Scheduler)
+    @job #the current job (see Rufus::Scheduler)
+
+    def initialize
+      @time = :forever
+      @timed_out = false
+      @subscribers = Array.new
+      @scheduler = Rufus::Scheduler.start_new
+    end
 
     ##
     #
@@ -27,23 +40,10 @@ module Models
       fail "Time should not be in past" unless time == :forever || time >= Time.now
 
       event = TimedEvent.new
-      event.scheduler = Rufus::Scheduler.start_new
+      event.subscribe(object_to_time)
 
-      event.timed_out = false
-      event.subscribers = Array.new
-      event.subscribers.push(object_to_time)
-
-      if (time == :forever)
-        event.time = :forever
-      else
-        event.time = time
-
-        time = Rufus.to_datetime time
-
-        event.job = event.scheduler.at time.to_s do
-          event.timed_out = true
-          event.subscribers.each { |object| object.timed_out }
-        end
+      unless (time == :forever)
+        event.reschedule(time)
       end
 
       event
@@ -54,29 +54,32 @@ module Models
     # Adds an object to this timed event. If the timed event reaches the
     # specified time this object performs his timed_out method
     #
+    # Each object that shall be time must implement a #timed_out
+    # method. A TimedEvent can have multiple subscribers.
+    #
     ##
     def subscribe(object_to_time)
       fail "Should have method #timed_out implemented" unless object_to_time.respond_to?(:timed_out)
 
-      self.subscribers.push(object_to_time)
+      @subscribers.push(object_to_time)
     end
 
     ##
     #
-    # TODO: add doc
+    # Reschedules the time when the method #timed_out is called.
     #
     ##
     def reschedule(time)
       time_rufus = Rufus.to_datetime time
 
-      self.job.unschedule unless (self.time == :forever)
+      @job.unschedule unless (self.time == :forever)
 
-      self.job = self.scheduler.at time_rufus.to_s do
-        self.timed_out = true
-        self.subscribers.each { |object| object.timed_out }
+      @job = @scheduler.at time_rufus.to_s do
+        @timed_out = true
+        @subscribers.each { |object| object.timed_out }
       end
 
-      self.time = time
+      @time = time
     end
 
     ##
@@ -84,24 +87,37 @@ module Models
     # Removes the specified time,
     # so that the TimedEvent never
     # triggers(unless a new time is
-    # entered)
+    # set in #reschedule(time))
     #
     ##
     def unschedule
       if (self.time != :forever)
-        self.job.unschedule
-        self.time = :forever
-        self.timed_out = false
+        @job.unschedule
+        @time = :forever
+        @timed_out = false
       end
     end
 
     ##
     #
-    # TODO: add doc
+    # Checks if an event is scheduled
+    # Returns true if it is. False
+    # otherwise.
     #
     ##
     def scheduled?
-      self.time != :forever
+      @time != :forever
+    end
+
+    ##
+    #
+    # Returns all subscribers of this
+    # timed event.
+    #
+    ##
+
+    def subscribers
+      @subscribers.clone
     end
   end
 end
