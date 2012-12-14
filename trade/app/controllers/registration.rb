@@ -44,8 +44,10 @@ module Controllers
       hash = params[:reg_hash]
       if Models::System.instance.reg_hash_exists?(hash)
         user = Models::System.instance.fetch_user_by_reg_hash(hash)
-        session[:alert] = Alert.create("Error!", "Your account is already activated. Please login.", true) if user.activated
-        redirect '/login' if user.activated
+        if user.activated
+          session[:alert] = Alert.create("Error!", "Your account is already activated. Please login.", true)
+          redirect '/login'
+        end
         user.activate
       else
         session[:alert] = Alert.create("Error!", "No such activation code. Try with copy and paste the complete URL from the e-mail into your Browser.", true)
