@@ -14,6 +14,6 @@
       %td
         %img(height=50 width=50){ :alt => user.name, :src => user.avatar }
       %td
-        = haml :'mailbox/form/send_message', :locals => { :user => user }
+        = haml :'messagebox/form/send_message', :locals => { :user => user }
       %td
         %a(href="/users/#{user.id}" ) Show User Details

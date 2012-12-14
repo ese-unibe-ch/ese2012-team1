@@ -13,7 +13,7 @@
           %form(action="/unauthenticate" method="post")
             %button(name="submit" value="submit" type="submit")
         - elsif name == "messagebox"
-          - #Simply ignore entry for mailbox
+          - #Simply ignore entry for messagebox
         - else
           %span{ :id => "#{navigation_name}-inactive"}
             %a{ :href=>route,  :title=>""}

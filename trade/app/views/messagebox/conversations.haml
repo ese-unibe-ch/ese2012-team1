@@ -12,7 +12,7 @@
     %br
     Last Message:
     - msg = conversation.get_last_message
-    = haml :'mailbox/message', :locals => { :message => msg,
+    = haml :'messagebox/message', :locals => { :message => msg,
                                             :conversation_id => conversation_id,
                                             :indention => false }
-    = haml :'mailbox/form/reply_message', :locals => { :conv_id => conversation.conversation_id, :mess_id => nil}
+    = haml :'messagebox/form/reply_message', :locals => { :conv_id => conversation.conversation_id, :mess_id => nil}

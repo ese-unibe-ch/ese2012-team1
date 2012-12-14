@@ -7,7 +7,7 @@
 - if message_id.nil? || message_id == ""
   = "Conversation: #{conversation.title}"
 - else
-  = haml :'mailbox/message', :locals => { :message => conversation.get(message_id),
+  = haml :'messagebox/message', :locals => { :message => conversation.get(message_id),
                                           :conversation_id => conversation.conversation_id,
                                           :short => true }
 

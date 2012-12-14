@@ -32,7 +32,7 @@ module Controllers
             receivers = params[:receivers].map { |user_id| System.instance.fetch_account(user_id.to_i) }
           end
 
-          haml :'mailbox/send', :locals => { :receivers => receivers }
+          haml :'messagebox/send', :locals => { :receivers => receivers }
         end
 
         ##
@@ -48,7 +48,7 @@ module Controllers
           session[:navigation][:subnavigation]  = "news"
 
           #TODO!
-          haml :'mailbox/news'
+          haml :'messagebox/news'
         end
 
         ##
@@ -64,7 +64,7 @@ module Controllers
           session[:navigation][:subnavigation]  = "conversations"
 
           #TODO!
-          haml :'mailbox/conversations'
+          haml :'messagebox/conversations'
         end
 
         ##
@@ -90,7 +90,7 @@ module Controllers
 
           Messenger.instance.get_message_box(session[:user]).set_conversation_as_read(conversation.conversation_id)
 
-          haml :'mailbox/conversation', :locals => { :conversation => conversation }
+          haml :'messagebox/conversation', :locals => { :conversation => conversation }
         end
 
         ##
@@ -118,7 +118,7 @@ module Controllers
 
           unless @error.empty?
             receivers.map! { |receiver| System.instance.fetch_account(receiver) }
-            halt haml :'mailbox/send', :locals => { :receivers => receivers }
+            halt haml :'messagebox/send', :locals => { :receivers => receivers }
           end
 
           if (receivers.size == 0)
@@ -162,7 +162,7 @@ module Controllers
             error_redirect("Reply yourself", "You can't reply to a message sent by yourself.", message.sender.to_s == session[:user].to_s, "/messagebox/conversations")
           end
 
-          haml :'mailbox/reply', :locals => { :conversation => conversation, :message_id => mid }
+          haml :'messagebox/reply', :locals => { :conversation => conversation, :message_id => mid }
         end
 
         ##
@@ -181,7 +181,7 @@ module Controllers
           @error[:message] = "You have to enter a message" if params[:message].nil? || params[:message].empty?
 
           unless @error.empty?
-            halt       haml :'mailbox/reply', :locals => { :receiver_id => params[:receiver_id],
+            halt       haml :'messagebox/reply', :locals => { :receiver_id => params[:receiver_id],
                                                           :receiver_name => params[:receiver_name], }
           end
 
