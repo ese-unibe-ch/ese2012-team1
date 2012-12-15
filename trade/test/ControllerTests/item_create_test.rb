@@ -21,7 +21,7 @@ class ItemCreateTest < Test::Unit::TestCase
       homers_items = DAOItem.instance.fetch_items_of(user.id)
       assert(!homers_items.include?('Gold'), "Should not own gold before post /create")
 
-      file = Rack::Test::UploadedFile.new("../../app/public/images/items/default_item.png", "image/png")
+      file = Rack::Test::UploadedFile.new(absolute_path("../../app/public/images/items/default_item.png", __FILE__), "image/png")
 
       post '/item/create', { :item_picture => file, :name => 'Gold', :price => 100, :description => 'Very very valuable'}, 'rack.session' => { :user => user.id, :auth => true, :account => user.id }
 
@@ -33,7 +33,7 @@ class ItemCreateTest < Test::Unit::TestCase
       assert(item.price == 100, "Should cost 100 credits but was #{item.price}")
 
       # Removing File after test
-      File.delete("#{item.picture.sub("/images", "../../app/public/images")}")
+      File.delete("#{item.picture.sub("/images", absolute_path("../../app/public/images", __FILE__))}")
     end
   end
 end

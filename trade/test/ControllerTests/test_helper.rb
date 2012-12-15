@@ -54,9 +54,9 @@ class TestHelper
     self.reset
 
     # Create pictures for item picture
-    File.copy("../../app/public/images/users/default_avatar.png", "../../app/public/images/items/test_elephant.png")
-    File.copy("../../app/public/images/users/default_avatar.png", "../../app/public/images/items/test_skateboard.png")
-    File.copy("../../app/public/images/users/default_avatar.png", "../../app/public/images/items/test_beer.png")
+    File.copy(absolute_path("../../app/public/images/users/default_avatar.png", __FILE__), absolute_path("../../app/public/images/items/test_elephant.png", __FILE__))
+    File.copy(absolute_path("../../app/public/images/users/default_avatar.png", __FILE__), absolute_path("../../app/public/images/items/test_skateboard.png", __FILE__))
+    File.copy(absolute_path("../../app/public/images/users/default_avatar.png", __FILE__), absolute_path("../../app/public/images/items/test_beer.png", __FILE__))
 
     # Create bart
     bart = Models::User.created('Bart' , 'bart', 'bart@mail.ch', 'I\' should not...', '/images/users/default_avatar.png')

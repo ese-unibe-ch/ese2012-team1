@@ -1,15 +1,5 @@
-require 'rubygems'
-require '../../app/require'
-require 'test/unit'
-require 'helper'
-require 'rack/test'
-
-ENV['RACK_ENV'] = 'test'
-
+require 'controller_require'
 require_relative '../../app/controllers/registration'
-require_relative '../../app/models/user'
-
-require 'test_helper'
 
 class RegistrationTest < Test::Unit::TestCase
 

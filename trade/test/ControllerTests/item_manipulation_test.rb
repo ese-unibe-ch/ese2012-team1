@@ -93,7 +93,7 @@ class ItemManipulationTest < Test::Unit::TestCase
       item = @items[:skateboard]
       item.to_inactive
 
-      file = Rack::Test::UploadedFile.new("../../app/public/images/items/default_item.png", "image/png")
+      file = Rack::Test::UploadedFile.new(absolute_path("../../app/public/images/items/default_item.png", __FILE__), "image/png")
 
       post '/item/edit/save', { :id => item.id, :item_picture => file, :new_description => 'Kind of used...', :new_price => 200 }, 'rack.session' => { :account => @users[:bart].id, :user => @users[:bart].id, :auth => true  }
 
@@ -103,21 +103,21 @@ class ItemManipulationTest < Test::Unit::TestCase
       assert(item.picture == "/images/items/#{item.id}.png", "Path to file should be /images/items/#{item.id}.png but was #{item.picture}")
 
       # Removing File after test
-      File.delete("#{item.picture.sub("/images", "../../app/public/images")}")
+      File.delete("#{item.picture.sub("/images", absolute_path("../../app/public/images", __FILE__))}")
     end
 
     it 'post /item/edit/save with correct data should redirect to /items/my/all' do
       item = @items[:skateboard]
       item.to_inactive
 
-      file = Rack::Test::UploadedFile.new("../../app/public/images/items/default_item.png", "image/png")
+      file = Rack::Test::UploadedFile.new(absolute_path("../../app/public/images/items/default_item.png", __FILE__), "image/png")
 
       post '/item/edit/save', { :id => item.id, :item_picture => file, :new_description => 'Kind of used...', :new_price => 200 }, 'rack.session' => { :account => @users[:bart].id, :user => @users[:bart].id, :auth => true  }
 
       assert(last_response.location.include?('/items/my/all'), "Should redirect to /items/my/all but was #{last_response.location}")
 
       # Removing File after test
-      File.delete("#{item.picture.sub("/images", "../../app/public/images")}")
+      File.delete("#{item.picture.sub("/images", absolute_path("../../app/public/images", __FILE__))}")
     end
   end
 end

@@ -1,15 +1,5 @@
-require 'rubygems'
-require '../../app/require'
-require 'test/unit'
-require 'helper'
-require 'rack/test'
-
-require 'test_helper'
-
-ENV['RACK_ENV'] = 'test'
-
+require 'controller_require'
 require_relative '../../app/controllers/organisation'
-require_relative '../../app/models/user'
 
 class OrganisationTest < Test::Unit::TestCase
   include Rack::Test::Methods
