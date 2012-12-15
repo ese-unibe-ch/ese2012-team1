@@ -30,7 +30,7 @@ module Models
     def add_account(account)
       fail "No account" if (account == nil)
       fail "Account \'#{account}\' already exists" if (@accounts.one? {|id, acc| acc == account })
-      fail "Account should be set by this method" unless account.id == nil
+      fail "Account id should be set by this method" unless account.id == nil
 
       account.id = @account_id_count
       @accounts.store(account.id, account)
@@ -115,8 +115,17 @@ module Models
     # Checks if a user email exists
     #
     ##
-    def user_exists?(email)
+    def email_exists?(email)
       @accounts.values.one?{|account| account.respond_to?(:email) && account.email == email}
+    end
+
+    ##
+    #
+    # Checks if a user with a specific id exists
+    #
+    ##
+    def user_exists?(user_id)
+      @accounts.member?(user_id)
     end
 
     ##
@@ -200,6 +209,27 @@ module Models
       for org in orgs
         org.reset_member_limits
       end
+    end
+
+    ##
+    #
+    # Counts all accounts
+    #
+    ##
+
+    def count_accounts
+      @accounts.size
+    end
+
+    ##
+    #
+    # Resets counter and removes all accounts
+    #
+    ##
+
+    def reset
+      @accounts = Hash.new
+      @account_id_count = 0
     end
   end
 end

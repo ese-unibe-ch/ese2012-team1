@@ -52,7 +52,7 @@ module Controllers
     #
     ##
     post '/organisation/add/member' do
-      if DAOAccount.instance.user_exists?(params[:member])
+      if DAOAccount.instance.email_exists?(params[:member])
         haml :'organisation/member_confirm', :locals => { :member => params[:member]}
       else
         session[:alert] = Alert.create("Oh no!", "User with email #{params[:member]} does not exist!", true)
@@ -73,7 +73,7 @@ module Controllers
     #
     ##
     post '/organisation/member/confirm' do
-      if DAOAccount.instance.user_exists?(params[:member])
+      if DAOAccount.instance.email_exists?(params[:member])
         user =  DAOAccount.instance.fetch_user_by_email(params[:member])
         org = DAOAccount.instance.fetch_account(session[:account])
         org.add_member(user)
@@ -110,7 +110,7 @@ module Controllers
         session[:alert] = Alert.create("Oh no!", "You can't leave this Organisation, because you're the only Administrator.", true)
         redirect "/organisation/members"
       end
-      if DAOAccount.instance.user_exists?(params[:member])
+      if DAOAccount.instance.email_exists?(params[:member])
         haml :'organisation/member_delete_confirm', :locals => { :member => params[:member]}
       else
         redirect 'organisation/members', :locals => { :error_message => "User does not exist" }
@@ -141,7 +141,7 @@ module Controllers
         session[:alert] = Alert.create("Oh no!", "You can't leave this Organisation, because you're the only Administrator.", true)
         redirect "/organisation/members"
       end
-      unless DAOAccount.instance.user_exists?(params[:user_email])
+      unless DAOAccount.instance.email_exists?(params[:user_email])
         session[:alert] = Alert.create("Oh no!", "This is not a valid User.", true)
         redirect "/organisation/members"
       end
@@ -176,7 +176,7 @@ module Controllers
         redirect "/organisation/members"
       end
 
-      if DAOAccount.instance.user_exists?(params[:member])
+      if DAOAccount.instance.email_exists?(params[:member])
         haml :'organisation/member_to_admin_confirm', :locals => { :member => params[:member]}
       else
         redirect '/organisation/members'
@@ -234,7 +234,7 @@ module Controllers
         session[:alert] = Alert.create("Oh no!", "You can not revoke administrator privileges from yourself if you are the only Administrator of an Organisation.", true)
         redirect "/organisation/members"
       end
-      if DAOAccount.instance.user_exists?(params[:member])
+      if DAOAccount.instance.email_exists?(params[:member])
         haml :'organisation/admin_to_member_confirm', :locals => { :member => params[:member]}
       else
         redirect '/organisation/members'

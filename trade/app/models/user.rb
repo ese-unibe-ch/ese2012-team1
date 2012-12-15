@@ -57,7 +57,7 @@ module Models
       fail "Missing path to avatar" if (avatar == nil)
       fail "There's no avatar at #{avatar}" unless (File.exists?(Helpers::absolute_path(avatar.sub("/images", "../public/images"), __FILE__)))
       fail "Not a correct email address" unless email.is_email?
-      fail "E-mail not unique" if DAOAccount.instance.user_exists?(email)
+      fail "E-mail not unique" if DAOAccount.instance.email_exists?(email)
 
       user = super(name, description, avatar)
 

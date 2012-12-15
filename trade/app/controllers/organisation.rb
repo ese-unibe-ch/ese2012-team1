@@ -218,7 +218,7 @@ module Controllers
     #  session[:account] : the user's current id (his own or an organisation's)
     ##
     post '/organisation/leave' do
-      redirect "/error/No_Valid_User" unless DAOAccount.instance.user_exists?(params[:user_email])
+      redirect "/error/No_Valid_User" unless DAOAccount.instance.email_exists?(params[:user_email])
       if session[:user] == session[:account]
         session[:alert] = Alert.create("Oh no!", "You can't leave an organisation when you're not in your Organisations Profile.", true)
         redirect "/home"

@@ -79,7 +79,7 @@ module Models
     #
     ##
     def fetch_all_items_but_of(account_id)
-      fail "No account with id #{account_id}" unless DAOAccount.account_exists?(account_id)
+      fail "No account with id #{account_id}" unless DAOAccount.instance.account_exists?(account_id)
       @items.values.delete_if {|item| item.owner.id == account_id}
     end
 
@@ -112,6 +112,25 @@ module Models
       fail "There are no items" if @items.size == 0
       fail "No such item with id #{item_id}" unless @items.member?(item_id)
       @items.delete_if { |id, item| item.id == item_id }
+    end
+
+    ##
+    #
+    # Counts all items
+    #
+    ##
+    def count_items
+      @items.size
+    end
+
+    ##
+    #
+    # Resets item counter and removes all items
+    #
+    ##
+    def reset
+      @items = Hash.new
+      @item_id_count = 0
     end
   end
 end

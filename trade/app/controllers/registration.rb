@@ -113,13 +113,13 @@ module Controllers
     post '/register' do
       if are_nil?(params[:password], params[:re_password], params[:email], params[:name]) ||
          ! params[:password].is_strong_password? || params[:password] != params[:re_password] ||
-          params[:email] == "" || ! params[:email].is_email? || params[:name] == "" || DAOAccount.instance.user_exists?(params[:email])
+          params[:email] == "" || ! params[:email].is_email? || params[:name] == "" || DAOAccount.instance.email_exists?(params[:email])
 
         #Error Messages Sessions
         session[:email_error] = ""
-        session[:email_error] = "E-Mail Address already in use." if DAOAccount.instance.user_exists?(params[:email])
+        session[:email_error] = "E-Mail Address already in use." if DAOAccount.instance.email_exists?(params[:email])
         session[:email_error] = "Not a correct E-Mail Address" if params[:email] == "" || !params[:email].is_email?
-        session[:is_email_error] = "yes" if DAOAccount.instance.user_exists?(params[:email])
+        session[:is_email_error] = "yes" if DAOAccount.instance.email_exists?(params[:email])
         session[:is_email_error] = "yes" if params[:email] == "" || !params[:email].is_email?
 
         #Values from wrong form data

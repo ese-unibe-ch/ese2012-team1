@@ -61,7 +61,7 @@ module Controllers
     post "/authenticate" do
       before_for_user_not_authenticated
 
-      if (!DAOAccount.instance.user_exists?(params[:username]))
+      if (!DAOAccount.instance.email_exists?(params[:username]))
         session[:alert] = Alert.create("", "No such user or password", true)
         redirect '/login'
       else
