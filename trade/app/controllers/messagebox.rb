@@ -29,7 +29,7 @@ module Controllers
 
           receivers = []
           unless (params[:receivers].nil?)
-            receivers = params[:receivers].map { |user_id| System.instance.fetch_account(user_id.to_i) }
+            receivers = params[:receivers].map { |user_id| DAOAccount.instance.fetch_account(user_id.to_i) }
           end
 
           haml :'messagebox/send', :locals => { :receivers => receivers }
@@ -117,7 +117,7 @@ module Controllers
           end
 
           unless @error.empty?
-            receivers.map! { |receiver| System.instance.fetch_account(receiver) }
+            receivers.map! { |receiver| DAOAccount.instance.fetch_account(receiver) }
             halt haml :'messagebox/send', :locals => { :receivers => receivers }
           end
 
@@ -213,7 +213,7 @@ module Controllers
 
           before_for_user_authenticated
 
-          users = Models::System.instance.fetch_all_users_but(session[:account])
+          users = DAOAccount.instance.fetch_all_users_but(session[:account])
           users.delete_if do |user|
             !user.name.include?(params[:query])
           end
@@ -250,7 +250,7 @@ module Controllers
           conv = Messenger.instance.conversations.fetch(conv_id.to_s)
           subs = conv.subscribers
 
-          users = Models::System.instance.fetch_all_users_but(session[:account])
+          users = DAOAccount.instance.fetch_all_users_but(session[:account])
           if params[:query] == "?"
             users.delete_if do |user|
               !subs.include?(user.id) || user.id.to_s == session[:user].to_s

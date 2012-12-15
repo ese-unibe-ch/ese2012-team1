@@ -33,7 +33,7 @@ module Controllers
     ##
     get '/items/my/active' do
         user_id = session[:account]
-        haml :'item/my_active', :locals => {:active_items => Models::System.instance.fetch_account(user_id).list_active_items}
+        haml :'item/my_active', :locals => {:active_items => DAOAccount.instance.fetch_account(user_id).list_active_items}
     end
 
     ##
@@ -45,12 +45,12 @@ module Controllers
     ##
     get '/items/my/inactive' do
         user_id = session[:account]
-        haml :'item/my_inactive', :locals => {:inactive_items => Models::System.instance.fetch_account(user_id).list_inactive_items}
+        haml :'item/my_inactive', :locals => {:inactive_items => DAOAccount.instance.fetch_account(user_id).list_inactive_items}
     end
 
     get '/item/wish/list' do
         user_id = session[:account]
-        haml :'item/wish_list', :locals => {:wish_list => Models::System.instance.fetch_account(user_id).wish_list}
+        haml :'item/wish_list', :locals => {:wish_list => DAOAccount.instance.fetch_account(user_id).wish_list}
     end
 
     ##
@@ -65,7 +65,7 @@ module Controllers
       session[:navigation][:selected]  = "home"
       session[:navigation][:subnavigation]  = "items"
 
-      account = Models::System.instance.fetch_account(session[:account])
+      account = DAOAccount.instance.fetch_account(session[:account])
 
       haml :'item/my_all', :locals => {:inactive_items => account.list_inactive_items,
                                        :active_items => account.list_active_items}
@@ -83,7 +83,7 @@ module Controllers
       session[:navigation][:selected]  = "home"
       session[:navigation][:subnavigation] = "wishlist"
 
-      account = Models::System.instance.fetch_account(session[:account])
+      account = DAOAccount.instance.fetch_account(session[:account])
 
       haml :'item/wish_list', :locals => {:wish_list_items => account.wish_list.items}
     end

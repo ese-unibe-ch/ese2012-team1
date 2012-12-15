@@ -1,5 +1,5 @@
 %form(action="/account/edit/user/profile" enctype="multipart/form-data" method="post")
-  - user = Models::System.instance.fetch_account(session[:user])
+  - user = DAOAccount.instance.fetch_account(session[:user])
 
   %div(class="labeled-input")
   %table

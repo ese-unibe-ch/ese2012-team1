@@ -51,7 +51,7 @@ module Models
     ##
 
     def priority_of_user(user_id)
-      fail "User does not exist" unless System.instance.account_exists?(user_id)
+      fail "User does not exist" unless DAOAccount.instance.account_exists?(user_id)
 
       self.part_of?(user_id) ? 1 : 2
     end

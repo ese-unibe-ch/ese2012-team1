@@ -9,12 +9,12 @@
   - unless short
     %strong
       From
-    = System.instance.fetch_account(message.sender).name
+    = DAOAccount.instance.fetch_account(message.sender).name
     %hr
     %strong
       To
     - message.receivers.each do |receiver|
-      = "#{System.instance.fetch_account(receiver).name}, "
+      = "#{DAOAccount.instance.fetch_account(receiver).name}, "
     %hr
   %strong
     Subject

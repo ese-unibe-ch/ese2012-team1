@@ -1,11 +1,17 @@
 require 'singleton'
 
 module Models
+  ##
+  #
+  # This class serves as data access object. It holds all items (identified by id).
+  # It is implemented as a Singleton.
+  #
+  ##
   class DAOItem
     include Singleton
 
-    @items
-    @item_id_count
+    @items # a hash that contains all item ids and associated item
+    @item_id_count # counts how many items there are in the system
 
     def initialize
       @items = Hash.new
@@ -52,7 +58,7 @@ module Models
     #
     ##
     def fetch_items_of(account_id)
-      fail "No account with id #{account_id}" unless System.instance.accounts.member?(account_id)
+      fail "No account with id #{account_id}" unless DAOAccount.instance.account_exists?(account_id)
       @items.values.select {|item| item.owner.id == account_id}
     end
 
@@ -62,8 +68,8 @@ module Models
     #
     ##
     def fetch_active_items_of(user_email)
-      fail "No such user email" unless System.instance.fetch_user(user_email)
-      user = System.instance.fetch_user(user_email)
+      fail "No such user email" unless DAOAccount.instance.fetch_user(user_email)
+      user = DAOAccount.instance.fetch_user(user_email)
       @items.values.select {| item| item.owner == user}.select {|i| i.active}
     end
 
@@ -73,7 +79,7 @@ module Models
     #
     ##
     def fetch_all_items_but_of(account_id)
-      fail "No account with id #{account_id}" unless System.instance.accounts.member?(account_id)
+      fail "No account with id #{account_id}" unless DAOAccount.account_exists?(account_id)
       @items.values.delete_if {|item| item.owner.id == account_id}
     end
 
@@ -83,7 +89,7 @@ module Models
     #
     ##
     def fetch_all_active_items_but_of(account_id)
-      fail "No account with id #{account_id}" unless System.instance.accounts.member?(account_id)
+      fail "No account with id #{account_id}" unless DAOAccount.instance.account_exists?(account_id)
       @items.values.select{|item| item.owner.id != account_id && item.active}
     end
 

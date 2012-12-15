@@ -64,7 +64,7 @@ module Controllers
 
         haml :'home/user'
       else
-		    admin_view = Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+		    admin_view = DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_account(session[:user]))
         if admin_view
           session[:navigation][:selected] = :organisation_admin
         else
@@ -100,7 +100,7 @@ module Controllers
       session[:navigation][:selected] = "home"
       session[:navigation][:subnavigation] = "profile"
 
-      admin_view = Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+      admin_view = DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_account(session[:user]))
 
       haml :'home/organisation', :locals => { :admin_view => admin_view }
     end

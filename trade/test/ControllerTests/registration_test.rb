@@ -70,7 +70,7 @@ class RegistrationTest < Test::Unit::TestCase
       post "/register", {:password => 'aB12De', :re_password => 'aB12De', :name => 'Matz', :interests => "Ruby rocks!",
                          :email => 'matz@mail.ch'},
            'rack.session' => { :user => nil, :auth => false  }
-      user = Models::System.instance.fetch_user_by_email('matz@mail.ch')
+      user = DAOAccount.instance.fetch_user_by_email('matz@mail.ch')
       assert(user != nil, "User should exist within system")
       assert(user.name == 'Matz', "User should be called Matz but was #{user.name}");
       assert(user.email == 'matz@mail.ch', "User should have email matz@mail.ch but was #{user.email}")
@@ -115,7 +115,7 @@ class RegistrationTest < Test::Unit::TestCase
 
     it 'post /unregister should redirect to /unauthenticate' do
       users = TestHelper.get_users
-       System.instance.fetch_organisations_of(users[:homer].id)
+       DAOAccount.instance.fetch_organisations_of(users[:homer].id)
 
 
       post '/unregister', {}, 'rack.session' => { :user => users[:homer].id, :auth => true, :account => users[:homer].id  }

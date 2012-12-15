@@ -20,7 +20,7 @@
   %div(class="align-forms-vertical")
     %form(action="/item/buy" method="post")
       = haml :'item/form/buy', :locals => { :item => item }
-    -if (Models::System.instance.fetch_account(session[:account]).wish_list.items.include?(item))
+    -if (DAOAccount.instance.fetch_account(session[:account]).wish_list.items.include?(item))
       = haml :'partials/form/remove_from_wishlist', :locals => { :item => item }
     -else
       = haml :'partials/form/add_to_wishlist', :locals => { :item => item }

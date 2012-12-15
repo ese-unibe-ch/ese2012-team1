@@ -50,11 +50,11 @@ module Controllers
     post '/account/edit/user/profile' do
       before_for_user_authenticated
 
-      user = Models::System.instance.fetch_account(session[:user])
+      user = DAOAccount.instance.fetch_account(session[:user])
       session[:email_error] = nil
       #Error Messages Sessions
       if params[:email] != nil
-        newMailUser = Models::System.instance.fetch_user_by_email(params[:email])
+        newMailUser = DAOAccount.instance.fetch_user_by_email(params[:email])
         if newMailUser != nil
           session[:email_error] = "You entered a e-mail which is already in use." if (newMailUser != user)
           session[:is_email_error] = "yes" if (newMailUser != user)
@@ -135,7 +135,7 @@ module Controllers
     post '/account/edit/organisation/profile' do
       before_for_admin
 
-      organisation = Models::System.instance.fetch_account(session[:account])
+      organisation = DAOAccount.instance.fetch_account(session[:account])
       redirect "/error/Wrong_Limit" if params[:credit_limit] != "" && !(/^[\d]+(\.[\d]+){0,1}$/.match(params[:credit_limit]))
 
       if !params[:description].nil?

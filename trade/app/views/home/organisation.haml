@@ -1,5 +1,5 @@
-- organisation = Models::System.instance.fetch_account(session[:account].to_i)
-- user = Models::System.instance.fetch_account(session[:user].to_i)
+- organisation = DAOAccount.instance.fetch_account(session[:account].to_i)
+- user = DAOAccount.instance.fetch_account(session[:user].to_i)
 
 #usr_img
   %a(href="#{organisation.avatar}" rel="lightbox")
@@ -13,23 +13,23 @@
     = haml :'partials/description-entry-horizontal', :locals => {:description => inputs[index], :label => label}
 
   %div(class="description")
-    = "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).list_active_items.size} active Items"
+    = "Your Organisation has #{DAOAccount.instance.fetch_account(session[:account]).list_active_items.size} active Items"
 
   %div(class="description")
-    = "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).list_inactive_items.size} inactive Items"
+    = "Your Organisation has #{DAOAccount.instance.fetch_account(session[:account]).list_inactive_items.size} inactive Items"
 
   %div(class="description")
-    = "Your Organisation has #{Models::System.instance.fetch_account(session[:account]).members.size} Members (including you)"
+    = "Your Organisation has #{DAOAccount.instance.fetch_account(session[:account]).members.size} Members (including you)"
 
   = haml :'partials/description-entry-vertical_mkdown', :locals => {:description => organisation.description, :label =>   "Description:" }
 
   %div(class="description")
     -if admin_view
-      - user_limit = Models::System.instance.fetch_account(session[:account]).limit
+      - user_limit = DAOAccount.instance.fetch_account(session[:account]).limit
       - user_limit = "NOT SET" if user_limit == nil
       = "User Credit Limit is currently #{user_limit}"
     -else
-      - limit = Models::System.instance.fetch_account(session[:account]).get_limit(Models::System.instance.fetch_account(session[:user]))
+      - limit = DAOAccount.instance.fetch_account(session[:account]).get_limit(DAOAccount.instance.fetch_account(session[:user]))
       - limit = "NOT SET" if limit == nil
       = "Your personal Credit Limit is currently #{limit}"
 

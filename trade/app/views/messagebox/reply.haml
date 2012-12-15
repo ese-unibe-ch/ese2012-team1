@@ -1,6 +1,6 @@
 - subs = conversation.subscribers
 - receivers = Array.new
-- subs.each { |s| receivers.push(System.instance.fetch_account(s.to_i)) if s.to_i != session[:user].to_i }
+- subs.each { |s| receivers.push(DAOAccount.instance.fetch_account(s.to_i)) if s.to_i != session[:user].to_i }
 
 %h2 Reply to:
 

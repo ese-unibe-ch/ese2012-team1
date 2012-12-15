@@ -8,7 +8,7 @@
     %strong
       Subscribers:
     - conversation.subscribers.each do |subscriber|
-      = System.instance.fetch_account(subscriber).name
+      = DAOAccount.instance.fetch_account(subscriber).name
     %br
     Last Message:
     - msg = conversation.get_last_message

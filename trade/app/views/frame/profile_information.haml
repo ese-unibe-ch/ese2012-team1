@@ -1,6 +1,6 @@
 %div(class="profile-information")
-  - current_user = Models::System.instance.fetch_account(session[:user])
-  - current_organisation = Models::System.instance.fetch_account(session[:account]) if session[:account] != session[:user]
+  - current_user = DAOAccount.instance.fetch_account(session[:user])
+  - current_organisation = DAOAccount.instance.fetch_account(session[:account]) if session[:account] != session[:user]
   - current_organisation = nil if session[:account] == session[:user]
   - if current_organisation == nil
     = "Logged in as: #{current_user.name} - Credits: #{current_user.credits} -"
@@ -14,5 +14,5 @@
     %input(type="submit" value="Watch as")
     %select(name="account" size="1")
       %option(value="#{current_user.id}"){ :selected => current_user.id == session[:account] ? true : false } #{current_user.name}
-      - for org in Models::System.instance.fetch_organisations_of(current_user.id)
+      - for org in DAOAccount.instance.fetch_organisations_of(current_user.id)
         %option(value="#{org.id}"){ :selected => org.id == session[:account] ? true : false } #{org.name}

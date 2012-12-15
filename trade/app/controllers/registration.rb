@@ -42,8 +42,8 @@ module Controllers
     ##
     get '/registration/confirm/:reg_hash' do
       hash = params[:reg_hash]
-      if Models::System.instance.reg_hash_exists?(hash)
-        user = Models::System.instance.fetch_user_by_reg_hash(hash)
+      if DAOAccount.instance.reg_hash_exists?(hash)
+        user = DAOAccount.instance.fetch_user_by_reg_hash(hash)
         if user.activated
           session[:alert] = Alert.create("Error!", "Your account is already activated. Please login.", true)
           redirect '/login'
@@ -113,13 +113,13 @@ module Controllers
     post '/register' do
       if are_nil?(params[:password], params[:re_password], params[:email], params[:name]) ||
          ! params[:password].is_strong_password? || params[:password] != params[:re_password] ||
-          params[:email] == "" || ! params[:email].is_email? || params[:name] == "" || Models::System.instance.user_exists?(params[:email])
+          params[:email] == "" || ! params[:email].is_email? || params[:name] == "" || DAOAccount.instance.user_exists?(params[:email])
 
         #Error Messages Sessions
         session[:email_error] = ""
-        session[:email_error] = "E-Mail Address already in use." if Models::System.instance.user_exists?(params[:email])
+        session[:email_error] = "E-Mail Address already in use." if DAOAccount.instance.user_exists?(params[:email])
         session[:email_error] = "Not a correct E-Mail Address" if params[:email] == "" || !params[:email].is_email?
-        session[:is_email_error] = "yes" if Models::System.instance.user_exists?(params[:email])
+        session[:is_email_error] = "yes" if DAOAccount.instance.user_exists?(params[:email])
         session[:is_email_error] = "yes" if params[:email] == "" || !params[:email].is_email?
 
         #Values from wrong form data
@@ -197,12 +197,12 @@ module Controllers
     ##
     post '/unregister' do
       redirect "/" unless session[:auth]
-      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
-      user = Models::System.instance.fetch_account(session[:user])
+      redirect "/error/No_Valid_Account_Id" unless DAOAccount.instance.account_exists?(session[:user])
+      user = DAOAccount.instance.fetch_account(session[:user])
 
       # Do Organisation Check
       deletable = true
-      org_list = Models::System.instance.fetch_organisations_of(session[:user])
+      org_list = DAOAccount.instance.fetch_organisations_of(session[:user])
       for org in org_list do
          if org.is_admin?(user) && org.admin_count() == 1
            deletable = false

@@ -128,7 +128,7 @@ class SystemTest < Test::Unit::TestCase
     user0 = MockUser.new
     system.add_account(user0)
     assert(system.accounts.member?(user0.id), "User0 should already be added to the system")
-    assert_raise(RuntimeError) { Models::System.instance.add_account(user0)}
+    assert_raise(RuntimeError) { DAOAccount.instance.add_account(user0)}
   end
 
   def test_should_fetch_user

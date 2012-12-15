@@ -35,8 +35,8 @@ module Controllers
         post '/item/buy' do
 
           item = DAOItem.instance.fetch_item(params[:id])
-          buyer = Models::System.instance.fetch_account(session[:account])
-          user=Models::System.instance.fetch_account(session[:user])
+          buyer = DAOAccount.instance.fetch_account(session[:account])
+          user=DAOAccount.instance.fetch_account(session[:user])
           version = params[:version]
 
           unless item.can_be_bought_by?(buyer)
@@ -77,7 +77,7 @@ module Controllers
         ###
         post '/item/towishlist' do
           item = DAOItem.instance.fetch_item(params[:id])
-          account = Models::System.instance.fetch_account(session[:account])
+          account = DAOAccount.instance.fetch_account(session[:account])
 
           #TODO check conditions!
           account.wish_list.add(item)
@@ -100,7 +100,7 @@ module Controllers
         ###
         post '/item/fromwishlist' do
           item = DAOItem.instance.fetch_item(params[:id])
-          account = Models::System.instance.fetch_account(session[:account])
+          account = DAOAccount.instance.fetch_account(session[:account])
 
           #TODO check conditions!
           account.wish_list.remove(item)
@@ -128,7 +128,7 @@ module Controllers
 
           redirect "/error/No_Valid_Input" if params[:comment].nil? || params[:comment] == ""
 
-          user = Models::System.instance.fetch_account(session[:account])
+          user = DAOAccount.instance.fetch_account(session[:account])
           item = DAOItem.instance.fetch_item(params[:id])
 
           comment = Comment.create(user, Sanitize.clean(params[:header]), Sanitize.clean(params[:comment]))

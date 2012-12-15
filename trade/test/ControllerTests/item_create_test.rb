@@ -16,7 +16,7 @@ class ItemCreateTest < Test::Unit::TestCase
     end
 
     it 'post /item/create should create a new item' do
-      user = Models::System.instance.fetch_user_by_email('homer@mail.ch')
+      user = DAOAccount.instance.fetch_user_by_email('homer@mail.ch')
 
       homers_items = DAOItem.instance.fetch_items_of(user.id)
       assert(!homers_items.include?('Gold'), "Should not own gold before post /create")

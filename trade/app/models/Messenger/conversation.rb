@@ -64,7 +64,7 @@ class Conversation
   end
 
   def self.users_exist?(users_id)
-    users_id.all? { |user_id| System.instance.account_exists?(user_id) }
+    users_id.all? { |user_id| DAOAccount.instance.account_exists?(user_id) }
   end
 
   ##

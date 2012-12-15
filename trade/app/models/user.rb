@@ -26,7 +26,7 @@ module Models
     #
     ##
     def invariant
-      Models::System.instance.fetch_user_by_email(self.email) == self
+      DAOAccount.instance.fetch_user_by_email(self.email) == self
     end
 
     ##
@@ -57,7 +57,7 @@ module Models
       fail "Missing path to avatar" if (avatar == nil)
       fail "There's no avatar at #{avatar}" unless (File.exists?(Helpers::absolute_path(avatar.sub("/images", "../public/images"), __FILE__)))
       fail "Not a correct email address" unless email.is_email?
-      fail "E-mail not unique" if Models::System.instance.user_exists?(email)
+      fail "E-mail not unique" if DAOAccount.instance.user_exists?(email)
 
       user = super(name, description, avatar)
 
@@ -101,7 +101,7 @@ module Models
     #TODO test if admin by init works
     def clear
       DAOItem.instance.fetch_items_of(self.id).each { |e| e.clear }
-      Models::System.instance.remove_account(self.id)
+      DAOAccount.instance.remove_account(self.id)
 
       unless (self.avatar == "/images/users/default_avatar.png")
         File.delete("#{self.avatar.sub("/images", "./public/images")}")
@@ -147,7 +147,7 @@ module Models
     #
     ##
     def is_last_admin?
-      organisations = Models::System.fetch_organisations_of(self.id)
+      organisations = DAOAccount.instance.fetch_organisations_of(self.id)
       organisations.one? { |organisation| self.is_last_admin_of?(organisation)}
     end
 

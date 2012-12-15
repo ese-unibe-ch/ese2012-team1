@@ -53,7 +53,7 @@ module Controllers
 
     post '/organisation/create' do
       @error[:name] = ErrorMessages.get("No_Name") if params[:name].nil? || params[:name].length == 0
-      @error[:name] = ErrorMessages.get("Choose_Another_Name") if Models::System.instance.organisation_exists?(params[:name])
+      @error[:name] = ErrorMessages.get("Choose_Another_Name") if DAOAccount.instance.organisation_exists?(params[:name])
       @error[:limit] = ErrorMessages.get("Wrong_Limit") if params[:limit] != "" && !(/^[\d]+(\.[\d]+){0,1}$/.match(params[:limit]))
 
       unless @error.empty?
@@ -73,7 +73,7 @@ module Controllers
         file_path = "/images/organisations/#{params[:name]}.#{filename.sub(/.*\./, "")}"
       end
 
-      user = Models::System.instance.fetch_account(session[:user])
+      user = DAOAccount.instance.fetch_account(session[:user])
       organisation = user.create_organisation(Sanitize.clean(params[:name]), Sanitize.clean(params[:description]), file_path)
 
       new_limit = params[:limit]
@@ -105,7 +105,7 @@ module Controllers
 
     post '/organisation/switch' do
       session[:account] = params[:account].to_i
-      new_account = System.instance.fetch_account(session[:account])
+      new_account = DAOAccount.instance.fetch_account(session[:account])
 
       session[:alert] = Alert.create("Success!", "You changed to " + new_account.name + ". You can now buy and sell items in its name.", false)
       redirect '/home'
@@ -124,8 +124,8 @@ module Controllers
       session[:navigation][:selected]  = "home"
       session[:navigation][:subnavigation] = "organisations"
 
-      user = Models::System.instance.fetch_account(session[:user])
-      haml :'organisation/self', :locals => { :all_organisations => Models::System.instance.fetch_organisations_of(user.id) }
+      user = DAOAccount.instance.fetch_account(session[:user])
+      haml :'organisation/self', :locals => { :all_organisations => DAOAccount.instance.fetch_organisations_of(user.id) }
     end
 
     ##
@@ -142,8 +142,8 @@ module Controllers
       session[:navigation][:selected]  = "home"
       session[:navigation][:subnavigation] = "members"
 
-      organisation = Models::System.instance.fetch_account(session[:account])
-      admin_view = organisation.is_admin?(Models::System.instance.fetch_account(session[:user]))
+      organisation = DAOAccount.instance.fetch_account(session[:account])
+      admin_view = organisation.is_admin?(DAOAccount.instance.fetch_account(session[:user]))
       haml :'organisation/members', :locals => { :all_members => organisation.members_without_admins, :all_admins => organisation.admins.values, :admin_view => admin_view }
     end
 
@@ -162,7 +162,7 @@ module Controllers
       session[:navigation][:subnavigation] = "organisations"
 
       organisation = session[:account]
-      haml :'organisation/all', :locals => { :all_organisations => Models::System.instance.fetch_organisations_but(organisation) }
+      haml :'organisation/all', :locals => { :all_organisations => DAOAccount.instance.fetch_organisations_but(organisation) }
     end
 
     ##
@@ -175,7 +175,7 @@ module Controllers
     ##
     get '/organisations/:id' do
       organisation_id = params[:id]
-      haml :'organisation/id', :locals => {:active_items => Models::System.instance.fetch_account(organisation_id.to_i).list_active_items}
+      haml :'organisation/id', :locals => {:active_items => DAOAccount.instance.fetch_account(organisation_id.to_i).list_active_items}
     end
 
     ##
@@ -195,8 +195,8 @@ module Controllers
         session[:alert] = Alert.create("Oh no!", "You can't leave an organisation when you're not in your Organisations Profile.", true)
         redirect "/home"
       end
-      organisation = Models::System.instance.fetch_account(session[:account])
-      is_admin = organisation.is_admin?(Models::System.instance.fetch_account(session[:user]))
+      organisation = DAOAccount.instance.fetch_account(session[:account])
+      is_admin = organisation.is_admin?(DAOAccount.instance.fetch_account(session[:user]))
       only_admin = false
       only_admin = true if organisation.admin_count == 1
       if is_admin && only_admin
@@ -218,13 +218,13 @@ module Controllers
     #  session[:account] : the user's current id (his own or an organisation's)
     ##
     post '/organisation/leave' do
-      redirect "/error/No_Valid_User" unless Models::System.instance.user_exists?(params[:user_email])
+      redirect "/error/No_Valid_User" unless DAOAccount.instance.user_exists?(params[:user_email])
       if session[:user] == session[:account]
         session[:alert] = Alert.create("Oh no!", "You can't leave an organisation when you're not in your Organisations Profile.", true)
         redirect "/home"
       end
-      organisation = Models::System.instance.fetch_account(session[:account])
-      is_admin = organisation.is_admin?(Models::System.instance.fetch_account(session[:user]))
+      organisation = DAOAccount.instance.fetch_account(session[:account])
+      is_admin = organisation.is_admin?(DAOAccount.instance.fetch_account(session[:user]))
       only_admin = false
       only_admin = true if organisation.admin_count == 1
       if is_admin && only_admin
@@ -232,7 +232,7 @@ module Controllers
         redirect "/home"
       end
 
-      user = Models::System.instance.fetch_user_by_email(params[:user_email])
+      user = DAOAccount.instance.fetch_user_by_email(params[:user_email])
       if params[:user_email] != user.email
         session[:alert] = Alert.create("Oh no!", "You're trying to remove an other User from the Organisation.", true)
         redirect "/home"
@@ -256,7 +256,7 @@ module Controllers
     # TODO: This should go to organisation_admin.rb!
     ##
     get '/organisation/delete' do
-      unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+      unless DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_account(session[:user]))
         session[:alert] = Alert.create("Oh no!", "You can't delete this Organisation, because you're not an Administrator.", true)
         redirect "/home"
       end
@@ -275,16 +275,16 @@ module Controllers
   # TODO: This should go to organisation_admin.rb!
   ##
     post '/organisation/delete' do
-      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
-      unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+      redirect "/error/No_Valid_Account_Id" unless DAOAccount.instance.account_exists?(session[:user])
+      unless DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_account(session[:user]))
         session[:alert] = Alert.create("Oh no!", "You can't delete this Organisation, because you're not an Administrator.", true)
         redirect "/home"
       end
-      org = Models::System.instance.fetch_account(session[:account])
-      Models::System.instance.remove_account(org.id)
+      org = DAOAccount.instance.fetch_account(session[:account])
+      DAOAccount.instance.remove_account(org.id)
 
       user = session[:user]
-      session[:account] = Models::System.instance.fetch_account(user).id
+      session[:account] = DAOAccount.instance.fetch_account(user).id
 
       redirect '/home'
     end

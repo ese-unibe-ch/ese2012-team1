@@ -52,7 +52,7 @@ module Controllers
     #
     ##
     post '/organisation/add/member' do
-      if Models::System.instance.user_exists?(params[:member])
+      if DAOAccount.instance.user_exists?(params[:member])
         haml :'organisation/member_confirm', :locals => { :member => params[:member]}
       else
         session[:alert] = Alert.create("Oh no!", "User with email #{params[:member]} does not exist!", true)
@@ -73,9 +73,9 @@ module Controllers
     #
     ##
     post '/organisation/member/confirm' do
-      if Models::System.instance.user_exists?(params[:member])
-        user =  Models::System.instance.fetch_user_by_email(params[:member])
-        org = Models::System.instance.fetch_account(session[:account])
+      if DAOAccount.instance.user_exists?(params[:member])
+        user =  DAOAccount.instance.fetch_user_by_email(params[:member])
+        org = DAOAccount.instance.fetch_account(session[:account])
         org.add_member(user)
 
         session[:alert] = Alert.create("Success!", "You added user #{params[:member]}", false)
@@ -103,14 +103,14 @@ module Controllers
     #
     ##
     post '/organisation/member/delete' do
-      self_remove = (Models::System.instance.fetch_account(session[:user]) == Models::System.instance.fetch_user_by_email(params[:member]))
-      organisation = Models::System.instance.fetch_account(session[:account])
+      self_remove = (DAOAccount.instance.fetch_account(session[:user]) == DAOAccount.instance.fetch_user_by_email(params[:member]))
+      organisation = DAOAccount.instance.fetch_account(session[:account])
       only_admin = true if organisation.admin_count == 1
       if self_remove && only_admin
         session[:alert] = Alert.create("Oh no!", "You can't leave this Organisation, because you're the only Administrator.", true)
         redirect "/organisation/members"
       end
-      if Models::System.instance.user_exists?(params[:member])
+      if DAOAccount.instance.user_exists?(params[:member])
         haml :'organisation/member_delete_confirm', :locals => { :member => params[:member]}
       else
         redirect 'organisation/members', :locals => { :error_message => "User does not exist" }
@@ -134,18 +134,18 @@ module Controllers
     #
     ##
     post '/organisation/member/delete/confirm' do
-      self_remove = (Models::System.instance.fetch_account(session[:user]) == Models::System.instance.fetch_user_by_email(params[:user_email]))
-      organisation = Models::System.instance.fetch_account(session[:account])
+      self_remove = (DAOAccount.instance.fetch_account(session[:user]) == DAOAccount.instance.fetch_user_by_email(params[:user_email]))
+      organisation = DAOAccount.instance.fetch_account(session[:account])
       only_admin = true if organisation.admin_count == 1
       if self_remove && only_admin
         session[:alert] = Alert.create("Oh no!", "You can't leave this Organisation, because you're the only Administrator.", true)
         redirect "/organisation/members"
       end
-      unless Models::System.instance.user_exists?(params[:user_email])
+      unless DAOAccount.instance.user_exists?(params[:user_email])
         session[:alert] = Alert.create("Oh no!", "This is not a valid User.", true)
         redirect "/organisation/members"
       end
-      user = Models::System.instance.fetch_user_by_email(params[:user_email])
+      user = DAOAccount.instance.fetch_user_by_email(params[:user_email])
       organisation.remove_member_by_email(user.email)
 
       if self_remove
@@ -171,12 +171,12 @@ module Controllers
     #
     ##
     post '/organisation/member/to_admin' do
-      if Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_user_by_email(params[:member]))
+      if DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_user_by_email(params[:member]))
         session[:alert] = Alert.create("Oh no!", "This user is already an Administrator of this Organisation.", true)
         redirect "/organisation/members"
       end
 
-      if Models::System.instance.user_exists?(params[:member])
+      if DAOAccount.instance.user_exists?(params[:member])
         haml :'organisation/member_to_admin_confirm', :locals => { :member => params[:member]}
       else
         redirect '/organisation/members'
@@ -197,13 +197,13 @@ module Controllers
     #
     ##
     post '/organisation/member/to_admin/confirm' do
-      if Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_user_by_email(params[:user_email]))
+      if DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_user_by_email(params[:user_email]))
         session[:alert] = Alert.create("Oh no!", "This user is already an Administrator of this Organisation.", true)
         redirect "/organisation/members"
       end
 
-      organisation = Models::System.instance.fetch_account(session[:account])
-      user = Models::System.instance.fetch_user_by_email(params[:user_email])
+      organisation = DAOAccount.instance.fetch_account(session[:account])
+      user = DAOAccount.instance.fetch_user_by_email(params[:user_email])
       if user.id != session[:user]
         organisation.set_as_admin(user)
       end
@@ -227,14 +227,14 @@ module Controllers
     ##
 
     post '/organisation/admin/to_member' do
-      self_revoke = (Models::System.instance.fetch_account(session[:user]) == Models::System.instance.fetch_user_by_email(params[:member]))
-      organisation = Models::System.instance.fetch_account(session[:account])
+      self_revoke = (DAOAccount.instance.fetch_account(session[:user]) == DAOAccount.instance.fetch_user_by_email(params[:member]))
+      organisation = DAOAccount.instance.fetch_account(session[:account])
       only_admin = true if organisation.admin_count == 1
       if self_revoke && only_admin
         session[:alert] = Alert.create("Oh no!", "You can not revoke administrator privileges from yourself if you are the only Administrator of an Organisation.", true)
         redirect "/organisation/members"
       end
-      if Models::System.instance.user_exists?(params[:member])
+      if DAOAccount.instance.user_exists?(params[:member])
         haml :'organisation/admin_to_member_confirm', :locals => { :member => params[:member]}
       else
         redirect '/organisation/members'
@@ -258,20 +258,20 @@ module Controllers
     #
     ##
     post '/organisation/admin/to_member/confirm' do
-      unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+      unless DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_account(session[:user]))
         session[:alert] = Alert.create("Oh no!", "You're not an administrator of this Organisation.", true)
         redirect "/organisation/members"
       end
 
-      self_revoke = (Models::System.instance.fetch_account(session[:user]) == Models::System.instance.fetch_user_by_email(params[:user_email]))
-      organisation = Models::System.instance.fetch_account(session[:account])
+      self_revoke = (DAOAccount.instance.fetch_account(session[:user]) == DAOAccount.instance.fetch_user_by_email(params[:user_email]))
+      organisation = DAOAccount.instance.fetch_account(session[:account])
       only_admin = true if organisation.admin_count == 1
       if self_revoke && only_admin
         session[:alert] = Alert.create("Oh no!", "You can not revoke administrator privileges from yourself if you are the only Administrator of an Organisation.", true)
         redirect "/organisation/members"
       end
 
-      user = Models::System.instance.fetch_user_by_email(params[:user_email])
+      user = DAOAccount.instance.fetch_user_by_email(params[:user_email])
       organisation.revoke_admin_rights(user)
 
       if user.id == session[:user]

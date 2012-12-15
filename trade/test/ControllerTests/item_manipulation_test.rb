@@ -80,7 +80,7 @@ class ItemManipulationTest < Test::Unit::TestCase
     end
 
     it 'post /item/changestate/setactive should not set items of somebody else active' do
-      item = Models::System.instance.fetch_user_by_email('bart@mail.ch').create_item('sling', 20)
+      item = DAOAccount.instance.fetch_user_by_email('bart@mail.ch').create_item('sling', 20)
 
       assert(!item.is_active?, "Item should be inactive")
 

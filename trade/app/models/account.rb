@@ -64,7 +64,7 @@ module Models
     #
     ##
     def save
-      Models::System.instance.add_account(self)
+      DAOAccount.instance.add_account(self)
     end
 
     ##

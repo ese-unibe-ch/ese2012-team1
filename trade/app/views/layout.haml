@@ -35,7 +35,7 @@
       - auth = session[:auth] ? "yes" : "no"
       - user = session[:auth] ? session[:user] : "none"
       - account = session[:auth] ? session[:account] : "none"
-      - admin_view = Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user])) if auth == "yes" && session[:account] != session[:user]
+      - admin_view = DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_account(session[:user])) if auth == "yes" && session[:account] != session[:user]
       - navigation = Navigations.instance.get(session[:navigation][:context])
 
       = haml :'frame/header', :locals =>  {  :auth => auth,
