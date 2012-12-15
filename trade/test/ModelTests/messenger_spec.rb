@@ -8,7 +8,8 @@ describe Messenger do
   context "when created" do
     before(:each) do
       @system = double("System")
-      System.stub(:instance).and_return(@system)
+      DAOAccount.stub(:instance).and_return(@system)
+      DAOItem.stub(:instance).and_return(@system)
       @system.stub(:account_exists?).and_return(true)
 
       @messenger = Messenger.instance

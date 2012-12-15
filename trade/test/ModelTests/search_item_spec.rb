@@ -5,7 +5,8 @@ describe "SearchItem" do
     @to_be_searched = double("Searched Item")
     @search_item = SearchItem.create(@to_be_searched, "SearchItem", [:method1, :method2, :method3])
     @system = double("system")
-    System.stub(:instance).and_return(@system)
+    DAOAccount.stub(:instance).and_return(@system)
+    DAOItem.stub(:instance).and_return(@system)
     @system.stub(:account_exists?).and_return(true)
   end
 
@@ -93,13 +94,14 @@ describe "SearchItem" do
         organisation = double("organisation")
         user = double("user")
         system = double("system")
-        System.stub(:instance).and_return(system)
+        DAOAccount.stub(:instance).and_return(system)
 
         user.stub(:id).and_return(1)
         system.should_receive(:fetch_account).with(user.id).and_return(user)
         organisation.should_receive(:is_member?).with(user).and_return(true)
 
         search_item = SearchItemOrganisation.create(organisation, "organisation", [:callMe])
+
         search_item.part_of?(user.id).should == true
       end
     end
@@ -110,7 +112,7 @@ describe "SearchItem" do
         user1 = double("user1")
         user2 = double("user2")
         system = double("system")
-        System.stub(:instance).and_return(system)
+        DAOAccount.stub(:instance).and_return(system)
 
         user1.stub(:id).and_return(1)
         system.should_receive(:fetch_account).with(user1.id).and_return(user1)

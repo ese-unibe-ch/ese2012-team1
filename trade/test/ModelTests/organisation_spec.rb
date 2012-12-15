@@ -5,9 +5,11 @@ require_relative "account_shared_examples"
 describe "Organisation" do
   before(:each) do
     @system = double('system')
-    System.stub(:instance).and_return(@system)
+    DAOAccount.stub(:instance).and_return(@system)
+    DAOItem.stub(:instance).and_return(@system)
+
     @system.stub(:add_account)
-    @system.stub(:user_exists?).and_return(false)
+    @system.stub(:email_exists?).and_return(false)
 
     @search = double('search')
     @search.stub(:register)

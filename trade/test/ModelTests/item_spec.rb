@@ -14,7 +14,7 @@ require 'test_require'
 describe "Coupling for CommentContainer:" do
   context "System" do
     before(:each) do
-      @system = System.instance
+      @system = DAOItem.instance
     end
 
     it "should response to instance" do
@@ -147,7 +147,8 @@ describe Models::Item do
     context "#clear" do
       before(:each) do
         @system = double('System')
-        System.stub(:instance).and_return(@system)
+        DAOItem.stub(:instance).and_return(@system)
+        DAOAccount.stub(:instance).and_return(@system)
         @system.stub(:remove_item)
 
         @search = double('search')

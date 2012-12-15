@@ -87,7 +87,6 @@ class Conversation
       count = 0
 
       found = @messages[index+1..@messages.size-1].find do |last_message|
-        puts last_message.message
         result = last_message.depth < message.depth
         count += 1
         result

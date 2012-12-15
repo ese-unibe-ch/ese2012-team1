@@ -1,35 +1,41 @@
 require 'test_require'
 
 describe "Coupling to" do
-  context "System" do
+  context "DAOAccount" do
     it "should respond to instance" do
-      System.respond_to?(:instance).should be_true
+      DAOAccount.respond_to?(:instance).should be_true
     end
 
     context "instance" do
       it "should respond to add_account" do
-        System.instance.respond_to?(:add_account).should be_true
-      end
-      it "should respond to add_item" do
-        System.instance.respond_to?(:add_item).should be_true
-      end
-      it "should respond to items" do
-        System.instance.should respond_to(:items)
-      end
-      it "should respond to fetch_items_of" do
-        System.instance.respond_to?(:fetch_items_of).should be_true
+        DAOAccount.instance.respond_to?(:add_account).should be_true
       end
       it "should respond to remove_account" do
-        System.instance.should respond_to(:remove_account)
+        DAOAccount.instance.should respond_to(:remove_account)
       end
-      it "should respond to fetch_item" do
-        System.instance.should respond_to(:fetch_item)
+      it "should respond to email_exists?" do
+        DAOAccount.instance.should respond_to(:email_exists?)
       end
-      it "should respond to item_exists?" do
-        System.instance.should respond_to(:item_exists?)
+    end
+
+    context "DAOItem" do
+      it "should respond to instance" do
+        DAOItem.respond_to?(:instance).should be_true
       end
-      it "should respond to user_exists?" do
-        System.instance.should respond_to(:user_exists?)
+
+      context "instance" do
+        it "should respond to add_item" do
+          DAOItem.instance.respond_to?(:add_item).should be_true
+        end
+        it "should respond to fetch_items_of" do
+          DAOItem.instance.respond_to?(:fetch_items_of).should be_true
+        end
+        it "should respond to fetch_item" do
+          DAOItem.instance.should respond_to(:fetch_item)
+        end
+        it "should respond to item_exists?" do
+          DAOItem.instance.should respond_to(:item_exists?)
+        end
       end
     end
   end
@@ -62,9 +68,10 @@ end
 describe "User" do
   before(:each) do
     @system = double('system')
-    System.stub(:instance).and_return(@system)
+    DAOItem.stub(:instance).and_return(@system)
+    DAOAccount.stub(:instance).and_return(@system)
     @system.stub(:add_account)
-    @system.stub(:user_exists?).and_return(false)
+    @system.stub(:email_exists?).and_return(false)
 
     @search = double('search')
     @search.stub(:register)

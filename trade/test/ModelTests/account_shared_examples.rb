@@ -9,9 +9,10 @@ end
 shared_examples_for "any Account while creation" do
   before(:each) do
     @system = double('system')
-    System.stub(:instance).and_return(@system)
+    DAOAccount.stub(:instance).and_return(@system)
+    DAOItem.stub(:instance).and_return(@system)
     @system.stub(:add_account)
-    @system.stub(:user_exists?).and_return(false)
+    @system.stub(:email_exists?).and_return(false)
 
     @search = double('search')
     @search.stub(:register)
@@ -26,6 +27,12 @@ shared_examples_for "any Account while creation" do
 end
 
 shared_examples_for "any created Account" do
+    before(:each) do
+      @system = double('system')
+      DAOAccount.stub(:instance).and_return(@system)
+      DAOItem.stub(:instance).and_return(@system)
+    end
+
     it "should have name" do
       @user.name.should be_like  "Bart"
     end
@@ -82,6 +89,10 @@ end
 
 shared_examples_for "any Account while item creation" do
   before(:each) do
+    @system = double('system')
+    DAOAccount.stub(:instance).and_return(@system)
+    DAOItem.stub(:instance).and_return(@system)
+
     @item = double('item')
   end
 
@@ -111,6 +122,10 @@ end
 
 shared_examples_for "any Account after item creation" do
   before(:each) do
+    @system = double('system')
+    DAOAccount.stub(:instance).and_return(@system)
+    DAOItem.stub(:instance).and_return(@system)
+
     @item = double('item')
   end
 
