@@ -110,7 +110,7 @@ class RegistrationTest < Test::Unit::TestCase
     it 'post /unregister should remove bart from list of users' do
       users = TestHelper.get_users
       post '/unregister', {}, 'rack.session' => { :user => users[:bart].id, :auth => true  }
-      assert !Models::System.instance.accounts.member?(users[:bart].id), "Bart should not exist anymore"
+      assert !Models::DAOAccount.instance.account_exists?(users[:bart].id), "Bart should not exist anymore"
     end
 
     it 'post /unregister should redirect to /unauthenticate' do

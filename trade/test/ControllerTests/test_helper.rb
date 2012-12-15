@@ -131,7 +131,8 @@ class TestHelper
   ##
 
   def self.clear_all
-    Models::System.instance.reset
+    Models::DAOAccount.instance.reset
+    Models::DAOItem.instance.reset
   end
 
   ##
