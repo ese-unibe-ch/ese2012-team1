@@ -16,6 +16,7 @@ describe DAOItem do
     user.should_receive(:id).and_return(nil)
     user.should_receive(:id=).with(id)
     user.stub(:id).and_return(id)
+    user.stub(:organisation).and_return(false)
 
     user
   end
@@ -78,6 +79,34 @@ describe DAOItem do
         fetched2.should == @users[:momo]
       end
 
+      it "should fetch added users by email" do
+        @users[:beppo].should_receive(:respond_to?).and_return(true)
+        @users[:beppo].should_receive(:email).and_return("beppo@mail.ch")
+
+        fetched = @accounts.fetch_user_by_email("beppo@mail.ch")
+
+        fetched.should == @users[:beppo]
+      end
+
+      it "should return false when registration hash doesn't exist" do
+        @users[:beppo].stub(:organisation).and_return(false)
+        @users[:beppo].should_receive(:reg_hash).and_return(1)
+        @users[:momo].stub(:organisation).and_return(false)
+        @users[:momo].should_receive(:reg_hash).and_return(1)
+        @users[:kassiopeia].stub(:organisation).and_return(false)
+        @users[:kassiopeia].should_receive(:reg_hash).and_return(1)
+
+        @accounts.reg_hash_exists?(0).should be_false
+      end
+
+      it "should fetch all users but one" do
+        fetched = @accounts.fetch_all_users_but(@users[:momo].id)
+
+        fetched.include?(@users[:momo]).should be_false
+        fetched.include?(@users[:kassiopeia]).should be_true
+        fetched.include?(@users[:beppo]).should be_true
+      end
+
       it "should remove added users by id" do
         @users[:kassiopeia].should_receive(:avatar).and_return("/images/users/default_avatar.png" )
         @users[:beppo].should_receive(:avatar).and_return("/images/users/default_avatar.png" )
@@ -96,7 +125,14 @@ describe DAOItem do
         @accounts.count_accounts.should == 0
       end
 
-      it "should fetch all but one user" do
+      it "should remove picture when removing a user" do
+        @users[:kassiopeia].stub(:avatar).and_return("/images/users/1.png" )
+        File.should_receive(:delete).with("./public/images/users/1.png")
+
+        @accounts.remove_account(@users[:kassiopeia].id)
+      end
+
+      it "should fetch all but one accounts" do
         others = @accounts.fetch_all_accounts_but(@users[:momo].id)
         others.size.should == 2
         others.include?(@users[:beppo]).should be_true
