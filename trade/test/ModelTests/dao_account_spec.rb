@@ -2,11 +2,12 @@ require 'test_require'
 
 describe DAOItem do
   before(:each) do
-    @items = Models::DAOItem.instance
+    @items = double("Items")
+    DAOItem.stub(:instance).and_return(@items)
+
     @accounts = Models::DAOAccount.instance
 
     @accounts.reset
-    @items.reset
   end
 
   def double_user(name, id)
@@ -19,16 +20,6 @@ describe DAOItem do
     user
   end
 
-  def double_item(name, id, owner)
-    item = double(name)
-    item.should_receive(:id).and_return(nil)
-    item.should_receive(:id=).with(id)
-    item.stub(:id).and_return(id)
-    item.stub(:owner).and_return(owner)
-
-    item
-  end
-
   def add_users
     @users = {  :momo => double_user("Momo", 0),
                 :beppo => double_user("Peppo", 1),
@@ -37,18 +28,6 @@ describe DAOItem do
     @accounts.add_account(@users[:momo])
     @accounts.add_account(@users[:beppo])
     @accounts.add_account(@users[:kassiopeia])
-  end
-
-  def add_items
-    @some_items = { :curly_hair => double_item("Curly Hair", 0, @users[:momo]),
-                    :sand => double_item("Hourflower", 1, @users[:momo]),
-                    :broom => double_item("Broom", 2, @users[:beppo]),
-                    :time => double_item("Time", 3, @users[:kassiopeia]) }
-
-    @items.add_item(@some_items[:curly_hair])
-    @items.add_item(@some_items[:sand])
-    @items.add_item(@some_items[:broom])
-    @items.add_item(@some_items[:time])
   end
 
   context "when created" do
