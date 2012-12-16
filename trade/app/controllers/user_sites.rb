@@ -47,7 +47,7 @@ module Controllers
     #
     ##
     get '/users/:id' do
-        redirect "/error/No_Valid_Account_Id" unless DAOAccount.instance.account_exists?(params[:id].to_i)
+        error_redirect("Oh no!", "There's something gone wrong.", !DAOAccount.instance.account_exists?(params[:id].to_i), "/home")
         user_id = params[:id]
         redirect "/home" if user_id.to_s == session[:account].to_s
         haml :'user/id', :locals => {:active_items => DAOAccount.instance.fetch_account(user_id.to_i).list_active_items}
