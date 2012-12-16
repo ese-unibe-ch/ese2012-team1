@@ -13,7 +13,7 @@ class ErrorMessages
     elsif name == "No_Name"
       msg = "Please enter a name"
     elsif name == "No_Price"
-      msg = "Please enter a name"
+      msg = "Please enter a price"
     elsif name == "No_Description"
       msg = "Please enter a description"
     elsif name == "No_Valid_Item_Id"

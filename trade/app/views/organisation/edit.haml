@@ -16,7 +16,7 @@
       %td
         %label Credit Limit for normal User (Empty for no Limit):
       %td
-        %input(type="text" name="credit_limit" value="#{DAOAccount.instance.fetch_account(session[:account]).limit}")
+        = haml :'partials/alert-input-no-label-value', :locals => { :name => :credit_limit, :value => DAOAccount.instance.fetch_account(session[:account]).limit}
     %tr
       %td
         %label Avatar:

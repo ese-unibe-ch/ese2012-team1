@@ -39,21 +39,10 @@ module Controllers
           user=DAOAccount.instance.fetch_account(session[:user])
           version = params[:version]
 
-          unless item.can_be_bought_by?(buyer)
-            session[:alert] = Alert.create("Oh no!", "You have not enough Credits to buy this Item.", true)
-            redirect "/item/#{params[:id]}"
-          end
-          if  buyer!=user #true if it is a user acting as an organisation
-            unless buyer.within_limit_of?(item, user)
-              session[:alert] = Alert.create("Oh no!", "You tried to buy something for your organistion that is over your daily organisation limit.", true)
-              redirect "/item/#{params[:id]}"
-            end
-          end
+          error_redirect("Oh no!", "You have not enough Credits to buy this Item.", !item.can_be_bought_by?(buyer), "/item/#{params[:id]}")
+          error_redirect("Oh no!", "You tried to buy something for your organistion that is over your daily organisation limit.", buyer!=user && !buyer.within_limit_of?(item, user), "/item/#{params[:id]}")
+          error_redirect("Item has Changed!", "While you were watching this site, the Item was modified.", !item.current_version?(version), "/item/#{item.id}")
 
-          unless item.current_version?(version)
-            session[:alert] = Alert.create("Item has Changed!", "While you were watching this site, the Item was modified.", true)
-            redirect "/item/#{item.id}"
-          end
           buyer.buy_item(item, user)
 
           item.alter_version
@@ -126,7 +115,7 @@ module Controllers
         ###
         post '/item/add/comment/:id' do
 
-          redirect "/error/No_Valid_Input" if params[:comment].nil? || params[:comment] == ""
+          error_redirect("No Valid Input", "There has something gone wrong.", params[:comment].nil? || params[:comment] == "", "/home")
 
           user = DAOAccount.instance.fetch_account(session[:account])
           item = DAOItem.instance.fetch_item(params[:id])

@@ -66,9 +66,9 @@ module Controllers
       else
 		    admin_view = DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_account(session[:user]))
         if admin_view
-          session[:navigation][:selected] = :organisation_admin
+          session[:navigation][:context] = :organisation_admin
         else
-          session[:navigation][:selected] = :organisation
+          session[:navigation][:context] = :organisation
         end
         session[:navigation][:selected]  = "home"
         session[:navigation][:subnavigation] = "profile"

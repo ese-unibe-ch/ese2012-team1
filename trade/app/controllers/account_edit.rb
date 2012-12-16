@@ -136,7 +136,14 @@ module Controllers
       before_for_admin
 
       organisation = DAOAccount.instance.fetch_account(session[:account])
-      redirect "/error/Wrong_Limit" if params[:credit_limit] != "" && !(/^[\d]+(\.[\d]+){0,1}$/.match(params[:credit_limit]))
+      #redirect "/error/Wrong_Limit" if params[:credit_limit] != "" && !(/^[\d]+(\.[\d]+){0,1}$/.match(params[:credit_limit]))
+
+      @error[:credit_limit] = ErrorMessages.get("Wrong_Limit") if params[:credit_limit] != "" && !(/^[\d]+(\.[\d]+){0,1}$/.match(params[:credit_limit]))
+
+      unless @error.empty?
+        #redirect back
+        halt haml :'/organisation/edit'
+      end
 
       if !params[:description].nil?
         organisation.description = params[:description].nil? ? "" : Sanitize.clean(params[:description])
