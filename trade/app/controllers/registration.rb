@@ -188,7 +188,7 @@ module Controllers
       user = DAOAccount.instance.fetch_account(session[:user])
 
       # Do Organisation Check
-      deletable = ! DAOAccount.instance.is_last_admin?
+      deletable = ! DAOAccount.instance.is_last_admin?(user)
 
       # Remove User From Organisation
       if deletable
