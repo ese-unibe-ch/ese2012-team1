@@ -6,7 +6,6 @@
 
 require 'rubygems'
 require 'bcrypt'
-require 'sinatra'
 require 'rack/protection'
 require 'haml'
 require 'haml/template/options'
@@ -17,6 +16,8 @@ require 'webrick'
 require 'webrick/https'
 require 'openssl'
 require 'json'
+
+require_relative '../../sinatra-1.3.3-custom/lib/sinatra'
 
 require_relative 'models/data access object/dao_item'
 require_relative 'models/data access object/dao_account'
