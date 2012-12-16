@@ -140,7 +140,6 @@ module Controllers
       @error[:credit_limit] = ErrorMessages.get("Wrong_Limit") if params[:credit_limit] != "" && !(/^[\d]+(\.[\d]+){0,1}$/.match(params[:credit_limit]))
 
       unless @error.empty?
-        #redirect back
         halt haml :'/organisation/edit'
       end
 
