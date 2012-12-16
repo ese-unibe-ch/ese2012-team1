@@ -28,11 +28,12 @@ describe "Organisation" do
   context "when created" do
     before(:each) do
       @user = create_account
+      @organisation = @user
     end
 
     it_behaves_like "any created Account"
 
-    it "should have user sink" do  # @pas what does this mean?? is not a sink, where you wash your dishes? xD
+    it "should have list of members" do
       @user.respond_to?(:members)
     end
 
@@ -42,6 +43,99 @@ describe "Organisation" do
 
     it_behaves_like "any Account while item creation"
     it_behaves_like "any Account after item creation"
+
+    context "when user limit is set" do
+      before(:each) do
+        @normal_user = double("Normal User")
+        @normal_user.stub(:email).and_return("normal@mail.ch")
+        @admin = double("Admin")
+        @admin.stub(:email).and_return("admin@mail.ch")
+
+        @organisation.add_member(@normal_user)
+        @organisation.add_member(@admin)
+        @organisation.set_as_admin(@admin)
+        @organisation.set_limit(50)
+      end
+
+      it "normal user should have same limit" do
+        @organisation.get_limit(@normal_user).should == 50
+      end
+
+      it "admins should have not limit" do
+        @organisation.get_limit(@admin).should == nil
+      end
+    end
+
+    context "when buying items" do
+      before(:each) do
+        @seller = double("Seller")
+        @seller.stub(:credits).and_return(100)
+        @seller.stub(:credits=)
+
+        @buyer = double("Buyer")
+        @buyer.stub(:organisation).and_return(false)
+        @buyer.stub(:email).and_return("buyer@mail.ch")
+        @organisation.add_member(@buyer)
+
+        @item = double("Item")
+        @item.stub(:price).and_return(20)
+        @item.stub(:id).and_return(0)
+        @item.stub(:owner).and_return(@seller)
+        @item.stub(:bought_by)
+
+        @system.stub(:item_exists?).and_return(true)
+      end
+
+      it "should add credits to seller" do
+        @seller.should_receive(:credits=).with(@seller.credits + @item.price)
+
+        @organisation.buy_item(@item, @buyer)
+      end
+
+      it "should set organisation as buyer" do
+        @item.should_receive(:bought_by).with(@organisation)
+
+        @organisation.buy_item(@item, @buyer)
+      end
+
+      it "should not sell item when buy is on behalf of an organisation" do
+        @buyer.should_receive(:organisation).and_return(true)
+
+        lambda{ @organisation.buy_item(@item, @buyer) }.should raise_error(RuntimeError)
+      end
+
+      it "should not sell item if user is not part of organisation" do
+        @organisation.remove_member(@buyer)
+
+        lambda{ @organisation.buy_item(@item, @buyer) }.should raise_error(RuntimeError)
+      end
+
+
+      it "should not sell item if organisation has not enough credits" do
+        @organisation.credits = @item.price - 10
+
+        lambda { @organisation.buy_item(@item, @buyer) }.should raise_error(RuntimeError)
+      end
+
+      context "when user limit set" do
+        before(:each) do
+          @organisation.set_limit(50)
+        end
+
+        it "should possible to buy over limit when admin" do
+          @organisation.set_as_admin(@buyer)
+          @item.stub(:price).and_return(60)
+
+          @organisation.buy_item(@item, @buyer)
+        end
+
+        it "should not be possible to buy over limit when not admin" do
+          @item.stub(:price).and_return(60)
+
+          @organisation.buy_item(@item, @buyer)
+        end
+      end
+    end
 
     context "adding and removing members" do
       before(:each) do
@@ -88,15 +182,6 @@ describe "Organisation" do
         @member_to_be_admin = double('member_to_be_admin')
         @member_to_be_admin.stub(:email).and_return("bart@mail.ch")
         @organisation = create_account
-      end
-
-      it "creator should have admin right" do
-        # It's not a good test, but I dont know how I should imitate
-        # the situation, that the creator should automatically have
-        # admin rights. This would have to be in user, right?
-        # But there is already a such a test.
-        @organisation.set_as_admin(@member_to_be_admin)
-        @organisation.is_admin?(@member_to_be_admin).should be_true
       end
 
       it "should not revoke admin right if only one admin" do

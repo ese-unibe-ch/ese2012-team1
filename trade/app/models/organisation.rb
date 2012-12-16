@@ -169,7 +169,9 @@ module Models
     #
     ##
     def buy_item(item_to_buy, user)
-      fail "would exceed #{user.email}'s organisation limit for today" unless within_limit_of?(item_to_buy, user)
+      fail "only users can buy items in behalve of an organisation" if (user.organisation)
+      fail "only users that are part of #{self.name} can buy items for it" unless (is_member?(user))
+      fail "would exceed #{user.name}'s organisation limit for today" unless within_limit_of?(item_to_buy, user)
       fail "not enough credits" if item_to_buy.price > self.credits
       fail "Item not in System" unless (DAOItem.instance.item_exists?(item_to_buy.id))
 
@@ -180,7 +182,7 @@ module Models
       #Adds price to owner
       old_owner.credits += item_to_buy.price
       #decreases the limit of the buyer
-      member_limits[user.email]=self.member_limits.fetch(user.email)-item_to_buy.price unless self.limit.nil?
+      member_limits[user.email]=self.member_limits.fetch(user.email)-item_to_buy.price unless self.limit.nil? || is_admin?(user)
 
       item_to_buy.bought_by(self)
     end
@@ -256,11 +258,11 @@ module Models
     ##
     #
     # Removes the organisation from the system
+    # TODO: This does nothing at all...
     #
     ##
     def clear
       System.search.unregister(self)
     end
-
   end
 end
