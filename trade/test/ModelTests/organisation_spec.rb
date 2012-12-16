@@ -122,17 +122,64 @@ describe "Organisation" do
           @organisation.set_limit(50)
         end
 
-        it "should possible to buy over limit when admin" do
+        it "user should buy over limit when admin" do
           @organisation.set_as_admin(@buyer)
           @item.stub(:price).and_return(60)
 
           @organisation.buy_item(@item, @buyer)
         end
 
-        it "should not be possible to buy over limit when not admin" do
+        it "user should not buy over limit when not admin" do
           @item.stub(:price).and_return(60)
 
           lambda{@organisation.buy_item(@item, @buyer)}.should raise_error(RuntimeError)
+        end
+
+        it "user should buy item within limit" do
+          @item.stub(:price).and_return(20)
+          @item.should_receive(:bought_by).with(@organisation)
+
+          @organisation.buy_item(@item, @buyer)
+        end
+
+        it "user should have limit decreased by cost" do
+          @item.stub(:price).and_return(20)
+
+          @organisation.buy_item(@item, @buyer)
+
+          @organisation.get_limit(@buyer).should == 30
+        end
+
+        context "when bought item and limit changes" do
+          before(:each) do
+            @item.stub(:price).and_return(20)
+            @organisation.buy_item(@item, @buyer)
+          end
+
+          it "remaining limit should be calculated on base of the spend money" do
+            @organisation.set_limit(70)
+            @organisation.get_limit(@buyer).should == 50
+          end
+
+          it "remaining limit should be zero if limit is smaller than amount spend" do
+            @organisation.set_limit(10)
+            @organisation.get_limit(@buyer).should == 0
+          end
+
+          it "when reset limit then limit should be as before" do
+            @organisation.reset_member_limits
+            @organisation.get_limit(@buyer).should == 50
+          end
+
+          context "to nil" do
+            it "user should buy items without limit" do
+              @item.stub(:price).and_return(80)
+              @organisation.set_limit(nil)
+              @item.should_receive(:bought_by).with(@organisation)
+
+              @organisation.buy_item(@item, @buyer)
+            end
+          end
         end
       end
     end

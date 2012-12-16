@@ -154,9 +154,8 @@ module Controllers
         if new_limit == ""
           organisation.limit = nil
         else
-          organisation.limit = new_limit.to_i
+          organisation.set_limit(new_limit.to_i)
         end
-        organisation.reset_member_limits
       end
 
       dir = absolute_path('../public/images/organisations/', __FILE__)

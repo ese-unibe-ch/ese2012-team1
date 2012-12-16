@@ -44,16 +44,18 @@ module Models
       end
 
       def limit
-        if @organisation.is_admin?(@user)
+        if @organisation.is_admin?(@user) || @organisation.limit.nil?
             nil
         else
-          resources =  organisation.limit - @spend
+          resources =  @organisation.limit - @spend
           resources < 0 ? 0 : resources
         end
       end
 
       def has_resources_for?(price)
-        resources =  organisation.limit - (@spend + price)
+        return true if @organisation.limit.nil? || @organisation.is_admin?(@user)
+
+        resources =  @organisation.limit - (@spend + price)
         resources > 0
       end
 
@@ -271,7 +273,7 @@ module Models
     #
     ##
     def within_limit_of?(item, user)
-      is_admin?(user) or self.limit.nil? or @member_limits.fetch(user.email).has_resources_for?(item.price)
+      @member_limits.fetch(user.email).has_resources_for?(item.price)
     end
 
     ##
@@ -284,7 +286,7 @@ module Models
     #
     ##
     def set_limit(amount)
-      fail "no valid limit" if amount<0
+      fail "no valid limit" if !amount.nil? && amount<0
 
       self.limit=amount
     end
