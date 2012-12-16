@@ -4,7 +4,7 @@ module Helpers
 
     common_before
 
-    redirect "/error/No_Valid_Account_Id" unless DAOAccount.instance.account_exists?(session[:account])
+    error_redirect("No valid Account ID", "The given account ID could not be found,", !DAOAccount.instance.account_exists?(session[:account]), "/home")
   end
 
   def before_for_user_not_authenticated
@@ -25,14 +25,14 @@ module Helpers
   def before_for_item_manipulation
     before_for_item_interaction
 
-    redirect "/error/Not_Your_Item" unless DAOItem.instance.fetch_item(params[:id]).owner.id == session[:account]
+    error_redirect("Not your Item", "You can only edit your own items.", !DAOItem.instance.fetch_item(params[:id]).owner.id == session[:account], "/items/my/all")
     #TODO: There is a problem because before is called anyway even if the path is not taken afterwards
   end
 
   def before_for_item_interaction
     before_for_user_authenticated
 
-    redirect "/error/No_Valid_Item_Id" unless DAOItem.instance.item_exists?(params[:id])
+    error_redirect("No valid Item ID", "The requested item id could not be found.", !DAOItem.instance.item_exists?(params[:id]), "/items/my/all")
   end
 
   def before_for_admin
@@ -42,7 +42,7 @@ module Helpers
     user = DAOAccount.instance.fetch_account(session[:user])
 
     redirect "/home" if session[:user] == session[:account]
-    redirect "/error/Not_an_Admin" unless account.is_admin?(user)
+    error_redirect("Not an Admin", "You're not an administrator of this Organisation.", !account.is_admin?(user), "/organisation/members")
   end
 
   def common_before
