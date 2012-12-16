@@ -29,17 +29,10 @@ module Controllers
     ##
     get '/registration/confirm/:reg_hash' do
       hash = params[:reg_hash]
-      if DAOAccount.instance.reg_hash_exists?(hash)
-        user = DAOAccount.instance.fetch_user_by_reg_hash(hash)
-        if user.activated
-          session[:alert] = Alert.create("Error!", "Your account is already activated. Please login.", true)
-          redirect '/login'
-        end
-        user.activate
-      else
-        session[:alert] = Alert.create("Error!", "No such activation code. Try with copy and paste the complete URL from the e-mail into your Browser.", true)
-        redirect '/login'
-      end
+      error_redirect("Error!", "No such activation code. Try with copy and paste the complete URL from the e-mail into your Browser.", !DAOAccount.instance.reg_hash_exists?(hash), "/login")
+      user = DAOAccount.instance.fetch_user_by_reg_hash(hash)
+      error_redirect("Error!", "Your account is already activated. Please login.", user.activated, "/login")
+      user.activate
 
       session[:alert] = Alert.create("Activation successful!", "Your account is now activated. Please login.", false)
 
@@ -184,7 +177,7 @@ module Controllers
     ##
     post '/unregister' do
       redirect "/" unless session[:auth]
-      redirect "/error/No_Valid_Account_Id" unless DAOAccount.instance.account_exists?(session[:user])
+      error_redirect("Oh, no!", "There's something went wrong.", !DAOAccount.instance.account_exists?(session[:user]), "/home")
       user = DAOAccount.instance.fetch_account(session[:user])
 
       # Do Organisation Check
