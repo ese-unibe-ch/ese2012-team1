@@ -32,6 +32,15 @@ module Models
         @organisation = nil
       end
 
+      ##
+      #
+      # Factory method to create a Limit
+      #
+      # Params: user : the user the limit is for
+      #         organisation : the organisation this limit belongs
+      #
+      ##
+
       def self.create(user, organisation)
         limit = Limit.new
         limit.user = user
@@ -39,9 +48,27 @@ module Models
         limit
       end
 
+      ##
+      #
+      # Adds new amount to the amount the user
+      # already has spend.
+      #
+      ##
+
       def spend(amount)
         @spend += amount
       end
+
+      ##
+      #
+      # Calculates the limit for the user. This calculation
+      # is based on the amount of money the user has spend.
+      # Returns 0 if the user can't spend any money anymore.
+      # If the user is an administrator or the limit of the
+      # organisation is nil. He can spend as much money as he
+      # he wants and this method returns nil to indicate this.
+      #
+      ##
 
       def limit
         if @organisation.is_admin?(@user) || @organisation.limit.nil?
@@ -52,12 +79,29 @@ module Models
         end
       end
 
+      ##
+      #
+      # Returns true if the price is within the range of the users
+      # limit and he can buy it without succeding his limit.
+      # Returns false otherwise.
+      #
+      # Params: price : the price the user wants to spend
+      #
+      ##
+
       def has_resources_for?(price)
         return true if @organisation.limit.nil? || @organisation.is_admin?(@user)
 
         resources =  @organisation.limit - (@spend + price)
         resources > 0
       end
+
+      ##
+      #
+      # Resets the amount spended. After this #limit returns exactly the
+      # limit of the organisation
+      #
+      ##
 
       def reset
         @spend = 0
