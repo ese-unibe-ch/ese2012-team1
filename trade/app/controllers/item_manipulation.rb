@@ -1,4 +1,5 @@
-require_relative '../helpers/HTML_constructor'
+include Models
+include Helpers
 
 module Controllers
 
@@ -61,10 +62,7 @@ module Controllers
 
         time = Time.local(day_month_year[2].to_i, day_month_year[1].to_i, day_month_year[0].to_i, hours_minutes[0], hours_minutes[1])
 
-        if (time <= Time.now)
-          session[:alert] = Alert.create("", "You can't set time in past.", true)
-          redirect "/item/changestate/expiration?id=" + item.id.to_s
-        end
+        error_redirect("", "You can't set time in past.", time <= Time.now, "/item/changestate/expiration?id=" + item.id.to_s)
 
         item.add_expiration_date(time)
       end
@@ -151,8 +149,8 @@ module Controllers
 
       new_description = Sanitize.clean(params[:new_description])
 
-      redirect "/error/No_Price" if params[:new_price] == nil
-      redirect "/error/Not_A_Number" unless /^[\d]+(\.[\d]+){0,1}$/.match(params[:new_price])
+      error_redirect("No Price set", "You have to set a Price for this Item.", params[:new_price] == nil || params[:new_price].length == 0, "/item/#{params[:id]}/edit")
+      error_redirect("Not a Number", "Price should be a number!", !/^[\d]+(\.[\d]+){0,1}$/.match(params[:new_price]), "/item/#{params[:id]}/edit")
 
       new_price = params[:new_price].to_i
       item.add_description(new_description) if item.description != new_description

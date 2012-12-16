@@ -1,3 +1,6 @@
+include Models
+include Helpers
+
 module Controllers
     class Messagebox < Sinatra::Application
         set :views, "#{absolute_path('../views', __FILE__)}"
@@ -121,10 +124,7 @@ module Controllers
             halt haml :'messagebox/send', :locals => { :receivers => receivers }
           end
 
-          if (receivers.size == 0)
-            session[:alert] = Alert.create("", "You have not entered any receivers", true)
-            redirect '/messagebox/send'
-          end
+          error_redirect("", "You have not entered any receivers", receivers.size == 0, "/messagebox/send")
 
           conversation = Messenger.instance.new_message(session[:user], receivers, params[:subject], params[:message])
 
@@ -178,22 +178,14 @@ module Controllers
         post '/messagebox/reply' do
           before_for_user_authenticated
 
-          @error[:message] = "You have to enter a message" if params[:message].nil? || params[:message].empty?
-
-          unless @error.empty?
-            halt       haml :'messagebox/reply', :locals => { :receiver_id => params[:receiver_id],
-                                                          :receiver_name => params[:receiver_name], }
-          end
+          error_redirect("", "You have to enter a message", params[:message].nil? || params[:message].empty?, "/messagebox/reply?error=yes&conversation_id=#{params[:conv_id]}&message_id=#{params[:mess_id]}")
 
           receivers = Array.new
           params.each do |key, user_id|
             receivers.push(user_id.to_i) if (key.include?("hidden"))
           end
 
-          if (receivers.size == 0)
-            session[:alert] = Alert.create("", "You have removed every receivers", true)
-            redirect back
-          end
+          error_redirect("", "You have removed every receivers", receivers.size == 0, "/messagebox/reply?error=yes&conversation_id=#{params[:conv_id]}&message_id=#{params[:mess_id]}")
 
           params[:mess_id] == "" ? mess_id = nil : mess_id = params[:mess_id]
           Messenger.instance.answer_message(session[:user], receivers, params[:subject], params[:message], params[:conv_id], mess_id)

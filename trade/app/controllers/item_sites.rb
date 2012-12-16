@@ -1,14 +1,3 @@
-require 'rubygems'
-require 'require_relative'
-require 'sinatra/base'
-require 'haml'
-require 'sinatra/content_for'
-require_relative('../models/user')
-require_relative('../models/item')
-
-require_relative('../helpers/render')
-require_relative '../helpers/before'
-
 include Models
 include Helpers
 
@@ -132,12 +121,9 @@ module Controllers
     #
     ##
     get '/item/:id' do
-      redirect "/error/No_Valid_Item_Id" unless DAOItem.instance.item_exists?(params[:id])
+      error_redirect("No valid Item ID", "The requested item id could not be found.", !DAOItem.instance.item_exists?(params[:item_id]), "/items/active")
       item = DAOItem.instance.fetch_item(params[:id])
-      if !item.is_active? && item.owner.id != session[:account]
-        session[:alert] = Alert.create("Inactive Item", "The Item you try to watch isn't active.", true)
-        redirect "/items/active"
-      end
+      error_redirect("Inactive Item", "The Item you try to watch isn't active.", !item.is_active? && item.owner.id != session[:account], "/items/active")
 
       haml :'item/item', :locals => {:item => item}
     end
@@ -160,7 +146,7 @@ module Controllers
     #  Shows the  make comment page, for a comment on a comment
     #
     #  Redirects:
-    #  /error/No_Valid_Item_Id when the system doesn't know this item id
+    #  /items/active when the system doesn't know this item id
     #
     #  Expects:
     #  session[:navigation] : has to be initialized
@@ -170,7 +156,7 @@ module Controllers
     #
     ##
     get '/item/add/comment/:item_id/:comment_nr' do
-      redirect "/error/No_Valid_Item_Id" unless DAOItem.instance.item_exists?(params[:item_id])
+      error_redirect("No valid Item ID", "The requested item id could not be found.", !DAOItem.instance.item_exists?(params[:item_id]), "/items/active")
 
       item = DAOItem.instance.fetch_item(params[:item_id])
 

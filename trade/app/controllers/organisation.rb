@@ -1,14 +1,3 @@
-require 'rubygems'
-require 'require_relative'
-require 'sinatra/base'
-require 'haml'
-require 'sinatra/content_for'
-require_relative('../models/user')
-require_relative('../models/item')
-require_relative('../helpers/render')
-require_relative '../helpers/before'
-require_relative('../helpers/string_checkers')
-
 include Models
 include Helpers
 
@@ -191,18 +180,12 @@ module Controllers
     #
     ##
     get '/organisation/leave' do
-      if session[:user] == session[:account]
-        session[:alert] = Alert.create("Oh no!", "You can't leave an organisation when you're not in your Organisations Profile.", true)
-        redirect "/home"
-      end
+      error_redirect("Oh no!", "You can't leave an organisation when you're not in your Organisations Profile.", session[:user] == session[:account], "/home")
       organisation = DAOAccount.instance.fetch_account(session[:account])
       is_admin = organisation.is_admin?(DAOAccount.instance.fetch_account(session[:user]))
       only_admin = false
       only_admin = true if organisation.admin_count == 1
-      if is_admin && only_admin
-        session[:alert] = Alert.create("Oh no!", "You can't leave this Organisation, because you're the only Administrator.", true)
-        redirect "/home"
-      end
+      error_redirect("Oh no!", "You can't leave this Organisation, because you're the only Administrator.", is_admin && only_admin, "/home")
 
       haml :'organisation/leave'
     end
@@ -218,25 +201,17 @@ module Controllers
     #  session[:account] : the user's current id (his own or an organisation's)
     ##
     post '/organisation/leave' do
-      redirect "/error/No_Valid_User" unless DAOAccount.instance.email_exists?(params[:user_email])
-      if session[:user] == session[:account]
-        session[:alert] = Alert.create("Oh no!", "You can't leave an organisation when you're not in your Organisations Profile.", true)
-        redirect "/home"
-      end
+      error_redirect("No valid User", "Your email could not be found.", !DAOAccount.instance.email_exists?(params[:user_email]), "/home")
+      error_redirect("Oh no!", "You can't leave an organisation when you're not in your Organisations Profile.", session[:user] == session[:account], "/home")
+
       organisation = DAOAccount.instance.fetch_account(session[:account])
       is_admin = organisation.is_admin?(DAOAccount.instance.fetch_account(session[:user]))
       only_admin = false
       only_admin = true if organisation.admin_count == 1
-      if is_admin && only_admin
-        session[:alert] = Alert.create("Oh no!", "You can't leave this Organisation, because you're the only Administrator.", true)
-        redirect "/home"
-      end
+      error_redirect("Oh no!", "You can't leave this Organisation, because you're the only Administrator.", is_admin && only_admin, "/home")
 
-      user = DAOAccount.instance.fetch_user_by_email(params[:user_email])
-      if params[:user_email] != user.email
-        session[:alert] = Alert.create("Oh no!", "You're trying to remove an other User from the Organisation.", true)
-        redirect "/home"
-      end
+      user = DAOAccount.instance.fetch_account(session[:user])
+      error_redirect("Oh no!", "You're trying to remove an other User from the Organisation.", params[:user_email] != user.email, "/home")
 
       organisation.remove_member_by_email(user.email)
 
@@ -256,10 +231,7 @@ module Controllers
     # TODO: This should go to organisation_admin.rb!
     ##
     get '/organisation/delete' do
-      unless DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_account(session[:user]))
-        session[:alert] = Alert.create("Oh no!", "You can't delete this Organisation, because you're not an Administrator.", true)
-        redirect "/home"
-      end
+      error_redirect("Oh no!", "You can't delete this Organisation, because you're not an Administrator.", !DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_account(session[:user])), "/home")
       haml :'organisation/delete'
     end
 
@@ -275,11 +247,9 @@ module Controllers
   # TODO: This should go to organisation_admin.rb!
   ##
     post '/organisation/delete' do
-      redirect "/error/No_Valid_Account_Id" unless DAOAccount.instance.account_exists?(session[:user])
-      unless DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_account(session[:user]))
-        session[:alert] = Alert.create("Oh no!", "You can't delete this Organisation, because you're not an Administrator.", true)
-        redirect "/home"
-      end
+      error_redirect("Oh no!", "There is something gone wrong.", !DAOAccount.instance.account_exists?(session[:user]), "/home")
+      error_redirect("Oh no!", "You can't delete this Organisation, because you're not an Administrator.", !DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_account(session[:user])), "/home")
+
       org = DAOAccount.instance.fetch_account(session[:account])
       DAOAccount.instance.remove_account(org.id)
 

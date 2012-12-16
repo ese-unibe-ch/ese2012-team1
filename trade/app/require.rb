@@ -43,6 +43,8 @@ require_relative 'models/reversable_description'
 require_relative 'models/timed_event'
 require_relative 'models/wish_list'
 
+require_relative('helpers/before')
+require_relative('helpers/alert')
 require_relative('helpers/render')
 require_relative('helpers/string_checkers')
 require_relative('helpers/navigation')
@@ -51,6 +53,7 @@ require_relative('helpers/mailer')
 require_relative('helpers/HTML_constructor')
 require_relative('helpers/error')
 require_relative('helpers/error_redirect')
+require_relative('helpers/error_messages')
 
 require_relative('controllers/home')
 require_relative('controllers/authentication')
