@@ -199,6 +199,17 @@ module Models
       org.one? { |organisation| organisation.is_admin?(user) }
     end
 
+
+    ##
+    #
+    # Checks if this user is the last admin of any organisation
+    #
+    ##
+    def is_last_admin?(user)
+      organisations = fetch_organisations_of(user.id)
+      organisations.one? { |organisation| organisation.is_last_admin?(user)}
+    end
+
     ##
     #
     # Resets all limits for all organisations members

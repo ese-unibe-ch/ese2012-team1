@@ -181,18 +181,33 @@ describe "Organisation" do
       before(:each) do
         @member_to_be_admin = double('member_to_be_admin')
         @member_to_be_admin.stub(:email).and_return("bart@mail.ch")
+
+        @member_to_be_admin2 = double('member_to_be_admin2')
+        @member_to_be_admin2.stub(:email).and_return("lisa@mail.ch")
+
         @organisation = create_account
       end
 
       it "should not revoke admin right if only one admin" do
-        @organisation.set_as_admin(@member_to_be_admin).should raise_error
+        @organisation.set_as_admin(@member_to_be_admin)
+        lambda{@organisation.revoke_admin_rights(@member_to_be_admin)}.should raise_error(RuntimeError)
+      end
+
+      it "should be last admin when only on user is admin" do
+        @organisation.set_as_admin(@member_to_be_admin)
+        @organisation.is_last_admin?(@member_to_be_admin).should be_true
+      end
+
+      it "should not be last admin when two users ar set as admin" do
+        @organisation.set_as_admin(@member_to_be_admin)
+        @organisation.set_as_admin(@member_to_be_admin2)
+
+        @organisation.is_last_admin?(@member_to_be_admin).should be_false
+        @organisation.is_last_admin?(@member_to_be_admin2).should be_false;
       end
 
       it "should revoke admin rights" do
         # Cannot remove admin rights, if only one admin is left ;)
-        @member_to_be_admin2 = double('member_to_be_admin2')
-        @member_to_be_admin2.stub(:email).and_return("lisa@mail.ch")
-
         @organisation.set_as_admin(@member_to_be_admin)
         @organisation.set_as_admin(@member_to_be_admin2)
 

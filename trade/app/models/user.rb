@@ -128,29 +128,6 @@ module Models
       org
     end
 
-    #TODO tests
-    ##
-    #
-    # Checks if this user is the last admin of a specific organisation
-    #
-    ##
-    def is_last_admin_of?(organisation)
-      #Precondition
-      fail "Missing organisation to check" if (organisation == nil)
-      organisation.is_admin?(self) && organisation.size == 1
-    end
-
-    #TODO tests
-    ##
-    #
-    # Checks if this user is the last admin of any organisation
-    #
-    ##
-    def is_last_admin?
-      organisations = DAOAccount.instance.fetch_organisations_of(self.id)
-      organisations.one? { |organisation| self.is_last_admin_of?(organisation)}
-    end
-
     ##
     #
     # Used to change the password to a new one

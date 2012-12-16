@@ -189,6 +189,17 @@ module Models
 
     ##
     #
+    # Checks if given user is the last admin
+    #
+    ##
+    def is_last_admin?(user)
+      fail "Missing user" if (user == nil)
+
+      is_admin?(user) && self.admin_count == 1
+    end
+
+    ##
+    #
     # Returns the limit of a specific user
     #
     # Expects :
