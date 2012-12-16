@@ -16,8 +16,51 @@ module Models
     #
     ##
 
-    attr_accessor :members, :admins, :limit, :member_limits
+    attr_accessor :members, :admins, :limit
 
+    @member_limits
+
+
+    class Limit
+      attr_accessor :spend, # money the user spend until now
+                    :user, # user that belongs to this limit
+                    :organisation # the organisation this limit belongs to
+
+      def initialize
+        @spend = 0
+        @user = nil
+        @organisation = nil
+      end
+
+      def self.create(user, organisation)
+        limit = Limit.new
+        limit.user = user
+        limit.organisation = organisation
+        limit
+      end
+
+      def spend(amount)
+        @spend += amount
+      end
+
+      def limit
+        if @organisation.is_admin?(@user)
+            nil
+        else
+          resources =  organisation.limit - @spend
+          resources < 0 ? 0 : resources
+        end
+      end
+
+      def has_resources_for?(price)
+        resources =  organisation.limit - (@spend + price)
+        resources > 0
+      end
+
+      def reset
+        @spend = 0
+      end
+    end
 
     ##
     #
@@ -30,7 +73,7 @@ module Models
       super
       self.members = Hash.new
       self.admins = Hash.new
-      self.member_limits = Hash.new #the remaining limit of each user
+      @member_limits = Hash.new #the remaining limit of each user
       self.limit = nil #with limit=nil everybody can spend as much as they want
       self.organisation = true
 
@@ -46,7 +89,7 @@ module Models
     #
     ##
     def add_member(user)
-      self.member_limits.store(user.email, self.limit)
+      @member_limits.store(user.email, Limit.create(user, self))
       self.members.store(user.email, user)
     end
 
@@ -55,12 +98,14 @@ module Models
     # Removes a user from the organisation by deleting him from the member- , limit-
     # and if needed from the adminhashmap
     #
+    # TODO: Removing a member should only be possible if he's not the last admin
+    #
     # Expects :
     # user : the user who should be removed from the org.
     #
     ##
     def remove_member(user)
-      self.member_limits.delete(user.email)
+      @member_limits.delete(user.email)
       self.members.delete(user.email)
       self.admins.delete(user.email) if self.is_admin?(user)
     end
@@ -69,6 +114,8 @@ module Models
     #
     # Removes a user from the organisation by deleting him from the member- , limit-
     # and if needed from the adminhashmap
+    #
+    # TODO: Removing a member should only be possible if he's not the last admin
     #
     # Expects :
     # user_mail : the email of the user who should be removed from the org.
@@ -131,7 +178,9 @@ module Models
     #
     ##
     def set_as_admin(member)
-#      fail "#{member.email} is not a member of this organisation" unless members[member.email]
+      fail "#{member.email} is not a member of this organisation" unless is_member?(member)
+      fail "#{member.email} is already admin" if is_admin?(member)
+
       self.admins.store(member.email, member)
     end
 
@@ -171,7 +220,7 @@ module Models
     def buy_item(item_to_buy, user)
       fail "only users can buy items in behalve of an organisation" if (user.organisation)
       fail "only users that are part of #{self.name} can buy items for it" unless (is_member?(user))
-      fail "would exceed #{user.name}'s organisation limit for today" unless within_limit_of?(item_to_buy, user)
+      fail "would exceed #{user.email}'s organisation limit for today" unless within_limit_of?(item_to_buy, user)
       fail "not enough credits" if item_to_buy.price > self.credits
       fail "Item not in System" unless (DAOItem.instance.item_exists?(item_to_buy.id))
 
@@ -182,7 +231,7 @@ module Models
       #Adds price to owner
       old_owner.credits += item_to_buy.price
       #decreases the limit of the buyer
-      member_limits[user.email]=self.member_limits.fetch(user.email)-item_to_buy.price unless self.limit.nil? || is_admin?(user)
+      @member_limits[user.email].spend(item_to_buy.price) unless self.limit.nil? || is_admin?(user)
 
       item_to_buy.bought_by(self)
     end
@@ -207,7 +256,7 @@ module Models
     #
     ##
     def get_limit(user)
-      self.member_limits.fetch(user.email)
+      @member_limits.fetch(user.email).limit
     end
 
     ##
@@ -222,7 +271,7 @@ module Models
     #
     ##
     def within_limit_of?(item, user)
-      is_admin?(user) or self.limit.nil? or self.member_limits.fetch(user.email)>=item.price
+      is_admin?(user) or self.limit.nil? or @member_limits.fetch(user.email).has_resources_for?(item.price)
     end
 
     ##
@@ -236,22 +285,8 @@ module Models
     ##
     def set_limit(amount)
       fail "no valid limit" if amount<0
-      self.limit=amount
-    end
 
-    ##
-    #
-    # Sets the limit of a specific user to
-    # the desired amount.
-    #
-    # Expects :
-    # user : the user whose limit is changed
-    # amount : the new limit of this user
-    #
-    ##
-    def set_member_limit(user,amount)
-      fail "no valid limit" if amount<0
-      member_limits[user.email]=amount
+      self.limit=amount
     end
 
     ##
@@ -261,8 +296,8 @@ module Models
     #
     ##
     def reset_member_limits
-      member_limits.each do |user, limit|
-        member_limits[user]=self.limit
+      @member_limits.each do |user, limit|
+        limit.reset
       end
     end
 

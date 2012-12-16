@@ -132,7 +132,7 @@ describe "Organisation" do
         it "should not be possible to buy over limit when not admin" do
           @item.stub(:price).and_return(60)
 
-          @organisation.buy_item(@item, @buyer)
+          lambda{@organisation.buy_item(@item, @buyer)}.should raise_error(RuntimeError)
         end
       end
     end
@@ -189,16 +189,21 @@ describe "Organisation" do
       end
 
       it "should not revoke admin right if only one admin" do
+        @organisation.add_member(@member_to_be_admin)
         @organisation.set_as_admin(@member_to_be_admin)
         lambda{@organisation.revoke_admin_rights(@member_to_be_admin)}.should raise_error(RuntimeError)
       end
 
       it "should be last admin when only on user is admin" do
+        @organisation.add_member(@member_to_be_admin)
         @organisation.set_as_admin(@member_to_be_admin)
         @organisation.is_last_admin?(@member_to_be_admin).should be_true
       end
 
       it "should not be last admin when two users ar set as admin" do
+        @organisation.add_member(@member_to_be_admin)
+        @organisation.add_member(@member_to_be_admin2)
+
         @organisation.set_as_admin(@member_to_be_admin)
         @organisation.set_as_admin(@member_to_be_admin2)
 
@@ -207,6 +212,8 @@ describe "Organisation" do
       end
 
       it "should revoke admin rights" do
+        @organisation.add_member(@member_to_be_admin)
+        @organisation.add_member(@member_to_be_admin2)
         # Cannot remove admin rights, if only one admin is left ;)
         @organisation.set_as_admin(@member_to_be_admin)
         @organisation.set_as_admin(@member_to_be_admin2)
