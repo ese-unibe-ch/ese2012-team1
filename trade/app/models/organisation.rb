@@ -169,7 +169,7 @@ module Models
     ##
     def remove_member_by_email(user_mail)
       self.members.delete(user_mail)
-      self.member_limits.delete(user_mail)
+      @member_limits.delete(user_mail)
       self.admins.delete(user_mail) if self.admins.one? { |email, admin| email == user_mail }
     end
 
