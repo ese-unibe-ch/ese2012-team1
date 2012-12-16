@@ -53,6 +53,8 @@ class TestHelper
     self.clear_all
     self.reset
 
+    Navigations.instance.build
+
     # Create pictures for item picture
     File.copy(absolute_path("../../app/public/images/users/default_avatar.png", __FILE__), absolute_path("../../app/public/images/items/test_elephant.png", __FILE__))
     File.copy(absolute_path("../../app/public/images/users/default_avatar.png", __FILE__), absolute_path("../../app/public/images/items/test_skateboard.png", __FILE__))

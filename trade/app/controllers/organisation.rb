@@ -23,6 +23,9 @@ module Controllers
     ##
 
     get '/organisation/create' do
+      session[:navigation][:selected] = "home"
+      session[:navigation][:subnavigation] = "organisation"
+
       haml :'organisation/create'
     end
 

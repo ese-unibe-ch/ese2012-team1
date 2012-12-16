@@ -17,6 +17,10 @@ def file_list_controller(t)
   t.test_files = FileList["trade/test/ControllerTests/*_test.rb"]
 end
 
+def exclude_controller(t)
+  t.rcov_opts << "--exclude \"/gems/,/models/,spec,/helpers/,/*Tests/,init.rb,require.rb\""
+end
+
 def exclude(t)
   t.rcov_opts << "--exclude \"/gems/,/controllers/,spec,/helpers/,/*Tests/,init.rb,require.rb\""
 end
@@ -62,5 +66,5 @@ end
 Rcov::RcovTask.new :controllers_rcov do |t|
   lib_controller(t)
   file_list_controller(t)
-  exclude(t)
+  exclude_controller(t)
 end
