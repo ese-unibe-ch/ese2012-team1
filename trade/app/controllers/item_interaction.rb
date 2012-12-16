@@ -1,3 +1,6 @@
+include Models
+include Helpers
+
 ##
 #
 # Here is everything concerning the interaction between items

@@ -1,16 +1,3 @@
-require 'rubygems'
-require 'require_relative'
-require 'sinatra/base'
-require 'haml'
-require 'ftools'
-
-require_relative '../models/user'
-require_relative '../helpers/alert'
-require_relative '../helpers/render'
-require_relative '../helpers/before'
-require_relative '../helpers/string_checkers'
-require_relative '../models/simple_email_client' unless ENV['RACK_ENV'] == 'test'
-
 include Models
 include Helpers
 

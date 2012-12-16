@@ -32,7 +32,9 @@
     %label
       Subject:
     %input(type = 'text' name = 'subject')
-    = haml :'partials/alert-textarea', :locals => { :name => :message, :label => "Message: " }
+    %label
+      Message:
+    %textarea(cols='27' name='message' rows='10' type='text')
     %input(type = 'submit' value = 'send message')
 
 %script(type="text/javascript" src="/java-script/add_remove_users.js")

@@ -1,4 +1,5 @@
-require_relative '../helpers/HTML_constructor'
+include Models
+include Helpers
 
 module Controllers
 

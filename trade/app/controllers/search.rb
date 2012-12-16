@@ -1,14 +1,3 @@
-require 'rubygems'
-require 'require_relative'
-require 'sinatra/base'
-require 'haml'
-require 'sinatra/content_for'
-require_relative('../models/user')
-require_relative('../models/item')
-require_relative('../helpers/render')
-require_relative '../helpers/before'
-require_relative('../helpers/string_checkers')
-
 include Models
 include Helpers
 
