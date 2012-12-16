@@ -10,7 +10,8 @@ module Controllers
 
     set :views , "#{absolute_path('../views', __FILE__)}"
 
-    before do
+    before_when_route_is_taken do
+      puts "Yes, i'm taken!"
       before_for_user_not_authenticated
     end
 
