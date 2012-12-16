@@ -1,8 +1,4 @@
-require 'rubygems'
-require 'require_relative'
-
 require_relative '../models/simple_email_client' unless ENV['RACK_ENV'] == 'test'
-require_relative 'render'
 
 ##
 #
