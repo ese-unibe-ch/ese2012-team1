@@ -66,7 +66,6 @@ require_relative('controllers/user_sites')
 require_relative('controllers/organisation')
 require_relative('controllers/account_edit')
 require_relative('controllers/item_manipulation')
-require_relative('controllers/error')
 require_relative('controllers/search')
 require_relative('controllers/messagebox')
 

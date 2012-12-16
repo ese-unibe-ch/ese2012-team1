@@ -37,7 +37,6 @@ class App < Sinatra::Base
 
   #No registration needed
   use Controllers::Home
-  use Controllers::Error
   use Controllers::Authentication
   use Controllers::Registration
 
