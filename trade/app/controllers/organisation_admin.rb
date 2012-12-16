@@ -151,7 +151,7 @@ module Controllers
     #
     ##
     post '/organisation/member/to_admin' do
-      error_redirect("Oh no!", "This user is already an Administrator of this Organisation.", !DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_user_by_email(params[:member])), "/organisation/members")
+      error_redirect("Oh no!", "This user is already an Administrator of this Organisation.", DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_user_by_email(params[:member])), "/organisation/members")
 
       if DAOAccount.instance.email_exists?(params[:member])
         haml :'organisation/member_to_admin_confirm', :locals => { :member => params[:member]}
