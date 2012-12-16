@@ -177,7 +177,7 @@ module Controllers
     ##
     post '/unregister' do
       redirect "/" unless session[:auth]
-      error_redirect("Oh, no!", "There's something went wrong.", !DAOAccount.instance.account_exists?(session[:user]), "/home")
+      error_redirect("Oh, no!", "Something went wrong.", !DAOAccount.instance.account_exists?(session[:user]), "/home")
       user = DAOAccount.instance.fetch_account(session[:user])
 
       # Do Organisation Check
@@ -185,6 +185,8 @@ module Controllers
 
       # Remove User From Organisation
       if deletable
+        org_list = DAOAccount.instance.fetch_organisations_of(user)
+
         for org in org_list do
           org.remove_member_by_email(user.email)
         end
