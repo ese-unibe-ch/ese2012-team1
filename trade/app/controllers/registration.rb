@@ -185,7 +185,7 @@ module Controllers
 
       # Remove User From Organisation
       if deletable
-        org_list = DAOAccount.instance.fetch_organisations_of(user)
+        org_list = DAOAccount.instance.fetch_organisations_of(user.id)
 
         for org in org_list do
           org.remove_member_by_email(user.email)

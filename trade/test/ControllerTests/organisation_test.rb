@@ -31,15 +31,11 @@ class OrganisationTest < Test::Unit::TestCase
     it 'get organisation/create should show page to create an organisation' do
       TestHelper.reload
 
-      users = TestHelper.get_users
+      session = TestHelper.get_sessions
 
-      session = { :navigation => { :context => :user }, :user => users[:homer].id, :auth => true, :account => users[:homer].id }
-      puts session[:navigation][:context]
-      puts Navigations.instance.get(session[:navigation][:context])
+      get "/organisation/create", {}, 'rack.session' => session[:homer]
 
-      get "/organisation/create", {}, 'rack.session' => session
-
-      assert last_response.ok?
+      assert last_response.ok?, "#{last_response.body}"
       assert last_response.body.include?("Launch Organisation")
     end
   end

@@ -105,11 +105,10 @@ class RegistrationTest < Test::Unit::TestCase
 
     it 'post /unregister should redirect to /unauthenticate' do
       users = TestHelper.get_users
-       DAOAccount.instance.fetch_organisations_of(users[:homer].id)
+      sessions = TestHelper.get_sessions
 
-
-      post '/unregister', {}, 'rack.session' => { :user => users[:homer].id, :auth => true, :account => users[:homer].id  }
-      assert last_response.redirect?
+      post '/unregister', {}, 'rack.session' => sessions[:bart]
+      assert last_response.redirect?, "#{ last_response.body }"
       assert last_response.location.include?('/'), "Should redirect to / but was #{last_response.location}"
     end
   end
