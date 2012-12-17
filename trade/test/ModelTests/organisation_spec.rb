@@ -42,7 +42,6 @@ describe "Organisation" do
     end
 
     it_behaves_like "any Account while item creation"
-    it_behaves_like "any Account after item creation"
 
     context "when user limit is set" do
       before(:each) do

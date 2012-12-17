@@ -120,7 +120,6 @@ describe "User" do
     end
 
     it_behaves_like "any Account while item creation"
-    it_behaves_like "any Account after item creation"
 
     context "when creating an organisation" do
       before(:each) do

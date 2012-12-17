@@ -119,34 +119,3 @@ shared_examples_for "any Account while item creation" do
     received_item.should be @item
   end
 end
-
-shared_examples_for "any Account after item creation" do
-  before(:each) do
-    @system = double('system')
-    DAOAccount.stub(:instance).and_return(@system)
-    DAOItem.stub(:instance).and_return(@system)
-
-    @item = double('item')
-  end
-
-  it "should posses item" do
-    @system.stub(:item_exists?).and_return(true)
-    @system.stub(:fetch_item).and_return(@item)
-    @item.stub(:owner).and_return(@user)
-    @user.should have_item(1)
-  end
-
-  context "when listing items" do
-    it "should return item when item active" do
-      @system.stub(:fetch_items_of).and_return([@item])
-      @item.stub(:is_active?).and_return(true)
-      DAOItem.instance.fetch_items_of(@user.id).should include(@item)
-    end
-
-    it "should return item when item inactive" do
-      @system.stub(:fetch_items_of).and_return([@item])
-      @item.stub(:is_active?).and_return(false)
-      DAOItem.instance.fetch_items_of(@user.id).should include(@item)
-    end
-  end
-end
