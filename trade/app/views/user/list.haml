@@ -8,7 +8,7 @@
     - i = (i + 1)%2
     %tr{ :class => i == 0 ? "colored" : "normal" }
       %td{:width => "250px;"}
-        = (user.name.size > 15 ? "#{user.name[0..14]}..." : user.name).to_s.boldify(boldify) + " has #{user.list_active_items.size} Items to sell. "
+        = (user.name.size > 15 ? "#{user.name[0..14]}..." : user.name).to_s.boldify(boldify) + " has #{DAOItem.instance.fetch_active_items_of(user.id).size} Items to sell. "
       %td
         = user.description.boldify(boldify)
       %td

@@ -117,7 +117,7 @@ module Models
     #
     ##
     def buy_item(item_to_buy, user)
-      fail "missing item" if item.nil?
+      fail "missing item" if item_to_buy.nil?
       fail "not enough credits" if item_to_buy.price > self.credits
       fail "Item not in System" unless (DAOItem.instance.item_exists?(item_to_buy.id))
 
@@ -145,16 +145,6 @@ module Models
     ##
     def is_member?(user)
       false
-    end
-
-
-    ##
-    #
-    # Returns account's list of active items
-    #
-    ##
-    def list_active_items
-      DAOItem.instance.fetch_items_of(self.id).select {|s| s.is_active?}
     end
 
     ##

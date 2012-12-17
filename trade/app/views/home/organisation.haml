@@ -12,14 +12,16 @@
   - labels.each_with_index do |label, index|
     = haml :'partials/description-entry-horizontal', :locals => {:description => inputs[index], :label => label}
 
-  %div(class="description")
-    = "Your Organisation has #{DAOAccount.instance.fetch_account(session[:account]).list_active_items.size} active Items"
+  - dao_item = DAOItem.instance
 
   %div(class="description")
-    = "Your Organisation has #{DAOItem.instance.fetch_inactive_items_of(session[:account]).size} inactive Items"
+    = "Your Organisation has #{dao_item.fetch_active_items_of(session[:account]).size} active Items"
 
   %div(class="description")
-    = "Your Organisation has #{DAOAccount.instance.fetch_account(session[:account]).members.size} Members (including you)"
+    = "Your Organisation has #{dao_item.fetch_inactive_items_of(session[:account]).size} inactive Items"
+
+  %div(class="description")
+    = "Your Organisation has #{organisation.members.size} Members (including you)"
 
   = haml :'partials/description-entry-vertical_mkdown', :locals => {:description => organisation.description, :label =>   "Description:" }
 

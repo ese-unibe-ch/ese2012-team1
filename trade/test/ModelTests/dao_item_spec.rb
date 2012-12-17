@@ -58,7 +58,7 @@ describe DAOItem do
       @items.count_items.should == 3
     end
 
-    context "when added items" do
+    context "when items where added" do
       before(:each) do
         add_items
       end
@@ -104,6 +104,38 @@ describe DAOItem do
         @items.remove_item(@some_items[:time].id)
 
         @items.count_items.should == 0
+      end
+
+      context "when fetching active items" do
+        before(:each) do
+          @accounts.stub(:account_exists?).and_return(true)
+        end
+
+        it "should return item when item active" do
+          @some_items[:broom].stub(:is_active?).and_return(true)
+          @items.fetch_active_items_of(@users[:beppo].id).should include(@some_items[:broom])
+        end
+
+        it "should not return item when item inactive" do
+          @some_items[:broom].stub(:is_active?).and_return(false)
+          @items.fetch_active_items_of(@users[:beppo].id).should_not include(@some_items[:broom])
+        end
+      end
+
+      context "when listing inactive items" do
+        before(:each) do
+          @accounts.stub(:account_exists?).and_return(true)
+        end
+
+        it "should not return item when item active" do
+          @some_items[:broom].stub(:is_active?).and_return(true)
+          @items.fetch_inactive_items_of(@users[:beppo].id).should_not include(@some_items[:broom])
+        end
+
+        it "should not return item when item inactive" do
+          @some_items[:broom].stub(:is_active?).and_return(false)
+          @items.fetch_inactive_items_of(@users[:beppo].id).should include(@some_items[:broom])
+        end
       end
     end
   end

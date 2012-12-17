@@ -17,6 +17,7 @@ require 'webrick'
 require 'webrick/https'
 require 'openssl'
 require 'json'
+require 'ftools'
 
 require_relative 'models/data access object/dao_item'
 require_relative 'models/data access object/dao_account'

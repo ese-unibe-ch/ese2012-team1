@@ -1,7 +1,7 @@
 %h2
   Comment for #{item.name}
 
-%form(enctype="text/form-data" method="post"){:action => "/item/add/comment/#{item.id}"}
+%form(enctype="text/form-data" method="post"){:action => "/item/#{item.id}/add/comment"}
   %label Title:
   %div
   %input(type="text" name="header" id="header"){:value => "Re: #{item.get(comment_nr).header}"}

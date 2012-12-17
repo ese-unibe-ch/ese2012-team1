@@ -11,7 +11,7 @@
 = haml :'partials/description-entry-horizontal', :locals => {:description => user.credits, :label => "Your Credits:" }
 
 %div(class="description padding-top")
-  = "You have #{user.list_active_items.size} active Items"
+  = "You have #{DAOItem.instance.fetch_active_items_of(session[:user]).size} active Items"
 
 %div(class="description")
   = "You have #{DAOItem.instance.fetch_inactive_items_of(session[:user]).size} inactive Items"

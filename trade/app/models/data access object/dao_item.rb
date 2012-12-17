@@ -69,10 +69,8 @@ module Models
     # Returns a hash with all active items of this user.
     #
     ##
-    def fetch_active_items_of(user_email)
-      fail "No such user email" unless DAOAccount.instance.fetch_user(user_email)
-      user = DAOAccount.instance.fetch_user_by_email(user_email)
-      @items.values.select {| item| item.owner == user}.select {|i| i.active}
+    def fetch_active_items_of(user_id)
+      fetch_items_of(user_id.to_i).select {|s| s.is_active? }
     end
 
     ##
@@ -81,7 +79,7 @@ module Models
     #
     ##
     def fetch_inactive_items_of(user_id)
-      DAOItem.instance.fetch_items_of(user_id.to_i).select {|s| !s.is_active? }
+      fetch_items_of(user_id.to_i).select {|s| !s.is_active? }
     end
 
 

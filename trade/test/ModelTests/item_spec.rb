@@ -11,7 +11,7 @@ require 'test_require'
 #
 ##
 
-describe "Coupling for CommentContainer:" do
+describe "Coupling for Item:" do
   context "System" do
     before(:each) do
       @system = DAOItem.instance

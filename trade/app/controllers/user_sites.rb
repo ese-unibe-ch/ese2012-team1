@@ -50,7 +50,7 @@ module Controllers
         error_redirect("Oh no!", "There's something gone wrong.", !DAOAccount.instance.account_exists?(params[:id].to_i), "/home")
         user_id = params[:id]
         redirect "/home" if user_id.to_s == session[:account].to_s
-        haml :'user/id', :locals => {:active_items => DAOAccount.instance.fetch_account(user_id.to_i).list_active_items}
+        haml :'user/id', :locals => {:active_items => DAOItem.instance.fetch_active_items_of(user_id.to_i) }
     end
   end
 end

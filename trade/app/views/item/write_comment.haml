@@ -1,6 +1,6 @@
 %h3 Write a Comment
 %div(class="labeled-input")
-  %form(enctype="text/form-data" method="post" class="bigmargin"){:action => "/item/add/comment/#{item.id}"}
+  %form(enctype="text/form-data" method="post" class="bigmargin"){:action => "/item/#{item.id}/add/comment"}
     %label Title:
     %input(type="text" name="header" id="header")
     %label Comment:

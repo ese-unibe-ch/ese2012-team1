@@ -11,10 +11,6 @@ include Helpers
 module Controllers 
     class ItemInteraction < Sinatra::Application
         set :views, "#{absolute_path('../views', __FILE__)}"
-        
-        before do
-          before_for_item_interaction
-        end
 
         ###
         #
@@ -36,6 +32,7 @@ module Controllers
         #
         ###
         post '/item/buy' do
+          before_for_item_interaction
 
           item = DAOItem.instance.fetch_item(params[:id])
           buyer = DAOAccount.instance.fetch_account(session[:account])
@@ -69,6 +66,8 @@ module Controllers
         #
         ###
         post '/item/towishlist' do
+          before_for_item_interaction
+
           item = DAOItem.instance.fetch_item(params[:id])
           account = DAOAccount.instance.fetch_account(session[:account])
 
@@ -92,6 +91,8 @@ module Controllers
         #
         ###
         post '/item/fromwishlist' do
+          before_for_item_interaction
+
           item = DAOItem.instance.fetch_item(params[:id])
           account = DAOAccount.instance.fetch_account(session[:account])
 
@@ -117,7 +118,8 @@ module Controllers
         #  params[:account] : the id of the user or org.
         #
         ###
-        post '/item/add/comment/:id' do
+        post '/item/:id/add/comment' do
+          before_for_item_interaction
 
           error_redirect("No Valid Input", "There has something gone wrong.", params[:comment].nil? || params[:comment] == "", "/home")
 

@@ -22,7 +22,7 @@ module Controllers
     ##
     get '/items/my/active' do
         user_id = session[:account]
-        haml :'item/my_active', :locals => {:active_items => DAOAccount.instance.fetch_account(user_id).list_active_items}
+        haml :'item/my_active', :locals => {:active_items => DAOItem.instance.fetch_active_items_of(user_id)}
     end
 
     ##
@@ -54,10 +54,10 @@ module Controllers
       session[:navigation][:selected]  = "home"
       session[:navigation][:subnavigation]  = "items"
 
-      account = DAOAccount.instance.fetch_account(session[:account])
+      dao = DAOItem.instance
 
-      haml :'item/my_all', :locals => {:inactive_items => DAOItem.instance.fetch_inactive_items_of(session[:account]),
-                                       :active_items => account.list_active_items}
+      haml :'item/my_all', :locals => {:inactive_items => dao.fetch_inactive_items_of(session[:account]),
+                                       :active_items => dao.fetch_active_items_of(session[:account]) }
     end
 
     ##
@@ -121,7 +121,7 @@ module Controllers
     #
     ##
     get '/item/:id' do
-      error_redirect("No valid Item ID", "The requested item id could not be found.", !DAOItem.instance.item_exists?(params[:item_id]), "/items/active")
+      error_redirect("No valid Item ID", "The requested item id could not be found.", !DAOItem.instance.item_exists?(params[:id]), "/items/active")
       item = DAOItem.instance.fetch_item(params[:id])
       error_redirect("Inactive Item", "The Item you try to watch isn't active.", !item.is_active? && item.owner.id != session[:account], "/items/active")
 

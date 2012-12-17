@@ -167,7 +167,7 @@ module Controllers
     ##
     get '/organisations/:id' do
       organisation_id = params[:id]
-      haml :'organisation/id', :locals => {:active_items => DAOAccount.instance.fetch_account(organisation_id.to_i).list_active_items}
+      haml :'organisation/id', :locals => {:active_items => DAOItem.instance.fetch_active_items_of(organisation_id.to_i) }
     end
 
     ##
