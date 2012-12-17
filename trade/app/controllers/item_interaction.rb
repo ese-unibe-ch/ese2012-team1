@@ -42,8 +42,9 @@ module Controllers
           user=DAOAccount.instance.fetch_account(session[:user])
           version = params[:version]
 
-          error_redirect("Oh no!", "You have not enough Credits to buy this Item.", !item.can_be_bought_by?(buyer), "/item/#{params[:id]}")
-          error_redirect("Oh no!", "You tried to buy something for your organistion that is over your daily organisation limit.", buyer!=user && !buyer.within_limit_of?(item, user), "/item/#{params[:id]}")
+          error_redirect("Oh no!", "You can't buy this item.", !item.can_be_bought_by?(buyer), "/item/#{item.id}")
+          error_redirect("Oh no!", "You have not enough Credits to buy this Item.", item.price > buyer.credits, "/item/#{item.id}")
+          error_redirect("Oh no!", "You tried to buy something for your organisation that is over your daily organisation limit.", buyer!=user && !buyer.within_limit_of?(item, user), "/item/#{item.id}")
           error_redirect("Item has Changed!", "While you were watching this site, the Item was modified.", !item.current_version?(version), "/item/#{item.id}")
 
           buyer.buy_item(item, user)

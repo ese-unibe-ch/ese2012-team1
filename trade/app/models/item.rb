@@ -226,8 +226,8 @@ module Models
 
     ##
     #
-    # Returns true if a specific user has enough credits to buy this item
-    # and if the item is for sale
+    # Returns true if a specific user has enough credits to buy this item,
+    # if the item is for sale and if the current owner is not the buyer
     #
     # Expects:
     # user : the user who wants to check if he can buy this item (can't be nil)
@@ -236,7 +236,7 @@ module Models
     def can_be_bought_by?(user)
       # Precondition
       fail "Missing user" if (user == nil)
-      user.credits >= self.price && self.active
+      user.credits >= self.price && self.active && self.owner != user
     end
 
     ##

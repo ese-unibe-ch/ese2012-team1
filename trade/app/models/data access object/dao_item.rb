@@ -39,6 +39,8 @@ module Models
     #
     ##
     def item_exists?(item_id)
+      fail "Missing id" if item_id.nil?
+
       @items.member?(item_id.to_i)
     end
 

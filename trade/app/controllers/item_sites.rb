@@ -172,6 +172,8 @@ module Controllers
     #
     ##
     get '/item/changestate/expiration' do
+      error_redirect("No valid Item ID", "The requested item id could not be found.", !DAOItem.instance.item_exists?(params[:id]), "/items/active")
+
       item = DAOItem.instance.fetch_item(params[:id])
 
       haml :'item/expiration', :locals => {:item => item}
