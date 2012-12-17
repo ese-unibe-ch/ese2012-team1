@@ -71,7 +71,7 @@ module Models
     ##
     def fetch_active_items_of(user_email)
       fail "No such user email" unless DAOAccount.instance.fetch_user(user_email)
-      user = DAOAccount.instance.fetch_user(user_email)
+      user = DAOAccount.instance.fetch_user_by_email(user_email)
       @items.values.select {| item| item.owner == user}.select {|i| i.active}
     end
 
