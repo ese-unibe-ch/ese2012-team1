@@ -139,8 +139,12 @@ describe Models::Item do
       end
 
       it "should be bought by user with enough money" do
-        @owner.stub(:credits).and_return(50)
-        @item.can_be_bought_by?(@owner).should be_true
+        buyer = double("Buyer")
+        buyer.stub(:credits).and_return(50)
+        buyer.stub(:id).and_return(10)
+        @owner.stub(:id).and_return(2)
+
+        @item.can_be_bought_by?(buyer).should be_true
       end
     end
 

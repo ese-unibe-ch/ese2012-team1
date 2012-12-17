@@ -147,24 +147,6 @@ module Models
       false
     end
 
-    ##
-    #
-    # Returns account's item list
-    #
-    ##
-    def list_items
-      DAOItem.instance.fetch_items_of(self.id)
-    end
-
-    ##
-    #
-    # Returns account's list of inactive items
-    #
-    ##
-    def list_inactive_items
-      DAOItem.instance.fetch_items_of(self.id).select {|s| !s.is_active?}
-    end
-
 
     ##
     #

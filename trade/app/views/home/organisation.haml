@@ -16,7 +16,7 @@
     = "Your Organisation has #{DAOAccount.instance.fetch_account(session[:account]).list_active_items.size} active Items"
 
   %div(class="description")
-    = "Your Organisation has #{DAOAccount.instance.fetch_account(session[:account]).list_inactive_items.size} inactive Items"
+    = "Your Organisation has #{DAOItem.instance.fetch_inactive_items_of(session[:account]).size} inactive Items"
 
   %div(class="description")
     = "Your Organisation has #{DAOAccount.instance.fetch_account(session[:account]).members.size} Members (including you)"

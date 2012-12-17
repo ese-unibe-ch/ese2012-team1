@@ -34,7 +34,7 @@ module Controllers
     ##
     get '/items/my/inactive' do
         user_id = session[:account]
-        haml :'item/my_inactive', :locals => {:inactive_items => DAOAccount.instance.fetch_account(user_id).list_inactive_items}
+        haml :'item/my_inactive', :locals => {:inactive_items => DAOItem.instance.fetch_inactive_items_of(user_id) }
     end
 
     get '/item/wish/list' do
@@ -56,7 +56,7 @@ module Controllers
 
       account = DAOAccount.instance.fetch_account(session[:account])
 
-      haml :'item/my_all', :locals => {:inactive_items => account.list_inactive_items,
+      haml :'item/my_all', :locals => {:inactive_items => DAOItem.instance.fetch_inactive_items_of(session[:account]),
                                        :active_items => account.list_active_items}
     end
 

@@ -148,13 +148,13 @@ shared_examples_for "any Account after item creation" do
     it "should return item when item active" do
       @system.stub(:fetch_items_of).and_return([@item])
       @item.stub(:is_active?).and_return(true)
-      @user.list_items.should include(@item)
+      DAOItem.instance.fetch_items_of(@user.id).should include(@item)
     end
 
     it "should return item when item inactive" do
       @system.stub(:fetch_items_of).and_return([@item])
       @item.stub(:is_active?).and_return(false)
-      @user.list_items.should include(@item)
+      DAOItem.instance.fetch_items_of(@user.id).should include(@item)
     end
   end
 
@@ -174,15 +174,13 @@ shared_examples_for "any Account after item creation" do
 
   context "when listing inactive items" do
     it "should not return item when item active" do
-      @system.stub(:fetch_items_of).and_return([@item])
-      @item.stub(:is_active?).and_return(true)
-      @user.list_inactive_items.should_not include(@item)
+      @system.stub(:fetch_inactive_items_of).and_return([])
+      DAOItem.instance.fetch_inactive_items_of(@user.id).should_not include(@item)
     end
 
     it "should not return item when item inactive" do
-      @system.stub(:fetch_items_of).and_return([@item])
-      @item.stub(:is_active?).and_return(false)
-      @user.list_inactive_items.should include(@item)
+      @system.stub(:fetch_inactive_items_of).and_return([@item])
+      DAOItem.instance.fetch_inactive_items_of(@user.id).should include(@item)
     end
   end
 end

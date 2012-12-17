@@ -77,6 +77,16 @@ module Models
 
     ##
     #
+    # Returns a hash with all inactive items of this user
+    #
+    ##
+    def fetch_inactive_items_of(user_id)
+      DAOItem.instance.fetch_items_of(user_id.to_i).select {|s| !s.is_active? }
+    end
+
+
+    ##
+    #
     # Returns all items but the ones of the specified user.
     #
     ##
