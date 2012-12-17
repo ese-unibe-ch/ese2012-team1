@@ -136,14 +136,6 @@ shared_examples_for "any Account after item creation" do
     @user.should have_item(1)
   end
 
-  it "should return his item" do
-    @system.stub(:item_exists?).and_return(true)
-    @system.stub(:fetch_item).and_return(@item)
-    @item.stub(:owner).and_return(@user)
-
-    @user.get_item(1).should be @item
-  end
-
   context "when listing items" do
     it "should return item when item active" do
       @system.stub(:fetch_items_of).and_return([@item])

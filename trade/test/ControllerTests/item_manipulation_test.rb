@@ -97,7 +97,7 @@ class ItemManipulationTest < Test::Unit::TestCase
 
       post '/item/edit/save', { :id => item.id, :item_picture => file, :new_description => 'Kind of used...', :new_price => 200 }, 'rack.session' => { :account => @users[:bart].id, :user => @users[:bart].id, :auth => true  }
 
-      assert(@users[:bart].has_item?(item.id), "Should own skateboard")
+      assert(@users[:bart] == item.owner, "Should own skateboard")
       assert(item.price.to_i == 200, "Should cost 200 but was #{item.price}")
       assert(item.description == 'Kind of used...', "Should be \'Kind of used...\' but was #{item.description}")
       assert(item.picture == "/images/items/#{item.id}.png", "Path to file should be /images/items/#{item.id}.png but was #{item.picture}")

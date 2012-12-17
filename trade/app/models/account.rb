@@ -146,36 +146,5 @@ module Models
     def is_member?(user)
       false
     end
-
-    ##
-    #
-    # Returns true if an user owns a specific item
-    # Returns false otherwise.
-    #
-    # <b>Parameters</b>
-    #
-    # [item_id] : the id of the item you want to check
-    #
-    ##
-    def has_item?(item_id)
-      DAOItem.instance.item_exists?(item_id) &&
-      DAOItem.instance.fetch_item(item_id).owner == self
-    end
-
-    ##
-    #
-    # Returns item with the given id. Throws error if
-    # user doesn't own the item.
-    #
-    # <b>Parameters</b>
-    #
-    # [item_Id] : the id of the item
-    #
-    ##
-    def get_item(item_Id)
-      fail "#{self.name} doesn't own object: \'#{item_Id}\'" unless (self.has_item?(item_Id.to_i))
-
-      DAOItem.instance.fetch_item(item_Id)
-    end
   end
 end
