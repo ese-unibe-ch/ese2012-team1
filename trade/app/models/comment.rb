@@ -26,6 +26,8 @@ module Models
     @@unique_nr = 0
 
     def initialize
+      super
+
       @nr = @@unique_nr
       @@unique_nr += 1
     end

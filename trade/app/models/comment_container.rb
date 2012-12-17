@@ -3,12 +3,16 @@ module Models
   #
   # A CommentContainer can have comments on itself. If there are multiple
   # comments on the same CommentContainer, the container is responsible
-  # to bring them in some order. A container also knows how many direct comment
-  # on it there are.
+  # to sort them by adding date. The oldest added comment is first and the
+  # newest added comment is the last. A container also knows how many direct
+  # comments on it there are.
   #
   ##
   class CommentContainer
+    #Shows the depth of the comment container. The root container has
+    #depth zero.
     attr_accessor :depth
+    @comments
 
     ##
     #
@@ -20,7 +24,7 @@ module Models
     def initialize
       @comments = Array.new
       self.depth = 0
-    end
+    end #:nodoc
 
     ##
     #
@@ -36,7 +40,9 @@ module Models
     # Adds a new child to the container. Assigns his depth
     # plus one as depth to the new child.
     #
-    # You can not add nil as new child.
+    # === Parameters
+    #
+    # +comment+:: comment to be added (Can't be nil)
     #
     ##
     def add(comment)
@@ -49,10 +55,11 @@ module Models
     ##
     #
     # Travers over all comments by calling #collect and iterating over each
-    # element.
+    # element
     #
-    # Example to print all comments:
-    # container.travers{ |comment| puts comment }
+    # === Example
+    #
+    #   container.travers{ |comment| puts comment }
     #
     ##
     def travers
@@ -63,19 +70,28 @@ module Models
 
     ##
     #
-    # Gets comment with the specific nr
+    # Gets comment with the specific nr. Returns
+    # nil if comment with this number does not
+    # exist.
     #
+    # === Parameters
+    #
+    # +comment_nr+:: Nr of comment to get
     ##
     def get(comment_nr)
+      fail "must be a positive number" unless comment_nr.to_s.is_positive_integer?
+
       self.collect.each do |comment|
         return comment if (comment.nr == comment_nr.to_i)
       end
+
+      nil
     end
 
     ##
     #
-    # Collects all children comments and returns them ordered in
-    # the way they were added. Simply skips all CommentContainers.
+    # Collects all children comments and returns them as array
+    # ordered in the way they were added.
     #
     ##
     def collect
