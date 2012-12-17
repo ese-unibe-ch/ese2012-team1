@@ -70,13 +70,13 @@ module Models
 
     ##
     #
-    # Gets comment with the specific nr. Returns
+    # Gets comment by his unique nr (see Comment). Returns
     # nil if comment with this number does not
     # exist.
     #
     # === Parameters
     #
-    # +comment_nr+:: Nr of comment to get
+    # +comment_nr+:: Number of comment to get
     ##
     def get(comment_nr)
       fail "must be a positive number" unless comment_nr.to_s.is_positive_integer?
