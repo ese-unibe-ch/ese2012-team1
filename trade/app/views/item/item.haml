@@ -1,11 +1,12 @@
+#usr_img
+  %a(href="#{item.picture}" rel="lightbox")
+    %img(height=200 width=200){ :alt => item.name, :src =>item.picture }
+
 %h2
   #{item.name}
   - if item.owner.id == session[:account]
     %span
       (You own it)
-#usr_img
-  %a(href="#{item.picture}" rel="lightbox")
-    %img(height=200 width=200){ :alt => item.name, :src =>item.picture }
 
 = haml :'partials/description-entry-horizontal', :locals => { :label => "Price:",
                                                               :description => item.price }
