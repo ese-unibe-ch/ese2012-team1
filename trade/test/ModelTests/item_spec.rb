@@ -55,6 +55,10 @@ describe Models::Item do
       @item = create_item
     end
 
+    it "have a string representation showing the name and the price" do
+      @item.to_s.should be_like "testobject, 50"
+    end
+
     it "should have name" do
       @item.name.should be_like "testobject"
     end
@@ -73,6 +77,66 @@ describe Models::Item do
 
     it "should have an empty description" do
       @item.description.should be_like ""
+    end
+
+    it "should have version 1" do
+      @item.version.should == 1
+    end
+
+    it "should have current version 1" do
+      @item.current_version?(1).should be_true
+    end
+
+    it "should not have any other current version" do
+      @item.current_version?(2).should be_false
+      @item.current_version?(10).should be_false
+    end
+
+    it "should increase version" do
+      @item.alter_version
+
+      @item.version.should == 2
+      @item.current_version?(2).should be_true
+      @item.current_version?(1).should be_false
+    end
+
+    it "should have no observers" do
+      @item.observers.should be_empty
+    end
+
+    it "should accept observers" do
+      observer = double("Observer")
+
+      @item.add_observer(observer)
+
+      @item.observers.should include(observer)
+      @item.observers.size.should == 1
+    end
+
+    context "when observers are added" do
+      before(:each) do
+        @observer1 = double("Observer One")
+        @observer2 = double("Observer Two")
+
+        @item.add_observer(@observer1)
+        @item.add_observer(@observer2)
+      end
+
+      it "should notify observers when an item is deactivated" do
+        @observer1.should_receive(:update).with(@item)
+        @observer2.should_receive(:update).with(@item)
+
+        @item.to_active
+        @item.to_inactive
+      end
+
+      it "should remove observer" do
+        @item.remove_observer(@observer1)
+
+        @item.observers.should include(@observer2)
+        @item.observers.should_not include(@observer1)
+        @item.observers.size.should == 1
+      end
     end
 
     context "when added a description" do
@@ -184,6 +248,25 @@ describe Models::Item do
         @system.should_receive(:remove_item).with(@item.id)
         @item.clear
       end
+    end
+
+    it "should set item to inactive when timed out" do
+      @item.to_active
+
+      @item.timed_out
+
+      @item.is_active?.should be_false
+    end
+
+    it "should add an expiration time" do
+      @timed_event = double("Timed Event")
+      #This stub on item is necessary so that is not
+      #needed to schedule a real TimedEvent.
+      @item.should_receive(:timed_event).and_return(@timed_event)
+      time = Time.now + 10
+      @timed_event.should_receive(:reschedule).with(time)
+
+      @item.add_expiration_date(time)
     end
 
     context "when bought" do
