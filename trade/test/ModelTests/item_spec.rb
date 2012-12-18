@@ -133,6 +133,7 @@ describe Models::Item do
 
     it "should accept observers" do
       observer = double("Observer")
+      observer.stub(:update)
 
       @item.add_observer(observer)
 
@@ -144,6 +145,8 @@ describe Models::Item do
       before(:each) do
         @observer1 = double("Observer One")
         @observer2 = double("Observer Two")
+        @observer1.stub(:update)
+        @observer2.stub(:update)
 
         @item.add_observer(@observer1)
         @item.add_observer(@observer2)
