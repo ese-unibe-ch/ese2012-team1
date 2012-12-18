@@ -1,12 +1,16 @@
 %h2 All Organisations
-%table
-  %tr
-  - i = 0
-  - for organisation in all_organisations
-    - i = (i + 1)%2
-    %tr{ :class => i == 0 ? "colored" : "normal" }
-      %td{:width => "250px;"}= organisation.name.size > 15 ? "#{organisation.name[0..14]}..." : organisation.name + " has #{DAOItem.instance.fetch_active_items_of(organisation.id).size} Items to sell. "
-      %td
-        %img(height=50 width=50){ :alt => organisation.name, :src => organisation.avatar }
-      %td
-        %a(href="/organisations/#{organisation.id}" ) Show Organisation Details
+-if all_organisations.size == 0
+  %div
+    No organisations.
+-else
+  %table
+    %tr
+    - i = 0
+    - for organisation in all_organisations
+      - i = (i + 1)%2
+      %tr{ :class => i == 0 ? "colored" : "normal" }
+        %td{:width => "250px;"}= organisation.name.size > 15 ? "#{organisation.name[0..14]}..." : organisation.name + " has #{DAOItem.instance.fetch_active_items_of(organisation.id).size} Items to sell. "
+        %td
+          %img(height=50 width=50){ :alt => organisation.name, :src => organisation.avatar }
+        %td
+          %a(href="/organisations/#{organisation.id}" ) Show Organisation Details

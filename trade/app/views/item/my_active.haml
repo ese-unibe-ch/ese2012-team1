@@ -3,32 +3,35 @@
 %h2= "#{text} Active Items"
 
 
-
-%table
-  %tr
-    %th Name
-    %th Price
-    %th
-    %th
-  - i = 0
-  - for item in active_items
-    - i = (i + 1)%2
-    %tr{ :class => i == 0 ? "colored" : "normal" }
-      %td{:width => "135px;"}
-        %a{:href => "/item/#{item.id}"}
+-if active_items.size == 0
+  %div
+    No active items.
+-else
+  %table
+    %tr
+      %th Name
+      %th Price
+      %th
+      %th
+    - i = 0
+    - for item in active_items
+      - i = (i + 1)%2
+      %tr{ :class => i == 0 ? "colored" : "normal" }
+        %td{:width => "135px;"}
+          %a{:href => "/item/#{item.id}"}
           = item.name.size > 15 ? "#{item.name[0..14]}..." : item.name
-      %td{:width => "90px;"}= item.price
-      %td
-        %img(height=50 width=50){ :alt => item.name, :src => item.picture }
-      -time = item.get_expiration_date
-      %td{ :colspan => time == :forever ? 2 : 1 }
-        = haml :'item/form/set_inactive', :locals => { :item => item }
-      -if (time != :forever)
-        :javascript
-          $(function () {
-            austDay = new Date("#{time.strftime("%B %d, %Y %H:%M:%S")}");
-            $("#countdown#{item.id}").countdown({until: austDay, format: 'DHM', expiryText: 'Beyond expiration time. Reload your browser'});
-            $('#year').text(austDay.getFullYear());
-          });
+        %td{:width => "90px;"}= item.price
         %td
-          %span{:id => "countdown#{item.id}"}
+          %img(height=50 width=50){ :alt => item.name, :src => item.picture }
+        -time = item.get_expiration_date
+        %td{ :colspan => time == :forever ? 2 : 1 }
+          = haml :'item/form/set_inactive', :locals => { :item => item }
+        -if (time != :forever)
+          :javascript
+            $(function () {
+              austDay = new Date("#{time.strftime("%B %d, %Y %H:%M:%S")}");
+              $("#countdown#{item.id}").countdown({until: austDay, format: 'DHM', expiryText: 'Beyond expiration time. Reload your browser'});
+              $('#year').text(austDay.getFullYear());
+            });
+          %td
+            %span{:id => "countdown#{item.id}"}

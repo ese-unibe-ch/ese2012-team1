@@ -2,29 +2,33 @@
 - text = "My" if session[:account] == session[:user]
 %h2= "#{text} Inactive Items"
 %div
-%table
-  %tr
-    %th Name
-    %th Price
-    %th
-    %th Description
-    %th
-    %th
-    %th
-  - i = 0
-  - for item in inactive_items
-    - i = (i+1)%2
-    %tr{ :class => i == 0 ? "colored" : "normal" }
-      %td{:width => "135px;"}
-        %a{:href => "/item/#{item.id}"}
-          = item.name.size > 15 ? "#{item.name[0..14]}..." : item.name
-      %td{:width => "90px;"}= item.price
-      %td
-        %img(height=50 width=50){ :alt => item.name, :src => item.picture }
-      %td{:width => "250px;"}= item.description.size > 30 ? "#{item.description[0..29]}..." : item.description
-      %td
-        = haml :'item/form/set_active', :locals => { :item => item }
-      %td
-        = haml :'item/form/edit', :locals => { :item => item }
-      %td
-        = haml :'item/form/delete', :locals => { :item => item }
+-if inactive_items.size == 0
+  %div
+    No inactive items.
+-else
+  %table
+    %tr
+      %th Name
+      %th Price
+      %th
+      %th Description
+      %th
+      %th
+      %th
+    - i = 0
+    - for item in inactive_items
+      - i = (i+1)%2
+      %tr{ :class => i == 0 ? "colored" : "normal" }
+        %td{:width => "135px;"}
+          %a{:href => "/item/#{item.id}"}
+            = item.name.size > 15 ? "#{item.name[0..14]}..." : item.name
+        %td{:width => "90px;"}= item.price
+        %td
+          %img(height=50 width=50){ :alt => item.name, :src => item.picture }
+        %td{:width => "250px;"}= item.description.size > 30 ? "#{item.description[0..29]}..." : item.description
+        %td
+          = haml :'item/form/set_active', :locals => { :item => item }
+        %td
+          = haml :'item/form/edit', :locals => { :item => item }
+        %td
+          = haml :'item/form/delete', :locals => { :item => item }
