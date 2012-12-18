@@ -22,14 +22,14 @@ Move into directory JOKR:
 Start the installer (needs root privileges)
 
   Ubuntu:
-
+  
     sudo ./installer.sh
-
+    
   Debian:
-
+  
     su root
     ./installer.sh
-
+    
 Start the Trading System with the Startup Script:
 
     ./start.sh
@@ -43,7 +43,7 @@ Start the Trading System with the Startup Script:
 ###Windows (Tested on Windows XP, 7 and 8)
 Get the latest relese of ESE TredyngSystem by #1:
 
-    [https://tux1.pillo-srv.ch/jokr.tar.bz2](https://tux1.pillo-srv.ch/jokr.tar.bz2)
+[https://tux1.pillo-srv.ch/jokr.tar.bz2](https://tux1.pillo-srv.ch/jokr.tar.bz2)
 
 Extract the archive:
 
@@ -116,7 +116,6 @@ Login to the system using
 E-Mail: ese@mail.ch
 
 Password: ese
-
 
 ##Tests
 If you want to use rspec in RubyMine you have to install the ruby rspec (Only if you're not using the Install Script)
