@@ -17,8 +17,10 @@ class Conversation
   include Observable
   @@conversations_count = 1
 
-  attr_reader :conversation_id, #Unique id to address the Conversation
-              :messages         #Messages belonging to this conversation
+  #Unique id to address the Conversation
+  attr_reader :conversation_id
+  #Messages belonging to this conversation
+  attr_reader :messages
 
   attr_accessor :subscribers    #Participants
 
@@ -47,8 +49,9 @@ class Conversation
   #
   # Creates a Conversation and stores its subscribers.
   #
-  # Params:
-  # subscribers : all ids of users that are subscribed to this conversation
+  # === Parameters
+  #
+  # +subscribers+:: all ids of users that are subscribed to this conversation
   #
   ##
 
@@ -73,6 +76,9 @@ class Conversation
   # If a message has reply_to then this message is stored
   # right behind the message it replies to.
   #
+  # === Parameters
+  #
+  # +message+:: message to be added
   ##
 
   def add_message(message)
@@ -102,8 +108,9 @@ class Conversation
 
   ##
   #
-  # Count of all messages belonging to this Conversation
+  # Count of all messages belonging to this Conversation.
   #
+  # Returns count as Integer.
   ##
 
   def count_messages
@@ -113,8 +120,12 @@ class Conversation
   ##
   #
   # Gets message with message id
+  #
   # Return nil if message does not exist
   #
+  # === Parameters
+  #
+  # +message_id+:: id of the message to be fetched
   ##
 
   def get(message_id)
@@ -125,6 +136,8 @@ class Conversation
   #
   # Get the last message
   #
+  # Returns a Message
+  #
   ##
   def get_last_message
     @messages.fetch(self.count_messages - 1)
@@ -133,7 +146,13 @@ class Conversation
   ##
   #
   # Check if user is subscriber of this conversation.
-  # Params: user_id_id : Integer (User ID)
+  #
+  # Returns true if User with given id is a
+  # subscriber, false otherwise.
+  #
+  # === Parameters:
+  #
+  # +user_id+:: user id of possible subscriber
   #
   ##
   def has_subscriber?(user_id)
@@ -142,8 +161,15 @@ class Conversation
 
   ##
   #
-  # Check if user is subscriber of this conversation.
-  # Params: user_id_id : Integer (Message ID)
+  # Checks if conversation has this message
+  # with the given id.
+  #
+  # Returns true if conversation has message,
+  # false otherwise.
+  #
+  # === Parameters
+  #
+  # +mess_id+:: id of the message to be checked
   #
   ##
   def has_message?(mess_id)
