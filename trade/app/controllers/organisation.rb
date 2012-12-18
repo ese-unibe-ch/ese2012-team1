@@ -91,13 +91,14 @@ module Controllers
     #  Expects:
     #  params[:account] : id of the account(user/org.) the user wants to switch to
     #
-    #  TODO: Check that the user is aloud to change to this organisation!
-    #
     ###
 
     post '/organisation/switch' do
       session[:account] = params[:account].to_i
       new_account = DAOAccount.instance.fetch_account(session[:account])
+      user = DAOAccount.instance.fetch_account(session[:user])
+
+      error_redirect("Oh no!", "Your not a member of this organisation!", new_account.is_member?(user), "/home")
 
       session[:alert] = Alert.create("Success!", "You changed to " + new_account.name + ". You can now buy and sell items in its name.", false)
       redirect '/home'
@@ -220,46 +221,6 @@ module Controllers
 
       session[:account] = session[:user]
       redirect "/home"
-    end
-
-    ##
-    # Shows the confirmation page if the user really wants to delete the organisation
-    #
-    # Redirect:
-    # /home when the user is no admin
-    #
-    # Expects:
-    # session[:user] : the id of the user who wants to delete the org.
-    # session[:account] : the org. on which behalf the user acts upon
-    # TODO: This should go to organisation_admin.rb!
-    ##
-    get '/organisation/delete' do
-      error_redirect("Oh no!", "You can't delete this Organisation, because you're not an Administrator.", !DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_account(session[:user])), "/home")
-      haml :'organisation/delete'
-    end
-
-  ##
-  # Deletes the organisation
-  #
-  # Redirect:
-  # /home when the user is no admin
-  #
-  # Expects:
-  # session[:user] : the id of the user who wants to delete the org.
-  # session[:account] : the org. on which behalf the user acts upon
-  # TODO: This should go to organisation_admin.rb!
-  ##
-    post '/organisation/delete' do
-      error_redirect("Oh no!", "There is something gone wrong.", !DAOAccount.instance.account_exists?(session[:user]), "/home")
-      error_redirect("Oh no!", "You can't delete this Organisation, because you're not an Administrator.", !DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_account(session[:user])), "/home")
-
-      org = DAOAccount.instance.fetch_account(session[:account])
-      org.clear
-
-      user = session[:user]
-      session[:account] = DAOAccount.instance.fetch_account(user).id
-
-      redirect '/home'
     end
   end
 end

@@ -246,5 +246,45 @@ module Controllers
       end
     end
 
+
+    ##
+    # Shows the confirmation page if the user really wants to delete the organisation
+    #
+    # Redirect:
+    # /home when the user is no admin
+    #
+    # Expects:
+    # session[:user] : the id of the user who wants to delete the org.
+    # session[:account] : the org. on which behalf the user acts upon
+    #
+    ##
+    get '/organisation/delete' do
+      error_redirect("Oh no!", "You can't delete this Organisation, because you're not an Administrator.", !DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_account(session[:user])), "/home")
+      haml :'organisation/delete'
+    end
+
+    ##
+    # Deletes the organisation
+    #
+    # Redirect:
+    # /home when the user is no admin
+    #
+    # Expects:
+    # session[:user] : the id of the user who wants to delete the org.
+    # session[:account] : the org. on which behalf the user acts upon
+    #
+    ##
+    post '/organisation/delete' do
+      error_redirect("Oh no!", "There is something gone wrong.", !DAOAccount.instance.account_exists?(session[:user]), "/home")
+      error_redirect("Oh no!", "You can't delete this Organisation, because you're not an Administrator.", !DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_account(session[:user])), "/home")
+
+      org = DAOAccount.instance.fetch_account(session[:account])
+      org.clear
+
+      user = session[:user]
+      session[:account] = DAOAccount.instance.fetch_account(user).id
+
+      redirect '/home'
+    end
   end
 end
