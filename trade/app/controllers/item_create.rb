@@ -23,7 +23,6 @@ module Controllers
     # params[:name] : name for the item
     # params[:price] : price for the item
     # params[:description] :  description for the item
-    # TODO: Description should be optional?
     # optional params[:item_picture] : picture for the item
     #
     ##

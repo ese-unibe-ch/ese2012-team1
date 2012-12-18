@@ -130,19 +130,6 @@ module Controllers
 
     ##
     #
-    # Shows the form to write a comment on a specific item
-    #
-    # Expects:
-    # params[:id] : the id of the item someone wants to comment on
-    # TODO: I am not sure what this does, or if it is used
-    ##
-    get '/item/comment/:id' do
-      item = DAOItem.instance.fetch_item(params[:id].to_i)
-      haml :'item/comments', :locals => {:item => item }
-    end
-
-    ##
-    #
     #  Shows the  make comment page, for a comment on a comment
     #
     #  Redirects:
