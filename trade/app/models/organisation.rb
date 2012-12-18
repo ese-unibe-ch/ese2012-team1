@@ -359,7 +359,7 @@ module Models
     def set_limit(amount)
       fail "no valid limit" if !amount.nil? && amount<0
 
-      self.limit=amount.to_i
+      self.limit=amount
     end
 
     ##

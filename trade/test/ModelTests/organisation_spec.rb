@@ -299,8 +299,11 @@ describe "Organisation" do
     end
 
     context "#clear" do
+      before(:each) do
+        File.stub(:delete)
+      end
+
       it "should remove organisation from system" do
-        pending()
         @system.stub(:fetch_items_of).and_return([])
         @user.stub(:id).and_return(1)
         @system.should_receive(:remove_account).with(1)
@@ -309,7 +312,6 @@ describe "Organisation" do
 
       context "with one item" do
         it "should clear one item" do
-          pending()
           @item = double('item')
           @system.stub(:fetch_items_of).and_return([@item])
           @system.stub(:remove_account)
@@ -320,7 +322,6 @@ describe "Organisation" do
 
       context "with three items" do
         it "should clear three items" do
-          pending()
           @item = double('item')
           @system.stub(:fetch_items_of).and_return([@item, @item, @item])
           @system.stub(:remove_account)
