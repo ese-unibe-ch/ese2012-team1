@@ -1,10 +1,15 @@
 module Models
+  ##
+  #
   # This class implements the MessageBox for Users.
   # It holds all conversations (identified by id).
   #
-  # Responsibility:
+  # === Responsibility
+  #
   # Controlling of Message Reading (mark as Read)
   # Observes all Conversations that are in the MessageBox
+  #
+  ##
 
   class MessageBox
 
@@ -13,7 +18,10 @@ module Models
     ##
     #
     # Create a new MessageBox for User with ID user_id.
-    # Params: user_id : Integer (User ID)
+    #
+    # === Parameters:
+    #
+    # +user_id+:: id of the user to own this messagebox
     #
     ##
     def self.create(user_id)
@@ -28,7 +36,11 @@ module Models
     #
     # Find conversation by id
     #
-    # Params: conversation_id
+    # Returns Conversation.
+    #
+    # === Parameters:
+    #
+    # +conversation_id+:: id of conversation to be fetched.
     #
     ##
     def fetch_conversation(conversation_id)
@@ -40,7 +52,9 @@ module Models
     # Add Conversation to Users MessageBox and add
     # himself as observer.
     #
-    # Params: conversation : Conversation
+    # === Parameters
+    #
+    # +conversation+:: Conversation to be added
     #
     ##
 
@@ -50,6 +64,16 @@ module Models
       self.add_to_tree(conversation)
     end
 
+    ##
+    #
+    # Adds conversation to the message tree.
+    #
+    # === Parameters
+    #
+    # +conversation+:: Conversation to be added
+    #
+    ##
+
     def add_to_tree(conversation)
       conv_id = conversation.conversation_id
       self.message_tree.store(conv_id.to_s, Hash.new)
@@ -58,9 +82,15 @@ module Models
 
     ##
     #
-    # Check if Message was already read by User.
-    # Params: conv_id : Integer (Conversation ID)
-    #         mess_id : Integer (Message ID)
+    # Checks if Message was already read by user.
+    #
+    # Returns true if message was already read
+    # by a user.
+    #
+    # === Parameters:
+    #
+    # +conv_id+:: conversation id of the conversation to be checked
+    # +mess_id+:: message id of the message to be checked in Conversation belonging to +conv_id+
     #
     ##
     def read?(conv_id, mess_id)
@@ -69,9 +99,12 @@ module Models
 
     ##
     #
-    # Set Message as Read.
-    # Params: conv_id : Integer (Conversation ID)
-    #         mess_id : Integer (Message ID)
+    # Set Message as read.
+    #
+    # === Parameters:
+    #
+    # +conv_id+:: conversation id of the conversation to be checked
+    # +mess_id+:: message id of the message to be set as read in Conversation belonging to +conv_id+
     #
     ##
     def set_as_read(conv_id, mess_id)
@@ -80,8 +113,11 @@ module Models
 
     ##
     #
-    # Set all Messages in Conversation as Read.
-    # Params: conv_id : Integer (Conversation ID)
+    # Set all Messages in Conversation as read.
+    #
+    # === Parameters
+    #
+    # +conv_id+:: conversation id of the conversation whose messages are to be set as read
     #
     ##
     def set_conversation_as_read(conv_id)
@@ -91,6 +127,8 @@ module Models
     ##
     #
     # Counting number of new Messages.
+    #
+    # Returns count as Integer.
     #
     ##
     def new_messages_count
@@ -103,7 +141,13 @@ module Models
 
     ##
     #
-    # Counting new messages for a specifique conversation
+    # Counting new messages for a specific conversation.
+    #
+    # Returns count as Integer
+    #
+    # === Parameters
+    #
+    # +counversation_id+:: id of conversation whose message are to be counted
     #
     ##
 
@@ -119,9 +163,11 @@ module Models
     #
     # Travers over all new messages of the user
     #
-    # Messenger.instance.travers_new_messages do |message, conversation_id|
-    #   puts message.message
-    # end
+    # === Examples
+    #
+    #   Messenger.instance.travers_new_messages do |message, conversation_id|
+    #     puts message.message
+    #   end
     #
     ##
 
@@ -140,6 +186,9 @@ module Models
     #
     # Check if there are unread Messages.
     #
+    # Returns true if messagebox has new messages,
+    # false otherwise.
+    #
     ##
     def new_messages?
       self.new_messages_count == 0 ? false : true
@@ -147,7 +196,9 @@ module Models
 
     ##
     #
-    # Counting number of all Messages.
+    # Counts messages in messagebox.
+    #
+    # Returns count as Integer.
     #
     ##
     def messages_count
@@ -161,9 +212,12 @@ module Models
     ##
     #
     # Counting number of all message in
-    # a specifique conversation
+    # a specific conversation
     #
-    # Params: conversation_id : Id of the conversation to count messages for
+    # === Parameters
+    #
+    # +conversation_id+ id of the conversation to count messages of
+    #
     ##
 
     def message_count_for(conversation_id)
@@ -177,7 +231,12 @@ module Models
 
     ##
     #
-    # Observing conversations.
+    # Observing conversations. Called from Conversation.
+    #
+    # === Parameters
+    #
+    # +conversation+:: conversation which was updated
+    # +message+:: message that was newly added
     #
     ##
     def update(conversation, message)

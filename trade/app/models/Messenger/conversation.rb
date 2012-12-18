@@ -5,7 +5,7 @@ require 'observer'
 # A conversation holds all messages belonging to one subject
 # Each conversation has a unique id.
 # A conversation knows all its participants
-# A conversation can be observed. If a new message is put
+# A conversation can be observed (see MessageBox). If a new message is put
 # to it then all observers are notified. The conversation
 # itself and the message_id are then returned.
 # An observer has to implement the method
