@@ -22,8 +22,9 @@ module Models
 
     ##
     #
-    # Adds an item to the system and increments the id counter for items.
+    # Adds an item to the system and sets the id of the item
     #
+    # +item+:: item to be added
     ##
     def add_item(item)
       fail "An items id should initially be nil, but was #{item.id}" unless (item.id == nil)
@@ -35,7 +36,9 @@ module Models
 
     ##
     #
-    # Returns true if item exists in system. False in all other cases.
+    # Returns true if item exists in system, false otherwise.
+    #
+    # +item_id+ id of the item to be checked (can't be nil)
     #
     ##
     def item_exists?(item_id)
@@ -48,16 +51,20 @@ module Models
     #
     # Returns the item with associated id.
     #
+    # +item_id+:: id of the item to be fetched (can't be nil and must exist in database)
+    #
     ##
     def fetch_item(item_id)
+      fail "Missing id" if item_id.nil?
       fail "No such item id: #{item_id}" unless @items.member?(item_id.to_i)
       @items.fetch(item_id.to_i)
     end
 
     ##
     #
-    # Returns a hash with all items of this user.
+    # Returns an array with all items of this user.
     #
+    # +account_id+:: id of the Account whichs item are to be fetched (must exist in database)
     ##
     def fetch_items_of(account_id)
       fail "No account with id #{account_id}" unless DAOAccount.instance.account_exists?(account_id)
@@ -66,20 +73,22 @@ module Models
 
     ##
     #
-    # Returns a hash with all active items of this user.
+    # Returns a hash with all active items of this account.
     #
+    # +account_id+:: id of the Account whose item are to be fetched (must exist in database)
     ##
-    def fetch_active_items_of(user_id)
-      fetch_items_of(user_id.to_i).select {|s| s.is_active? }
+    def fetch_active_items_of(account_id)
+      fetch_items_of(account_id.to_i).select {|s| s.is_active? }
     end
 
     ##
     #
-    # Returns a hash with all inactive items of this user
+    # Returns a hash with all inactive items of this account.
     #
+    # +account_id+:: id of the Account whose item are to be fetched (must exist in database)
     ##
-    def fetch_inactive_items_of(user_id)
-      fetch_items_of(user_id.to_i).select {|s| !s.is_active? }
+    def fetch_inactive_items_of(account_id)
+      fetch_items_of(account_id.to_i).select {|s| !s.is_active? }
     end
 
 
@@ -87,6 +96,7 @@ module Models
     #
     # Returns all items but the ones of the specified user.
     #
+    # +account_id+:: id of the Account whose item are to be fetched (must exist in database)
     ##
     def fetch_all_items_but_of(account_id)
       fail "No account with id #{account_id}" unless DAOAccount.instance.account_exists?(account_id)
@@ -97,6 +107,7 @@ module Models
     #
     # Returns all active items but the ones of the specified user.
     #
+    # +account_id+:: id of the Account whose item are to be fetched (must exist in database)
     ##
     def fetch_all_active_items_but_of(account_id)
       fail "No account with id #{account_id}" unless DAOAccount.instance.account_exists?(account_id)
@@ -105,7 +116,7 @@ module Models
 
     ##
     #
-    # Returns all active items.
+    # Returns all active items in the database.
     #
     ##
     def fetch_all_active_items
@@ -115,8 +126,9 @@ module Models
     ##
     #
     # Removes an item from the system
-    # @see fetch_item
+    # (see #fetch_item)
     #
+    # +item_id+:: id of the item to be removed (can't be nil and must exist in database)
     ##
     def remove_item(item_id)
       fail "There are no items" if @items.size == 0
@@ -127,6 +139,8 @@ module Models
     ##
     #
     # Counts all items
+    #
+    # Returns count as Integer
     #
     ##
     def count_items
