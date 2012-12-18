@@ -9,7 +9,7 @@
       Subscribers:
     - conversation.subscribers.each do |subscriber|
       = DAOAccount.instance.fetch_account(subscriber).name
-    %br
+    %div
     Last Message:
     - msg = conversation.get_last_message
     = haml :'messagebox/message', :locals => { :message => msg,
