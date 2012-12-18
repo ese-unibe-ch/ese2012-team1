@@ -2,8 +2,16 @@ module Models
 
   ##
   #
-  # Responsibility:
-  # Hold SearchItems and scan them for a specifique string.
+  # This class performs a search over various registered
+  # items. In our case these are items (see Item),
+  # users (see User) and organisations (see Organisation).
+  #
+  # You can register and unregister SearchItem to this
+  # search.
+  #
+  # === Responsibility
+  #
+  # Hold SearchItems and scan them for a specific string.
   # Provide a SearchResult holding the results of the
   # search.
   #
@@ -18,13 +26,14 @@ module Models
 
     ##
     #
-    # Search through all registered items (see #register) for a
-    # given string and returns all items including that string
+    # Searches through all registered items (see #register) for a
+    # given string and returns all items including +search_string+
     # as a SearchResult (see SearchResult). The search is
     # case insensitive.
     #
-    # Params:
-    # search_string: String to be searched for
+    # === Parameters
+    #
+    # +search_string+:: String to be searched for
     #
     ##
 
@@ -49,8 +58,9 @@ module Models
     # Registers a SearchItem (see SearchItem) to
     # the search in #find.
     #
-    # Params:
-    # search_item: a SearchItem
+    # === Parameters
+    #
+    # +search_item+:: A SearchItem
     #
     ##
 
@@ -61,12 +71,16 @@ module Models
     ##
     #
     # Removes an item from the search. This has
-    # to be the original item that was added.
+    # to be the original item that was added not the
+    # SearchItem. So the user of this Search has
+    # not to save all SearchItems he creates.
+    #
     # At the moment those are User, Organisation
     # or Item.
     #
-    # Params:
-    # original_item: Item to be unregistered
+    # === Parameters
+    #
+    # original_item: item to be unregistered
     #
     ##
 
