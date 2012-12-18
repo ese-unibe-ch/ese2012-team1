@@ -40,7 +40,7 @@ Start the Trading System with the Startup Script:
     ruby app/app.rb
 
 
-###Windows (Tested on Windows XP, 7 and 8)
+###Windows (Tested on Windows 7 and 8)
 Get the latest release of ESE Trading System by #1:
 
 [https://tux1.pillo-srv.ch/jokr.tar.bz2](https://tux1.pillo-srv.ch/jokr.tar.bz2)
