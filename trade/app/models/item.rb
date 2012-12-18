@@ -188,7 +188,7 @@ module Models
     ##
     def add_observer(observer)
       fail "missing observer" if observer.nil?
-      fail "must implement #update" unless (observer.respond_to(:update))
+      fail "must implement #update" unless (observer.respond_to?(:update))
 
       self.observers << observer
     end

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+  <title>Test Suite</title>
+</head>
+<body>
+<table id="suiteTable" cellpadding="1" cellspacing="1" border="1" class="selenium"><tbody>
+<tr><td><b>Test Suite</b></td></tr>
+<tr><td><a href="Login">Login</a></td></tr>
+<tr><td><a href="Create Item">Create Item</a></td></tr>
+<tr><td><a href="Buy Item">Buy Item</a></td></tr>
+<tr><td><a href="Create Organisation">Create Organisation</a></td></tr>
+<tr><td><a href="Change to ESEOrg">Change to ESEOrg</a></td></tr>
+<tr><td><a href="Buy Item for ESEOrg">Buy Item for ESEOrg</a></td></tr>
+<tr><td><a href="Create Item for ESEOrg">Create Item for ESEOrg</a></td></tr>
+<tr><td><a href="Add Item To Wishlist">Add Orange To Wishlist</a></td></tr>
+<tr><td><a href="Find UserB">Find UserB</a></td></tr>
+<tr><td><a href="Find A380">Find A380</a></td></tr>
+<tr><td><a href="Comment On Swiss Franc">Comment On Swiss Franc</a></td></tr>
+<tr><td><a href="Send Message To UserA">Send Message To UserA</a></td></tr>
+<tr><td><a href="Put BMW M5 on market">Put BMW M5 on market</a></td></tr>
+<tr><td><a href="Remove Fiat 500 from market">Remove Fiat500 from market</a></td></tr>
+<tr><td><a href="Logout">Logout</a></td></tr>
+</tbody></table>
+</body>
+</html>
