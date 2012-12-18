@@ -8,22 +8,38 @@ Team #1
 ##Using Installation Script
 ###Unix Based Systems (Tested on Ubuntu and Debian)
 Get the latest relese of ESE TredyngSystem by #1:
+
     wget https://tux1.pillo-srv.ch/jokr.tar.bz2
+
 Extract files:
+
     tar xfvj jokr.tar.bz2
+
 Move into directory JOKR:
+
     cd JOKR/
+
 Start the installer (needs root privileges)
+
   Ubuntu:
+
     sudo ./installer.sh
+
   Debian:
+
     su root
+
     ./installer.sh
+
 Start the Trading System with the Startup Script:
+
     ./start.sh
+
   Alternative start app.rb direct:
+
     cd ./trade/app/
     ruby app.rb
+
 
 ###Windows (Tested on Windows XP, 7 and 8)
 Get the latest relese of ESE TredyngSystem by #1:
