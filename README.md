@@ -7,7 +7,7 @@ Team #1
 
 ##Using Installation Script
 ###Unix Based Systems (Tested on Ubuntu and Debian)
-Get the latest release of ESE TredyngSystem by #1:
+Get the latest release of ESE Trading System by #1:
 
     wget https://tux1.pillo-srv.ch/jokr.tar.bz2
 
@@ -41,7 +41,7 @@ Start the Trading System with the Startup Script:
 
 
 ###Windows (Tested on Windows XP, 7 and 8)
-Get the latest release of ESE TredyngSystem by #1:
+Get the latest release of ESE Trading System by #1:
 
 [https://tux1.pillo-srv.ch/jokr.tar.bz2](https://tux1.pillo-srv.ch/jokr.tar.bz2)
 
@@ -122,7 +122,7 @@ If you want to use rspec in RubyMine you have to install the ruby rspec (Only if
 
     sudo apt-get install rspec
 
-To use selenium tests you need to install firefox. Downlaod it from
+To use selenium tests you need to install firefox. Download it from
 http://www.mozilla.org/de/firefox/fx/ and the selenium plugin
 http://seleniumhq.org/projects/ide/
 
