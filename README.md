@@ -7,7 +7,7 @@ Team #1
 
 ##Using Installation Script
 ###Unix Based Systems (Tested on Ubuntu and Debian)
-Get the latest relese of ESE TredyngSystem by #1:
+Get the latest release of ESE TredyngSystem by #1:
 
     wget https://tux1.pillo-srv.ch/jokr.tar.bz2
 
@@ -41,7 +41,7 @@ Start the Trading System with the Startup Script:
 
 
 ###Windows (Tested on Windows XP, 7 and 8)
-Get the latest relese of ESE TredyngSystem by #1:
+Get the latest release of ESE TredyngSystem by #1:
 
 [https://tux1.pillo-srv.ch/jokr.tar.bz2](https://tux1.pillo-srv.ch/jokr.tar.bz2)
 
@@ -65,7 +65,7 @@ Start the Trading System with the Startup Script:
     ruby app\app.rb
 
 
-##Manuel Installation
+##Manual Installation
 ###Gems
 
     run 'bundle install'
