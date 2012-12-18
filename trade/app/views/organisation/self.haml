@@ -1,17 +1,21 @@
 %form(action="/organisation/create" method="get")
   %button(type="submit" name="create organisation" value="create organisation" id="createOrg")
     create organisation
-%div(class="line-spacing")
-%table
-  %tr
-    %th Name
-    %th
-    %th Description
-  - i = 0
-  - for organisation in all_organisations
-    - i = (i + 1)%2
-    %tr{ :class => i == 0 ? "colored" : "normal" }
-      %td{:width => "160px;"}=organisation.name.size > 20 ? "#{organisation.name[0...19]}..." : organisation.name
-      %td
-        %img(height=50 width=50){ :alt => organisation.name, :src => organisation.avatar }
-      %td{:width => "700px;"}= organisation.description.size > 80 ? "#{organisation.description[0..79]}..." : organisation.description
+%div(class="padding-top")
+-if all_organisations.size == 0
+  %div
+    No organisations.
+-else
+  %table
+    %tr
+      %th Name
+      %th
+      %th Description
+    - i = 0
+    - for organisation in all_organisations
+      - i = (i + 1)%2
+      %tr{ :class => i == 0 ? "colored" : "normal" }
+        %td{:width => "160px;"}=organisation.name.size > 20 ? "#{organisation.name[0...19]}..." : organisation.name
+        %td
+          %img(height=50 width=50){ :alt => organisation.name, :src => organisation.avatar }
+        %td{:width => "700px;"}= organisation.description.size > 80 ? "#{organisation.description[0..79]}..." : organisation.description

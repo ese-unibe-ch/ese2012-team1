@@ -2,29 +2,33 @@
 - text = "My" if session[:account] == session[:user]
 %h2= "#{text} Wish List"
 %div
-%table
-  %tr
-    %th Name
-    %th Price
-    %th
-    %th Description
-    %th
-    %th
-    %th
-  - i = 0
-  - for item in wish_list_items
-    - i = (i+1)%2
-    %tr{ :class => i == 0 ? "colored" : "normal" }
-      %td{:width => "135px;"}
-        %a{:href => "/item/#{item.id}"}
-          = item.name.size > 15 ? "#{item.name[0..14]}..." : item.name
-      %td{:width => "90px;"}= item.price
-      %td
-        %img(height=50 width=50){ :alt => item.name, :src => item.picture }
-      %td{:width => "250px;"}= item.description.size > 30 ? "#{item.description[0..29]}..." : item.description
-      %td
-        = haml :'item/form/buy', :locals => { :item => item }
-      %td
-        = haml :'partials/form/remove_from_wishlist', :locals => { :item => item }
+-if wish_list_items.size == 0
+  %div
+    No items on the wish list.
+-else
+  %table
+    %tr
+      %th Name
+      %th Price
+      %th
+      %th Description
+      %th
+      %th
+      %th
+    - i = 0
+    - for item in wish_list_items
+      - i = (i+1)%2
+      %tr{ :class => i == 0 ? "colored" : "normal" }
+        %td{:width => "135px;"}
+          %a{:href => "/item/#{item.id}"}
+            = item.name.size > 15 ? "#{item.name[0..14]}..." : item.name
+        %td{:width => "90px;"}= item.price
+        %td
+          %img(height=50 width=50){ :alt => item.name, :src => item.picture }
+        %td{:width => "250px;"}= item.description.size > 30 ? "#{item.description[0..29]}..." : item.description
+        %td
+          = haml :'item/form/buy', :locals => { :item => item }
+        %td
+          = haml :'partials/form/remove_from_wishlist', :locals => { :item => item }
 
 
