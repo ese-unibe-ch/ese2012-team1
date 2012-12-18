@@ -50,7 +50,6 @@ module Controllers
           session[:navigation][:selected]  = "messagebox"
           session[:navigation][:subnavigation]  = "news"
 
-          #TODO!
           haml :'messagebox/news'
         end
 
@@ -66,7 +65,6 @@ module Controllers
           session[:navigation][:selected]  = "messagebox"
           session[:navigation][:subnavigation]  = "conversations"
 
-          #TODO!
           haml :'messagebox/conversations'
         end
 
