@@ -6,19 +6,19 @@ require 'time'
 #
 # Sending E-mail via ruby
 #
-# Example of usage:
+# === Examples
 #
-# <tt>require 'rubygems'
-# require 'require_relative'
-# require 'simple_email_client'
+#   <tt>require 'rubygems'
+#   require 'require_relative'
+#   require 'simple_email_client'
 #
-# client = SimpleEmailClient.setup
+#   client = SimpleEmailClient.setup
 #
-# content = <<HERE
-# Hello John!
-# HERE
+#   content = <<HERE
+#   Hello John!
+#   HERE
 #
-# client.send_email("youremail@mail.ch", "Send E-Mails with Ruby", content)</tt>
+#   client.send_email("receiver@mail.ch", "Send E-Mails with Ruby", content)</tt>
 #
 # This class is base on code from: http://rolandtanglao.com/archives/2010/07/29
 # /ruby-code-send-email-using-configured-SMTP-Server
@@ -37,10 +37,10 @@ class SimpleEmailClient
   # and sender. Data is loaded from '../private
   # /email.conf'. Its content should be
   #
-  # from_address = 'your from address'
-  # smtp_server = 'your smtp server'
-  # username = 'your user name'
-  # password = 'your password'
+  #   from_address = 'your from address'
+  #   smtp_server = 'your smtp server'
+  #   username = 'your user name'
+  #   password = 'your password'
   #
   ##
   def self.setup
@@ -66,9 +66,9 @@ class SimpleEmailClient
   #
   # Sending email from tradingsystemese@gmail.com
   #
-  # @param to : Receiver of the e-mail
-  # @param subject : e-mail header
-  # @param content : text to be send
+  # +to+:: Receiver of the e-mail
+  # +subject+:: e-mail header
+  # +content+:: text to be send
   #
   ##
   def send_email(to, subject, content)
