@@ -103,7 +103,7 @@ module Models
     ##
 
     def clear
-      System.search.unregister(self)
+      System.instance.search.unregister(self)
 
       DAOItem.instance.fetch_items_of(self.id).each { |e| e.clear }
       DAOAccount.instance.remove_account(self.id)

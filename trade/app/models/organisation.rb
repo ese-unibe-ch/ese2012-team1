@@ -382,13 +382,13 @@ module Models
     #
     ##
     def clear
-      System.search.unregister(self)
+      System.instance.search.unregister(self)
 
       DAOItem.instance.fetch_items_of(self.id).each { |e| e.clear }
       DAOAccount.instance.remove_account(self.id)
 
-      unless (account.avatar == "/images/organisations/default_avatar.png")
-        File.delete("#{account.avatar.sub("/images", "./public/images")}")
+      unless (self.avatar == "/images/organisations/default_avatar.png")
+        File.delete("#{self.avatar.sub("/images", "./public/images")}")
       end
     end
   end

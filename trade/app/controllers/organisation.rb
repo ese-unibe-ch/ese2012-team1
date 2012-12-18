@@ -254,7 +254,7 @@ module Controllers
       error_redirect("Oh no!", "You can't delete this Organisation, because you're not an Administrator.", !DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_account(session[:user])), "/home")
 
       org = DAOAccount.instance.fetch_account(session[:account])
-      DAOAccount.instance.remove_account(org.id)
+      org.clear
 
       user = session[:user]
       session[:account] = DAOAccount.instance.fetch_account(user).id
