@@ -30,7 +30,7 @@
           = item.description.boldify(boldify)
       %td
         %img(height=50 width=50){ :alt => item.name, :src => item.picture }
-      -time = item.timed_event.time
+      -time = item.get_expiration_date
       %td{ :colspan => time == :forever ? 2 : 1 }
         = haml :'item/form/buy', :locals => { :item => item }
       %td

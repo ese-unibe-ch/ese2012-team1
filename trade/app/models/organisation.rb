@@ -1,21 +1,22 @@
 module Models
- class Organisation < Models::Account
-    ##
-    #
-    # An Organisation is an account which is accessed by multiple users (member).
-    # Users with certain rights (admin) may add and remove members of an organisation.
-    # Every user in the users list can act as the organisation and buy or sell items for it.
-    # Organisations may own certain items.
-    # Organisations (represented by the users in the list) may buy and sell  items of another user or organisation
-    # The limit of each member is reseted at 23:59 to the organisation limit.
-    #
-    # members : a hashmap with all email addresses and users of an organisation
-    # admins : a part of members that contains only the admins
-    # limit : the maximum amount of credits non-admins can spend per day
-    # member_limits : a hashmap with email address of all members and their rest limit
-    #
-    ##
+  ##
+  #
+  # An Organisation is an account which is accessed by multiple users (member).
+  # Users with certain rights (admin) may add and remove members of an organisation.
+  # Every user in the users list can act as the organisation and buy or sell items for it.
+  # Organisations may own certain items.
+  # Organisations (represented by the users in the list) may buy and sell items of another user or organisation.
+  # It is possible to set a limit so normal user can only buy items to a certain amount.
+  # The limit of each member is reseted at 23:59 to the organisation limit.
+  #
+  # +members+:: a hashmap with all email addresses and users of an organisation
+  # +admins+:: a part of members that contains only the admins
+  # +limit+:: the maximum amount of credits non-admins can spend per day
+  # +member_limits+:: a hashmap with email address of all members and their rest limit
+  #
+  ##
 
+  class Organisation < Models::Account
     attr_accessor :members, :admins, :limit
 
     @member_limits

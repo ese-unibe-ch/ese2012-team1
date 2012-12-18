@@ -35,7 +35,7 @@
       = haml :'item/form/edit', :locals => { :item => item }
       = haml :'item/form/delete', :locals => { :item => item }
 
--time = item.timed_event.time
+-time = item.get_expiration_date
 -if (time != :forever)
   %div(class="padding-top")
     Offer expires in:

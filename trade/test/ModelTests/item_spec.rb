@@ -47,7 +47,28 @@ end
 describe Models::Item do
   def create_item
     @owner = double('Owner')
+
+    #Injects a mock for timed_event
+    @timed_event = double("Timed Event")
+    TimedEvent.stub(:create).and_return(@timed_event)
+    @timed_event.stub(:reschedule)
+    @timed_event.stub(:unschedule)
+
     Models::Item.created("testobject", 50, @owner)
+  end
+
+  context "while creation" do
+    it "should set expiration date of timed event to :forever" do
+      @owner = double("Owner")
+
+      @timed_event = double("Timed Event")
+      @timed_event.stub(:reschedule)
+      @timed_event.stub(:unschedule)
+
+      TimedEvent.should_receive(:create).with(any_args, :forever).and_return(@timed_event)
+
+      Models::Item.created("testobject", 50, @owner)
+    end
   end
 
   context "after creation" do
@@ -90,6 +111,12 @@ describe Models::Item do
     it "should not have any other current version" do
       @item.current_version?(2).should be_false
       @item.current_version?(10).should be_false
+    end
+
+    it "should get time from timed event" do
+      @timed_event.should_receive(:time)
+
+      @item.get_expiration_date
     end
 
     it "should increase version" do
@@ -179,6 +206,18 @@ describe Models::Item do
       end
     end
 
+    context "When set to inactive" do
+      before(:each) do
+        @item.to_active
+      end
+
+      it "should unschedule timed event" do
+        @timed_event.should_receive(:unschedule)
+
+        @item.to_inactive
+      end
+    end
+
     context "when set to active" do
       before(:each) do
         @item.to_active
@@ -259,10 +298,6 @@ describe Models::Item do
     end
 
     it "should add an expiration time" do
-      @timed_event = double("Timed Event")
-      #This stub on item is necessary so that is not
-      #needed to schedule a real TimedEvent.
-      @item.should_receive(:timed_event).and_return(@timed_event)
       time = Time.now + 10
       @timed_event.should_receive(:reschedule).with(time)
 

@@ -15,7 +15,7 @@ module Models
   # +owner+:: who owns this item
   # +id+:: The id of this item (initially nil and is set by system)
   # +description_list+:: A list that contains all past describtion of this item (see ReversableDescription)
-  # +description_position+ : Which of these descriptions is used now
+  # +description_position+:: Which of these descriptions is used now
   # +picture+:: path to the items picture
   # +version+:: how many times this item has been changed (starts with 1)
   # +observers+:: who should get a message if the item is changed
@@ -23,14 +23,23 @@ module Models
   ##
   class Item < CommentContainer
 
-    attr_accessor :timed_event, :name, :price, :owner, :id, :description_list, :description_position, :picture, :version, :observers
+    attr_accessor :description_list, :description_position, :name, :price, :owner, :id, :picture, :observers
 
-    attr_reader :active
+    attr_reader :active, :version
+
+    @timed_event
 
     def initialize
       super
 
       @active = false
+
+      @description_list = ReversableDescription.new
+      @description_position = 0
+
+      @timed_event = TimedEvent.create(self, :forever)
+
+      @version = 1
     end
 
     ##
@@ -53,14 +62,10 @@ module Models
 
       item = self.new
       item.id = nil
-      item.timed_event = TimedEvent.create(item, :forever)
       item.name = name
       item.price = price
       item.owner = owner
-      item.description_list = ReversableDescription.new
-      item.description_position = 0
       item.picture = "/images/items/default_item.png"
-      item.version = 1
 	    item.observers = []
       item
     end
@@ -99,7 +104,22 @@ module Models
     ##
     def add_expiration_date(time)
       fail "Time should not be in past" if time < Time.now
-      self.timed_event.reschedule(time)
+      @timed_event.reschedule(time)
+    end
+
+    ##
+    #
+    # Returns the expiration time of this
+    # item. This is when #timed_event
+    # is called.
+    #
+    # May return Time if the item can
+    # expire or :forever if not.
+    # (see TimedEvent)
+    ##
+
+    def get_expiration_date
+      @timed_event.time
     end
 
     ##
@@ -138,7 +158,7 @@ module Models
     ##
     def to_inactive
       @active = false
-      self.timed_event.unschedule
+      @timed_event.unschedule
       System.instance.search.unregister(self)
       self.notify_observers
     end
@@ -334,7 +354,7 @@ module Models
     #
     ##
     def alter_version
-      self.version += 1
+      @version += 1
     end
   end
 end
