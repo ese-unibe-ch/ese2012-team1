@@ -26,7 +26,6 @@ module Helpers
     before_for_item_interaction
 
     error_redirect("Not your Item", "You can only edit your own items.", !DAOItem.instance.fetch_item(params[:id]).owner.id == session[:account], "/items/my/all")
-    #TODO: There is a problem because before is called anyway even if the path is not taken afterwards
   end
 
   def before_for_item_interaction

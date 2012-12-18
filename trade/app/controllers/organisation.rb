@@ -98,7 +98,7 @@ module Controllers
       new_account = DAOAccount.instance.fetch_account(session[:account])
       user = DAOAccount.instance.fetch_account(session[:user])
 
-      error_redirect("Oh no!", "Your not a member of this organisation!", new_account.is_member?(user), "/home")
+      error_redirect("Oh no!", "Your not a member of this organisation!", !new_account.is_member?(user), "/home")
 
       session[:alert] = Alert.create("Success!", "You changed to " + new_account.name + ". You can now buy and sell items in its name.", false)
       redirect '/home'
