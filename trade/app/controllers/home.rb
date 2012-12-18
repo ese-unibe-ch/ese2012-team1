@@ -76,33 +76,5 @@ module Controllers
         haml :'home/organisation', :locals => { :admin_view => admin_view }
       end
     end
-
-    ###
-    #
-    #  Shows home site for user
-    #
-    ###
-    get '/home/user' do
-      session[:navigation][:context] = :user
-      session[:navigation][:selected] = "home"
-      session[:navigation][:subnavigation] = "profile"
-
-      haml :'home/user'
-    end
-
-    ###
-    #
-    #  Shows home site for organisation
-    #
-    ###
-    get '/home/organisation' do
-      session[:navigation][:context] = :organisation
-      session[:navigation][:selected] = "home"
-      session[:navigation][:subnavigation] = "profile"
-
-      admin_view = DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_account(session[:user]))
-
-      haml :'home/organisation', :locals => { :admin_view => admin_view }
-    end
   end
 end
