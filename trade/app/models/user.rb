@@ -1,33 +1,31 @@
 module Models
+  ##
+  #
+  #  Users have a name, an unique e-mail, a description and an avatar.
+  #  Users have an amount of credits.
+  #  A new user has originally 100 credits.
+  #  An user can add a new item to the system with a name and a price; the item is originally inactive.
+  #  An user provides a method that lists his/her active items to sell.
+  #  User possesses certain items
+  #  An user can buy active items of another user (inactive items can't be bought). If an user buys an item, it becomes
+  #  the owner; credits are transferred accordingly; immediately after the trade, the item is inactive. The transaction
+  #  fails if the buyer has not enough credits.
+  #
+  ##
+
   class User < Models::Account
-    #Users have a name, an unique e-mail, a description and an avatar.
-    #Users have an amount of credits.
-    #A new user has originally 100 credits.
-    #An user can add a new item to the system with a name and a price; the item is originally inactive.
-    #An user provides a method that lists his/her active items to sell.
-    #User possesses certain items
-    #An user can buy active items of another user (inactive items can't be bought). If an user buys an item, it becomes
-    #  the owner; credits are transferred accordingly; immediately after the trade, the item is inactive. The transaction
-    #  fails if the buyer has not enough credits.
-    #
-    # email : email of the user
-    # pw : TODO: is this even used?
-    # password_hash : the encrypted password
-    # password_salt : the salt used for the encryption
-    # activated : true of false, not activated users can't log in, they need to confirm their
-    #             email first
-    # reg_hash : used in the email confirmation process
 
-    attr_accessor :email, :pw, :password_hash, :password_salt, :activated, :reg_hash
-
-    ##
-    #
-    # E-Mailaddress should be unique
-    #
-    ##
-    def invariant
-      DAOAccount.instance.fetch_user_by_email(self.email) == self
-    end
+    #email of the user
+    attr_accessor :email
+    #encrypted password
+    attr_accessor :password_hash
+    #salt used for the encryption
+    attr_accessor :password_salt
+    # true of false, not activated users can't log in, they need to confirm their
+    # email first
+    attr_accessor :activated
+    # used in the email confirmation process
+    attr_accessor :reg_hash
 
     ##
     #
@@ -46,6 +44,14 @@ module Models
     # factory method (constructor) on the class
     # You have to save the avatar at public/images/users/ before
     # you call this method. If not, it will fail.
+    #
+    # === Parameters
+    #
+    # +name+:: name of the user (can't be nil)
+    # +password+:: password the user wants to use (can't be nil)
+    # +email+:: email address of the user (can't be nil, has to be a valid email address, has to be unique)
+    # +description+:: description for the user (can't be nil)
+    # +avatar+:: path to avatar (can't be nil and file must exist at public/images/users)
     #
     ##
     def self.created(name,  password, email, description, avatar)
@@ -80,8 +86,14 @@ module Models
     # Returns true if password equals to the user password,
     # false otherwise.
     #
+    # === Parameters
+    #
+    # +password+:: password to be checked (can't be nil)
+    #
     ##
     def login(password)
+      fail "missing password" if password.nil?
+
       self.password_hash == BCrypt::Engine.hash_secret(password, self.password_salt)
     end
 
@@ -116,10 +128,15 @@ module Models
     ##
     #
     # Allows the user to create an organisation of which he automatically becomes the admin.
-    # @param name   the name of the organisation
-    # @param description    the description of the organisation
-    # @param avatar : avatar of the organisation
-    # @return new_organization    the organisation which was created
+    # (see Organisation)
+    #
+    # Returns the newly created Organisation.
+    #
+    # === Parameters
+    #
+    # +name+:: name of the organisation (can't be nil)
+    # +description+:: description of the organisation (can't be nil)
+    # +avatar+:: path to avatar of the organisation (can't be nil)
     #
     ##
     def create_organisation(name, description, avatar)
@@ -127,6 +144,7 @@ module Models
       fail "Missing name" if (name == nil)
       fail "Missing description" if (description == nil)
       fail "Missing avatar path" if (avatar == nil)
+
       org = Models::Organisation.created(name, description, avatar)
       org.add_member(self)
       org.set_as_admin(self)
@@ -135,12 +153,15 @@ module Models
 
     ##
     #
-    # Used to change the password to a new one
+    # Changes password of a user
+    #
+    # +password+:: new password for this user (can't be nil)
     #
     ##
     def password(password)
       # Precondition
       fail "Missing password" if (password == nil)
+
       pw_salt = BCrypt::Engine.generate_salt
       pw_hash = BCrypt::Engine.hash_secret(password, pw_salt)
       self.password_salt = pw_salt
