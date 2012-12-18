@@ -108,10 +108,6 @@ describe DAOItem do
       end
 
       it "should remove added users by id" do
-        @users[:kassiopeia].should_receive(:avatar).and_return("/images/users/default_avatar.png" )
-        @users[:beppo].should_receive(:avatar).and_return("/images/users/default_avatar.png" )
-        @users[:momo].should_receive(:avatar).and_return("/images/users/default_avatar.png" )
-
         @accounts.remove_account(@users[:kassiopeia].id)
 
         @accounts.count_accounts.should == 2
@@ -123,13 +119,6 @@ describe DAOItem do
         @accounts.remove_account(@users[:momo].id)
 
         @accounts.count_accounts.should == 0
-      end
-
-      it "should remove picture when removing a user" do
-        @users[:kassiopeia].stub(:avatar).and_return("/images/users/1.png" )
-        File.should_receive(:delete).with("./public/images/users/1.png")
-
-        @accounts.remove_account(@users[:kassiopeia].id)
       end
 
       it "should fetch all but one accounts" do
@@ -172,8 +161,6 @@ describe DAOItem do
 
     it "test_should_remove_organisation" do
       @accounts.account_exists?(@organisation.id).should be_true
-
-      @organisation.should_receive(:avatar).and_return("/images/users/default_avatar.png" )
 
       @accounts.remove_account(@organisation.id)
 
