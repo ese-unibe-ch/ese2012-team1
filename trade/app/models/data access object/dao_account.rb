@@ -24,7 +24,10 @@ module Models
 
     ##
     #
-    # Adds an account to the system.
+    # Adds an Account to the system and sets a specifique id
+    # for it. Registers the account to the Messenger.
+    #
+    # +account+:: account to be added (can't be nil, ,mustn't exist in database already, can't have an id already)
     #
     ##
     def add_account(account)
@@ -44,7 +47,9 @@ module Models
 
     ##
     #
-    # Returns the account with associated account id.
+    # Returns the Account with associated account id.
+    #
+    # +account_id+:: id of the account to be fetched (must exist in database)
     #
     ##
     def fetch_account(account_id)
@@ -54,8 +59,13 @@ module Models
 
     ##
     #
-    # Checks if an account id exists
+    # Checks if an Account exists
     #
+    # Returns true if the Account with the
+    # associated account id is saved in the
+    # database
+    #
+    # +account_id+:: id of the account to be checked
     ##
     def account_exists?(account_id)
       @accounts.member?(account_id)
@@ -63,8 +73,10 @@ module Models
 
     ##
     #
-    # Returns all accounts (users and organisations) but the one specified in an array
+    # Returns an array of all Accounts (users and organisations)
+    # saved in the database but the one specified
     #
+    # +account_id+:: id of the account not to be returned (must exist in database)
     ##
     def fetch_all_accounts_but(account_id)
       fail "No account with id #{account_id}" unless @accounts.member?(account_id)
@@ -73,7 +85,7 @@ module Models
 
     ##
     #
-    # Removes an account from the system.
+    # Removes an account from the database.
     #
     ##
     def remove_account(account_id)
@@ -88,44 +100,58 @@ module Models
 
     ##
     #
-    # returns the user with the specified email
+    # Returns the user with the specified email.
+    # Returns nil if no user was found.
     #
+    # This method is used in the login process
+    # because the id of the user is not known then.
+    #
+    # +email+:: E-mail of the user to be fetched
     ##
     def fetch_user_by_email(email)
       @accounts.values.detect{|account| account.respond_to?(:email) && account.email == email}
     end
 
+
     ##
     #
-    # returns the user with the specified registration hash
+    # Checks if a user e-mail exists.
+    #
+    # Returns true if the given +email+
+    # exists in database, false otherwise.
+    #
+    # This method is used in the login process
+    # because the id of the user is not known then.
+    #
+    # +email+:: E-mail of the user to be checked
+    ##
+    def email_exists?(email)
+      @accounts.values.one?{|account| account.respond_to?(:email) && account.email == email}
+    end
+
+
+    ##
+    #
+    # Returns the user with the specified registration hash.
+    # Returns nil if no user was found.
+    #
+    # This method is used in the registration process
+    # to securely identify the user.
+    #
+    # +hash+:: Registration hash of the user to be fetched
     #
     ##
     def fetch_user_by_reg_hash(hash)
       @accounts.values.detect{|account| !account.organisation && account.reg_hash == hash}
     end
 
-
     ##
     #
-    # Checks if a user email exists
+    # Returns true if there is a user with the given
+    # registration hash in the database, false
+    # otherwise.
     #
-    ##
-    def email_exists?(email)
-      @accounts.values.one?{|account| account.respond_to?(:email) && account.email == email}
-    end
-
-    ##
-    #
-    # Checks if a user with a specific id exists
-    #
-    ##
-    def user_exists?(user_id)
-      @accounts.member?(user_id)
-    end
-
-    ##
-    #
-    # Returns true if there is a user with this reg_hash in the system
+    # +hash+:: Registration hash of the user to be checked
     #
     ##
     def reg_hash_exists?(hash)
@@ -134,13 +160,14 @@ module Models
 
     ##
     #
-    # Returns all users but the one specified in an array
+    # Returns all users (meaning where user#organisation returns false) but
+    # the one specified in an array
     #
+    # +user_id+:: user not to be fetched (must exist in database)
     ##
-    def fetch_all_users_but(account_id)
-      fail "No account with id #{account_id}" unless @accounts.member?(account_id)
-      tmp = @accounts.values.select{|acc| acc.organisation == false}
-      tmp.select{|acc| acc.id != account_id}
+    def fetch_all_users_but(user_id)
+      fail "No account with id #{user_id}" unless @accounts.member?(user_id)
+      tmp = @accounts.values.select{|acc| acc.organisation == false && acc.id != user_id}
     end
 
     # ------------------------- organisation --------------------------------------------
@@ -149,15 +176,19 @@ module Models
     #
     # Returns all organisations in which a user is a member
     #
+    # +account_id+ id of user
+    #
     ##
-    def fetch_organisations_of(account_nr)
-      account = fetch_account(account_nr)
+    def fetch_organisations_of(account_id)
+      account = fetch_account(account_id)
       @accounts.values.select {|acc| acc.is_member?(account)}
     end
 
     ##
     #
     # Returns the organisation with the specified name
+    #
+    # +organisation_name+:: name of the organisation to be fetched
     #
     ##
     def fetch_organisation_by_name(organisation_name)
@@ -168,6 +199,8 @@ module Models
     #
     # Returns all organisations but the specified
     #
+    # +organisation_id+:: id of the organisation not to be fetched
+    #
     ##
     def fetch_organisations_but(organisation_id)
       tmp = @accounts.values.select{|acc| acc.organisation == true}
@@ -176,17 +209,27 @@ module Models
 
     ##
     #
-    # Checks if an organisation with the specified name exists
+    # Checks if an organisation with the specified
+    # name exists
+    #
+    # Returns true if organisation exists, false
+    # otherwise.
+    #
+    # +organisation_name+:: Name of the organisation.
     #
     ##
     def organisation_exists?(organisation_name)
       @accounts.values.one?{|acc| !acc.respond_to?(:email) && acc.name == organisation_name}
     end
 
-    #TODO test
     ##
     #
     # Checks if a user is admin of any organisation
+    #
+    # Returns true if the user is admin of any
+    # organisation.
+    #
+    # +user+ User to be checked (an Account)
     #
     ##
     def admin_of_an_organisation?(user)
@@ -197,8 +240,12 @@ module Models
 
     ##
     #
-    # Checks if this user is the last admin of any organisation
+    # Checks if this user is the last admin of any organisation.
     #
+    # Returns true if the given +user+ is the last admin
+    # of any organisation, false otherwise.
+    #
+    # +user+ User to be checked (an Account)
     ##
     def is_last_admin?(user)
       organisations = fetch_organisations_of(user.id)
@@ -207,7 +254,8 @@ module Models
 
     ##
     #
-    # Resets all limits for all organisations members
+    # Resets all member limits in all
+    # organisations (see Organisation)
     #
     ##
     def reset_all_member_limits
@@ -220,6 +268,9 @@ module Models
     ##
     #
     # Counts all accounts
+    #
+    # Returns the count of all accounts as
+    # Integer.
     #
     ##
 

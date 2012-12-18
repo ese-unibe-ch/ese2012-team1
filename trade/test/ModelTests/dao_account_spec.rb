@@ -60,7 +60,7 @@ describe DAOItem do
       meister_hora.stub(:id).and_return(0)
 
       @accounts.add_account(meister_hora)
-      @accounts.user_exists?(meister_hora.id).should be_true;
+      @accounts.account_exists?(meister_hora.id).should be_true;
 
       lambda{ DAOAccount.instance.add_account(meister_hora) }.should raise_error(RuntimeError)
     end
@@ -68,6 +68,56 @@ describe DAOItem do
     context "when users are added" do
       before(:each) do
         add_users
+      end
+
+      context "when organisation is added" do
+        before(:each) do
+          @organisation = double_user("Organisation", 3)
+          @organisation.stub(:organisation).and_return(true)
+          @accounts.add_account(@organisation)
+
+          @users[:momo].stub(:is_member?).and_return(false)
+          @users[:beppo].stub(:is_member?).and_return(false)
+          @users[:kassiopeia].stub(:is_member?).and_return(false)
+
+        end
+
+        it "should return true if user is part of added organisation and admin" do
+          @organisation.should_receive(:is_member?).with(@users[:momo]).and_return(true)
+          @organisation.should_receive(:is_admin?).with(@users[:momo]).and_return(true)
+          @accounts.admin_of_an_organisation?(@users[:momo]).should be_true
+        end
+
+        it "should return false if user is part of added organisation but not admin" do
+          @organisation.should_receive(:is_member?).with(@users[:momo]).and_return(true)
+          @organisation.should_receive(:is_admin?).with(@users[:momo]).and_return(false)
+          @accounts.admin_of_an_organisation?(@users[:momo]).should be_false
+        end
+
+        it "should return false if user not part of organisation" do
+          @organisation.should_receive(:is_member?).with(@users[:momo]).and_return(false)
+          @accounts.admin_of_an_organisation?(@users[:momo]).should be_false
+        end
+
+        it "should return false if there are multiple admin" do
+          @organisation.should_receive(:is_member?).with(@users[:momo]).and_return(true)
+          @organisation.should_receive(:is_last_admin?).with(@users[:momo]).and_return(false)
+
+          @accounts.is_last_admin?(@users[:momo]).should be_false
+        end
+
+        it "should return true if there is only one admin" do
+          @organisation.should_receive(:is_member?).with(@users[:momo]).and_return(true)
+          @organisation.should_receive(:is_last_admin?).with(@users[:momo]).and_return(true)
+
+          @accounts.is_last_admin?(@users[:momo]).should be_true
+        end
+
+        it "should reset all member limits" do
+          @organisation.should_receive(:reset_member_limits)
+
+          @accounts.reset_all_member_limits
+        end
       end
 
 
@@ -111,9 +161,9 @@ describe DAOItem do
         @accounts.remove_account(@users[:kassiopeia].id)
 
         @accounts.count_accounts.should == 2
-        @accounts.user_exists?(@users[:kassiopeia].id).should be_false
-        @accounts.user_exists?(@users[:beppo].id).should be_true
-        @accounts.user_exists?(@users[:momo].id).should be_true
+        @accounts.account_exists?(@users[:kassiopeia].id).should be_false
+        @accounts.account_exists?(@users[:beppo].id).should be_true
+        @accounts.account_exists?(@users[:momo].id).should be_true
 
         @accounts.remove_account(@users[:beppo].id)
         @accounts.remove_account(@users[:momo].id)
