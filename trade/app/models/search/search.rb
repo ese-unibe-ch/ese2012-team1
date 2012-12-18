@@ -42,8 +42,8 @@ module Models
       result.pattern = search_string
 
       items.each do |item|
-        item.symbol_methods.each_with_index do |symbol_method, index|
-          if item.item.send(symbol_method).downcase.include?(search_string.downcase)
+        item.methods.each_with_index do |method, index|
+          if item.item.send(method).downcase.include?(search_string.downcase)
             result.add(item, index+1)
             break
           end
