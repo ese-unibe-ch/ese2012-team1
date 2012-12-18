@@ -71,7 +71,6 @@ module Controllers
           item = DAOItem.instance.fetch_item(params[:id])
           account = DAOAccount.instance.fetch_account(session[:account])
 
-          #TODO check conditions!
           account.wish_list.add(item)
           session[:alert] = Alert.create("", "#{item.name.create_link(item.id)} has been added to your <a href=\"/items/my/wishlist\">wishlist</a>.", false)
           redirect back.nil? ? "/items/active" : back
@@ -96,7 +95,6 @@ module Controllers
           item = DAOItem.instance.fetch_item(params[:id])
           account = DAOAccount.instance.fetch_account(session[:account])
 
-          #TODO check conditions!
           account.wish_list.remove(item)
           session[:alert] = Alert.create("", "#{item.name.create_link(item.id)} has been removed from your <a href=\"/items/my/wishlist\">wishlist</a>", false)
           redirect back.nil? ? "/items/my/all" : back

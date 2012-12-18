@@ -21,7 +21,7 @@ module Models
     attr_accessor :password_hash
     #salt used for the encryption
     attr_accessor :password_salt
-    # true of false, not activated users can't log in, they need to confirm their
+    # true or false, not activated users can't log in, they need to confirm their
     # email first
     attr_accessor :activated
     # used in the email confirmation process
