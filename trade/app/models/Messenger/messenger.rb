@@ -1,18 +1,27 @@
 require 'singleton'
 
 module Models
+  ##
+  #
   # This class is the global messenger.
   # It holds all MessageBoxes (identified by user_id).
   # It is implemented as a Singleton.
   #
-  # Responsibility:
-  # Control of all MessageBoxes
-  # Control of sending and receiving messages
+  # === Responsibility
+  #
+  # Control of all MessageBoxes (see MessageBox).
+  # Control conversations (see Conversation)
+  # Control of sending and receiving messages (see Message).
+  #
+  ##
 
   class Messenger
     include Singleton
 
-    attr_accessor :message_boxes, :conversations
+    #All messageboxes
+    attr_accessor :message_boxes
+    #All existing conversations
+    attr_accessor :conversations
 
     def initialize
       self.message_boxes = Hash.new
@@ -22,11 +31,14 @@ module Models
     ##
     #
     # Create a new Conversation between two or more users.
-    # Params: from    : Integer (User ID)
-    #         to      : Array[Integer] (User IDs)
-    #         subject : String
-    #         message : String
-    #  Add Conversation to subscribers MessageBox
+    # Add Conversation to subscribed MessageBoxes
+    #
+    # === Parameters
+    #
+    # +from+:: id of the sender
+    # +to+:: array of the ids of the receivers
+    # +subject+:: subject of the message
+    # +message:: message itself
     #
     ##
     def new_message(from, to, subject, message)
@@ -46,13 +58,16 @@ module Models
     ##
     #
     # Answer to a Message in a Conversation to all (ore some) users in a conversation.
-    # Params: from    : Integer (User ID)
-    #         to      : Array[Integer] (User IDs)
-    #         subject : String
-    #         message : Message
-    #         conv_id : Integer
-    #         mess_id : Integer
-    #  Add message to conversation
+    # Adds a new Message to the conversation with +conv_id+.
+    #
+    # === Parameters
+    #
+    # +from+:: id of the sender the message is from
+    # +to+:: array of ids of the receivers
+    # +subject+:: subject of the message
+    # +message+:: text of the message
+    # +conv_id+:: id of the conversation this answer belongs to
+    # +mess_id+:: id of the message this message answers to
     #
     ##
     def answer_message(from, to, subject, message, conv_id, mess_id)
@@ -64,8 +79,11 @@ module Models
 
     ##
     #
-    # Get MessageBox of user.
-    # Params: user_id : Integer (User ID)
+    # Fetches MessageBox of user.
+    #
+    # === Parameters
+    #
+    # +user_id+:: id of the user to get message for
     #
     ##
     def get_message_box(user_id)
@@ -75,8 +93,11 @@ module Models
 
     ##
     #
-    # Create MessageBox for User with ID user_id.
-    # Params: user_id : Integer (User ID)
+    # Creates MessageBox for User with id +user_id+.
+    #
+    # === Parameters:
+    #
+    # +user_id+:: id of the user to create a MessageBox for
     #
     ##
     def register(user_id)
@@ -87,8 +108,11 @@ module Models
 
     ##
     #
-    # Delete MessageBox for User with ID user_id.
-    # Params: user_id : Integer (User ID)
+    # Deletes MessageBox for User with ID user_id.
+    #
+    # === Parameters
+    #
+    # +user_id+:: id of the user whose MessageBox is to be deleted
     #
     ##
     def unregister(user_id)
@@ -97,13 +121,25 @@ module Models
 
     ##
     #
-    # Check if conversation exists.
-    # Params: conversation_id : Integer (User ID)
+    # Checks if conversation exists.
+    #
+    # Returns true if conversation exist, false
+    # otherwise.
+    #
+    # === Parameters:
+    #
+    # +conversation_id+:: id of the conversation to be checked
     #
     ##
-    def has_conversation?(conv_id)
-      self.conversations.has_key?(conv_id.to_s)
+    def has_conversation?(conversation_id)
+      self.conversations.has_key?(conversation_id.to_s)
     end
+
+    ##
+    #
+    # Removes all message boxes an conversations
+    #
+    ##
 
     def reset
       self.message_boxes = Hash.new
