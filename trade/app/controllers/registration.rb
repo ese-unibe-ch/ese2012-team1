@@ -188,7 +188,7 @@ module Controllers
         org_list = DAOAccount.instance.fetch_organisations_of(user.id)
 
         for org in org_list do
-          org.remove_member_by_email(user.email)
+          org.remove_member(user)
         end
       else
         session[:alert] = Alert.create("Oh no!", "You can't delete your Account, because you're the only Admin of one of your Organisations.", true)

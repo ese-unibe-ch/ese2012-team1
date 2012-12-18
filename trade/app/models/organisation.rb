@@ -23,9 +23,12 @@ module Models
 
 
     class Limit
-      attr_accessor :spend, # money the user spend until now
-                    :user, # user that belongs to this limit
-                    :organisation # the organisation this limit belongs to
+      # money the user spend until now
+      attr_accessor :spend
+      # user that belongs to this limit
+      attr_accessor :user
+      # the organisation this limit belongs to
+      attr_accessor  :organisation
 
       def initialize
         @spend = 0
@@ -37,8 +40,10 @@ module Models
       #
       # Factory method to create a Limit
       #
-      # Params: user : the user the limit is for
-      #         organisation : the organisation this limit belongs
+      # === Parameters
+      #
+      # +user+:: the user the limit is for
+      # +organisation+:: the organisation this limit belongs
       #
       ##
 
@@ -53,6 +58,8 @@ module Models
       #
       # Adds new amount to the amount the user
       # already has spend.
+      #
+      # +amount+:: amount to add
       #
       ##
 
@@ -86,7 +93,9 @@ module Models
       # limit and he can buy it without succeding his limit.
       # Returns false otherwise.
       #
-      # Params: price : the price the user wants to spend
+      # ===Parameters
+      #
+      # +price+:: price the user wants to spend
       #
       ##
 
@@ -111,9 +120,9 @@ module Models
 
     ##
     #
-    # Creates all hashmaps and sets no limit.
-    # Creates a searchitem for the organisation
-    # and adds it to the system
+    # Creates all hash maps and sets limit to nil (ergo no limit at all).
+    # Creates a SearchItem for the organisation and adds it to the Search..
+    # Sets +organisation+ to true to indicate that this is a organisation.
     #
     ##
     def initialize
@@ -129,29 +138,34 @@ module Models
 
     ##
     #
-    # Adds a user to the organisation by adding him to the member- and the limithashmap
+    # Adds a user to the organisation by adding him to the member
+    # and the limits hash map
     #
-    # Expects :
-    # user : the user who should be added to the org.
+    # === Parameters
+    #
+    # +user+:: the user who should be added to the org.
     #
     ##
     def add_member(user)
+      fail "missing user" if user.nil?
+
       @member_limits.store(user.email, Limit.create(user, self))
       self.members.store(user.email, user)
     end
 
     ##
     #
-    # Removes a user from the organisation by deleting him from the member- , limit-
-    # and if needed from the adminhashmap
+    # Removes a user from the organisation by deleting him from the member, limit
+    # and if needed from the admin hash map
     #
-    # TODO: Removing a member should only be possible if he's not the last admin
+    # === Parameters
     #
-    # Expects :
-    # user : the user who should be removed from the org.
+    # +user+:: the user who should be removed from the org (can't be last admin of organisation).
     #
     ##
     def remove_member(user)
+      fail "not enough admins left" if self.is_last_admin?(user)
+
       @member_limits.delete(user.email)
       self.members.delete(user.email)
       self.admins.delete(user.email) if self.is_admin?(user)
@@ -159,27 +173,13 @@ module Models
 
     ##
     #
-    # Removes a user from the organisation by deleting him from the member- , limit-
-    # and if needed from the adminhashmap
-    #
-    # TODO: Removing a member should only be possible if he's not the last admin
-    #
-    # Expects :
-    # user_mail : the email of the user who should be removed from the org.
-    #
-    ##
-    def remove_member_by_email(user_mail)
-      self.members.delete(user_mail)
-      @member_limits.delete(user_mail)
-      self.admins.delete(user_mail) if self.admins.one? { |email, admin| email == user_mail }
-    end
-
-    ##
-    #
     # Determines if a specific user is a member of this organisation.
     #
-    # Expects :
-    # user : user who should be checked
+    # Returns true if user is a member, false otherwise.
+    #
+    # === Parameters
+    #
+    # +user+:: user who should be checked
     #
     ##
     def is_member?(user)
@@ -188,7 +188,9 @@ module Models
 
     ##
     #
-    # Gets all non-admin memebers of this organisation
+    # Gets all non-admin members of this organisation
+    #
+    # Returns an array of all non-admin members
     #
     ##
     def members_without_admins
@@ -199,8 +201,11 @@ module Models
     #
     # Determines if a specific user is an admin in this organisation.
     #
-    # Expects :
-    # user : user who should be checked
+    # Returns true if user is admin, false otherwise
+    #
+    # === Parameters
+    #
+    # +user+:: user who should be checked
     #
     ##
     def is_admin?(user)
@@ -209,7 +214,9 @@ module Models
 
     ##
     #
-    # Returns how many admins are in this organisation
+    # Counts how many admins are in this organisation
+    #
+    # Returns the number of admins as Integer
     #
     ##
     def admin_count
@@ -220,8 +227,9 @@ module Models
     #
     # Promotes a regular member to an admin
     #
-    # Expects :
-    # member : the member who becomes an admin
+    # === Parameters
+    #
+    # +member+:: the member who becomes an admin (must be member of this organisation and can't be already admin)
     #
     ##
     def set_as_admin(member)
@@ -234,11 +242,13 @@ module Models
     ##
     #
     # Degrades an admin to a regular member
+    #
     # Fails if member is the last admin in this org. or
     # if he is no admin
     #
-    # Expects :
-    # member : the admin who will be degraded
+    # === Parameters
+    #
+    # +member+:: the admin who will be degraded (must be admin of this organisation and can't be last admin)
     #
     ##
     def revoke_admin_rights(member)
@@ -258,10 +268,11 @@ module Models
     # the limit of user, if the org. doesn't have enough money, or
     # if the item couldn't be found.
     #
-    # Expects :
-    # item_to_buy : the item who user wants to buy
-    # user : the user who buys this item on behalf of this
-    #        organisation
+    # === Parameters
+    #
+    # +item_to_buy+:: the item who user wants to buy
+    # +user+:: the user who buys this item on behalf of this
+    #          organisation
     #
     ##
     def buy_item(item_to_buy, user)
@@ -285,7 +296,12 @@ module Models
 
     ##
     #
-    # Checks if given user is the last admin
+    # Checks if given user is the last admin.
+    #
+    # Returns true if user is las admin, false
+    # otherwise.
+    #
+    # +user+:: User to be checked
     #
     ##
     def is_last_admin?(user)
@@ -297,24 +313,34 @@ module Models
     ##
     #
     # Returns the limit of a specific user
+    # as Integer
     #
-    # Expects :
-    # user : the user whose limit you want to know
+    # === Parameters
+    #
+    # +user+:: the user whose limit you want to know (can't be nil)
     #
     ##
     def get_limit(user)
+      fail "missing user" if user.nil?
+
       @member_limits.fetch(user.email).limit
     end
 
     ##
     #
     # Checks if item can be bought by user with his
-    # current limit. Returns always true if user is
+    # current limit.
+    #
+    # Returns true if user has enough resources to
+    # buy this item, false otherwise.
+    #
+    # Returns always true if user is
     # an admin or the limit is nil.
     #
-    # Expects :
-    # item : the item that user wants to buy
-    # user : the user whose limit is checked
+    # === Parameters
+    #
+    # +item+:: the item that user wants to buy
+    # +user+:: the user whose limit is to be checked
     #
     ##
     def within_limit_of?(item, user)
@@ -324,16 +350,16 @@ module Models
     ##
     #
     # Changes the limit of this organisation.
-    # it can't be less than 0
     #
-    # Expects :
-    # amount : the new limit
+    # === Parameters
+    #
+    # +amount+:: the new limit (can't be nil or less than zero)
     #
     ##
     def set_limit(amount)
       fail "no valid limit" if !amount.nil? && amount<0
 
-      self.limit=amount
+      self.limit=amount.to_i
     end
 
     ##
@@ -350,12 +376,20 @@ module Models
 
     ##
     #
-    # Removes the organisation from the system
-    # TODO: This does nothing at all...
+    #  Removes user from the list of users of the DAOAccount,
+    #  deletes his avatar, removes user's items from DAOItem and
+    #  unregisters himself from Search
     #
     ##
     def clear
       System.search.unregister(self)
+
+      DAOItem.instance.fetch_items_of(self.id).each { |e| e.clear }
+      DAOAccount.instance.remove_account(self.id)
+
+      unless (account.avatar == "/images/organisations/default_avatar.png")
+        File.delete("#{account.avatar.sub("/images", "./public/images")}")
+      end
     end
   end
 end

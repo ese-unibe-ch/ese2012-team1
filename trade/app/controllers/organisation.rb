@@ -216,7 +216,7 @@ module Controllers
       user = DAOAccount.instance.fetch_account(session[:user])
       error_redirect("Oh no!", "You're trying to remove an other User from the Organisation.", params[:user_email] != user.email, "/home")
 
-      organisation.remove_member_by_email(user.email)
+      organisation.remove_member(user)
 
       session[:account] = session[:user]
       redirect "/home"

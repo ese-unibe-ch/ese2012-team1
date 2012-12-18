@@ -126,7 +126,7 @@ module Controllers
       error_redirect("Oh no!", "You can't leave this Organisation, because you're the only Administrator.", self_remove && only_admin, "/organisation/members")
       error_redirect("Oh no!", "This is not a valid User.", !DAOAccount.instance.email_exists?(params[:user_email]), "/organisation/members")
       user = DAOAccount.instance.fetch_user_by_email(params[:user_email])
-      organisation.remove_member_by_email(user.email)
+      organisation.remove_member(user)
 
       if self_remove
         session[:account] = session[:user]

@@ -77,8 +77,11 @@ module Models
     #
     # Checks if the entered password equals the user password
     #
+    # Returns true if password equals to the user password,
+    # false otherwise.
+    #
     ##
-    def login password
+    def login(password)
       self.password_hash == BCrypt::Engine.hash_secret(password, self.password_salt)
     end
 
@@ -93,13 +96,15 @@ module Models
 
     ##
     #
-    #Removes himself from the list of users of the Models::System
-    #Removes his avatar (not yet implemented)
-    #Removes user's items beforehand
+    #  Removes user from the list of users of the DAOAccount,
+    #  deletes his avatar, removes user's items from DAOItem and
+    #  unregisters himself from Search
     #
     ##
-    #TODO test if admin by init works
+
     def clear
+      System.search.unregister(self)
+
       DAOItem.instance.fetch_items_of(self.id).each { |e| e.clear }
       DAOAccount.instance.remove_account(self.id)
 

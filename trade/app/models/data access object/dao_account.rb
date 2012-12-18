@@ -79,11 +79,6 @@ module Models
     def remove_account(account_id)
       fail "No account with id #{account_id}" unless @accounts.member?(account_id)
 
-      account = self.fetch_account(account_id)
-      unless (account.avatar == "/images/users/default_avatar.png" || account.avatar == "/images/organisations/default_avatar.png")
-        File.delete("#{account.avatar.sub("/images", "./public/images")}")
-      end
-
       Messenger.instance.unregister(account_id)
 
       @accounts.delete(account_id)
