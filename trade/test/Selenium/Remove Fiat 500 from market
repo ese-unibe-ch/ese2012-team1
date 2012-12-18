@@ -23,7 +23,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//input[@value='Set Inactive' and preceding-sibling::input[@value='10.Fiat 500']]</td>
+	<td>//input[@class='itembuttons' and preceding-sibling::input[@value='10.Fiat 500']]</td>
 	<td></td>
 </tr>
 <tr>

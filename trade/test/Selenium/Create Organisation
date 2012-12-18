@@ -12,11 +12,6 @@
 <tr><td rowspan="1" colspan="3">Create Organisation</td></tr>
 </thead><tbody>
 <tr>
-	<td>open</td>
-	<td>/home</td>
-	<td></td>
-</tr>
-<tr>
 	<td>clickAndWait</td>
 	<td>link=home</td>
 	<td></td>

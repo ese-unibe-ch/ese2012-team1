@@ -79,7 +79,7 @@ module Controllers
 
     ###
     #
-    #  TODO: Is this even used?
+    #  Shows home site for user
     #
     ###
     get '/home/user' do
@@ -92,7 +92,7 @@ module Controllers
 
     ###
     #
-    #  TODO: Is this even used?
+    #  Shows home site for organisation
     #
     ###
     get '/home/organisation' do

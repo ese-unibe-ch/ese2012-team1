@@ -12,11 +12,6 @@
 <tr><td rowspan="1" colspan="3">Create Item</td></tr>
 </thead><tbody>
 <tr>
-	<td>open</td>
-	<td>/home/user</td>
-	<td></td>
-</tr>
-<tr>
 	<td>clickAndWait</td>
 	<td>link=market</td>
 	<td></td>
