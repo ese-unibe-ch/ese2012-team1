@@ -4,22 +4,30 @@ module Models
   # Creates a timed event that calls timed_out of the
   # given object to time after after a specified time.
   #
-  # Usage in our model:
+  #
+  # === Usage in model
+  #
   # Lets an item expire if the specified time is up. If
   # this happens the item is set to inactive.
-  #
-  # time: when the TimedEvent triggers. :forever if the timed_event is not triggered at all
-  # subscribers : all objects that are affected by the TimedEvent
-  # timed_out : true if the current job has timed out
   #
   ##
 
   class TimedEvent
-    attr_reader :time, :timed_out
+    # Time when the TimedEvent triggers. :forever if the timed_event is not triggered at all
+    attr_reader :time
+    # +timed_out+;: true if the last job has timed out
+    attr_reader :timed_out
 
-    @subscribers #subscribers of this event
+    @subscribers #all objects that are affected by the TimedEvent
     @scheduler #schedules and reschedules jobs (see Rufus::Scheduler)
     @job #the current job (see Rufus::Scheduler)
+
+    ##
+    #
+    # Initially +time+ is set to :forever and +timed_out+ to false.
+    # There are no subscribers at the beginning.
+    #
+    ##
 
     def initialize
       @time = :forever
@@ -30,7 +38,11 @@ module Models
 
     ##
     #
-    # The constructor for this class
+    # The factory method (constructor) for this class
+    #
+    # +object_to_time+:: Object to be called when TimedEvent expires (can't be nil and must respond to #timed_out)
+    # +time+:: time when the call to #timed_out of +object_to_time+ happens. Values for +time+ are either a Time
+    #          or the flag :forever (can't be nil and can't be in past)
     #
     ##
     def self.create(object_to_time, time)
@@ -52,10 +64,12 @@ module Models
     ##
     #
     # Adds an object to this timed event. If the timed event reaches the
-    # specified time this object performs his timed_out method
+    # specified +time+ this object performs his timed_out method
     #
     # Each object that shall be time must implement a #timed_out
     # method. A TimedEvent can have multiple subscribers.
+    #
+    # +object_to_time+:: object to be timed by this TimedEvent
     #
     ##
     def subscribe(object_to_time)
@@ -66,10 +80,17 @@ module Models
 
     ##
     #
-    # Reschedules the time when the method #timed_out is called.
+    # Reschedules the time when the method #timed_out is called
+    # on all subscribers
+    #.
+    # To set the time to :forever use #unschedule
+    #
+    # +time+:: New time to be scheduled. Can be Time (Can't be nil)
     #
     ##
     def reschedule(time)
+      "missing time" if time.nil?
+
       time_rufus = Rufus.to_datetime time
 
       @job.unschedule unless (self.time == :forever)
@@ -88,6 +109,9 @@ module Models
     # so that the TimedEvent never
     # triggers(unless a new time is
     # set in #reschedule(time))
+    #
+    # Sets +time+ to :forever and
+    # +timed_out+ to false
     #
     ##
     def unschedule
@@ -111,8 +135,9 @@ module Models
 
     ##
     #
-    # Returns all subscribers of this
-    # timed event.
+    # Returns an array of all subscribers of this
+    # timed event. Changes on this array don't
+    # affect the TimedEvent
     #
     ##
 

@@ -10,6 +10,9 @@ module Models
   ##
   class System
     include Singleton
+
+    # Search where active items (see Item), users (see User) and
+    # organisations (see Organisation) are registered
     attr_accessor :search
 
     def initialize
