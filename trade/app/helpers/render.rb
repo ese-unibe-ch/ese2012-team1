@@ -1,4 +1,5 @@
 module Helpers
+
   def render_file(filename)
     contents = File.read(absolute_path("../views/#{filename}", __FILE__))
     Haml::Engine.new(contents).render
@@ -24,4 +25,5 @@ module Helpers
   def absolute_path(relative_path, path_of_file)
     File.join(File.expand_path(File.dirname(path_of_file)), relative_path)
   end
+
 end

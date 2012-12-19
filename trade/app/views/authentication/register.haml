@@ -1,3 +1,9 @@
+-#
+  Displays the form for registration.
+
+  Uses session[:form_description] to display a
+  previous description.
+
 %div(class="labeled-input")
   %form(action="/register" enctype="multipart/form-data" method="post")
     %label Name:
@@ -22,6 +28,6 @@
       = session[:form_description].to_s
 
     %label Avatar:
-    %input(type="file" name="avatar" size=30 maxlength="=100000" accept="text/*")
+    %input(type="file" name="avatar" size=30 maxlength="=100000" accept="image/*")
 
     %input(type="submit" id="register" value="Register" disabled=true)

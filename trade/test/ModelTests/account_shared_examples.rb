@@ -9,9 +9,10 @@ end
 shared_examples_for "any Account while creation" do
   before(:each) do
     @system = double('system')
-    System.stub(:instance).and_return(@system)
+    DAOAccount.stub(:instance).and_return(@system)
+    DAOItem.stub(:instance).and_return(@system)
     @system.stub(:add_account)
-    @system.stub(:user_exists?).and_return(false)
+    @system.stub(:email_exists?).and_return(false)
 
     @search = double('search')
     @search.stub(:register)
@@ -26,6 +27,12 @@ shared_examples_for "any Account while creation" do
 end
 
 shared_examples_for "any created Account" do
+    before(:each) do
+      @system = double('system')
+      DAOAccount.stub(:instance).and_return(@system)
+      DAOItem.stub(:instance).and_return(@system)
+    end
+
     it "should have name" do
       @user.name.should be_like  "Bart"
     end
@@ -82,6 +89,10 @@ end
 
 shared_examples_for "any Account while item creation" do
   before(:each) do
+    @system = double('system')
+    DAOAccount.stub(:instance).and_return(@system)
+    DAOItem.stub(:instance).and_return(@system)
+
     @item = double('item')
   end
 
@@ -106,68 +117,5 @@ shared_examples_for "any Account while item creation" do
     @system.stub(:add_item)
     received_item = create_item
     received_item.should be @item
-  end
-end
-
-shared_examples_for "any Account after item creation" do
-  before(:each) do
-    @item = double('item')
-  end
-
-  it "should posses item" do
-    @system.stub(:item_exists?).and_return(true)
-    @system.stub(:fetch_item).and_return(@item)
-    @item.stub(:owner).and_return(@user)
-    @user.should have_item(1)
-  end
-
-  it "should return his item" do
-    @system.stub(:item_exists?).and_return(true)
-    @system.stub(:fetch_item).and_return(@item)
-    @item.stub(:owner).and_return(@user)
-
-    @user.get_item(1).should be @item
-  end
-
-  context "when listing items" do
-    it "should return item when item active" do
-      @system.stub(:fetch_items_of).and_return([@item])
-      @item.stub(:is_active?).and_return(true)
-      @user.list_items.should include(@item)
-    end
-
-    it "should return item when item inactive" do
-      @system.stub(:fetch_items_of).and_return([@item])
-      @item.stub(:is_active?).and_return(false)
-      @user.list_items.should include(@item)
-    end
-  end
-
-  context "when listing active items" do
-    it "should return item when item active" do
-      @system.stub(:fetch_items_of).and_return([@item])
-      @item.stub(:is_active?).and_return(true)
-      @user.list_active_items.should include(@item)
-    end
-
-    it "should not return item when item inactive" do
-      @system.stub(:fetch_items_of).and_return([@item])
-      @item.stub(:is_active?).and_return(false)
-      @user.list_active_items.should_not include(@item)
-    end
-  end
-
-  context "when listing inactive items" do
-    it "should not return item when item active" do
-      @system.stub(:fetch_items_of).and_return([@item])
-      @item.stub(:is_active?).and_return(true)
-      @user.list_inactive_items.should_not include(@item)
-    end
-
-    it "should not return item when item inactive" do
-      @system.stub(:fetch_items_of).and_return([@item])
-      @item.stub(:is_active?).and_return(false)
-      @user.list_inactive_items.should include(@item)
-    end
   end
 end

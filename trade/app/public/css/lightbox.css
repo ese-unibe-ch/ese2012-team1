@@ -128,12 +128,12 @@
 
 /* line 83, ../sass/lightbox.sass */
 .prev:hover {
-  background: url(../images/prev.png) left 48% no-repeat;
+  background: url(../images/lightbox/prev.png) left 48% no-repeat;
 }
 
 /* line 87, ../sass/lightbox.sass */
 .next:hover {
-  background: url(../images/next.png) right 48% no-repeat;
+  background: url(../images/lightbox/next.png) right 48% no-repeat;
 }
 
 /* line 90, ../sass/lightbox.sass */

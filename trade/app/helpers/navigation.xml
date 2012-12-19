@@ -63,7 +63,7 @@
 
     <navigation>
       <name>messagebox</name>
-      <route>/mailbox</route>
+      <route>/messagebox</route>
 
       <subnavigation>
         <name>news</name>
@@ -137,6 +137,24 @@
       <name>logout</name>
       <route>/logout</route>
     </navigation>
+
+    <navigation>
+      <name>messagebox</name>
+      <route>/messagebox</route>
+
+      <subnavigation>
+        <name>news</name>
+        <route>/messagebox/news</route>
+      </subnavigation>
+      <subnavigation>
+        <name>send message</name>
+        <route>/messagebox/send</route>
+      </subnavigation>
+      <subnavigation>
+        <name>conversations</name>
+        <route>/messagebox/conversations</route>
+      </subnavigation>
+    </navigation>
   </context>
 
   <context>
@@ -203,6 +221,24 @@
     <navigation>
       <name>logout</name>
       <route>/logout</route>
+    </navigation>
+
+    <navigation>
+      <name>messagebox</name>
+      <route>/messagebox</route>
+
+      <subnavigation>
+        <name>news</name>
+        <route>/messagebox/news</route>
+      </subnavigation>
+      <subnavigation>
+        <name>send message</name>
+        <route>/messagebox/send</route>
+      </subnavigation>
+      <subnavigation>
+        <name>conversations</name>
+        <route>/messagebox/conversations</route>
+      </subnavigation>
     </navigation>
   </context>
 

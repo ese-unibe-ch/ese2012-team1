@@ -1,14 +1,3 @@
-require 'rubygems'
-require 'require_relative'
-require 'sinatra/base'
-require 'haml'
-require 'sinatra/content_for'
-require_relative('../models/user')
-require_relative('../models/item')
-
-require_relative('../helpers/render')
-require_relative '../helpers/before'
-
 include Models
 include Helpers
 
@@ -33,7 +22,7 @@ module Controllers
     ##
     get '/items/my/active' do
         user_id = session[:account]
-        haml :'item/my_active', :locals => {:active_items => Models::System.instance.fetch_account(user_id).list_active_items}
+        haml :'item/my_active', :locals => {:active_items => DAOItem.instance.fetch_active_items_of(user_id)}
     end
 
     ##
@@ -45,12 +34,12 @@ module Controllers
     ##
     get '/items/my/inactive' do
         user_id = session[:account]
-        haml :'item/my_inactive', :locals => {:inactive_items => Models::System.instance.fetch_account(user_id).list_inactive_items}
+        haml :'item/my_inactive', :locals => {:inactive_items => DAOItem.instance.fetch_inactive_items_of(user_id) }
     end
 
     get '/item/wish/list' do
         user_id = session[:account]
-        haml :'item/wish_list', :locals => {:wish_list => Models::System.instance.fetch_account(user_id).wish_list}
+        haml :'item/wish_list', :locals => {:wish_list => DAOAccount.instance.fetch_account(user_id).wish_list}
     end
 
     ##
@@ -62,13 +51,13 @@ module Controllers
     #
     ##
     get '/items/my/all' do
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("items")
+      session[:navigation][:selected]  = "home"
+      session[:navigation][:subnavigation]  = "items"
 
-      account = Models::System.instance.fetch_account(session[:account])
+      dao = DAOItem.instance
 
-      haml :'item/my_all', :locals => {:inactive_items => account.list_inactive_items,
-                                       :active_items => account.list_active_items}
+      haml :'item/my_all', :locals => {:inactive_items => dao.fetch_inactive_items_of(session[:account]),
+                                       :active_items => dao.fetch_active_items_of(session[:account]) }
     end
 
     ##
@@ -80,10 +69,10 @@ module Controllers
     #
     ##
     get '/items/my/wishlist' do
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("wishlist")
+      session[:navigation][:selected]  = "home"
+      session[:navigation][:subnavigation] = "wishlist"
 
-      account = Models::System.instance.fetch_account(session[:account])
+      account = DAOAccount.instance.fetch_account(session[:account])
 
       haml :'item/wish_list', :locals => {:wish_list_items => account.wish_list.items}
     end
@@ -96,8 +85,8 @@ module Controllers
     #
     ##
     get '/item/create' do
-       session[:navigation].get_selected.select_by_name("market")
-       session[:navigation].get_selected.subnavigation.select_by_name("create item")
+       session[:navigation][:selected]  = "market"
+       session[:navigation][:subnavigation] = "create item"
 
        haml :'item/create'
     end
@@ -112,11 +101,11 @@ module Controllers
     #
     ##
     get '/items/active' do
-        session[:navigation].get_selected.select_by_name("market")
-        session[:navigation].get_selected.subnavigation.select_by_name("on sale")
+        session[:navigation][:selected] = "market"
+        session[:navigation][:subnavigation] = "on sale"
 
         viewer_id = session[:account]
-        haml :'item/active', :locals => {:all_items => Models::System.instance.fetch_all_active_items_but_of(viewer_id)}
+        haml :'item/active', :locals => {:all_items => DAOItem.instance.fetch_all_active_items_but_of(viewer_id)}
     end
 
     ##
@@ -132,27 +121,11 @@ module Controllers
     #
     ##
     get '/item/:id' do
-      redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:id])
-      item = Models::System.instance.fetch_item(params[:id])
-      if !item.is_active? && item.owner.id != session[:account]
-        session[:alert] = Alert.create("Inactive Item", "The Item you try to watch isn't active.", true)
-        redirect "/items/active"
-      end
+      error_redirect("No valid Item ID", "The requested item id could not be found.", !DAOItem.instance.item_exists?(params[:id]), "/items/active")
+      item = DAOItem.instance.fetch_item(params[:id])
+      error_redirect("Inactive Item", "The Item you try to watch isn't active.", !item.is_active? && item.owner.id != session[:account], "/items/active")
 
       haml :'item/item', :locals => {:item => item}
-    end
-
-    ##
-    #
-    # Shows the form to write a comment on a specific item
-    #
-    # Expects:
-    # params[:id] : the id of the item someone wants to comment on
-    # TODO: I am not sure what this does, or if it is used
-    ##
-    get '/item/comment/:id' do
-      item = System.instance.fetch_item(params[:id].to_i)
-      haml :'item/comments', :locals => {:item => item }
     end
 
     ##
@@ -160,7 +133,7 @@ module Controllers
     #  Shows the  make comment page, for a comment on a comment
     #
     #  Redirects:
-    #  /error/No_Valid_Item_Id when the system doesn't know this item id
+    #  /items/active when the system doesn't know this item id
     #
     #  Expects:
     #  session[:navigation] : has to be initialized
@@ -170,9 +143,9 @@ module Controllers
     #
     ##
     get '/item/add/comment/:item_id/:comment_nr' do
-      redirect "/error/No_Valid_Item_Id" unless Models::System.instance.item_exists?(params[:item_id])
+      error_redirect("No valid Item ID", "The requested item id could not be found.", !DAOItem.instance.item_exists?(params[:item_id]), "/items/active")
 
-      item = Models::System.instance.fetch_item(params[:item_id])
+      item = DAOItem.instance.fetch_item(params[:item_id])
 
       haml :'item/comment', :locals => {:item => item, :comment_nr => params[:comment_nr]}
     end
@@ -186,7 +159,9 @@ module Controllers
     #
     ##
     get '/item/changestate/expiration' do
-      item = Models::System.instance.fetch_item(params[:id])
+      error_redirect("No valid Item ID", "The requested item id could not be found.", !DAOItem.instance.item_exists?(params[:id]), "/items/active")
+
+      item = DAOItem.instance.fetch_item(params[:id])
 
       haml :'item/expiration', :locals => {:item => item}
     end
@@ -204,7 +179,7 @@ module Controllers
       before_for_item_manipulation
 
       id = params[:id]
-      item = Models::System.instance.fetch_item(params[:id])
+      item = DAOItem.instance.fetch_item(params[:id])
       name = item.name
       description = item.description
       description_list = item.description_list

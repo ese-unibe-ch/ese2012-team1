@@ -24,8 +24,8 @@ module Controllers
 
     get '/account/edit/user/profile' do
       before_for_user_authenticated
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("edit profile")
+      session[:navigation][:selected]  = "home"
+      session[:navigation][:subnavigation]  = "edit profile"
 
       haml :'user/edit_profile', :locals => {:script => 'passwordchecker.js', :onload => 'initialize()'}
     end
@@ -50,11 +50,11 @@ module Controllers
     post '/account/edit/user/profile' do
       before_for_user_authenticated
 
-      user = Models::System.instance.fetch_account(session[:user])
+      user = DAOAccount.instance.fetch_account(session[:user])
       session[:email_error] = nil
       #Error Messages Sessions
       if params[:email] != nil
-        newMailUser = Models::System.instance.fetch_user_by_email(params[:email])
+        newMailUser = DAOAccount.instance.fetch_user_by_email(params[:email])
         if newMailUser != nil
           session[:email_error] = "You entered a e-mail which is already in use." if (newMailUser != user)
           session[:is_email_error] = "yes" if (newMailUser != user)
@@ -108,8 +108,8 @@ module Controllers
     get '/account/edit/organisation/profile' do
       before_for_admin
 
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("edit organisation")
+      session[:navigation][:selected]  = "home"
+      session[:navigation][:subnavigation]  = "edit organisation"
 
       haml :'organisation/edit'
     end
@@ -135,8 +135,13 @@ module Controllers
     post '/account/edit/organisation/profile' do
       before_for_admin
 
-      organisation = Models::System.instance.fetch_account(session[:account])
-      redirect "/error/Wrong_Limit" if params[:credit_limit] != "" && !(/^[\d]+(\.[\d]+){0,1}$/.match(params[:credit_limit]))
+      organisation = DAOAccount.instance.fetch_account(session[:account])
+
+      @error[:credit_limit] = ErrorMessages.get("Wrong_Limit") if params[:credit_limit] != "" && !(/^[\d]+(\.[\d]+){0,1}$/.match(params[:credit_limit]))
+
+      unless @error.empty?
+        halt haml :'/organisation/edit'
+      end
 
       if !params[:description].nil?
         organisation.description = params[:description].nil? ? "" : Sanitize.clean(params[:description])
@@ -148,9 +153,8 @@ module Controllers
         if new_limit == ""
           organisation.limit = nil
         else
-          organisation.limit = new_limit.to_i
+          organisation.set_limit(new_limit.to_i)
         end
-        organisation.reset_member_limits
       end
 
       dir = absolute_path('../public/images/organisations/', __FILE__)

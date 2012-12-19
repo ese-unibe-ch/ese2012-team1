@@ -27,12 +27,11 @@
                 %a(href = "#{mail_arguments[3]}") Confirm E-Mail Address
               %div(class='bigmargin')
                 If this link did not work correctly, copy the following URL and open it in your Browser:
-                %br
+                %div
                 = "#{mail_arguments[3]}"
               %div(class='bigmargin')
                 The ESE Team #1 wishes you good luck.
-              %br
-              %br
+              %div(class= 'line-spacing')
         %tr
           %td(colspan='2' style='width:900px;')
             = render_file('frame/footer.haml')

@@ -1,0 +1,7 @@
+%div(class="alert-input")
+  %div(class="input")
+    %input(class="#{@error[name].nil? ? "" : " error"}" type="text" name="#{name.to_s}" value="#{value}" )
+
+    - unless @error[name].nil?
+      %div(class="help")
+        = @error[name]

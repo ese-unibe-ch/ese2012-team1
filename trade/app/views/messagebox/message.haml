@@ -1,0 +1,39 @@
+- indention = !indention.nil? ? indention : false
+- short = !short.nil? ? short : false
+- news = !news.nil? ? news : false
+
+- style = indention ? { :style => "margin-left:#{20*message.depth}px"} : {}
+- style = { :class => message.sender == session[:user] ? "messagebox-message-user" : "messagebox-message" }.merge!(style)
+
+%div{style}
+  - unless short
+    %strong
+      From
+    = DAOAccount.instance.fetch_account(message.sender).name
+    %hr
+    %strong
+      To
+    - message.receivers.each do |receiver|
+      = "#{DAOAccount.instance.fetch_account(receiver).name}, "
+    %hr
+  %strong
+    Subject
+  = message.subject
+  %hr
+  - unless short
+    %strong
+      Date
+    = message.date.strftime("%a %d.%m.%Y, %H:%M:%S")
+    %hr
+  %div(class="message-content")
+    = message.message
+  %hr
+  %div(class="align-forms-vertical")
+    - if news
+      - button = "View Conversation"
+      %form(action="/messagebox/conversation?conversation_id=#{conversation_id}" method="get")
+        %input(type = 'hidden' name = 'conversation_id' value="#{conversation_id}")
+        %input(type = 'hidden' name = 'message_id' value="#{message.message_id}")
+        %input(type = 'submit' value="#{button}")
+    - if message.sender.to_s != session[:user].to_s &&  !short
+      = haml :'messagebox/form/reply_message', :locals => { :conv_id => conversation_id, :mess_id => message.message_id}

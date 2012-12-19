@@ -29,11 +29,11 @@ module Controllers
     get '/' do
       redirect "/home" if session[:auth]
 
-      session[:navigation].select(:unregistered)
-      session[:navigation].get_selected.select(1)
+      session[:navigation][:context] = :unregistered
+      session[:navigation][:selected] = "home"
 
       #get four random items
-      item_list = Models::System.instance.fetch_all_active_items
+      item_list = DAOItem.instance.fetch_all_active_items
       return_list = item_list.shuffle[0..3]
       haml :index, :locals => { :items_to_show => return_list }
     end
@@ -58,51 +58,23 @@ module Controllers
       redirect "/" unless session[:auth]
 
       if session[:user] == session[:account]
-        session[:navigation].select(:user)
-        session[:navigation].get_selected.select_by_name("home")
-        session[:navigation].get_selected.subnavigation.select_by_name("profile")
+        session[:navigation][:context] = :user
+        session[:navigation][:selected] = "home"
+        session[:navigation][:subnavigation] = "profile"
 
         haml :'home/user'
       else
-		    admin_view = Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
+		    admin_view = DAOAccount.instance.fetch_account(session[:account]).is_admin?(DAOAccount.instance.fetch_account(session[:user]))
         if admin_view
-          session[:navigation].select(:organisation_admin)
+          session[:navigation][:context] = :organisation_admin
         else
-          session[:navigation].select(:organisation)
+          session[:navigation][:context] = :organisation
         end
-        session[:navigation].get_selected.select_by_name("home")
-        session[:navigation].get_selected.subnavigation.select_by_name("profile")
+        session[:navigation][:selected]  = "home"
+        session[:navigation][:subnavigation] = "profile"
 
         haml :'home/organisation', :locals => { :admin_view => admin_view }
       end
-    end
-
-    ###
-    #
-    #  TODO: Is this even used?
-    #
-    ###
-    get '/home/user' do
-      session[:navigation].select(:user)
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("profile")
-
-      haml :'home/user'
-    end
-
-    ###
-    #
-    #  TODO: Is this even used?
-    #
-    ###
-    get '/home/organisation' do
-      session[:navigation].select(:organisation)
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("profile")
-
-      admin_view = Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
-
-      haml :'home/organisation', :locals => { :admin_view => admin_view }
     end
   end
 end

@@ -1,15 +1,5 @@
-require 'rubygems'
-require 'require_relative'
-require 'test/unit'
-require 'helper'
-require 'rack/test'
-
-require 'test_helper'
-
-ENV['RACK_ENV'] = 'test'
-
+require 'controller_require'
 require_relative '../../app/controllers/organisation'
-require_relative '../../app/models/user'
 
 class OrganisationTest < Test::Unit::TestCase
   include Rack::Test::Methods
@@ -32,10 +22,21 @@ class OrganisationTest < Test::Unit::TestCase
 
       org = users[:homer].create_organisation("founding.inc", "founds things", "/images/organisations/default_avatar.png")
 
-      session = { :user => users[:homer].id, :auth => true, :account => org.id  }
+      session = { :user => users[:homer].id, :auth => true, :account => users[:homer].id  }
       post "/organisation/switch", { :account => org.id }, 'rack.session' => session
 
       assert(session[:account] == org.id, "Should have id #{org.id} but had #{session[:account]}")
+    end
+
+    it 'get organisation/create should show page to create an organisation' do
+      TestHelper.reload
+
+      session = TestHelper.get_sessions
+
+      get "/organisation/create", {}, 'rack.session' => session[:homer]
+
+      assert last_response.ok?, "#{last_response.body}"
+      assert last_response.body.include?("Launch Organisation")
     end
   end
 end

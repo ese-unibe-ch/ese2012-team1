@@ -1,5 +1,5 @@
 %form(action="/account/edit/user/profile" enctype="multipart/form-data" method="post")
-  - user = Models::System.instance.fetch_account(session[:user])
+  - user = DAOAccount.instance.fetch_account(session[:user])
 
   %div(class="labeled-input")
   %table
@@ -42,7 +42,7 @@
       %td
         %label Avatar:
       %td(colspan="2")
-        %input(type="file" name="avatar" size=50 maxlength="=100000" accept="text/*")
+        %input(type="file" name="avatar" size=50 maxlength="=100000" accept="image/*")
     %tr
       %td(colspan="3")
         %input(type="submit" id="register" value="Edit Profile")

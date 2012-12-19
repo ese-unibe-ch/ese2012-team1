@@ -1,8 +1,4 @@
-require 'rubygems'
-require 'require_relative'
-
 require_relative '../models/simple_email_client' unless ENV['RACK_ENV'] == 'test'
-require_relative 'render'
 
 ##
 #
@@ -23,7 +19,7 @@ module Helpers
     #
     ##
     def sendRegMail(userid, current_host)
-      new_user = Models::System.instance.fetch_account(userid)
+      new_user = DAOAccount.instance.fetch_account(userid)
       fail "This is an Organisation, not a user" if (new_user.organisation)
       email = new_user.email
       name = new_user.name

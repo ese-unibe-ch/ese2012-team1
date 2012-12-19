@@ -1,14 +1,3 @@
-require 'rubygems'
-require 'require_relative'
-require 'sinatra/base'
-require 'haml'
-require 'sinatra/content_for'
-require_relative('../models/user')
-require_relative('../models/item')
-require_relative('../helpers/render')
-require_relative '../helpers/before'
-require_relative('../helpers/string_checkers')
-
 include Models
 include Helpers
 
@@ -34,6 +23,9 @@ module Controllers
     ##
 
     get '/organisation/create' do
+      session[:navigation][:selected] = "home"
+      session[:navigation][:subnavigation] = "organisation"
+
       haml :'organisation/create'
     end
 
@@ -53,11 +45,10 @@ module Controllers
 
     post '/organisation/create' do
       @error[:name] = ErrorMessages.get("No_Name") if params[:name].nil? || params[:name].length == 0
-      @error[:name] = ErrorMessages.get("Choose_Another_Name") if Models::System.instance.organisation_exists?(params[:name])
+      @error[:name] = ErrorMessages.get("Choose_Another_Name") if DAOAccount.instance.organisation_exists?(params[:name])
       @error[:limit] = ErrorMessages.get("Wrong_Limit") if params[:limit] != "" && !(/^[\d]+(\.[\d]+){0,1}$/.match(params[:limit]))
 
       unless @error.empty?
-        puts @error
         halt haml :'/organisation/create'
       end
 
@@ -74,7 +65,7 @@ module Controllers
         file_path = "/images/organisations/#{params[:name]}.#{filename.sub(/.*\./, "")}"
       end
 
-      user = Models::System.instance.fetch_account(session[:user])
+      user = DAOAccount.instance.fetch_account(session[:user])
       organisation = user.create_organisation(Sanitize.clean(params[:name]), Sanitize.clean(params[:description]), file_path)
 
       new_limit = params[:limit]
@@ -100,13 +91,14 @@ module Controllers
     #  Expects:
     #  params[:account] : id of the account(user/org.) the user wants to switch to
     #
-    #  TODO: Check that the user is aloud to change to this organisation!
-    #
     ###
 
     post '/organisation/switch' do
       session[:account] = params[:account].to_i
-      new_account = System.instance.fetch_account(session[:account])
+      new_account = DAOAccount.instance.fetch_account(session[:account])
+      user = DAOAccount.instance.fetch_account(session[:user])
+
+      error_redirect("Oh no!", "Your not a member of this organisation!", !new_account.is_member?(user), "/home")
 
       session[:alert] = Alert.create("Success!", "You changed to " + new_account.name + ". You can now buy and sell items in its name.", false)
       redirect '/home'
@@ -122,11 +114,11 @@ module Controllers
     #
     ##
     get '/organisations/self' do
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("organisations")
+      session[:navigation][:selected]  = "home"
+      session[:navigation][:subnavigation] = "organisations"
 
-      user = Models::System.instance.fetch_account(session[:user])
-      haml :'organisation/self', :locals => { :all_organisations => Models::System.instance.fetch_organisations_of(user.id) }
+      user = DAOAccount.instance.fetch_account(session[:user])
+      haml :'organisation/self', :locals => { :all_organisations => DAOAccount.instance.fetch_organisations_of(user.id) }
     end
 
     ##
@@ -140,11 +132,11 @@ module Controllers
     #
     ##
     get '/organisation/members' do
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("members")
+      session[:navigation][:selected]  = "home"
+      session[:navigation][:subnavigation] = "members"
 
-      organisation = Models::System.instance.fetch_account(session[:account])
-      admin_view = organisation.is_admin?(Models::System.instance.fetch_account(session[:user]))
+      organisation = DAOAccount.instance.fetch_account(session[:account])
+      admin_view = organisation.is_admin?(DAOAccount.instance.fetch_account(session[:user]))
       haml :'organisation/members', :locals => { :all_members => organisation.members_without_admins, :all_admins => organisation.admins.values, :admin_view => admin_view }
     end
 
@@ -159,11 +151,11 @@ module Controllers
     #
     ##
     get '/organisations/all' do
-      session[:navigation].get_selected.select_by_name("community")
-      session[:navigation].get_selected.subnavigation.select_by_name("organisations")
+      session[:navigation][:selected]  = "community"
+      session[:navigation][:subnavigation] = "organisations"
 
       organisation = session[:account]
-      haml :'organisation/all', :locals => { :all_organisations => Models::System.instance.fetch_organisations_but(organisation) }
+      haml :'organisation/all', :locals => { :all_organisations => DAOAccount.instance.fetch_organisations_but(organisation) }
     end
 
     ##
@@ -176,7 +168,7 @@ module Controllers
     ##
     get '/organisations/:id' do
       organisation_id = params[:id]
-      haml :'organisation/id', :locals => {:active_items => Models::System.instance.fetch_account(organisation_id.to_i).list_active_items}
+      haml :'organisation/id', :locals => {:active_items => DAOItem.instance.fetch_active_items_of(organisation_id.to_i) }
     end
 
     ##
@@ -192,18 +184,12 @@ module Controllers
     #
     ##
     get '/organisation/leave' do
-      if session[:user] == session[:account]
-        session[:alert] = Alert.create("Oh no!", "You can't leave an organisation when you're not in your Organisations Profile.", true)
-        redirect "/home"
-      end
-      organisation = Models::System.instance.fetch_account(session[:account])
-      is_admin = organisation.is_admin?(Models::System.instance.fetch_account(session[:user]))
+      error_redirect("Oh no!", "You can't leave an organisation when you're not in your Organisations Profile.", session[:user] == session[:account], "/home")
+      organisation = DAOAccount.instance.fetch_account(session[:account])
+      is_admin = organisation.is_admin?(DAOAccount.instance.fetch_account(session[:user]))
       only_admin = false
       only_admin = true if organisation.admin_count == 1
-      if is_admin && only_admin
-        session[:alert] = Alert.create("Oh no!", "You can't leave this Organisation, because you're the only Administrator.", true)
-        redirect "/home"
-      end
+      error_redirect("Oh no!", "You can't leave this Organisation, because you're the only Administrator.", is_admin && only_admin, "/home")
 
       haml :'organisation/leave'
     end
@@ -219,75 +205,22 @@ module Controllers
     #  session[:account] : the user's current id (his own or an organisation's)
     ##
     post '/organisation/leave' do
-      redirect "/error/No_Valid_User" unless Models::System.instance.user_exists?(params[:user_email])
-      if session[:user] == session[:account]
-        session[:alert] = Alert.create("Oh no!", "You can't leave an organisation when you're not in your Organisations Profile.", true)
-        redirect "/home"
-      end
-      organisation = Models::System.instance.fetch_account(session[:account])
-      is_admin = organisation.is_admin?(Models::System.instance.fetch_account(session[:user]))
+      error_redirect("No valid User", "Your email could not be found.", !DAOAccount.instance.email_exists?(params[:user_email]), "/home")
+      error_redirect("Oh no!", "You can't leave an organisation when you're not in your Organisations Profile.", session[:user] == session[:account], "/home")
+
+      organisation = DAOAccount.instance.fetch_account(session[:account])
+      is_admin = organisation.is_admin?(DAOAccount.instance.fetch_account(session[:user]))
       only_admin = false
       only_admin = true if organisation.admin_count == 1
-      if is_admin && only_admin
-        session[:alert] = Alert.create("Oh no!", "You can't leave this Organisation, because you're the only Administrator.", true)
-        redirect "/home"
-      end
+      error_redirect("Oh no!", "You can't leave this Organisation, because you're the only Administrator.", is_admin && only_admin, "/home")
 
-      user = Models::System.instance.fetch_user_by_email(params[:user_email])
-      if params[:user_email] != user.email
-        session[:alert] = Alert.create("Oh no!", "You're trying to remove an other User from the Organisation.", true)
-        redirect "/home"
-      end
+      user = DAOAccount.instance.fetch_account(session[:user])
+      error_redirect("Oh no!", "You're trying to remove an other User from the Organisation.", params[:user_email] != user.email, "/home")
 
-      organisation.remove_member_by_email(user.email)
+      organisation.remove_member(user)
 
       session[:account] = session[:user]
       redirect "/home"
-    end
-
-    ##
-    # Shows the confirmation page if the user really wants to delete the organisation
-    #
-    # Redirect:
-    # /home when the user is no admin
-    #
-    # Expects:
-    # session[:user] : the id of the user who wants to delete the org.
-    # session[:account] : the org. on which behalf the user acts upon
-    # TODO: This should go to organisation_admin.rb!
-    ##
-    get '/organisation/delete' do
-      unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
-        session[:alert] = Alert.create("Oh no!", "You can't delete this Organisation, because you're not an Administrator.", true)
-        redirect "/home"
-      end
-      haml :'organisation/delete'
-    end
-
-  ##
-  # Deletes the organisation
-  #
-  # Redirect:
-  # /home when the user is no admin
-  #
-  # Expects:
-  # session[:user] : the id of the user who wants to delete the org.
-  # session[:account] : the org. on which behalf the user acts upon
-  # TODO: This should go to organisation_admin.rb!
-  ##
-    post '/organisation/delete' do
-      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
-      unless Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user]))
-        session[:alert] = Alert.create("Oh no!", "You can't delete this Organisation, because you're not an Administrator.", true)
-        redirect "/home"
-      end
-      org = Models::System.instance.fetch_account(session[:account])
-      Models::System.instance.remove_account(org.id)
-
-      user = session[:user]
-      session[:account] = Models::System.instance.fetch_account(user).id
-
-      redirect '/home'
     end
   end
 end

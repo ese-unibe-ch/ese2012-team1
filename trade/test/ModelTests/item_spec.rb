@@ -11,10 +11,10 @@ require 'test_require'
 #
 ##
 
-describe "Coupling for CommentContainer:" do
+describe "Coupling for Item:" do
   context "System" do
     before(:each) do
-      @system = System.instance
+      @system = DAOItem.instance
     end
 
     it "should response to instance" do
@@ -47,12 +47,37 @@ end
 describe Models::Item do
   def create_item
     @owner = double('Owner')
+
+    #Injects a mock for timed_event
+    @timed_event = double("Timed Event")
+    TimedEvent.stub(:create).and_return(@timed_event)
+    @timed_event.stub(:reschedule)
+    @timed_event.stub(:unschedule)
+
     Models::Item.created("testobject", 50, @owner)
+  end
+
+  context "while creation" do
+    it "should set expiration date of timed event to :forever" do
+      @owner = double("Owner")
+
+      @timed_event = double("Timed Event")
+      @timed_event.stub(:reschedule)
+      @timed_event.stub(:unschedule)
+
+      TimedEvent.should_receive(:create).with(any_args, :forever).and_return(@timed_event)
+
+      Models::Item.created("testobject", 50, @owner)
+    end
   end
 
   context "after creation" do
     before(:each) do
       @item = create_item
+    end
+
+    it "have a string representation showing the name and the price" do
+      @item.to_s.should be_like "testobject, 50"
     end
 
     it "should have name" do
@@ -73,6 +98,75 @@ describe Models::Item do
 
     it "should have an empty description" do
       @item.description.should be_like ""
+    end
+
+    it "should have version 1" do
+      @item.version.should == 1
+    end
+
+    it "should have current version 1" do
+      @item.current_version?(1).should be_true
+    end
+
+    it "should not have any other current version" do
+      @item.current_version?(2).should be_false
+      @item.current_version?(10).should be_false
+    end
+
+    it "should get time from timed event" do
+      @timed_event.should_receive(:time)
+
+      @item.get_expiration_date
+    end
+
+    it "should increase version" do
+      @item.alter_version
+
+      @item.version.should == 2
+      @item.current_version?(2).should be_true
+      @item.current_version?(1).should be_false
+    end
+
+    it "should have no observers" do
+      @item.observers.should be_empty
+    end
+
+    it "should accept observers" do
+      observer = double("Observer")
+      observer.stub(:update)
+
+      @item.add_observer(observer)
+
+      @item.observers.should include(observer)
+      @item.observers.size.should == 1
+    end
+
+    context "when observers are added" do
+      before(:each) do
+        @observer1 = double("Observer One")
+        @observer2 = double("Observer Two")
+        @observer1.stub(:update)
+        @observer2.stub(:update)
+
+        @item.add_observer(@observer1)
+        @item.add_observer(@observer2)
+      end
+
+      it "should notify observers when an item is deactivated" do
+        @observer1.should_receive(:update).with(@item)
+        @observer2.should_receive(:update).with(@item)
+
+        @item.to_active
+        @item.to_inactive
+      end
+
+      it "should remove observer" do
+        @item.remove_observer(@observer1)
+
+        @item.observers.should include(@observer2)
+        @item.observers.should_not include(@observer1)
+        @item.observers.size.should == 1
+      end
     end
 
     context "when added a description" do
@@ -115,6 +209,18 @@ describe Models::Item do
       end
     end
 
+    context "When set to inactive" do
+      before(:each) do
+        @item.to_active
+      end
+
+      it "should unschedule timed event" do
+        @timed_event.should_receive(:unschedule)
+
+        @item.to_inactive
+      end
+    end
+
     context "when set to active" do
       before(:each) do
         @item.to_active
@@ -139,15 +245,20 @@ describe Models::Item do
       end
 
       it "should be bought by user with enough money" do
-        @owner.stub(:credits).and_return(50)
-        @item.can_be_bought_by?(@owner).should be_true
+        buyer = double("Buyer")
+        buyer.stub(:credits).and_return(50)
+        buyer.stub(:id).and_return(10)
+        @owner.stub(:id).and_return(2)
+
+        @item.can_be_bought_by?(buyer).should be_true
       end
     end
 
     context "#clear" do
       before(:each) do
         @system = double('System')
-        System.stub(:instance).and_return(@system)
+        DAOItem.stub(:instance).and_return(@system)
+        DAOAccount.stub(:instance).and_return(@system)
         @system.stub(:remove_item)
 
         @search = double('search')
@@ -179,6 +290,21 @@ describe Models::Item do
         @system.should_receive(:remove_item).with(@item.id)
         @item.clear
       end
+    end
+
+    it "should set item to inactive when timed out" do
+      @item.to_active
+
+      @item.timed_out
+
+      @item.is_active?.should be_false
+    end
+
+    it "should add an expiration time" do
+      time = Time.now + 10
+      @timed_event.should_receive(:reschedule).with(time)
+
+      @item.add_expiration_date(time)
     end
 
     context "when bought" do

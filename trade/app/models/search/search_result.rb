@@ -4,15 +4,18 @@ module Models
   # Stores results and the pattern that leaded to this result.
   # Used by Search to return results to a client.
   #
-  # Responsibility:
+  # === Responsibility
+  #
   # Hold, provide and sort (by priorities) results of a Search
   #
   ##
 
 
   class SearchResult
-    attr_accessor :result, # all results saved as Hash (see #initialize)
-                  :pattern # pattern used to get objects stored in result
+    # all results saved as Hash (see #initialize)
+    attr_accessor :result
+    # pattern used to get objects stored in result
+    attr_accessor :pattern
 
     def initialize
       self.result = Hash.new
@@ -25,9 +28,10 @@ module Models
     # results and detetermine they are returned in
     # #get
     #
-    # Params:
-    # item: a SearchItem Object
-    # priority: Priority used by #sort!
+    # === Parameters
+    #
+    # +item+:: a SearchItem Object
+    # +priority+:: Priority of the method (see SearchItem#priority_of_method) used by #sort!
     #
     ##
 
@@ -44,13 +48,16 @@ module Models
     # Returns a list of items stored with the given name. Fails
     # if there are no results of this name.
     #
-    # The name is determined by items given in #add.
+    # The name is determined by items given in #add (see
+    # SearchItem#name and SearchItem#create).
+    #
     # At the moment we use the names "organisation", "user"
     # and "item". So this method returns either a list of
     # Organisations, Users or Items.
     #
-    # Params:
-    # name: Name to get the list of
+    # === Parameters
+    #
+    # +name+:: Name to get the list of found objects
     #
     ##
 
@@ -63,10 +70,12 @@ module Models
     ##
     #
     # Sorts the SearchResults by two priorities. The first
-    # priority is if the result belongs to the user that sorts
-    # and the second priority is the method where the result is
-    # coming from. To learn more about how the second priority
-    # is set see Search.
+    # priority is if the result belongs to the user that
+    # performs the sorts.
+    #
+    # The second priority is the method where the result is
+    # coming from. This priority is set in #add. To learn more
+    # about how the second priority works see SearchItem.
     #
     # A short example: If you have a list containing the
     # following items:
@@ -89,8 +98,9 @@ module Models
     # about the ranking of 3) and 5) because they have the same priority. See
     # Search for more information.
     #
-    # Params:
-    # user_id: The id of the user that is doing this sort
+    # === Parameters
+    #
+    # +user_id+:: The id of the user that is doing this sort
     #
     ##
 
@@ -106,13 +116,15 @@ module Models
 
     ##
     #
-    # Checks if there are results for the given name
-    # Returns true if there are.
+    # Checks if there are results for the given name.
     #
-    # Example: If you want to check if there are results
+    # Returns true if there are, false otherwise.
+    #
+    # === Examples
+    # If you want to check if there are results
     # for an organisation then use:
     #
-    # #found?("organisation")
+    #   #found?("organisation")
     #
     ##
 
@@ -123,13 +135,22 @@ module Models
     ##
     #
     # Checks if there are any results at all
-    # Returns true if there are.
+    #
+    # Returns true if there are, false otherwise.
     #
     ##
 
     def empty?
       self.result.empty?
     end
+
+    ##
+    #
+    # Counts the found objects
+    #
+    # Returns count as Integer
+    #
+    ##
 
     def size
       self.result.size

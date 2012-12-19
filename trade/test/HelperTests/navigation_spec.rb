@@ -39,9 +39,5 @@ describe "Navigation" do
     navigation.subnavigation.direct_to.should == "/m"
     navigation.subnavigation.name.should == "m"
     navigation.direct_to.should == "/m"
-
-    navigation.travers do |name, direct_to|
-      puts "#{name} #{direct_to}"
-    end
   end
 end

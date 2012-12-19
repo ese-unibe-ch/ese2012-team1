@@ -1,13 +1,3 @@
-require 'rubygems'
-require 'require_relative'
-require 'sinatra/base'
-require 'haml'
-require 'sinatra/content_for'
-require_relative('../models/user')
-require_relative('../models/item')
-require_relative('../helpers/render')
-require_relative '../helpers/before'
-
 include Models
 include Helpers
 
@@ -38,10 +28,10 @@ module Controllers
     #
     ##
     get '/users/all' do
-        session[:navigation].get_selected.select_by_name("community")
-        session[:navigation].get_selected.subnavigation.select_by_name("users")
+        session[:navigation][:selected]  = "community"
+        session[:navigation][:subnavigation] = "users"
 
-        haml :'user/all', :locals => {:all_users => Models::System.instance.fetch_all_users_but(session[:account])}
+        haml :'user/all', :locals => {:all_users => DAOAccount.instance.fetch_all_users_but(session[:account])}
     end
 
     ##
@@ -57,10 +47,10 @@ module Controllers
     #
     ##
     get '/users/:id' do
-        redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(params[:id].to_i)
+        error_redirect("Oh no!", "There's something gone wrong.", !DAOAccount.instance.account_exists?(params[:id].to_i), "/home")
         user_id = params[:id]
         redirect "/home" if user_id.to_s == session[:account].to_s
-        haml :'user/id', :locals => {:active_items => Models::System.instance.fetch_account(user_id.to_i).list_active_items}
+        haml :'user/id', :locals => {:active_items => DAOItem.instance.fetch_active_items_of(user_id.to_i) }
     end
   end
 end

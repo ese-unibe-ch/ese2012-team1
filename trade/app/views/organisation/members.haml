@@ -1,28 +1,32 @@
 %h2 Members of Organisation
 %div
-%table
-  %tr
-    %th Name
-    %th
-    %th
-    %th
-  - i = 0
-  - for user in all_members
-    - i = (i+1)%2
-    %tr{ :class => i == 0 ? "colored" : "normal" }
-      %td= user.name
-      - if admin_view
+-if all_members.size == 0
+  %div
+    No members besides the admin(s).
+-else
+  %table
+    %tr
+      %th Name
+      %th
+      %th
+      %th
+    - i = 0
+    - for user in all_members
+      - i = (i+1)%2
+      %tr{ :class => i == 0 ? "colored" : "normal" }
+        %td= user.name
+        - if admin_view
+          %td
+            %form(name="remove" action="/organisation/member/delete" method="post")
+              %input(type="hidden" name="member" value="#{user.email}")
+              %input(class="itembuttons" type="submit" value="Remove from Organisation")
+          %td
+            %form(name="add_admin" action="/organisation/member/to_admin" method="post")
+              %input(type="hidden" name="member" value="#{user.email}")
+              %input(class="itembuttons" type="submit" value="Provide Admin Privileges")
         %td
-          %form(name="remove" action="/organisation/member/delete" method="post")
-            %input(type="hidden" name="member" value="#{user.email}")
-            %input(class="itembuttons" type="submit" value="Remove from Organisation")
-        %td
-          %form(name="add_admin" action="/organisation/member/to_admin" method="post")
-            %input(type="hidden" name="member" value="#{user.email}")
-            %input(class="itembuttons" type="submit" value="Provide Admin Privileges")
-      %td
-        %img(height=50 width=50){ :alt => user.name, :src => user.avatar }
-%div(class="padding-top")
+          %img(height=50 width=50){ :alt => user.name, :src => user.avatar }
+  %div(class="padding-top")
 %h2 Administrators of Organisation
 %div
 %table

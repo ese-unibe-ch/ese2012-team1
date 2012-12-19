@@ -1,11 +1,12 @@
+#usr_img
+  %a(href="#{item.picture}" rel="lightbox")
+    %img(height=200 width=200){ :alt => item.name, :src =>item.picture }
+
 %h2
   #{item.name}
   - if item.owner.id == session[:account]
     %span
       (You own it)
-#usr_img
-  %a(href="#{item.picture}" rel="lightbox")
-    %img(height=200 width=200){ :alt => item.name, :src =>item.picture }
 
 = haml :'partials/description-entry-horizontal', :locals => { :label => "Price:",
                                                               :description => item.price }
@@ -20,7 +21,7 @@
   %div(class="align-forms-vertical")
     %form(action="/item/buy" method="post")
       = haml :'item/form/buy', :locals => { :item => item }
-    -if (Models::System.instance.fetch_account(session[:account]).wish_list.items.include?(item))
+    -if (DAOAccount.instance.fetch_account(session[:account]).wish_list.items.include?(item))
       = haml :'partials/form/remove_from_wishlist', :locals => { :item => item }
     -else
       = haml :'partials/form/add_to_wishlist', :locals => { :item => item }
@@ -34,7 +35,7 @@
       = haml :'item/form/edit', :locals => { :item => item }
       = haml :'item/form/delete', :locals => { :item => item }
 
--time = item.timed_event.time
+-time = item.get_expiration_date
 -if (time != :forever)
   %div(class="padding-top")
     Offer expires in:
@@ -45,8 +46,6 @@
         $('#year').text(austDay.getFullYear());
       });
     %div(id = "countdown")
-
-
 
 %h2
   Comments

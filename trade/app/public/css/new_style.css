@@ -297,6 +297,12 @@ div#main #usr_img {
     float: right;
 }
 
+div#main #item_img {
+    padding-top: 20px;
+    padding-right: 10px;
+    float: right;
+}
+
 #usr_img img {
     height: 200px;
     width: 200px;
@@ -544,11 +550,11 @@ hr {
 }
 
 .messagebox-message-user hr {
-    background: #ffff00;
+    background: #9acd32;
 }
 
 .messagebox-message-user {
-    background-image: url('/images/design/item-owner.png');
+    background-image: url('/images/design/messagebox-message.png');
 }
 
 .message-content {
@@ -556,6 +562,13 @@ hr {
     margin-bottom: 20px;
 }
 
+.message-preview {
+    background-image: url('/images/design/normal.png');
+    padding: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid white;
+    border-top: 1px solid white;
+}
 
 h2 span {
   font-size: 75%;

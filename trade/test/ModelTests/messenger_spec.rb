@@ -8,7 +8,8 @@ describe Messenger do
   context "when created" do
     before(:each) do
       @system = double("System")
-      System.stub(:instance).and_return(@system)
+      DAOAccount.stub(:instance).and_return(@system)
+      DAOItem.stub(:instance).and_return(@system)
       @system.stub(:account_exists?).and_return(true)
 
       @messenger = Messenger.instance
@@ -37,7 +38,6 @@ describe Messenger do
 
       context "when a message is send from user1 to user2" do
         before(:each) do
-          puts "Here!"
           @messenger.new_message(1, [2], "Subject", "My Message")
 
           @message_box1 = @messenger.get_message_box(1)
@@ -50,7 +50,6 @@ describe Messenger do
           @message_box2.new_messages_count.should == 1
 
           @message_box2.travers_new_messages do |message, conversation_id|
-            puts "Conversation id: #{conversation_id}"
             message.subject.should be_like "Subject"
             message.message.should be_like "My Message"
           end
@@ -58,7 +57,6 @@ describe Messenger do
 
         it "then user1 and user2 two should have correct message" do
           @message_box1.travers_new_messages do |message, conversation_id|
-            puts "Conversation id: #{conversation_id}"
             message.subject.should be_like "Subject"
             message.message.should be_like "My Message"
           end

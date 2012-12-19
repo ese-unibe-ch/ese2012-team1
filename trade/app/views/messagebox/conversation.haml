@@ -3,7 +3,7 @@
 
 - conversation.messages.each do |message|
   -if message.is_receiver?(session[:user]) || message.is_sender?(session[:user])
-    = haml :'mailbox/message', :locals => { :message => message,
+    = haml :'messagebox/message', :locals => { :message => message,
                                             :conversation_id => conversation.conversation_id,
                                             :indention => true }
-= haml :'mailbox/form/reply_message', :locals => { :conv_id => conversation.conversation_id, :mess_id => nil}
+= haml :'messagebox/form/reply_message', :locals => { :conv_id => conversation.conversation_id, :mess_id => nil}

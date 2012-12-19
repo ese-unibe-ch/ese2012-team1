@@ -23,7 +23,6 @@ module Controllers
     # params[:name] : name for the item
     # params[:price] : price for the item
     # params[:description] :  description for the item
-    # TODO: Description should be optional?
     # optional params[:item_picture] : picture for the item
     #
     ##
@@ -41,7 +40,7 @@ module Controllers
       end
 
       id = session[:account]
-      new_item = Models::System.instance.fetch_account(id).create_item(Sanitize.clean(params[:name]), Integer((params[:price]).to_i))
+      new_item = DAOAccount.instance.fetch_account(id).create_item(Sanitize.clean(params[:name]), Integer((params[:price]).to_i))
       new_item.add_description(Sanitize.clean(params[:description]))
 
       dir = absolute_path('../public/images/items/', __FILE__)
@@ -60,8 +59,8 @@ module Controllers
 
       new_item.add_picture("/images/items/#{new_item.id}#{file_extension}")
 
-      session[:navigation].get_selected.select_by_name("home")
-      session[:navigation].get_selected.subnavigation.select_by_name("items")
+      session[:navigation][:selected]  = "home"
+      session[:navigation][:subnavigation]  = "items"
 
       session[:alert] = Alert.create("Success!", "You created a new item: #{new_item.name.create_link(new_item.id)}", false)
       redirect "/items/my/all"

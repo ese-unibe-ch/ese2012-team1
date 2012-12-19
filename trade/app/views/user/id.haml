@@ -1,4 +1,4 @@
-= haml :'partials/profile', :locals => { :account => Models::System.instance.fetch_account(params[:id].to_i),
+= haml :'partials/profile', :locals => { :account => DAOAccount.instance.fetch_account(params[:id].to_i),
                                          :user => true,
                                          :active_items => active_items }
 

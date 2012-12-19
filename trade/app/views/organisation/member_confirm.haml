@@ -1,11 +1,11 @@
 %h2="Is this the user you want to add?"
-%h3= "#{Models::System.instance.fetch_user_by_email(member).name}'s Profile"
+%h3= "#{DAOAccount.instance.fetch_user_by_email(member).name}'s Profile"
 #usr_img
-  %img(height=200 width=200){ :alt => Models::System.instance.fetch_user_by_email(member).name, :src => Models::System.instance.fetch_user_by_email(member).avatar }
+  %img(height=200 width=200){ :alt => DAOAccount.instance.fetch_user_by_email(member).name, :src => DAOAccount.instance.fetch_user_by_email(member).avatar }
 %div
   = "Description:"
   %div
-  = "#{Models::System.instance.fetch_user_by_email(member).description}"
+  = "#{DAOAccount.instance.fetch_user_by_email(member).description}"
 %div(class="padding-top")
   %form(action="/organisation/member/confirm" method="post")
     %input(type = 'hidden' name = 'member'){ :value => member }

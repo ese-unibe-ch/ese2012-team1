@@ -42,6 +42,7 @@ class TestHelper
   @@users = Hash.new
   @@items = Hash.new
   @@sessions = Hash.new
+  @@organisations = Hash.new
 
   ##
   #
@@ -53,10 +54,12 @@ class TestHelper
     self.clear_all
     self.reset
 
+    Navigations.instance.build
+
     # Create pictures for item picture
-    File.copy("../../app/public/images/users/default_avatar.png", "../../app/public/images/items/test_elephant.png")
-    File.copy("../../app/public/images/users/default_avatar.png", "../../app/public/images/items/test_skateboard.png")
-    File.copy("../../app/public/images/users/default_avatar.png", "../../app/public/images/items/test_beer.png")
+    File.copy(absolute_path("../../app/public/images/users/default_avatar.png", __FILE__), absolute_path("../../app/public/images/items/test_elephant.png", __FILE__))
+    File.copy(absolute_path("../../app/public/images/users/default_avatar.png", __FILE__), absolute_path("../../app/public/images/items/test_skateboard.png", __FILE__))
+    File.copy(absolute_path("../../app/public/images/users/default_avatar.png", __FILE__), absolute_path("../../app/public/images/items/test_beer.png", __FILE__))
 
     # Create bart
     bart = Models::User.created('Bart' , 'bart', 'bart@mail.ch', 'I\' should not...', '/images/users/default_avatar.png')
@@ -74,7 +77,7 @@ class TestHelper
 
 
     ## Store session for bart
-    @@sessions.store(:bart, { :auth => true, :user => bart.id, :account => bart.id })
+    @@sessions.store(:bart, {:navigation => { :context => :user }, :auth => true, :user => bart.id, :account => bart.id })
 
     # Create Homer
     homer = Models::User.created('Homer', 'homer', 'homer@mail.ch', 'Do!', '/images/users/default_avatar.png')
@@ -87,8 +90,18 @@ class TestHelper
     item.to_active
     @@items.store(:beer, item)
 
+    ## Create organisation for home
+    organisation = homer.create_organisation("Homers Org.", "Donut fabric", "/images/organisations/default_avatar.png")
+    @@organisations.store(:homer_org, organisation)
+
     ## Store session for homer
-    @@sessions.store(:homer, { :auth => true, :user => homer.id, :account => homer.id })
+    @@sessions.store(:homer, {:navigation => { :context => :user }, :auth => true, :user => homer.id, :account => homer.id })
+
+    ## Store session for homers organisation
+    @@sessions.store(:homer_org, {:navigation => { :context => :organisation_admin },
+                                 :auth => true,
+                                 :user => homer.id,
+                                 :account => organisation.id })
   end
 
   ##
@@ -100,6 +113,17 @@ class TestHelper
 
   def self.get_users
     @@users
+  end
+
+  ##
+  #
+  # Returns all organisations:
+  # organisationname => organisation
+  #
+  ##
+
+  def self.get_organisations
+    @@organisations
   end
 
   ##
@@ -131,7 +155,8 @@ class TestHelper
   ##
 
   def self.clear_all
-    Models::System.instance.reset
+    Models::DAOAccount.instance.reset
+    Models::DAOItem.instance.reset
   end
 
   ##

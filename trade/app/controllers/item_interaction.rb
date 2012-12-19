@@ -1,3 +1,6 @@
+include Models
+include Helpers
+
 ##
 #
 # Here is everything concerning the interaction between items
@@ -8,10 +11,6 @@
 module Controllers 
     class ItemInteraction < Sinatra::Application
         set :views, "#{absolute_path('../views', __FILE__)}"
-        
-        before do
-          before_for_item_interaction
-        end
 
         ###
         #
@@ -33,27 +32,18 @@ module Controllers
         #
         ###
         post '/item/buy' do
+          before_for_item_interaction
 
-          item = Models::System.instance.fetch_item(params[:id])
-          buyer = Models::System.instance.fetch_account(session[:account])
-          user=Models::System.instance.fetch_account(session[:user])
+          item = DAOItem.instance.fetch_item(params[:id])
+          buyer = DAOAccount.instance.fetch_account(session[:account])
+          user=DAOAccount.instance.fetch_account(session[:user])
           version = params[:version]
 
-          unless item.can_be_bought_by?(buyer)
-            session[:alert] = Alert.create("Oh no!", "You have not enough Credits to buy this Item.", true)
-            redirect "/item/#{params[:id]}"
-          end
-          if  buyer!=user #true if it is a user acting as an organisation
-            unless buyer.within_limit_of?(item, user)
-              session[:alert] = Alert.create("Oh no!", "You tried to buy something for your organistion that is over your daily organisation limit.", true)
-              redirect "/item/#{params[:id]}"
-            end
-          end
+          error_redirect("Oh no!", "You can't buy this item.", !item.can_be_bought_by?(buyer), "/item/#{item.id}")
+          error_redirect("Oh no!", "You have not enough Credits to buy this Item.", item.price > buyer.credits, "/item/#{item.id}")
+          error_redirect("Oh no!", "You tried to buy something for your organisation that is over your daily organisation limit.", buyer!=user && !buyer.within_limit_of?(item, user), "/item/#{item.id}")
+          error_redirect("Item has Changed!", "While you were watching this site, the Item was modified.", !item.current_version?(version), "/item/#{item.id}")
 
-          unless item.current_version?(version)
-            session[:alert] = Alert.create("Item has Changed!", "While you were watching this site, the Item was modified.", true)
-            redirect "/item/#{item.id}"
-          end
           buyer.buy_item(item, user)
 
           item.alter_version
@@ -76,10 +66,11 @@ module Controllers
         #
         ###
         post '/item/towishlist' do
-          item = Models::System.instance.fetch_item(params[:id])
-          account = Models::System.instance.fetch_account(session[:account])
+          before_for_item_interaction
 
-          #TODO check conditions!
+          item = DAOItem.instance.fetch_item(params[:id])
+          account = DAOAccount.instance.fetch_account(session[:account])
+
           account.wish_list.add(item)
           session[:alert] = Alert.create("", "#{item.name.create_link(item.id)} has been added to your <a href=\"/items/my/wishlist\">wishlist</a>.", false)
           redirect back.nil? ? "/items/active" : back
@@ -99,10 +90,11 @@ module Controllers
         #
         ###
         post '/item/fromwishlist' do
-          item = Models::System.instance.fetch_item(params[:id])
-          account = Models::System.instance.fetch_account(session[:account])
+          before_for_item_interaction
 
-          #TODO check conditions!
+          item = DAOItem.instance.fetch_item(params[:id])
+          account = DAOAccount.instance.fetch_account(session[:account])
+
           account.wish_list.remove(item)
           session[:alert] = Alert.create("", "#{item.name.create_link(item.id)} has been removed from your <a href=\"/items/my/wishlist\">wishlist</a>", false)
           redirect back.nil? ? "/items/my/all" : back
@@ -124,12 +116,13 @@ module Controllers
         #  params[:account] : the id of the user or org.
         #
         ###
-        post '/item/add/comment/:id' do
+        post '/item/:id/add/comment' do
+          before_for_item_interaction
 
-          redirect "/error/No_Valid_Input" if params[:comment].nil? || params[:comment] == ""
+          error_redirect("No Valid Input", "There has something gone wrong.", params[:comment].nil? || params[:comment] == "", "/home")
 
-          user = Models::System.instance.fetch_account(session[:account])
-          item = Models::System.instance.fetch_item(params[:id])
+          user = DAOAccount.instance.fetch_account(session[:account])
+          item = DAOItem.instance.fetch_item(params[:id])
 
           comment = Comment.create(user, Sanitize.clean(params[:header]), Sanitize.clean(params[:comment]))
           if params[:comment_nr].nil?

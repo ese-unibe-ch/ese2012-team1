@@ -1,15 +1,5 @@
-require 'rubygems'
-require 'require_relative'
-require 'test/unit'
-require 'helper'
-require 'rack/test'
-
-ENV['RACK_ENV'] = 'test'
-
+require 'controller_require'
 require_relative '../../app/controllers/registration'
-require_relative '../../app/models/user'
-
-require 'test_helper'
 
 class RegistrationTest < Test::Unit::TestCase
 
@@ -63,14 +53,14 @@ class RegistrationTest < Test::Unit::TestCase
                          :email => 'larry@mail.ch'},
            'rack.session' => { :user => nil, :auth => false  }
       assert last_response.redirect?, "Should redirect but was #{last_response.body}"
-      assert last_response.location =~ /\/register\/successful$/, "Should redirect to /register/successful but was #{last_response.location}"
+      assert last_response.location =~ /\/login$/, "Should redirect to /login but was #{last_response.location}"
     end
 
     it 'post /register should add user to system' do
       post "/register", {:password => 'aB12De', :re_password => 'aB12De', :name => 'Matz', :interests => "Ruby rocks!",
                          :email => 'matz@mail.ch'},
            'rack.session' => { :user => nil, :auth => false  }
-      user = Models::System.instance.fetch_user_by_email('matz@mail.ch')
+      user = DAOAccount.instance.fetch_user_by_email('matz@mail.ch')
       assert(user != nil, "User should exist within system")
       assert(user.name == 'Matz', "User should be called Matz but was #{user.name}");
       assert(user.email == 'matz@mail.ch', "User should have email matz@mail.ch but was #{user.email}")
@@ -110,17 +100,16 @@ class RegistrationTest < Test::Unit::TestCase
     it 'post /unregister should remove bart from list of users' do
       users = TestHelper.get_users
       post '/unregister', {}, 'rack.session' => { :user => users[:bart].id, :auth => true  }
-      assert !Models::System.instance.accounts.member?(users[:bart].id), "Bart should not exist anymore"
+      assert !Models::DAOAccount.instance.account_exists?(users[:bart].id), "Bart should not exist anymore"
     end
 
     it 'post /unregister should redirect to /unauthenticate' do
       users = TestHelper.get_users
-       System.instance.fetch_organisations_of(users[:homer].id)
+      sessions = TestHelper.get_sessions
 
-
-      post '/unregister', {}, 'rack.session' => { :user => users[:homer].id, :auth => true, :account => users[:homer].id  }
-      assert last_response.redirect?
-      assert last_response.location.include?('/unauthenticate'), "Should redirect to /unauthenticate but was #{last_response.location}"
+      post '/unregister', {}, 'rack.session' => sessions[:bart]
+      assert last_response.redirect?, "#{ last_response.body }"
+      assert last_response.location.include?('/'), "Should redirect to / but was #{last_response.location}"
     end
   end
 end

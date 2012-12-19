@@ -1,10 +1,10 @@
 %div(id="navigation-bar")
   = render_file('partials/search.haml')
   %ul(id="navigation-registered" class="navigation")
-    - my_arguments[:navigation].travers do |name, route, index, selected|
+    - navigation.travers(session[:navigation][:selected]) do |name, route, index, selected|
       - navigation_name = "navigation-registered-#{index}"
       %li{:id => navigation_name.sub("-registered", "")}
-        - if selected
+        - if session[:navigation][:selected] == name
           %span{:id => "#{navigation_name}-active"}
             %a{ :href=>route,  :title=>""}
               %span
@@ -12,8 +12,8 @@
         - elsif name == "logout"
           %form(action="/unauthenticate" method="post")
             %button(name="submit" value="submit" type="submit")
-        - elsif name == "mailbox"
-          - #Simply ignore entry for mailbox
+        - elsif name == "messagebox"
+          - #Simply ignore entry for messagebox
         - else
           %span{ :id => "#{navigation_name}-inactive"}
             %a{ :href=>route,  :title=>""}

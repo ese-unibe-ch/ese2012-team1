@@ -15,8 +15,8 @@ describe Conversation do
 
   context "when created" do
     before(:each) do
-      @system = double("System")
-      System.stub(:instance).and_return(@system)
+      @system = double("DAOAccount")
+      DAOAccount.stub(:instance).and_return(@system)
       @system.stub(:account_exists?).and_return(true)
 
       @subscribers = [double("Subscriber 1"), double("Subscriber 2")]
@@ -61,7 +61,7 @@ describe Conversation do
         @reply_to_message1 = double("Reply to message 1")
         @reply_to_message1.stub(:message_id).and_return(3)
         @reply_to_message1.stub(:reply_to).and_return(1)
-        @reply_to_message1.stub(:depth).and_return(0)
+        @reply_to_message1.stub(:depth).and_return(1)
         @reply_to_message1.stub(:depth=)
       end
 

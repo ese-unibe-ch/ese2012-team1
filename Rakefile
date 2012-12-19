@@ -7,10 +7,18 @@ require 'rspec/core/rake_task'
 require 'rcov/rcovtask'
 require 'rake/testtask'
 
-task :default => [:models]
+task :default => [:models_rcov]
 
 def file_list(t)
   t.test_files = FileList["trade/test/ModelTests/*_spec.rb", "trade/test/ModelTests/*_test.rb"]
+end
+
+def file_list_controller(t)
+  t.test_files = FileList["trade/test/ControllerTests/*_test.rb"]
+end
+
+def exclude_controller(t)
+  t.rcov_opts << "--exclude \"/gems/,/models/,spec,/helpers/,/*Tests/,init.rb,require.rb\""
 end
 
 def exclude(t)
@@ -19,6 +27,10 @@ end
 
 def lib(t)
   t.libs << "trade/test/ModelTests"
+end
+
+def lib_controller(t)
+  t.libs << "trade/test/ControllerTests"
 end
 
 Rcov::RcovTask.new :models_rcov do |t|
@@ -44,4 +56,15 @@ RSpec::Core::RakeTask.new :models_rspec do |t|
 
   t.rspec_opts = "-I#{directory}"
   t.pattern = Dir["trade/test/ModelTests/*_spec.rb"]
+end
+
+Rake::TestTask.new :controllers_test do |t|
+  lib_controller(t)
+  t.test_files = FileList["trade/test/ControllerTests/*_test.rb"]
+end
+
+Rcov::RcovTask.new :controllers_rcov do |t|
+  lib_controller(t)
+  file_list_controller(t)
+  exclude_controller(t)
 end

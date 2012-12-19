@@ -1,33 +1,40 @@
 - subs = conversation.subscribers
 - receivers = Array.new
-- subs.each { |s| receivers.push(System.instance.fetch_account(s.to_i)) if s.to_i != session[:user].to_i }
-- message_id == "" || message_id.nil? ? title = "Conversation: #{conversation.title}" : title = "Message: #{conversation.get(message_id).subject}"
+- subs.each { |s| receivers.push(DAOAccount.instance.fetch_account(s.to_i)) if s.to_i != session[:user].to_i }
 
 %h2 Reply to:
-= title
-%div
+
+- if message_id.nil? || message_id == ""
+  = "Conversation: #{conversation.title}"
+- else
+  = haml :'messagebox/message', :locals => { :message => conversation.get(message_id),
+                                          :conversation_id => conversation.conversation_id,
+                                          :short => true }
+
 %script(type="text/javascript")
   = "our_js_cid_var = \"#{conversation.conversation_id}\""
-%div(class="padding-top")
-%div(class="labeled-input")
-  %form(action="/messagebox/reply/send" id="send_form" method="post")
+%div(class="labeled-input padding-top")
+  %form(action="/messagebox/reply" id="send_form" method="post")
     %input(type="hidden" name="conv_id" value="#{conversation.conversation_id}")
     %input(type="hidden" name="mess_id" value="#{message_id}")
     - receivers.each do |receiver|
-      %input(type="hidden" name="hidden#{receiver.id}" value="#{receiver.id}")
-    %label
+      %input(type="hidden" id="hidden#{receiver.id}" name="hidden#{receiver.id}" value="#{receiver.id}")
+    %label(title="Use &quot;?&quot; to show all possible recipients.")
       Remove Receivers (this message only):
-    %input(type="text" name="query" id="query")
+
     %div(id="receivers")
       - receivers.each do |receiver|
         %span(id="div#{receiver.id}" class="receiver")
           = receiver.name
           %button(class="remove" onclick="removeReceiver(#{receiver.id})")
             x
+    %input(type="text" name="query" id="query")
     %label
       Subject:
     %input(type = 'text' name = 'subject')
-    = haml :'partials/alert-textarea', :locals => { :name => :message, :label => "Message: " }
+    %label
+      Message:
+    %textarea(cols='27' name='message' rows='10' type='text')
     %input(type = 'submit' value = 'send message')
 
 %script(type="text/javascript" src="/java-script/add_remove_users.js")

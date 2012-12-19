@@ -5,6 +5,7 @@
     No new messages
 
 - Messenger.instance.get_message_box(session[:user]).travers_new_messages do |message, conversation_id|
-  = haml :'mailbox/message', :locals => { :message => message,
+  = haml :'messagebox/message', :locals => { :message => message,
                                           :conversation_id => conversation_id,
-                                          :indention => false }
+                                          :indention => false,
+                                          :news => true}

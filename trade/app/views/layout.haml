@@ -35,18 +35,20 @@
       - auth = session[:auth] ? "yes" : "no"
       - user = session[:auth] ? session[:user] : "none"
       - account = session[:auth] ? session[:account] : "none"
-      - admin_view = Models::System.instance.fetch_account(session[:account]).is_admin?(Models::System.instance.fetch_account(session[:user])) if auth == "yes" && session[:account] != session[:user]
+      - navigation = Navigations.instance.get(session[:navigation][:context])
 
-      = render_file_with_argument('frame/header.haml', {  :auth => auth,
-                                                          :user => user,
-                                                          :account => account,
-                                                          :navigation => session[:navigation].get_selected } )
+      = haml :'frame/header', :locals =>  {  :auth => auth,
+                                      :user => user,
+                                      :account => account,
+                                      :navigation => navigation }
 
-      = render_file_with_argument('frame/profile_information.haml', {:user => session[:user], :account => session[:account]}) if session[:auth]
+      = haml :'frame/profile_information', :locals => {  :user => session[:user],
+                                                         :account => session[:account] }  if session[:auth]
 
       = haml :'frame/message_info' if  session[:auth]
 
-      = render_file_with_argument('frame/subnavigation.haml', {:auth => session[:auth], :navigation => session[:navigation].get_selected })
+      = haml :'frame/subnavigation', :locals => { :auth => session[:auth],
+                                                  :navigation => navigation }
 
       %div(id="main")
         -unless session[:alert].nil?

@@ -1,9 +1,14 @@
+-#
+  Shows message that an account can only be deleted if he's not an single admin of an
+  organisation.
+
+  Redirects to post '/unregister' via form
+
 %h1 Delete Account
-%div(class="line-spacing")
+%p
   You will not be able to Delete Your Account if you are an Administrator of an Organisation without other Admins.
-  %div
+%p
   In this case, you should provide Admin Privileges to one of your Members or Delete the Organisation.
-%div(class="line-spacing")
 %form(action="/unregister" method="post")
   %input(type="submit" value="Delete")
 

@@ -1,3 +1,6 @@
+include Models
+include Helpers
+
 module Controllers
     class Messagebox < Sinatra::Application
         set :views, "#{absolute_path('../views', __FILE__)}"
@@ -24,15 +27,15 @@ module Controllers
         get '/messagebox/send' do
           before_for_user_authenticated
 
-          session[:navigation].get_selected.select_by_name("messagebox")
-          session[:navigation].get_selected.subnavigation.select_by_name("send message")
+          session[:navigation][:selected]  = "messagebox"
+          session[:navigation][:subnavigation]  =  "send message"
 
           receivers = []
           unless (params[:receivers].nil?)
-            receivers = params[:receivers].map { |user_id| System.instance.fetch_account(user_id.to_i) }
+            receivers = params[:receivers].map { |user_id| DAOAccount.instance.fetch_account(user_id.to_i) }
           end
 
-          haml :'mailbox/send', :locals => { :receivers => receivers }
+          haml :'messagebox/send', :locals => { :receivers => receivers }
         end
 
         ##
@@ -44,11 +47,10 @@ module Controllers
         get '/messagebox/news' do
           before_for_user_authenticated
 
-          session[:navigation].get_selected.select_by_name("messagebox")
-          session[:navigation].get_selected.subnavigation.select_by_name("news")
+          session[:navigation][:selected]  = "messagebox"
+          session[:navigation][:subnavigation]  = "news"
 
-          #TODO!
-          haml :'mailbox/news'
+          haml :'messagebox/news'
         end
 
         ##
@@ -60,11 +62,10 @@ module Controllers
         get '/messagebox/conversations' do
           before_for_user_authenticated
 
-          session[:navigation].get_selected.select_by_name("messagebox")
-          session[:navigation].get_selected.subnavigation.select_by_name("conversations")
+          session[:navigation][:selected]  = "messagebox"
+          session[:navigation][:subnavigation]  = "conversations"
 
-          #TODO!
-          haml :'mailbox/conversations'
+          haml :'messagebox/conversations'
         end
 
         ##
@@ -79,20 +80,18 @@ module Controllers
         get '/messagebox/conversation' do
           before_for_user_authenticated
 
-          session[:navigation].get_selected.select_by_name("messagebox")
-          session[:navigation].get_selected.subnavigation.select_by_name("conversations")
+          session[:navigation][:selected]  = "messagebox"
+          session[:navigation][:subnavigation] = "conversations"
 
-          session[:alert] = Alert.create("No Conversation ID", "There is no Conversation ID set.", true) if params[:conversation_id] == nil || params[:conversation_id] == ""
-          redirect "/messagebox/conversations" if !session[:alert].nil?
-          session[:alert] = Alert.create("Wrong Conversation ID", "There is no Conversation with this ID.", true) if !Messenger.instance.has_conversation?(params[:conversation_id])
-          redirect "/messagebox/conversations" if !session[:alert].nil?
+          error_redirect("No Conversation ID", "There is no Conversation ID set.", params[:conversation_id] == nil || params[:conversation_id] == "", "/messagebox/conversations")
+          error_redirect("Wrong Conversation ID", "There is no Conversation with this ID.", !Messenger.instance.has_conversation?(params[:conversation_id]), "/messagebox/conversations")
 
           conversation = Messenger.instance.conversations.fetch(params[:conversation_id].to_s)
-          session[:alert] = Alert.create("Not your Conversation", "You can't view a conversation if you're not a Subscriber.", true) if !conversation.has_subscriber?(session[:user])
-          redirect "/messagebox/conversations" if !session[:alert].nil?
+          error_redirect("Not your Conversation", "You can't view a conversation if you're not a Subscriber.", !conversation.has_subscriber?(session[:user]), "/messagebox/conversations")
+
           Messenger.instance.get_message_box(session[:user]).set_conversation_as_read(conversation.conversation_id)
 
-          haml :'mailbox/conversation', :locals => { :conversation => conversation }
+          haml :'messagebox/conversation', :locals => { :conversation => conversation }
         end
 
         ##
@@ -113,35 +112,22 @@ module Controllers
 
           @error[:message] = "You have to enter a message" if params[:message].nil? || params[:message].empty?
 
-          unless @error.empty?
-            halt       haml :'mailbox/send', :locals => { :receiver_id => params[:receiver_id],
-                                                                :receiver_name => params[:receiver_name], }
-          end
-
-          message = "<h1>You have send:</h1> <br><br>"
-
-          message += "To: "
-
           receivers = Array.new
           params.each do |key, user_id|
             receivers.push(user_id.to_i) if (key.include?("hidden"))
           end
 
-          if (receivers.size == 0)
-            session[:alert] = Alert.create("", "You have not entered any receivers", true)
-            redirect '/messagebox/send'
+          unless @error.empty?
+            receivers.map! { |receiver| DAOAccount.instance.fetch_account(receiver) }
+            halt haml :'messagebox/send', :locals => { :receivers => receivers }
           end
 
-          message +=  receivers.join(",")
-          puts receivers.join(",")
+          error_redirect("", "You have not entered any receivers", receivers.size == 0, "/messagebox/send")
 
-          message += "<br>"
-          message += "Subject: " + params[:subject] + "<br>"
-          message += "Message: " + params[:message] + "<br>"
+          conversation = Messenger.instance.new_message(session[:user], receivers, params[:subject], params[:message])
 
-          Messenger.instance.new_message(session[:user], receivers, params[:subject], params[:message])
-
-          message
+          session[:alert] = Alert.create("", "Your message has been sent", false)
+          redirect "/messagebox/conversation?conversation_id=#{conversation.conversation_id.to_s}"
         end
 
         ##
@@ -157,31 +143,24 @@ module Controllers
         get '/messagebox/reply' do
           before_for_user_authenticated
 
-          session[:navigation].get_selected.select_by_name("messagebox")
-          session[:navigation].get_selected.subnavigation.select_by_name("send message")
+          session[:navigation][:selected]  = "messagebox"
+          session[:navigation][:subnavigation] = "send message"
 
-          session[:alert] = Alert.create("No Conversation ID", "There is no Conversation ID set.", true) if params[:conversation_id] == nil || params[:conversation_id] == ""
-          redirect "/messagebox/conversations" if !session[:alert].nil?
-          session[:alert] = Alert.create("Wrong Conversation ID", "There is no Conversation with this ID.", true) if !Messenger.instance.has_conversation?(params[:conversation_id])
-          redirect "/messagebox/conversations" if !session[:alert].nil?
+          error_redirect("No Conversation ID", "There is no Conversation ID set.", params[:conversation_id] == nil || params[:conversation_id] == "", "/messagebox/conversations")
+          error_redirect("Wrong Conversation ID", "There is no Conversation with this ID.", !Messenger.instance.has_conversation?(params[:conversation_id]), "/messagebox/conversations")
 
           conversation = Messenger.instance.conversations.fetch(params[:conversation_id].to_s)
-          session[:alert] = Alert.create("Not your Conversation", "You can't reply to a conversation if you're not a Subscriber.", true) if !conversation.has_subscriber?(session[:user])
-          redirect "/messagebox/conversations" if !session[:alert].nil?
+          error_redirect("Not your Conversation", "You can't reply to a conversation if you're not a Subscriber.", !conversation.has_subscriber?(session[:user]), "/messagebox/conversations")
 
           params[:message_id].nil? || params[:message_id] == "" ? mid = nil : mid = params[:message_id]
-          puts "mid = #{mid}" if !mid.nil?
-          puts "mid (nil?) = #{mid}" if mid.nil?
 
           if !mid.nil?
-            session[:alert] = Alert.create("Wrong Message ID", "The Message you try to reply did not exist.", true) if !conversation.has_message?(mid)
-            redirect "/messagebox/conversations" if !session[:alert].nil?
+            error_redirect("Wrong Message ID", "The Message you try to reply did not exist.", !conversation.has_message?(mid), "/messagebox/conversations")
             message = conversation.get(mid)
-            session[:alert] = Alert.create("Reply yourself", "You can't reply to a message sent by yourself.", true) if message.sender.to_s == session[:user].to_s
-            redirect "/messagebox/conversations" if !session[:alert].nil?
+            error_redirect("Reply yourself", "You can't reply to a message sent by yourself.", message.sender.to_s == session[:user].to_s, "/messagebox/conversations")
           end
 
-          haml :'mailbox/reply', :locals => { :conversation => conversation, :message_id => mid }
+          haml :'messagebox/reply', :locals => { :conversation => conversation, :message_id => mid }
         end
 
         ##
@@ -189,44 +168,28 @@ module Controllers
         # Shows the form to reply to a conversation.
         #
         # Expects:
-        # params[conversation_id] : id of conversation
-        # params[message_id] : id of message or nil
+        # params[conv_id] : id of conversation
+        # params[mess_id] : id of message or nil
         #
         ##
 
-        post '/messagebox/reply/send' do
+        post '/messagebox/reply' do
           before_for_user_authenticated
 
-          @error[:message] = "You have to enter a message" if params[:message].nil? || params[:message].empty?
-
-          unless @error.empty?
-            halt       haml :'mailbox/send', :locals => { :receiver_id => params[:receiver_id],
-                                                          :receiver_name => params[:receiver_name], }
-          end
-
-          message = "<h1>You have send:</h1> <br><br>"
-          message += "To: "
+          error_redirect("", "You have to enter a message", params[:message].nil? || params[:message].empty?, "/messagebox/reply?error=yes&conversation_id=#{params[:conv_id]}&message_id=#{params[:mess_id]}")
 
           receivers = Array.new
           params.each do |key, user_id|
             receivers.push(user_id.to_i) if (key.include?("hidden"))
           end
 
-          if (receivers.size == 0)
-            session[:alert] = Alert.create("", "You have removed every receivers", true)
-            redirect back
-          end
-
-          message +=  receivers.join(",")
-          puts receivers.join(",")
-
-          message += "<br>"
-          message += "Subject: " + params[:subject] + "<br>"
-          message += "Message: " + params[:message] + "<br>"
+          error_redirect("", "You have removed every receivers", receivers.size == 0, "/messagebox/reply?error=yes&conversation_id=#{params[:conv_id]}&message_id=#{params[:mess_id]}")
 
           params[:mess_id] == "" ? mess_id = nil : mess_id = params[:mess_id]
           Messenger.instance.answer_message(session[:user], receivers, params[:subject], params[:message], params[:conv_id], mess_id)
-          message
+
+          session[:alert] = Alert.create("", "Your message has been sent", false)
+          redirect "/messagebox/conversation?conversation_id=#{params[:conv_id].to_s}"
         end
 
         ##
@@ -240,7 +203,7 @@ module Controllers
 
           before_for_user_authenticated
 
-          users = Models::System.instance.fetch_all_users_but(session[:account])
+          users = DAOAccount.instance.fetch_all_users_but(session[:account])
           users.delete_if do |user|
             !user.name.include?(params[:query])
           end
@@ -277,7 +240,7 @@ module Controllers
           conv = Messenger.instance.conversations.fetch(conv_id.to_s)
           subs = conv.subscribers
 
-          users = Models::System.instance.fetch_all_users_but(session[:account])
+          users = DAOAccount.instance.fetch_all_users_but(session[:account])
           if params[:query] == "?"
             users.delete_if do |user|
               !subs.include?(user.id) || user.id.to_s == session[:user].to_s

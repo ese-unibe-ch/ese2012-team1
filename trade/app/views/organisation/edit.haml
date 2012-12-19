@@ -5,18 +5,18 @@
       %td(width="200px")
         %label Name:
       %td(width="400px")
-        #{Models::System.instance.fetch_account(session[:account]).name}
+        #{DAOAccount.instance.fetch_account(session[:account]).name}
     %tr
       %td
         %label Description:
       %td
         %textarea(name="description" cols=30 rows=10 )
-          = Models::System.instance.fetch_account(session[:account]).description.to_s
+          = DAOAccount.instance.fetch_account(session[:account]).description.to_s
     %tr
       %td
         %label Credit Limit for normal User (Empty for no Limit):
       %td
-        %input(type="text" name="credit_limit" value="#{Models::System.instance.fetch_account(session[:account]).limit}")
+        = haml :'partials/alert-input-no-label-value', :locals => { :name => :credit_limit, :value => DAOAccount.instance.fetch_account(session[:account]).limit}
     %tr
       %td
         %label Avatar:

@@ -37,7 +37,6 @@ class App < Sinatra::Base
 
   #No registration needed
   use Controllers::Home
-  use Controllers::Error
   use Controllers::Authentication
   use Controllers::Registration
 
@@ -62,7 +61,7 @@ class App < Sinatra::Base
   # Create Timer to reset User Buy Limits at 24:00
   scheduler = Rufus::Scheduler.start_new
   scheduler.cron '0 0 * * *' do
-    Models::System.instance.reset_all_member_limits
+    DAOAccount.instance.reset_all_member_limits
   end
 
   if useSecureServer

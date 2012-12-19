@@ -5,7 +5,7 @@ $(function () {
         serviceUrl:'/messagebox/users/all',
         onSelect: function (user_name, data) {
             var user_id = data[0]
-            var $hiddenInput = $('<input/>',{type:'hidden', name:"hidden"+user_id, value:user_id});
+            var $hiddenInput = $('<input/>',{type:'hidden', id:"hidden"+user_id, name:"hidden"+user_id, value:user_id});
             var $div = $('<span/>', {id:"div"+user_id,class:'receiver'})
             var $button = $('<button/>', {type:'button', class:"remove", onclick:"removeReceiver("+ user_id +")" })
             $button.html("x")

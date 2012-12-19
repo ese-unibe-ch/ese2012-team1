@@ -1,0 +1,18 @@
+- messagebox = Messenger.instance.get_message_box(session[:user])
+
+- messagebox.conversations.each do |conversation_id, conversation|
+  %div(class="message-preview")
+    %h2
+      %a(href="/messagebox/conversation?conversation_id=#{conversation_id}")
+        = conversation.title + "(" + messagebox.new_messages_count_for(conversation_id).to_s + "/" + messagebox.message_count_for(conversation_id).to_s + ")"
+    %strong
+      Subscribers:
+    - conversation.subscribers.each do |subscriber|
+      = DAOAccount.instance.fetch_account(subscriber).name
+    %div
+    Last Message:
+    - msg = conversation.get_last_message
+    = haml :'messagebox/message', :locals => { :message => msg,
+                                            :conversation_id => conversation_id,
+                                            :indention => false }
+    = haml :'messagebox/form/reply_message', :locals => { :conv_id => conversation.conversation_id, :mess_id => nil}

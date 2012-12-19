@@ -1,22 +1,9 @@
-require 'rubygems'
-require 'require_relative'
-require 'sinatra/base'
-require 'haml'
-require 'ftools'
-
-require_relative '../models/user'
-require_relative '../helpers/alert'
-require_relative '../helpers/render'
-require_relative '../helpers/before'
-require_relative '../helpers/string_checkers'
-require_relative '../models/simple_email_client' unless ENV['RACK_ENV'] == 'test'
-
 include Models
 include Helpers
 
 ##
 #
-# In this controller are all puts and gets needed for the creation of a new user handled
+# In this controller are all posts and gets needed for the creation of a new user handled
 #
 ##
 module Controllers
@@ -42,15 +29,10 @@ module Controllers
     ##
     get '/registration/confirm/:reg_hash' do
       hash = params[:reg_hash]
-      if Models::System.instance.reg_hash_exists?(hash)
-        user = Models::System.instance.fetch_user_by_reg_hash(hash)
-        session[:alert] = Alert.create("Error!", "Your account is already activated. Please login.", true) if user.activated
-        redirect '/login' if user.activated
-        user.activate
-      else
-        session[:alert] = Alert.create("Error!", "No such activation code. Try with copy and paste the complete URL from the e-mail into your Browser.", true)
-        redirect '/login'
-      end
+      error_redirect("Error!", "No such activation code. Try with copy and paste the complete URL from the e-mail into your Browser.", !DAOAccount.instance.reg_hash_exists?(hash), "/login")
+      user = DAOAccount.instance.fetch_user_by_reg_hash(hash)
+      error_redirect("Error!", "Your account is already activated. Please login.", user.activated, "/login")
+      user.activate
 
       session[:alert] = Alert.create("Activation successful!", "Your account is now activated. Please login.", false)
 
@@ -69,8 +51,8 @@ module Controllers
     ##
 
     get '/register' do
-      session[:navigation].select(:unregistered)
-      session[:navigation].get_selected.select_by_name("register")
+      session[:navigation][:context] = :unregistered
+      session[:navigation][:selected] = "register"
       haml :'authentication/register', :locals => { :script => 'passwordchecker.js', :onload => 'initialize()' }
     end
 
@@ -111,13 +93,13 @@ module Controllers
     post '/register' do
       if are_nil?(params[:password], params[:re_password], params[:email], params[:name]) ||
          ! params[:password].is_strong_password? || params[:password] != params[:re_password] ||
-          params[:email] == "" || ! params[:email].is_email? || params[:name] == "" || Models::System.instance.user_exists?(params[:email])
+          params[:email] == "" || ! params[:email].is_email? || params[:name] == "" || DAOAccount.instance.email_exists?(params[:email])
 
         #Error Messages Sessions
         session[:email_error] = ""
-        session[:email_error] = "E-Mail Address already in use." if Models::System.instance.user_exists?(params[:email])
+        session[:email_error] = "E-Mail Address already in use." if DAOAccount.instance.email_exists?(params[:email])
         session[:email_error] = "Not a correct E-Mail Address" if params[:email] == "" || !params[:email].is_email?
-        session[:is_email_error] = "yes" if Models::System.instance.user_exists?(params[:email])
+        session[:is_email_error] = "yes" if DAOAccount.instance.email_exists?(params[:email])
         session[:is_email_error] = "yes" if params[:email] == "" || !params[:email].is_email?
 
         #Values from wrong form data
@@ -160,7 +142,7 @@ module Controllers
       Mailer.setup.sendRegMail(user.id, address)
       session[:alert] = Alert.create("Your registration was successful!", "Now you have to activate your account by clicking on the link in the mail we sent you.", false)
 
-      haml :'authentication/login'
+      redirect "/login"
     end
 
 
@@ -195,22 +177,18 @@ module Controllers
     ##
     post '/unregister' do
       redirect "/" unless session[:auth]
-      redirect "/error/No_Valid_Account_Id" unless Models::System.instance.account_exists?(session[:user])
-      user = Models::System.instance.fetch_account(session[:user])
+      error_redirect("Oh, no!", "Something went wrong.", !DAOAccount.instance.account_exists?(session[:user]), "/home")
+      user = DAOAccount.instance.fetch_account(session[:user])
 
       # Do Organisation Check
-      deletable = true
-      org_list = Models::System.instance.fetch_organisations_of(session[:user])
-      for org in org_list do
-         if org.is_admin?(user) && org.admin_count() == 1
-           deletable = false
-         end
-      end
+      deletable = ! DAOAccount.instance.is_last_admin?(user)
 
       # Remove User From Organisation
       if deletable
+        org_list = DAOAccount.instance.fetch_organisations_of(user.id)
+
         for org in org_list do
-          org.remove_member_by_email(user.email)
+          org.remove_member(user)
         end
       else
         session[:alert] = Alert.create("Oh no!", "You can't delete your Account, because you're the only Admin of one of your Organisations.", true)
@@ -220,7 +198,7 @@ module Controllers
       user.clear
       session.clear
 
-      redirect '/unauthenticate'
+      redirect '/'
     end
   end
 end

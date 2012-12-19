@@ -1,19 +1,22 @@
 -unless (defined? boldify)
   - boldify = ""
-
-%table
-  %tr
-  - i = 0
-  - for user in all_users
-    - i = (i + 1)%2
-    %tr{ :class => i == 0 ? "colored" : "normal" }
-      %td{:width => "250px;"}
-        = (user.name.size > 15 ? "#{user.name[0..14]}..." : user.name).to_s.boldify(boldify) + " has #{user.list_active_items.size} Items to sell. "
-      %td
-        = user.description.boldify(boldify)
-      %td
-        %img(height=50 width=50){ :alt => user.name, :src => user.avatar }
-      %td
-        = haml :'mailbox/form/send_message', :locals => { :user => user }
-      %td
-        %a(href="/users/#{user.id}" ) Show User Details
+-if all_users.size == 0
+  %div
+    No users.
+-else
+  %table
+    %tr
+    - i = 0
+    - for user in all_users
+      - i = (i + 1)%2
+      %tr{ :class => i == 0 ? "colored" : "normal" }
+        %td{:width => "250px;"}
+          = (user.name.size > 15 ? "#{user.name[0..14]}..." : user.name).to_s.boldify(boldify) + " has #{DAOItem.instance.fetch_active_items_of(user.id).size} Items to sell. "
+        %td
+          = user.description.boldify(boldify)
+        %td
+          %img(height=50 width=50){ :alt => user.name, :src => user.avatar }
+        %td
+          = haml :'messagebox/form/send_message', :locals => { :user => user }
+        %td
+          %a(href="/users/#{user.id}" ) Show User Details
