@@ -6,7 +6,7 @@ Team #1
 #Installation
 
 ##Using Installation Script
-###Unix Based Systems (Tested on Ubuntu and Debian)
+###Unix Based Systems (Working on Ubuntu and Debian)
 Get the latest release of ESE Trading System by #1:
 
     wget https://tux1.pillo-srv.ch/jokr.tar.bz2
@@ -40,7 +40,7 @@ Start the Trading System with the Startup Script:
     ruby app/app.rb
 
 
-###Windows (Tested on Windows 7 and 8)
+###Windows (Working on Windows Vista, 7 and 8)
 Get the latest release of ESE Trading System by #1:
 
 [https://tux1.pillo-srv.ch/jokr.tar.bz2](https://tux1.pillo-srv.ch/jokr.tar.bz2)
