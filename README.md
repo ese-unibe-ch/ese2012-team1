@@ -2,6 +2,14 @@ Team #1
 ===============
 ##Prerequisites
     Ruby 1.8.7
+    Ruby DevKit
+
+The Unix Installer installs all used components.
+
+In Windows you have to install Ruby with the RubyInstaller [http://rubyinstaller.org/downloads/](http://rubyinstaller.org/downloads/).
+
+The Windows Installer will give you all needed information.
+
 
 #Installation
 
@@ -9,7 +17,7 @@ Team #1
 ###Unix Based Systems (Working on Ubuntu and Debian)
 Get the latest release of ESE Trading System by #1:
 
-    wget https://tux1.pillo-srv.ch/jokr.tar.bz2
+    wget https://tux1.pillo-srv.ch/jokr-v2.0-final.tar.bz2
 
 Extract files:
 
@@ -43,7 +51,7 @@ Start the Trading System with the Startup Script:
 ###Windows (Working on Windows Vista, 7 and 8)
 Get the latest release of ESE Trading System by #1:
 
-[https://tux1.pillo-srv.ch/jokr.tar.bz2](https://tux1.pillo-srv.ch/jokr.tar.bz2)
+[https://tux1.pillo-srv.ch/jokr-v2.0-final.tar.bz2](https://tux1.pillo-srv.ch/jokr-v2.0-final.tar.bz2)
 
 Extract the archive:
 

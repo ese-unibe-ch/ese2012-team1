@@ -10,7 +10,7 @@ require 'rake/testtask'
 task :default => [:models_rcov]
 
 def file_list(t)
-  t.test_files = FileList["trade/test/ModelTests/*_spec.rb", "trade/test/ModelTests/*_test.rb"]
+  t.test_files = FileList["trade/test/ModelTests/*_test.rb", "trade/test/ModelTests/*_spec.rb"]
 end
 
 def file_list_controller(t)
